@@ -42,6 +42,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
-    "prettier-eslint": "^15.0.1"
+    "prettier-eslint": "^15.0.1",
+    "sass": "^1.56.1"
   }
 }
