@@ -21,6 +21,14 @@ module.exports = {
         format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
       },
     ],
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        types: {
+          '{}': false,
+        },
+      },
+    ],
     '@typescript-eslint/no-unused-vars': ['error'],
     'prettier/prettier': ['error'],
   },
