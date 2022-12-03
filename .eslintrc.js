@@ -23,11 +23,11 @@ module.exports = {
     ],
     '@typescript-eslint/ban-types': [
       'error',
-      {
-        types: {
-          '{}': false,
-        },
-      },
+      // {
+      //   types: {
+      //     '{}': false,
+      //   },
+      // },
     ],
     '@typescript-eslint/no-unused-vars': ['error'],
     'prettier/prettier': ['error'],

@@ -2,8 +2,9 @@ import { FunctionComponent } from 'react';
 import logo from './logo.svg';
 import './App.scss';
 import { RecoilRoot } from 'recoil';
+import { Overlay } from './cdk/Overlay';
 
-const App: FunctionComponent<{}> = () => {
+const App: FunctionComponent = () => {
   return (
     <RecoilRoot>
       <div className="App">
@@ -21,6 +22,9 @@ const App: FunctionComponent<{}> = () => {
             Learn React
           </a>
         </header>
+        <Overlay>
+          <div>Hello world!</div>
+        </Overlay>
       </div>
     </RecoilRoot>
   );
