@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { generateUUID } from '../functions/uuid';
-import { InternalOverlay, OverlayProps, OverlayRef } from './Overlay';
+import { Overlay, OverlayProps, OverlayRef } from './Overlay';
 
 const GLOBAL_OVERLAY_ROOT_ID = 'cdk-overlay-root';
 
@@ -76,9 +76,9 @@ export const GlobalOverlayProvider: FunctionComponent<{
         close: (): void => close(key),
       };
       const portal = createPortal(
-        <InternalOverlay {...options} id={key}>
+        <Overlay {...options} id={key}>
           {node}
-        </InternalOverlay>,
+        </Overlay>,
         overlayRoot
       );
       portal.key = key;

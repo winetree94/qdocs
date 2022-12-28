@@ -3,6 +3,7 @@ import { FunctionComponent, ReactNode, useContext } from 'react';
 import { OverlayContext, OverlayContextType } from '../../cdk/overlay/Overlay';
 import { GlobalOverlayContext } from '../../cdk/overlay/GlobalOverlay';
 import { Toolbar, ToolbarItem } from '../toolbar/Toolbar';
+import { OverlayTest } from './OverlayTest';
 
 const MainLayout = styled.div`
   display: flex;
@@ -28,7 +29,6 @@ const ContentLayout = styled.div`
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
-  const { children } = props;
   const overlayContext = useContext(GlobalOverlayContext);
 
   const openOverlay = (): void => {
@@ -60,9 +60,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
         <button onClick={openOverlay}>click</button>
       </SubtoolbarLayout>
       <ContentLayout className="queue-content-layout">
-        <div className="RootLayout">
-          <div className="RootLayout__content">{children}</div>
-        </div>
+        <OverlayTest></OverlayTest>
       </ContentLayout>
     </MainLayout>
   );

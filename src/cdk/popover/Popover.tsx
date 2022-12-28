@@ -1,5 +1,5 @@
 import { FunctionComponent, ReactNode } from 'react';
-import { InternalOverlay } from '../overlay/Overlay';
+import { Overlay } from '../overlay/Overlay';
 
 export interface PopoverProps {
   children?: ReactNode;
@@ -7,5 +7,5 @@ export interface PopoverProps {
 
 export const Popover: FunctionComponent<PopoverProps> = (props) => {
   const { children } = props;
-  return <InternalOverlay id="sdf">{children}</InternalOverlay>;
+  return <Overlay id="sdf">{children}</Overlay>;
 };

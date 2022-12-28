@@ -46,7 +46,6 @@ const OverlayContent = styled.div`
 
 export interface OverlayProps {
   children?: ReactNode;
-  type?: 'global' | 'connected';
   id: string;
   useBackdrop?: boolean;
   closeOnBackdrop?: boolean;
@@ -55,19 +54,23 @@ export interface OverlayProps {
   ) => void;
 }
 
-export const InternalOverlay: FunctionComponent<OverlayProps> = (props) => {
+export const Overlay: FunctionComponent<OverlayProps> = (props) => {
   const globalOverlayContext = useContext(GlobalOverlayContext);
+
   const onBackdropClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (props.closeOnBackdrop) {
+        globalOverlayContext.close(props.id);
+      }
       if (!props.onBackdropClick) {
         return;
       }
       props.onBackdropClick(event);
     },
-    [props]
+    [props, globalOverlayContext]
   );
 
-  const portal = ReactDOM.createPortal(
+  return ReactDOM.createPortal(
     <OverlayContext.Provider
       value={{
         key: props.id,
@@ -86,11 +89,9 @@ export const InternalOverlay: FunctionComponent<OverlayProps> = (props) => {
     </OverlayContext.Provider>,
     globalOverlayContext.rootElement
   );
-
-  return portal;
 };
 
-InternalOverlay.defaultProps = {
+Overlay.defaultProps = {
   useBackdrop: false,
   closeOnBackdrop: true,
 };
