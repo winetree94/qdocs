@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { FunctionComponent, ReactNode, useContext } from 'react';
 import { OverlayContext, OverlayContextType } from '../../cdk/overlay/Overlay';
 import { GlobalOverlayContext } from '../../cdk/overlay/GlobalOverlay';
+import { Toolbar, ToolbarItem } from '../toolbar/Toolbar';
 
 const MainLayout = styled.div`
   display: flex;
@@ -46,10 +47,17 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   return (
     <MainLayout className="queue-root-layout">
       <ToolbarLayout className="queue-toolbar-layout">
-        <button onClick={openOverlay}>open</button>
+        <Toolbar>
+          <ToolbarItem>
+            <i className="ri-home-line"></i>File
+          </ToolbarItem>
+          <ToolbarItem>Edit</ToolbarItem>
+          <ToolbarItem>View</ToolbarItem>
+        </Toolbar>
       </ToolbarLayout>
       <SubtoolbarLayout className="queue-subtoolbar-layout">
         subtoolbar
+        <button onClick={openOverlay}>click</button>
       </SubtoolbarLayout>
       <ContentLayout className="queue-content-layout">
         <div className="RootLayout">
