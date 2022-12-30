@@ -1,47 +1,48 @@
-import { FunctionComponent, useContext, useState } from 'react';
+import { FunctionComponent, useContext, useRef, useState } from 'react';
 import { GlobalOverlayContext } from '../../cdk/overlay/GlobalOverlay';
-import { Overlay } from '../../cdk/overlay/Overlay';
+import { Popover } from '../../cdk/popover/Popover';
 
-export const OverlayTest: FunctionComponent<Record<string, never>> = () => {
-  const [flag, setFlag] = useState<boolean>(false);
+export const GlobalOverlayTest: FunctionComponent<{ flag: boolean }> = () => {
+  const [state, setState] = useState<number>(0);
   return (
-    <div>
-      <button onClick={(): void => setFlag(!flag)}>
-        toggle overlay test component
-      </button>
-
-      {flag && <OverlayTest2></OverlayTest2>}
-    </div>
+    <button onClick={(): void => setState(state + 1)}>increase {state}</button>
   );
 };
 
-export const OverlayTest2: FunctionComponent<Record<string, never>> = () => {
+export const OverlayTest: FunctionComponent<Record<string, never>> = () => {
   const globalOverlayContext = useContext(GlobalOverlayContext);
-  const [methodFlag, setMethodFlag] = useState<boolean>(false);
-  const [childrenFlag, setChildrenFlag] = useState<boolean>(false);
+  const ref = useRef<HTMLButtonElement>(null);
+  const [state, setState] = useState<number>(0);
+  const [popover, setPopover] = useState<boolean>(false);
 
-  const toggleMethodOverlay = (): void => {
-    if (methodFlag) {
-      globalOverlayContext.close('method-overlay');
-    } else {
-      globalOverlayContext.open(<div>hello world</div>, {
-        id: 'method-overlay',
-      });
-    }
-    setMethodFlag(!methodFlag);
+  const openGlobalOverlay = (): void => {
+    const key = globalOverlayContext.open(GlobalOverlayTest, {
+      onBackdropClick: (): void => {
+        globalOverlayContext.close(key);
+      },
+      initProps: {
+        flag: true,
+      },
+    });
   };
 
   return (
     <div>
-      <button onClick={(): void => setChildrenFlag(!childrenFlag)}>
-        toggle children overlay
+      <button ref={ref} onClick={(): void => setPopover(!popover)}>
+        toggle inline overlay
       </button>
-      <button onClick={(): void => toggleMethodOverlay()}>
-        toggle method overlay
-      </button>
-      {childrenFlag && (
-        <Overlay id="children-overlay">children-overlay</Overlay>
-      )}
+
+      <Popover
+        visible={popover}
+        target={ref.current}
+        onBackdropClick={(): void => setPopover(false)}
+      >
+        <button onClick={(): void => setState(state + 1)}>
+          increase {state}
+        </button>
+      </Popover>
+
+      <button onClick={openGlobalOverlay}>open global overlay</button>
     </div>
   );
 };

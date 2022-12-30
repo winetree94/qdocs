@@ -5,29 +5,23 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
+  useRef,
 } from 'react';
 import ReactDOM from 'react-dom';
 import { GlobalOverlayContext } from './GlobalOverlay';
 
 export interface OverlayContextType {
-  key: string;
-  close: () => void;
+  requestClose: () => void;
 }
 
 export const OverlayContext = createContext<OverlayContextType>({
-  key: '',
-  close: () => {
+  requestClose: () => {
     throw new Error(
       'method not implemented, use must declare OverlayContextProvider on root'
     );
   },
 });
-
-export interface OverlayRef {
-  key: string;
-  node: ReactNode;
-  close: () => void;
-}
 
 const OverlayBackdrop = styled.div`
   position: absolute;
@@ -46,45 +40,61 @@ const OverlayContent = styled.div`
 
 export interface OverlayProps {
   children?: ReactNode;
-  id: string;
   useBackdrop?: boolean;
-  closeOnBackdrop?: boolean;
+  onRequestDestroy?: () => void;
+  onDestroy?: () => void;
   onBackdropClick?: (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
 }
 
-export const Overlay: FunctionComponent<OverlayProps> = (props) => {
+export const Overlay: FunctionComponent<OverlayProps> = ({
+  children,
+  useBackdrop,
+  onRequestDestroy,
+  onDestroy,
+  onBackdropClick,
+}) => {
   const globalOverlayContext = useContext(GlobalOverlayContext);
 
-  const onBackdropClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (props.closeOnBackdrop) {
-        globalOverlayContext.close(props.id);
-      }
-      if (!props.onBackdropClick) {
+  const destroyCallback = useRef(() => {
+    if (onDestroy) {
+      onDestroy();
+    }
+  });
+
+  const requestClose = useCallback(() => {
+    if (onRequestDestroy) {
+      onRequestDestroy();
+    }
+  }, [onRequestDestroy]);
+
+  const backdropClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+      if (!onBackdropClick) {
         return;
       }
-      props.onBackdropClick(event);
+      onBackdropClick(event);
     },
-    [props, globalOverlayContext]
+    [onBackdropClick]
   );
+
+  useEffect(() => () => destroyCallback.current(), []);
 
   return ReactDOM.createPortal(
     <OverlayContext.Provider
       value={{
-        key: props.id,
-        close: () => globalOverlayContext.close(props.id),
+        requestClose: requestClose,
       }}
     >
-      {props.useBackdrop && (
+      {useBackdrop && (
         <OverlayBackdrop
           className="cdk-overlay-backdrop"
-          onClick={onBackdropClick}
+          onClick={backdropClick}
         ></OverlayBackdrop>
       )}
       <OverlayContent className="cdk-overlay-content">
-        {props.children}
+        {children}
       </OverlayContent>
     </OverlayContext.Provider>,
     globalOverlayContext.rootElement
@@ -92,6 +102,5 @@ export const Overlay: FunctionComponent<OverlayProps> = (props) => {
 };
 
 Overlay.defaultProps = {
-  useBackdrop: false,
-  closeOnBackdrop: true,
+  useBackdrop: true,
 };

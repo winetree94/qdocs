@@ -1,11 +1,28 @@
-import { FunctionComponent, ReactNode } from 'react';
-import { Overlay } from '../overlay/Overlay';
+import styled from '@emotion/styled';
+import { FunctionComponent } from 'react';
+import { Overlay, OverlayProps } from '../overlay/Overlay';
 
-export interface PopoverProps {
-  children?: ReactNode;
+export interface PopoverProps extends OverlayProps {
+  visible: boolean;
+  target?: HTMLElement | null;
 }
 
-export const Popover: FunctionComponent<PopoverProps> = (props) => {
-  const { children } = props;
-  return <Overlay id="sdf">{children}</Overlay>;
+const PopoverContainer = styled.div`
+  background-color: white;
+`;
+
+export const Popover: FunctionComponent<PopoverProps> = ({
+  visible,
+  target,
+  children,
+  ...overlayProps
+}) => {
+  if (!visible) {
+    return null;
+  }
+  return (
+    <Overlay {...overlayProps}>
+      <PopoverContainer>{children}</PopoverContainer>
+    </Overlay>
+  );
 };

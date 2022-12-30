@@ -1,23 +1,23 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import {
+  ComponentType,
   createContext,
   FunctionComponent,
   ReactNode,
-  ReactPortal,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom';
 import { generateUUID } from '../functions/uuid';
-import { Overlay, OverlayProps, OverlayRef } from './Overlay';
+import { Overlay, OverlayProps } from './Overlay';
 
 const GLOBAL_OVERLAY_ROOT_ID = 'cdk-overlay-root';
 
 export interface GlobalOverlayContextType {
   readonly rootElement: HTMLDivElement;
-  open(node: ReactNode, options?: OverlayProps): OverlayRef;
+  open<P, C extends ComponentType<P>>(
+    component: C,
+    options: OverlayProps & { initProps: P }
+  ): string;
   close(key: string): void;
 }
 
@@ -37,13 +37,19 @@ export const GlobalOverlayContext = createContext<GlobalOverlayContextType>({
   },
 });
 
+export interface InternalGlobalNodes<P, C extends ComponentType<P>> {
+  key: string;
+  Component: C;
+  options: OverlayProps & { initProps: P };
+}
+
 export const GlobalOverlayProvider: FunctionComponent<{
   children?: ReactNode;
 }> = (props) => {
   const [overlayRoot, setOverlayRoot] = useState<HTMLDivElement>(
     (document.getElementById(GLOBAL_OVERLAY_ROOT_ID) as HTMLDivElement) || null
   );
-  const [portals, setPortals] = useState<ReactPortal[]>([]);
+  const [nodes, setNodes] = useState<InternalGlobalNodes<any, any>[]>([]);
 
   const createOverlayRootIfNotExists = useCallback(() => {
     if (!document.getElementById(GLOBAL_OVERLAY_ROOT_ID)) {
@@ -53,53 +59,56 @@ export const GlobalOverlayProvider: FunctionComponent<{
       document.body.appendChild(el);
       setOverlayRoot(el);
     }
-  }, [overlayRoot]);
+  }, []);
 
-  useEffect(() => createOverlayRootIfNotExists(), []);
+  useEffect(
+    () => createOverlayRootIfNotExists(),
+    [createOverlayRootIfNotExists]
+  );
 
   const close = useCallback(
     (key: string) => {
-      const index = portals.findIndex((n) => n.key === key);
-      if (index !== -1) {
-        setPortals([...portals.slice(0, index), ...portals.slice(index + 1)]);
-      }
+      const index = nodes.findIndex((n) => n.key === key);
+      setNodes([...nodes.slice(0, index), ...nodes.slice(index + 1)]);
     },
-    [portals]
+    [nodes]
   );
 
   const open = useCallback(
-    (node: ReactNode, options?: OverlayProps): OverlayRef => {
-      const key = options?.id || generateUUID();
-      const ref: OverlayRef = {
-        key: key,
-        node: node,
-        close: (): void => close(key),
-      };
-      const portal = createPortal(
-        <Overlay {...options} id={key}>
-          {node}
-        </Overlay>,
-        overlayRoot
-      );
-      portal.key = key;
-      setPortals([...portals, portal]);
-      return ref;
+    <P, T extends ComponentType<P>>(
+      component: T,
+      options: OverlayProps & { initProps: P }
+    ): string => {
+      const key = generateUUID();
+      setNodes([
+        ...nodes,
+        {
+          key: key,
+          Component: component,
+          options: options,
+        },
+      ]);
+      return key;
     },
-    [overlayRoot, portals]
+    [nodes]
   );
 
   return (
-    <>
-      <GlobalOverlayContext.Provider
-        value={{
-          rootElement: overlayRoot,
-          open: open,
-          close: close,
-        }}
-      >
-        {portals}
-        {props.children}
-      </GlobalOverlayContext.Provider>
-    </>
+    <GlobalOverlayContext.Provider
+      value={{
+        rootElement: overlayRoot,
+        open: open,
+        close: close,
+      }}
+    >
+      {props.children}
+      {nodes.map(
+        ({ key, Component, options: { initProps, ...overlayProps } }) => (
+          <Overlay {...overlayProps} key={key}>
+            <Component {...initProps}></Component>
+          </Overlay>
+        )
+      )}
+    </GlobalOverlayContext.Provider>
   );
 };
