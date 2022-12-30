@@ -49,6 +49,7 @@ export const GlobalOverlayProvider: FunctionComponent<{
   const [overlayRoot, setOverlayRoot] = useState<HTMLDivElement>(
     (document.getElementById(GLOBAL_OVERLAY_ROOT_ID) as HTMLDivElement) || null
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [nodes, setNodes] = useState<InternalGlobalNodes<any, any>[]>([]);
 
   const createOverlayRootIfNotExists = useCallback(() => {

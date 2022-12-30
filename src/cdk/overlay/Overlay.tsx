@@ -33,14 +33,25 @@ const OverlayBackdrop = styled.div`
   pointer-events: auto;
 `;
 
-const OverlayContent = styled.div`
-  position: absolute;
-  pointer-events: auto;
-`;
+// const OverlayContent = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+// `;
+
+// const OverlayPane = styled.div`
+//   pointer-events: auto;
+// `;
 
 export interface OverlayProps {
   children?: ReactNode;
   useBackdrop?: boolean;
+  backdropClassName?: string;
+  contentClassName?: string;
+  paneClassName?: string;
   onRequestDestroy?: () => void;
   onDestroy?: () => void;
   onBackdropClick?: (
@@ -51,6 +62,9 @@ export interface OverlayProps {
 export const Overlay: FunctionComponent<OverlayProps> = ({
   children,
   useBackdrop,
+  backdropClassName,
+  contentClassName,
+  paneClassName,
   onRequestDestroy,
   onDestroy,
   onBackdropClick,
@@ -89,18 +103,23 @@ export const Overlay: FunctionComponent<OverlayProps> = ({
     >
       {useBackdrop && (
         <OverlayBackdrop
-          className="cdk-overlay-backdrop"
+          className={backdropClassName + ' cdk-overlay-backdrop'}
           onClick={backdropClick}
         ></OverlayBackdrop>
       )}
-      <OverlayContent className="cdk-overlay-content">
-        {children}
-      </OverlayContent>
+      {/* <OverlayContent className={contentClassName + 'cdk-overlay-content'}>
+        <OverlayPane className={paneClassName + 'cdk-overlay-pane'}> */}
+      {children}
+      {/* </OverlayPane>
+      </OverlayContent> */}
     </OverlayContext.Provider>,
     globalOverlayContext.rootElement
   );
 };
 
 Overlay.defaultProps = {
+  backdropClassName: '',
+  contentClassName: '',
+  paneClassName: '',
   useBackdrop: true,
 };

@@ -1,6 +1,6 @@
 import { FunctionComponent, useContext, useRef, useState } from 'react';
 import { GlobalOverlayContext } from '../../cdk/overlay/GlobalOverlay';
-import { Popover } from '../../cdk/popover/Popover';
+import { Popover } from '../../components/popover/Popover';
 
 export const GlobalOverlayTest: FunctionComponent<{ flag: boolean }> = () => {
   const [state, setState] = useState<number>(0);
