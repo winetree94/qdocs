@@ -1,13 +1,24 @@
-import { FunctionComponent, ReactNode } from 'react';
+import styled from '@emotion/styled';
 
-export const Toolbar: FunctionComponent<{ children: ReactNode }> = (props) => {
-  const { children } = props;
-  return <div className="queue-toolbar">{children}</div>;
-};
+export const Toolbar = styled.div`
+  height: 30px;
+  display: flex;
+`;
 
-export const ToolbarItem: FunctionComponent<{ children: ReactNode }> = (
-  props
-) => {
-  const { children } = props;
-  return <button className="queue-toolbar-item">{children}</button>;
-};
+export const ToolbarItem = styled.button`
+  border: none;
+  display: flex;
+  background: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px; 20px;
+
+  &:hover {
+    background: #eee;
+  }
+
+  &:active {
+    background: #ddd;
+  }
+`;
