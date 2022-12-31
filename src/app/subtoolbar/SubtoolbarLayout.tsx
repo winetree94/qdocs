@@ -1,6 +1,8 @@
 import { css } from '@emotion/css';
 import { FunctionComponent } from 'react';
+import { useRecoilState } from 'recoil';
 import { Button } from '../../components/button/Button';
+import { documentSettingsState } from '../../store/settings';
 
 const SubtoolbarButtonStyle = css`
   height: 100%;
@@ -10,6 +12,22 @@ const SubtoolbarButtonStyle = css`
 `;
 
 export const SubtoolbarLayout: FunctionComponent = () => {
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
+
+  const increaseScale = (): void => {
+    setSettings({
+      ...settings,
+      scale: settings.scale + 0.1,
+    });
+  };
+
+  const decreaseScale = (): void => {
+    setSettings({
+      ...settings,
+      scale: Math.max(settings.scale - 0.1, 0.1),
+    });
+  };
+
   return (
     <div
       className={css`
@@ -56,10 +74,10 @@ export const SubtoolbarLayout: FunctionComponent = () => {
           display: flex;
         `}
       >
-        <Button className={SubtoolbarButtonStyle}>
+        <Button className={SubtoolbarButtonStyle} onClick={decreaseScale}>
           <i className="ri-subtract-line" />
         </Button>
-        <Button className={SubtoolbarButtonStyle}>
+        <Button className={SubtoolbarButtonStyle} onClick={increaseScale}>
           <i className="ri-add-line" />
         </Button>
       </div>

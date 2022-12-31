@@ -23,7 +23,8 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       <div
         className={css`
           display: flex;
-          flex: 1 1 auto;
+          flex: 1;
+          min-height: 0;
         `}
       >
         <LeftPanel></LeftPanel>
