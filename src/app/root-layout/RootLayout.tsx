@@ -1,34 +1,35 @@
-import styled from '@emotion/styled';
+import { css } from '@emotion/css';
 import { FunctionComponent, ReactNode } from 'react';
+import { Content } from '../content/Content';
+import { LeftPanel } from '../left-panel/LeftPanel';
+import { RightPanel } from '../right-panel/RightPanel';
+import { SubtoolbarLayout } from '../subtoolbar/SubtoolbarLayout';
 import { ToolbarLayout } from '../toolbar/ToolbarLayout';
-import { OverlayTest } from './OverlayTest';
-
-const MainLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100vh;
-`;
-
-const SubtoolbarLayout = styled.div`
-  display: flex;
-  height: 40px;
-`;
-
-const ContentLayout = styled.div`
-  flex: 1 1 auto;
-`;
 
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
   return (
-    <MainLayout className="queue-root-layout">
+    <div
+      className={css`
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+      `}
+    >
       <ToolbarLayout></ToolbarLayout>
-      <SubtoolbarLayout className="queue-subtoolbar-layout"></SubtoolbarLayout>
-      <ContentLayout className="queue-content-layout">
-        <OverlayTest></OverlayTest>
-      </ContentLayout>
-    </MainLayout>
+      <SubtoolbarLayout></SubtoolbarLayout>
+      <div
+        className={css`
+          display: flex;
+          flex: 1 1 auto;
+        `}
+      >
+        <LeftPanel></LeftPanel>
+        <Content></Content>
+        <RightPanel></RightPanel>
+      </div>
+    </div>
   );
 };

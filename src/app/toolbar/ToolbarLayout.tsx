@@ -62,6 +62,7 @@ export const ToolbarLayout: FunctionComponent = () => {
     <div
       className={css`
         display: flex;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       `}
     >
       <div

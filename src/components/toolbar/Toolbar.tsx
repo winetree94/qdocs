@@ -12,6 +12,7 @@ export const ToolbarItem = styled.button`
   align-items: center;
   justify-content: center;
   user-select: none;
+  outline: none;
 
   padding: 10px; 20px;
 
