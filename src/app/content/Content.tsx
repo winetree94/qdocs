@@ -49,7 +49,11 @@ export const Content: FunctionComponent = () => {
           <svg
             width={document.documentRect.width * 2}
             height={document.documentRect.height * 2}
-          ></svg>
+          >
+            <g>
+              <rect width={200} height={200} x={0} y={0} stroke="black"></rect>
+            </g>
+          </svg>
         </div>
       </div>
     </div>

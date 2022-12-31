@@ -1,5 +1,7 @@
 import { css } from '@emotion/css';
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent, ReactNode, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { documentSettingsState } from '../../store/settings';
 import { Content } from '../content/Content';
 import { LeftPanel } from '../left-panel/LeftPanel';
 import { RightPanel } from '../right-panel/RightPanel';
@@ -9,6 +11,16 @@ import { ToolbarLayout } from '../toolbar/ToolbarLayout';
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
+
+  useEffect(() => {
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && settings.presentationMode) {
+        setSettings({ ...settings, presentationMode: false });
+      }
+    });
+  }, [settings, setSettings]);
+
   return (
     <div
       className={css`
@@ -18,8 +30,12 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
         height: 100vh;
       `}
     >
-      <ToolbarLayout></ToolbarLayout>
-      <SubtoolbarLayout></SubtoolbarLayout>
+      {!settings.presentationMode ? (
+        <>
+          <ToolbarLayout></ToolbarLayout>
+          <SubtoolbarLayout></SubtoolbarLayout>
+        </>
+      ) : null}
       <div
         className={css`
           display: flex;
@@ -27,9 +43,9 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
           min-height: 0;
         `}
       >
-        <LeftPanel></LeftPanel>
+        {!settings.presentationMode ? <LeftPanel></LeftPanel> : null}
         <Content></Content>
-        <RightPanel></RightPanel>
+        {!settings.presentationMode ? <RightPanel></RightPanel> : null}
       </div>
     </div>
   );

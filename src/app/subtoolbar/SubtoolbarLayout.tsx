@@ -18,14 +18,21 @@ export const SubtoolbarLayout: FunctionComponent = () => {
   const increaseScale = (): void => {
     setSettings({
       ...settings,
-      scale: settings.scale + 0.1,
+      scale: settings.scale + 0.05,
     });
   };
 
   const decreaseScale = (): void => {
     setSettings({
       ...settings,
-      scale: Math.max(settings.scale - 0.1, 0.1),
+      scale: Math.max(settings.scale - 0.05, 0.1),
+    });
+  };
+
+  const startPresentationModel = (): void => {
+    setSettings({
+      ...settings,
+      presentationMode: true,
     });
   };
 
@@ -56,6 +63,12 @@ export const SubtoolbarLayout: FunctionComponent = () => {
         </Button>
         <Button className={SubtoolbarButtonStyle}>
           <i className="ri-clipboard-line" />
+        </Button>
+        <Button
+          className={SubtoolbarButtonStyle}
+          onClick={startPresentationModel}
+        >
+          <i className="ri-slideshow-3-line"></i>
         </Button>
       </div>
       <div
