@@ -2,7 +2,7 @@
 import { css } from '@emotion/css';
 import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Drag } from '../../cdk/drag/Drag';
+import { Drawable } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 
@@ -21,7 +21,8 @@ export const Content: FunctionComponent = () => {
   };
 
   return (
-    <Drag
+    <Drawable
+      scale={settings.scale}
       className={css`
         flex: 1;
         background: #e9eaed;
@@ -61,6 +62,6 @@ export const Content: FunctionComponent = () => {
           </div>
         </div>
       </div>
-    </Drag>
+    </Drawable>
   );
 };
