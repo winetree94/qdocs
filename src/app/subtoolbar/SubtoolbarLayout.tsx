@@ -9,6 +9,7 @@ const SubtoolbarButtonStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
 `;
 
 export const SubtoolbarLayout: FunctionComponent = () => {
@@ -60,6 +61,7 @@ export const SubtoolbarLayout: FunctionComponent = () => {
       <div
         className={css`
           display: flex;
+          height: 100%;
         `}
       >
         <Button className={SubtoolbarButtonStyle}>
@@ -72,6 +74,7 @@ export const SubtoolbarLayout: FunctionComponent = () => {
       <div
         className={css`
           display: flex;
+          height: 100%;
         `}
       >
         <Button className={SubtoolbarButtonStyle} onClick={decreaseScale}>

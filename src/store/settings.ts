@@ -7,7 +7,7 @@ export interface QueueDocumentSettings {
 export const documentSettingsState = atom<QueueDocumentSettings>({
   key: 'documentSettingsState',
   default: {
-    scale: 1,
+    scale: 0.2,
   },
   effects: [
     ({ onSet }): void => {
