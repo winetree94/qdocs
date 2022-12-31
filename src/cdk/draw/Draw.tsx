@@ -1,13 +1,29 @@
 import { css } from '@emotion/css';
 import { FunctionComponent, ReactNode, useRef, useState } from 'react';
 
-export interface DragProps {
-  scale: number;
-  children: ReactNode;
+export interface DrawEvent {
+  // relative
+  offsetX: number;
+  offestY: number;
+  // fixed
+  clientX: number;
+  clientY: number;
+  // adjusted
+  drawX: number;
+  drawY: number;
+  // container
+  width: number;
+  height: number;
+}
+
+export interface DrawProps {
+  scale?: number;
+  children?: ReactNode;
   className?: string;
-  onDrawStart?: (event: React.DragEvent<HTMLDivElement>) => void;
-  onDrawMove?: (event: React.DragEvent<HTMLDivElement>) => void;
-  onDrawEnd?: (event: React.DragEvent<HTMLDivElement>) => void;
+  drawer?: ReactNode;
+  onDrawStart?: (event: DrawEvent) => void;
+  onDrawMove?: (event: DrawEvent) => void;
+  onDrawEnd?: (event: DrawEvent) => void;
 }
 
 const drawerStyle = css`
@@ -16,16 +32,15 @@ const drawerStyle = css`
 
 const drawStyle = css`
   position: absolute;
-  background: white;
-  top: 0;
-  left: 0;
-  border: 1px solid gray;
-  background-color: rgba(0, 0, 0, 0.2);
 `;
 
-export const Drawable: FunctionComponent<DragProps> = ({
+export const Drawable: FunctionComponent<DrawProps> = ({
   children,
   className,
+  drawer,
+  onDrawStart,
+  onDrawMove,
+  onDrawEnd,
 }) => {
   const container = useRef<HTMLDivElement>(null);
 
@@ -50,14 +65,23 @@ export const Drawable: FunctionComponent<DragProps> = ({
       return;
     }
     const containerRect = container.current.getBoundingClientRect();
-    console.log(containerRect, event);
-
     const initX = event.clientX - containerRect.x;
     const initY = event.clientY - containerRect.y;
 
     setPosition({
       x: initX,
       y: initY,
+      width: 0,
+      height: 0,
+    });
+
+    onDrawStart?.({
+      offsetX: initX,
+      offestY: initY,
+      clientX: event.clientX,
+      clientY: event.clientY,
+      drawX: initX,
+      drawY: initY,
       width: 0,
       height: 0,
     });
@@ -78,13 +102,41 @@ export const Drawable: FunctionComponent<DragProps> = ({
         width: width,
         height: height,
       });
+
+      onDrawMove?.({
+        offsetX: startX,
+        offestY: startY,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        drawX: startX,
+        drawY: startY,
+        width: width,
+        height: height,
+      });
     };
 
     const finish = (event: MouseEvent): void => {
-      console.log('finish');
       document.removeEventListener('mouseup', finish);
       document.removeEventListener('mousemove', mover);
       setIsDrawing(false);
+
+      const movedX = event.clientX - containerRect.x - initX;
+      const movedY = event.clientY - containerRect.y - initY;
+      const startX = movedX >= 0 ? initX : initX + movedX;
+      const startY = movedY >= 0 ? initY : initY + movedY;
+      const width = Math.abs(movedX);
+      const height = Math.abs(movedY);
+
+      onDrawEnd?.({
+        offsetX: startX,
+        offestY: startY,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        drawX: startX,
+        drawY: startY,
+        width: width,
+        height: height,
+      });
     };
 
     document.addEventListener('mousemove', mover);
@@ -109,7 +161,9 @@ export const Drawable: FunctionComponent<DragProps> = ({
             width: position.width,
             height: position.height,
           }}
-        ></div>
+        >
+          {drawer}
+        </div>
       )}
     </div>
   );

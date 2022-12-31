@@ -1,10 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
+import styled from '@emotion/styled';
 import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Drawable } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
+
+const Selector = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 1px solid gray;
+  background-color: rgba(0, 0, 0, 0.2);
+`;
 
 export const Content: FunctionComponent = () => {
   const [document] = useRecoilState(documentState);
@@ -23,6 +31,7 @@ export const Content: FunctionComponent = () => {
   return (
     <Drawable
       scale={settings.scale}
+      drawer={<Selector></Selector>}
       className={css`
         flex: 1;
         background: #e9eaed;
