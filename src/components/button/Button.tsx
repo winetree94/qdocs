@@ -12,10 +12,6 @@ export const Button = styled.button`
   }
 
   &:active {
-    background: #fff;
-  }
-
-  &.border {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #ddd;
   }
 `;
