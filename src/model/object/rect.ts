@@ -3,6 +3,7 @@ export interface QueueRectEffect extends QueueRectEditableProperties {
 }
 
 export interface QueueRectEditableProperties {
+  type: 'create' | 'update';
   x: number;
   y: number;
   width: number;

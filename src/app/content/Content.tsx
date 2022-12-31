@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { Drag } from '../../cdk/drag/Drag';
 import { documentState } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 
@@ -13,8 +14,14 @@ export const Content: FunctionComponent = () => {
     console.log(settings.scale);
   }, [settings]);
 
+  const onMousedown = (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ): void => {
+    console.log(event);
+  };
+
   return (
-    <div
+    <Drag
       className={css`
         flex: 1;
         background: #e9eaed;
@@ -48,18 +55,12 @@ export const Content: FunctionComponent = () => {
               height: document.documentRect.height,
             }}
           >
-            <div
-              className={css`
-                position: absolute;
-                top: -200px;
-                left: -200px;
-              `}
-            >
-              hello world!
-            </div>
+            {document.objects.map((object) => (
+              <div key={object.uuid}>d</div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </Drag>
   );
 };

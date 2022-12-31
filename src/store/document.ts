@@ -27,6 +27,7 @@ export const documentState = atom<QueueDocument>({
         uuid: generateUUID(),
         effects: [
           {
+            type: 'create',
             x: 0,
             y: 0,
             width: 100,

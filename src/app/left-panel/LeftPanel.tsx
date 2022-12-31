@@ -27,29 +27,28 @@ export const LeftPanel: FunctionComponent = () => {
       <ObjectGroup>
         <ObjectGroupTitle>Group Title</ObjectGroupTitle>
         <ObjectGrid>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-        </ObjectGrid>
-      </ObjectGroup>
-      <ObjectGroup>
-        <ObjectGroupTitle>Group Title</ObjectGroupTitle>
-        <ObjectGrid>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
+          <Object>
+            <svg
+              version="1.1"
+              baseProfile="full"
+              xmlns="http://www.w3.org/2000/svg"
+              className={css`
+                margin: 10px;
+                width: 30px;
+                height: 30px;
+              `}
+            >
+              <g>
+                <rect
+                  width="30"
+                  height="30"
+                  stroke="black"
+                  strokeWidth="4"
+                  fill="transparent"
+                />
+              </g>
+            </svg>
+          </Object>
         </ObjectGrid>
       </ObjectGroup>
       <ObjectGroup>
