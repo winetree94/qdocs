@@ -37,37 +37,47 @@ export const Content: FunctionComponent = () => {
         background: #e9eaed;
         overflow: auto;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        // justify-content: center;
+        // align-items: center;
       `}
     >
       <div
         style={{
-          width: document.documentRect.width * settings.scale,
-          height: document.documentRect.height * settings.scale,
+          padding: '10px',
+          margin: 'auto',
         }}
       >
         <div
-          className={css`
-            transform-origin: 0 0;
-            transform: scale(${settings.scale});
-          `}
+          style={{
+            width: document.documentRect.width * settings.scale,
+            height: document.documentRect.height * settings.scale,
+            background: 'white',
+            overflow: 'hidden',
+            flexShrink: 0,
+          }}
         >
           <div
             className={css`
-              position: relative;
-              border: 1px solid gray;
-              box-sizing: border-box;
-              background: white;
+              transform-origin: 0 0;
+              transform: scale(${settings.scale});
             `}
-            style={{
-              width: document.documentRect.width,
-              height: document.documentRect.height,
-            }}
           >
-            {document.objects.map((object) => (
-              <div key={object.uuid}>d</div>
-            ))}
+            <div
+              className={css`
+                position: relative;
+                border: 1px solid gray;
+                box-sizing: border-box;
+                background: white;
+              `}
+              style={{
+                width: document.documentRect.width,
+                height: document.documentRect.height,
+              }}
+            >
+              {document.objects.map((object) => (
+                <div key={object.uuid}></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
