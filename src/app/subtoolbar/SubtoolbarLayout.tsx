@@ -1,7 +1,8 @@
 import { css } from '@emotion/css';
-import { FunctionComponent } from 'react';
-import { useRecoilState } from 'recoil';
+import { FunctionComponent, useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Button } from '../../components/button/Button';
+import { queueObjectsByQueueIndexSelector } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 
 const SubtoolbarButtonStyle = css`
@@ -14,6 +15,17 @@ const SubtoolbarButtonStyle = css`
 
 export const SubtoolbarLayout: FunctionComponent = () => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const start = Math.max(settings.queueIndex - 2, 0);
+  const queues = useRecoilValue(
+    queueObjectsByQueueIndexSelector({
+      start: start,
+      end: start + 4,
+    })
+  );
+
+  useEffect(() => {
+    console.log(queues);
+  }, [queues]);
 
   const increaseScale = (): void => {
     setSettings({
@@ -33,6 +45,27 @@ export const SubtoolbarLayout: FunctionComponent = () => {
     setSettings({
       ...settings,
       presentationMode: true,
+    });
+  };
+
+  const setCurrentQueueIndex = (index: number): void => {
+    setSettings({
+      ...settings,
+      queueIndex: index,
+    });
+  };
+
+  const goToPreviousQueue = (): void => {
+    setSettings({
+      ...settings,
+      queueIndex: Math.max(settings.queueIndex - 1, 0),
+    });
+  };
+
+  const goToNextQueue = (): void => {
+    setSettings({
+      ...settings,
+      queueIndex: settings.queueIndex + 1,
     });
   };
 
@@ -77,10 +110,22 @@ export const SubtoolbarLayout: FunctionComponent = () => {
           height: 100%;
         `}
       >
-        <Button className={SubtoolbarButtonStyle}>
+        <Button className={SubtoolbarButtonStyle} onClick={goToPreviousQueue}>
           <i className="ri-arrow-left-line" />
         </Button>
-        <Button className={SubtoolbarButtonStyle}>
+        {queues.map((queue, index) => (
+          <Button
+            key={index}
+            className={SubtoolbarButtonStyle}
+            style={{
+              color: queue.index === settings.queueIndex ? 'red' : 'black',
+            }}
+            onClick={(): void => setCurrentQueueIndex(queue.index)}
+          >
+            {queue.index + 1}
+          </Button>
+        ))}
+        <Button className={SubtoolbarButtonStyle} onClick={goToNextQueue}>
           <i className="ri-arrow-right-line" />
         </Button>
       </div>

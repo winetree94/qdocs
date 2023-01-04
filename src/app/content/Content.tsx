@@ -4,7 +4,10 @@ import styled from '@emotion/styled';
 import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Drawable } from '../../cdk/draw/Draw';
-import { documentState } from '../../store/document';
+import {
+  documentState,
+  currentQueueObjectsSelector,
+} from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 
 const Selector = styled.div`
@@ -15,6 +18,7 @@ const Selector = styled.div`
 `;
 
 export const Content: FunctionComponent = () => {
+  const objects = useRecoilValue(currentQueueObjectsSelector);
   const [document] = useRecoilState(documentState);
   const settings = useRecoilValue(documentSettingsState);
 
@@ -37,8 +41,6 @@ export const Content: FunctionComponent = () => {
         background: #e9eaed;
         overflow: auto;
         display: flex;
-        // justify-content: center;
-        // align-items: center;
       `}
     >
       <div
@@ -52,7 +54,6 @@ export const Content: FunctionComponent = () => {
             width: document.documentRect.width * settings.scale,
             height: document.documentRect.height * settings.scale,
             background: 'white',
-            overflow: 'hidden',
             flexShrink: 0,
           }}
         >
@@ -74,8 +75,18 @@ export const Content: FunctionComponent = () => {
                 height: document.documentRect.height,
               }}
             >
-              {document.objects.map((object) => (
-                <div key={object.uuid}></div>
+              {objects.map((object) => (
+                <div
+                  key={object.uuid}
+                  className={css`
+                    position: absolute;
+                    top: ${object.rect.y}px;
+                    left: ${object.rect.x}px;
+                    width: ${object.rect.width}px;
+                    height: ${object.rect.height}px;
+                    background: red;
+                  `}
+                ></div>
               ))}
             </div>
           </div>

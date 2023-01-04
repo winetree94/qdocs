@@ -12,7 +12,7 @@ module.exports = {
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
     'no-trailing-spaces': ['error'],
-    indent: ['error', 2],
+    // indent: ['error', 2],
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/naming-convention': [
       'error',
@@ -30,6 +30,7 @@ module.exports = {
       // },
     ],
     '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'prettier/prettier': ['error'],
   },
 };
