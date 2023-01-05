@@ -3,7 +3,7 @@ import { generateUUID } from '../cdk/functions/uuid';
 import {
   getRectOfIndex,
   QueueSquare,
-  QueueRectWithEffect,
+  QueueSquareWithEffect,
 } from '../model/object/rect';
 import { documentSettingsState } from './settings';
 
@@ -15,7 +15,7 @@ export interface QueueDocumentRect {
 export interface QueueDocument {
   documentName: string;
   documentRect: QueueDocumentRect;
-  objects: QueueRectWithEffect[];
+  objects: QueueSquareWithEffect[];
 }
 
 export const documentState = atom<QueueDocument>({
@@ -181,14 +181,35 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
   },
 });
 
-export const currentQueueObjectsSelector = selector<QueueSquare[]>({
+export const currentQueueObjectsSelector = selector<
+  {
+    from: QueueSquare | null;
+    to: QueueSquare;
+  }[]
+>({
   key: 'currentQueueObjects',
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
-    const r = document.objects
-      .map((object) => getRectOfIndex(object, settings.queueIndex))
-      .filter((object) => object !== null) as QueueSquare[];
-    return r;
+    const result = document.objects
+      .map((object) => {
+        const toObject = getRectOfIndex(object, settings.queueIndex);
+        const fromObject =
+          settings.queuePosition === 'pause'
+            ? null
+            : settings.queuePosition === 'forward'
+            ? getRectOfIndex(object, settings.queueIndex - 1)
+            : getRectOfIndex(object, settings.queueIndex + 1);
+        return {
+          from: fromObject,
+          to: toObject,
+        };
+      })
+      .filter((object) => object.to !== null) as {
+      from: QueueSquare | null;
+      to: QueueSquare;
+    }[];
+    console.log(result);
+    return result;
   },
 });

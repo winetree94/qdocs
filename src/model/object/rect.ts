@@ -60,7 +60,7 @@ export interface QueueSquareTextEffect extends BaseQueueEffect {
   text: QueueSquareText;
 }
 
-export interface QueueRectWithEffect extends QueueSquare {
+export interface QueueSquareWithEffect extends QueueSquare {
   effects: (
     | CreateEffect
     | QueueSquareMoveEffect
@@ -72,7 +72,7 @@ export interface QueueRectWithEffect extends QueueSquare {
 }
 
 export function getRectOfIndex(
-  object: QueueRectWithEffect,
+  object: QueueSquareWithEffect,
   index: number
 ): QueueSquare | null {
   const createEffect = object.effects.find(
