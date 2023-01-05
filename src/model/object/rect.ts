@@ -12,8 +12,12 @@ export interface QueueSquareRect {
   height: number;
 }
 
+export interface QueueSquareFill {
+  color: string;
+}
+
 export interface QueueSquareStroke {
-  style: 'solid' | 'dashed' | 'dotted';
+  dashArray: string;
   width: number;
   color: string;
 }
@@ -31,6 +35,7 @@ export interface QueueSquare extends BaseObject {
   type: 'rect';
   uuid: string;
   rect: QueueSquareRect;
+  fill: QueueSquareFill;
   stroke: QueueSquareStroke;
   text: QueueSquareText;
 }
@@ -45,6 +50,11 @@ export interface QueueSquareStrokeEffect extends BaseQueueEffect {
   stroke: QueueSquareStroke;
 }
 
+export interface QueueSquareFillEffect extends BaseQueueEffect {
+  type: 'fill';
+  fill: QueueSquareFill;
+}
+
 export interface QueueSquareTextEffect extends BaseQueueEffect {
   type: 'text';
   text: QueueSquareText;
@@ -55,6 +65,7 @@ export interface QueueRectWithEffect extends QueueSquare {
     | CreateEffect
     | QueueSquareMoveEffect
     | QueueSquareStrokeEffect
+    | QueueSquareFillEffect
     | QueueSquareTextEffect
     | RemoveEffect
   )[];
@@ -92,7 +103,7 @@ export function getRectOfIndex(
             break;
           }
           case 'stroke': {
-            object.stroke.style = effect.stroke.style;
+            object.stroke.dashArray = effect.stroke.dashArray;
             object.stroke.width = effect.stroke.width;
             object.stroke.color = effect.stroke.color;
             break;
@@ -119,9 +130,12 @@ export function getRectOfIndex(
           height: object.rect.height,
         },
         stroke: {
-          style: object.stroke.style,
+          dashArray: object.stroke.dashArray,
           width: object.stroke.width,
           color: object.stroke.color,
+        },
+        fill: {
+          color: object.fill.color,
         },
         text: {
           text: object.text.text,

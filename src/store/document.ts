@@ -39,7 +39,10 @@ export const documentState = atom<QueueDocument>({
         stroke: {
           width: 1,
           color: '#000000',
-          style: 'solid',
+          dashArray: 'solid',
+        },
+        fill: {
+          color: '#ffffff',
         },
         text: {
           text: 'Hello World',
@@ -96,7 +99,10 @@ export const documentState = atom<QueueDocument>({
         stroke: {
           width: 1,
           color: '#000000',
-          style: 'solid',
+          dashArray: 'solid',
+        },
+        fill: {
+          color: '#ffffff',
         },
         text: {
           text: 'Hello World',

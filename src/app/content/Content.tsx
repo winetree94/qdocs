@@ -84,9 +84,45 @@ export const Content: FunctionComponent = () => {
                     left: ${object.rect.x}px;
                     width: ${object.rect.width}px;
                     height: ${object.rect.height}px;
-                    background: red;
                   `}
-                ></div>
+                >
+                  <svg
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                    }}
+                    width={object.rect.width}
+                    height={object.rect.height}
+                  >
+                    <g>
+                      <rect
+                        width={object.rect.width}
+                        height={object.rect.height}
+                        fill={object.fill.color}
+                        stroke={object.stroke.color}
+                        strokeWidth={object.stroke.width}
+                        strokeDasharray={object.stroke.dashArray}
+                        x={0}
+                        y={0}
+                      ></rect>
+                    </g>
+                  </svg>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: object.rect.width,
+                      height: object.rect.height,
+                      display: 'flex',
+                      justifyContent: object.text.horizontalAlign,
+                      alignItems: object.text.verticalAlign,
+                    }}
+                  >
+                    {object.text.text}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
