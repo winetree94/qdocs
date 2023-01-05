@@ -5,35 +5,65 @@ import {
   RemoveEffect,
 } from './object';
 
-export interface QueueRect extends BaseObject {
+export interface QueueSquareRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface QueueSquareStroke {
+  style: 'solid' | 'dashed' | 'dotted';
+  width: number;
+  color: string;
+}
+
+export interface QueueSquareText {
+  text: string;
+  fontSize: number;
+  fontFamily: string;
+  fontColor: string;
+  verticalAlign: 'top' | 'middle' | 'bottom';
+  horizontalAlign: 'left' | 'center' | 'right';
+}
+
+export interface QueueSquare extends BaseObject {
   type: 'rect';
   uuid: string;
-  rect: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+  rect: QueueSquareRect;
+  stroke: QueueSquareStroke;
+  text: QueueSquareText;
 }
 
-export interface QueueRectMoveEffect extends BaseQueueEffect {
+export interface QueueSquareMoveEffect extends BaseQueueEffect {
   type: 'move';
-  rect: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
+  rect: QueueSquareRect;
 }
 
-export interface QueueRectWithEffect extends QueueRect {
-  effects: (CreateEffect | QueueRectMoveEffect | RemoveEffect)[];
+export interface QueueSquareStrokeEffect extends BaseQueueEffect {
+  type: 'stroke';
+  stroke: QueueSquareStroke;
+}
+
+export interface QueueSquareTextEffect extends BaseQueueEffect {
+  type: 'text';
+  text: QueueSquareText;
+}
+
+export interface QueueRectWithEffect extends QueueSquare {
+  effects: (
+    | CreateEffect
+    | QueueSquareMoveEffect
+    | QueueSquareStrokeEffect
+    | QueueSquareTextEffect
+    | RemoveEffect
+  )[];
 }
 
 export function getRectOfIndex(
   object: QueueRectWithEffect,
   index: number
-): QueueRect | null {
+): QueueSquare | null {
   const createEffect = object.effects.find(
     (effect) => effect.type === 'create'
   )!;
@@ -51,7 +81,7 @@ export function getRectOfIndex(
   );
   return restEffects
     .filter((effect) => effect.index <= index)
-    .reduce<QueueRect>(
+    .reduce<QueueSquare>(
       (object, effect) => {
         switch (effect.type) {
           case 'move': {
@@ -59,6 +89,21 @@ export function getRectOfIndex(
             object.rect.y = effect.rect.y;
             object.rect.width = effect.rect.width;
             object.rect.height = effect.rect.height;
+            break;
+          }
+          case 'stroke': {
+            object.stroke.style = effect.stroke.style;
+            object.stroke.width = effect.stroke.width;
+            object.stroke.color = effect.stroke.color;
+            break;
+          }
+          case 'text': {
+            object.text.text = effect.text.text;
+            object.text.fontSize = effect.text.fontSize;
+            object.text.fontFamily = effect.text.fontFamily;
+            object.text.fontColor = effect.text.fontColor;
+            object.text.verticalAlign = effect.text.verticalAlign;
+            object.text.horizontalAlign = effect.text.horizontalAlign;
             break;
           }
         }
@@ -72,6 +117,19 @@ export function getRectOfIndex(
           y: object.rect.y,
           width: object.rect.width,
           height: object.rect.height,
+        },
+        stroke: {
+          style: object.stroke.style,
+          width: object.stroke.width,
+          color: object.stroke.color,
+        },
+        text: {
+          text: object.text.text,
+          fontSize: object.text.fontSize,
+          fontFamily: object.text.fontFamily,
+          fontColor: object.text.fontColor,
+          verticalAlign: object.text.verticalAlign,
+          horizontalAlign: object.text.horizontalAlign,
         },
       }
     );

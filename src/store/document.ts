@@ -2,7 +2,7 @@ import { atom, selector, selectorFamily } from 'recoil';
 import { generateUUID } from '../cdk/functions/uuid';
 import {
   getRectOfIndex,
-  QueueRect,
+  QueueSquare,
   QueueRectWithEffect,
 } from '../model/object/rect';
 import { documentSettingsState } from './settings';
@@ -35,6 +35,19 @@ export const documentState = atom<QueueDocument>({
           y: 0,
           width: 300,
           height: 300,
+        },
+        stroke: {
+          width: 1,
+          color: '#000000',
+          style: 'solid',
+        },
+        text: {
+          text: 'Hello World',
+          fontSize: 24,
+          fontColor: '#000000',
+          fontFamily: 'Arial',
+          horizontalAlign: 'center',
+          verticalAlign: 'middle',
         },
         effects: [
           {
@@ -80,6 +93,19 @@ export const documentState = atom<QueueDocument>({
           width: 100,
           height: 100,
         },
+        stroke: {
+          width: 1,
+          color: '#000000',
+          style: 'solid',
+        },
+        text: {
+          text: 'Hello World',
+          fontSize: 24,
+          fontColor: '#000000',
+          fontFamily: 'Arial',
+          horizontalAlign: 'center',
+          verticalAlign: 'middle',
+        },
         effects: [
           {
             type: 'create',
@@ -121,7 +147,7 @@ export const documentState = atom<QueueDocument>({
 
 export interface Queue {
   index: number;
-  objects: QueueRect[];
+  objects: QueueSquare[];
 }
 
 export const queueObjectsByQueueIndexSelector = selectorFamily<
@@ -143,21 +169,21 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
       r.forEach((queue) => {
         queue.objects = document.objects
           .map((object) => getRectOfIndex(object, queue.index))
-          .filter((object) => object !== null) as QueueRect[];
+          .filter((object) => object !== null) as QueueSquare[];
       });
       return r;
     };
   },
 });
 
-export const currentQueueObjectsSelector = selector<QueueRect[]>({
+export const currentQueueObjectsSelector = selector<QueueSquare[]>({
   key: 'currentQueueObjects',
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
     const r = document.objects
       .map((object) => getRectOfIndex(object, settings.queueIndex))
-      .filter((object) => object !== null) as QueueRect[];
+      .filter((object) => object !== null) as QueueSquare[];
     return r;
   },
 });
