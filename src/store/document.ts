@@ -170,7 +170,6 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
           objects: [],
         });
       }
-
       const document = get(documentState);
       r.forEach((queue) => {
         queue.objects = document.objects

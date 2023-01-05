@@ -52,6 +52,7 @@ export const SubtoolbarLayout: FunctionComponent = () => {
     setSettings({
       ...settings,
       queueIndex: index,
+      queuePosition: 'pause',
     });
   };
 
@@ -59,6 +60,7 @@ export const SubtoolbarLayout: FunctionComponent = () => {
     setSettings({
       ...settings,
       queueIndex: Math.max(settings.queueIndex - 1, 0),
+      queuePosition: settings.queueIndex - 1 >= 0 ? 'backward' : 'pause',
     });
   };
 
@@ -66,6 +68,7 @@ export const SubtoolbarLayout: FunctionComponent = () => {
     setSettings({
       ...settings,
       queueIndex: settings.queueIndex + 1,
+      queuePosition: 'forward',
     });
   };
 

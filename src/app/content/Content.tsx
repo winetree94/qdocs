@@ -3,10 +3,11 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Drawable } from '../../cdk/draw/Draw';
+import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import {
   documentState,
   currentQueueObjectsSelector,
+  queueObjectsByQueueIndexSelector,
 } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 
@@ -32,10 +33,15 @@ export const Content: FunctionComponent = () => {
     console.log(event);
   };
 
+  const onDrawEnd = (event: DrawEvent): void => {
+    console.log('end', event);
+  };
+
   return (
     <Drawable
       scale={settings.scale}
       drawer={<Selector></Selector>}
+      onDrawEnd={(e): void => onDrawEnd(e)}
       className={css`
         flex: 1;
         background: #e9eaed;
