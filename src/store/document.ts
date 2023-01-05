@@ -71,6 +71,50 @@ export const documentState = atom<QueueDocument>({
           },
         ],
       },
+      {
+        type: 'rect',
+        uuid: generateUUID(),
+        rect: {
+          x: 500,
+          y: 500,
+          width: 100,
+          height: 100,
+        },
+        effects: [
+          {
+            type: 'create',
+            duration: 0,
+            index: 2,
+          },
+          {
+            type: 'move',
+            duration: 1000,
+            index: 3,
+            rect: {
+              x: 1000,
+              y: 600,
+              width: 300,
+              height: 300,
+            },
+          },
+          {
+            type: 'move',
+            duration: 1000,
+            index: 4,
+            rect: {
+              x: 1000,
+              y: 100,
+              width: 100,
+              height: 100,
+            },
+          },
+          {
+            type: 'remove',
+            duration: 2000,
+            index: 5,
+          },
+        ],
+      },
     ],
   },
 });
