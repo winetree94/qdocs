@@ -8,6 +8,7 @@ import {
   useState,
   useRef,
   forwardRef,
+  MouseEvent,
 } from 'react';
 import { useRecoilValue } from 'recoil';
 import { animate, linear } from '../../cdk/animation/animate';
@@ -20,6 +21,7 @@ import {
   QueueSquareWithEffect,
 } from '../../model/object/rect';
 import { documentSettingsState } from '../../store/settings';
+import styles from './Object.module.scss';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -35,6 +37,9 @@ export interface QueueObjectProps {
   selected?: boolean;
   index: number;
   children?: ReactNode;
+  onMousedown?: (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => void;
   object: QueueSquareWithEffect;
 }
 
@@ -49,7 +54,7 @@ export const Animator: FunctionComponent = () => {
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   QueueObjectRef,
   QueueObjectProps
->(({ children, object, selected }, ref) => {
+>(({ children, object, selected, onMousedown }, ref) => {
   const [frame, setFrame] = useState<number>(0);
   const moveEffect = object.effects.find(
     (effect): effect is QueueSquareMoveEffect => effect.type === 'move'
@@ -58,6 +63,14 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   const container = useRef<HTMLDivElement>(null);
   const settings = useRecoilValue(documentSettingsState);
   const targetRect = moveEffect?.rect ?? targetObject.rect;
+
+  const onContainerMousedown = (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ): void => {
+    if (onMousedown) {
+      onMousedown(event);
+    }
+  };
 
   const anim = (): void => {
     if (!moveEffect) {
@@ -109,7 +122,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
     element.style.width = targetRect.width + 'px';
     element.style.height = targetRect.height + 'px';
     return () => cancelAnimationFrame(frame);
-  });
+  }, [targetRect, frame]);
 
   useLayoutEffect(() => {
     if (settings.queuePosition === 'forward') {
@@ -120,20 +133,14 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   return (
     <div
       ref={container}
-      className={css`
-        position: absolute;
-        background: red;
-      `}
+      className={styles.container}
+      onMouseDown={onContainerMousedown}
     >
-      <div>
-        {children}
-        {selected && (
-          <Resizer
-            width={targetRect.width}
-            height={targetRect.height}
-          ></Resizer>
-        )}
-      </div>
+      <div className={styles.object}></div>
+      <div className={styles.text}>{children}</div>
+      {selected && (
+        <Resizer width={targetRect.width} height={targetRect.height}></Resizer>
+      )}
     </div>
   );
 });

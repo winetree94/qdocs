@@ -84,7 +84,6 @@ export function getSumRect(
   sliced.rect = {
     ...moveEffect.rect,
   };
-  console.log(object, sliced);
   return sliced;
 }
 

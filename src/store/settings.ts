@@ -14,7 +14,7 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
     queueIndex: 0,
     queuePosition: 'forward',
     selectedObjects: [],
-    scale: 1,
+    scale: 0.25,
     presentationMode: false,
   },
   effects: [
