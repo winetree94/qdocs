@@ -1,12 +1,61 @@
 import { css } from '@emotion/css';
 import { FunctionComponent } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Input } from '../../components/input/Input';
 import { Object } from '../../components/object/Object';
 import { ObjectGrid } from '../../components/object/ObjectGrid';
 import { ObjectGroup } from '../../components/object/ObjectGroup';
 import { ObjectGroupTitle } from '../../components/object/ObjectGroupTitle';
+import { documentSettingsState } from '../../store/settings';
+import { documentState } from '../../store/document';
+import { generateUUID } from '../../cdk/functions/uuid';
 
 export const LeftPanel: FunctionComponent = () => {
+  const [document, setDocument] = useRecoilState(documentState);
+  const settings = useRecoilValue(documentSettingsState);
+
+  const createSquare = (): void => {
+    setDocument({
+      ...document,
+      objects: [
+        ...document.objects,
+        {
+          type: 'rect',
+          uuid: generateUUID(),
+          rect: {
+            x: 0,
+            y: 0,
+            width: 300,
+            height: 300,
+          },
+          stroke: {
+            width: 1,
+            color: '#000000',
+            dashArray: 'solid',
+          },
+          fill: {
+            color: '#ffffff',
+          },
+          text: {
+            text: 'Hello World',
+            fontSize: 24,
+            fontColor: '#000000',
+            fontFamily: 'Arial',
+            horizontalAlign: 'center',
+            verticalAlign: 'middle',
+          },
+          effects: [
+            {
+              type: 'create',
+              duration: 0,
+              index: settings.queueIndex,
+            },
+          ],
+        },
+      ],
+    });
+  };
+
   return (
     <div
       className={css`
@@ -27,7 +76,7 @@ export const LeftPanel: FunctionComponent = () => {
       <ObjectGroup>
         <ObjectGroupTitle>Group Title</ObjectGroupTitle>
         <ObjectGrid>
-          <Object>
+          <Object onClick={createSquare}>
             <svg
               version="1.1"
               baseProfile="full"
