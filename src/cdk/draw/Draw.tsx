@@ -2,15 +2,15 @@ import { css } from '@emotion/css';
 import { FunctionComponent, ReactNode, useRef, useState } from 'react';
 
 export interface DrawEvent {
-  // relative
-  offsetX: number;
-  offestY: number;
   // fixed
   clientX: number;
   clientY: number;
+
+  drawClientX: number;
+  drawClientY: number;
   // adjusted
-  drawX: number;
-  drawY: number;
+  drawOffsetX: number;
+  drawOffsetY: number;
   // container
   width: number;
   height: number;
@@ -59,29 +59,31 @@ export const Drawable: FunctionComponent<DrawProps> = ({
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
   const onMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ): void => {
     if (!container.current) {
       return;
     }
     const containerRect = container.current.getBoundingClientRect();
-    const initX = event.clientX - containerRect.x;
-    const initY = event.clientY - containerRect.y;
+    const initClientX = initEvent.clientX;
+    const initClientY = initEvent.clientY;
+    const initOffsetX = initEvent.clientX - containerRect.x;
+    const initOffsetY = initEvent.clientY - containerRect.y;
 
     setPosition({
-      x: initX,
-      y: initY,
+      x: initOffsetX,
+      y: initOffsetY,
       width: 0,
       height: 0,
     });
 
     onDrawStart?.({
-      offsetX: initX,
-      offestY: initY,
-      clientX: event.clientX,
-      clientY: event.clientY,
-      drawX: initX,
-      drawY: initY,
+      clientX: initEvent.clientX,
+      clientY: initEvent.clientY,
+      drawClientX: initClientX,
+      drawClientY: initClientY,
+      drawOffsetX: initOffsetX,
+      drawOffsetY: initOffsetY,
       width: 0,
       height: 0,
     });
@@ -89,27 +91,29 @@ export const Drawable: FunctionComponent<DrawProps> = ({
     const mover = (event: MouseEvent): void => {
       setIsDrawing(true);
 
-      const movedX = event.clientX - containerRect.x - initX;
-      const movedY = event.clientY - containerRect.y - initY;
-      const startX = movedX >= 0 ? initX : initX + movedX;
-      const startY = movedY >= 0 ? initY : initY + movedY;
+      const movedX = event.clientX - containerRect.x - initOffsetX;
+      const movedY = event.clientY - containerRect.y - initOffsetY;
+      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
+      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
+      const startOffsetX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
+      const startOfssetY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
       const width = Math.abs(movedX);
       const height = Math.abs(movedY);
 
       setPosition({
-        x: startX,
-        y: startY,
+        x: startOffsetX,
+        y: startOfssetY,
         width: width,
         height: height,
       });
 
       onDrawMove?.({
-        offsetX: startX,
-        offestY: startY,
+        drawOffsetX: startOffsetX,
+        drawOffsetY: startOfssetY,
+        drawClientX: startClientX,
+        drawClientY: startClientY,
         clientX: event.clientX,
         clientY: event.clientY,
-        drawX: startX,
-        drawY: startY,
         width: width,
         height: height,
       });
@@ -120,20 +124,22 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       document.removeEventListener('mousemove', mover);
       setIsDrawing(false);
 
-      const movedX = event.clientX - containerRect.x - initX;
-      const movedY = event.clientY - containerRect.y - initY;
-      const startX = movedX >= 0 ? initX : initX + movedX;
-      const startY = movedY >= 0 ? initY : initY + movedY;
+      const movedX = event.clientX - containerRect.x - initOffsetX;
+      const movedY = event.clientY - containerRect.y - initOffsetY;
+      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
+      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
+      const startX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
+      const startY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
       const width = Math.abs(movedX);
       const height = Math.abs(movedY);
 
       onDrawEnd?.({
-        offsetX: startX,
-        offestY: startY,
         clientX: event.clientX,
         clientY: event.clientY,
-        drawX: startX,
-        drawY: startY,
+        drawOffsetX: startX,
+        drawOffsetY: startY,
+        drawClientX: startClientX,
+        drawClientY: startClientY,
         width: width,
         height: height,
       });

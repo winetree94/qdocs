@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import { FunctionComponent, MouseEvent, useEffect } from 'react';
+import { FunctionComponent, MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../../components/queue/Object';
@@ -21,8 +21,9 @@ const Selector = styled.div`
 
 export const Content: FunctionComponent = () => {
   const objects = useRecoilValue(currentQueueObjectsSelector);
+  const canvasDiv = useRef<HTMLDivElement>(null);
   const [document] = useRecoilState(documentState);
-  const settings = useRecoilValue(documentSettingsState);
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   useEffect(() => {
     console.log(settings.queueIndex, settings.queuePosition);
@@ -35,7 +36,30 @@ export const Content: FunctionComponent = () => {
   };
 
   const onDrawEnd = (event: DrawEvent): void => {
-    console.log('end', event);
+    if (!canvasDiv.current) {
+      return;
+    }
+
+    const rect = canvasDiv.current.getBoundingClientRect();
+    const scale = 1 / settings.scale;
+    const x = (event.drawClientX - rect.x) * scale;
+    const y = (event.drawClientY - rect.y) * scale;
+    const width = event.width * scale;
+    const height = event.height * scale;
+    const selectedObjects = objects.filter((object) => {
+      const rect = object.rect;
+      return (
+        rect.x >= x &&
+        rect.y >= y &&
+        rect.x + rect.width <= x + width &&
+        rect.y + rect.height <= y + height
+      );
+    });
+
+    setSettings({
+      ...settings,
+      selectedObjects: selectedObjects.map((object) => object.uuid),
+    });
   };
 
   return (
@@ -71,6 +95,7 @@ export const Content: FunctionComponent = () => {
             `}
           >
             <div
+              ref={canvasDiv}
               className={css`
                 position: relative;
                 border: 1px solid gray;
@@ -86,6 +111,7 @@ export const Content: FunctionComponent = () => {
                 <QueueObject
                   key={object.uuid}
                   index={settings.queueIndex}
+                  selected={settings.selectedObjects.includes(object.uuid)}
                   object={object}
                 ></QueueObject>
               ))}

@@ -1,0 +1,24 @@
+.canvas {
+  // @apply py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-orange-500 hover:bg-orange-600;
+  position: absolute;
+}
+
+.topLeft,
+.bottomRight {
+  cursor: nwse-resize;
+}
+
+.topMiddle,
+.bottomMiddle {
+  cursor: ns-resize;
+}
+
+.topRight,
+.bottomLeft {
+  cursor: nesw-resize;
+}
+
+.middleLeft,
+.middleRight {
+  cursor: ew-resize;
+}

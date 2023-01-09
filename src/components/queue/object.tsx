@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { useRecoilValue } from 'recoil';
 import { animate, linear } from '../../cdk/animation/animate';
+import { Resizer } from '../../cdk/resizer/Resizer';
 import {
   getSumRect,
   QueueSquare,
@@ -31,6 +32,7 @@ export const QueueObjectContext = createContext<QueueObjectContextType>({
 });
 
 export interface QueueObjectProps {
+  selected?: boolean;
   index: number;
   children?: ReactNode;
   object: QueueSquareWithEffect;
@@ -47,7 +49,7 @@ export const Animator: FunctionComponent = () => {
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   QueueObjectRef,
   QueueObjectProps
->(({ children, object }, ref) => {
+>(({ children, object, selected }, ref) => {
   const [frame, setFrame] = useState<number>(0);
   const moveEffect = object.effects.find(
     (effect): effect is QueueSquareMoveEffect => effect.type === 'move'
@@ -55,6 +57,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   const targetObject = getSumRect(object);
   const container = useRef<HTMLDivElement>(null);
   const settings = useRecoilValue(documentSettingsState);
+  const targetRect = moveEffect?.rect ?? targetObject.rect;
 
   const anim = (): void => {
     if (!moveEffect) {
@@ -101,7 +104,6 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
       return;
     }
     const element = container.current;
-    const targetRect = moveEffect?.rect ?? targetObject.rect;
     element.style.left = targetRect.x + 'px';
     element.style.top = targetRect.y + 'px';
     element.style.width = targetRect.width + 'px';
@@ -116,22 +118,23 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   }, [settings.queueIndex, settings.queuePosition]);
 
   return (
-    <QueueObjectContext.Provider
-      value={{
-        to: null,
-        animate: () => null,
-      }}
+    <div
+      ref={container}
+      className={css`
+        position: absolute;
+        background: red;
+      `}
     >
-      <div
-        ref={container}
-        className={css`
-          position: absolute;
-          background: red;
-        `}
-      >
+      <div>
         {children}
+        {selected && (
+          <Resizer
+            width={targetRect.width}
+            height={targetRect.height}
+          ></Resizer>
+        )}
       </div>
-    </QueueObjectContext.Provider>
+    </div>
   );
 });
 

@@ -3,6 +3,7 @@ import { atom } from 'recoil';
 export interface QueueDocumentSettings {
   queueIndex: number;
   queuePosition: 'forward' | 'backward' | 'pause';
+  selectedObjects: string[];
   scale: number;
   presentationMode: boolean;
 }
@@ -12,7 +13,8 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
   default: {
     queueIndex: 0,
     queuePosition: 'forward',
-    scale: 0.25,
+    selectedObjects: [],
+    scale: 1,
     presentationMode: false,
   },
   effects: [
