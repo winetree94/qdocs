@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Button } from '../../components/button/Button';
 import { queueObjectsByQueueIndexSelector } from '../../store/document';
@@ -22,10 +22,6 @@ export const SubtoolbarLayout: FunctionComponent = () => {
       end: start + 4,
     })
   );
-
-  useEffect(() => {
-    console.log(queues);
-  }, [queues]);
 
   const increaseScale = (): void => {
     setSettings({

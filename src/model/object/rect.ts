@@ -71,10 +71,27 @@ export interface QueueSquareWithEffect extends QueueSquare {
   )[];
 }
 
+export function getSumRect(
+  object: QueueSquareWithEffect
+): QueueSquareWithEffect {
+  const sliced: QueueSquareWithEffect = { ...object };
+  const moveEffect = object.effects
+    // .filter((effect) => effect.index === index)
+    .find((effect) => effect.type === 'move') as QueueSquareMoveEffect;
+  if (!moveEffect) {
+    return object;
+  }
+  sliced.rect = {
+    ...moveEffect.rect,
+  };
+  console.log(object, sliced);
+  return sliced;
+}
+
 export function getRectOfIndex(
   object: QueueSquareWithEffect,
   index: number
-): QueueSquare | null {
+): QueueSquareWithEffect | null {
   const createEffect = object.effects.find(
     (effect) => effect.type === 'create'
   )!;
@@ -90,9 +107,9 @@ export function getRectOfIndex(
   const restEffects = object.effects.filter(
     (effect) => effect.type !== 'create' && effect.type !== 'remove'
   );
-  return restEffects
-    .filter((effect) => effect.index <= index)
-    .reduce<QueueSquare>(
+  const result = restEffects
+    .filter((effect) => effect.index < index)
+    .reduce<QueueSquareWithEffect>(
       (object, effect) => {
         switch (effect.type) {
           case 'move': {
@@ -145,6 +162,9 @@ export function getRectOfIndex(
           verticalAlign: object.text.verticalAlign,
           horizontalAlign: object.text.horizontalAlign,
         },
+        effects: [],
       }
     );
+  result.effects = object.effects.filter((effect) => effect.index === index);
+  return result;
 }

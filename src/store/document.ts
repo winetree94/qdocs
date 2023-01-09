@@ -60,7 +60,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'move',
-            duration: 1000,
+            duration: 200,
             index: 2,
             rect: {
               x: 100,
@@ -181,35 +181,14 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
   },
 });
 
-export const currentQueueObjectsSelector = selector<
-  {
-    from: QueueSquare | null;
-    to: QueueSquare;
-  }[]
->({
+export const currentQueueObjectsSelector = selector<QueueSquareWithEffect[]>({
   key: 'currentQueueObjects',
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
     const result = document.objects
-      .map((object) => {
-        const toObject = getRectOfIndex(object, settings.queueIndex);
-        const fromObject =
-          settings.queuePosition === 'pause'
-            ? null
-            : settings.queuePosition === 'forward'
-            ? getRectOfIndex(object, settings.queueIndex - 1)
-            : getRectOfIndex(object, settings.queueIndex + 1);
-        return {
-          from: fromObject,
-          to: toObject,
-        };
-      })
-      .filter((object) => object.to !== null) as {
-      from: QueueSquare | null;
-      to: QueueSquare;
-    }[];
-    console.log(result);
+      .map((object) => getRectOfIndex(object, settings.queueIndex))
+      .filter((object) => object !== null) as QueueSquareWithEffect[];
     return result;
   },
 });

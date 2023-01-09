@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { FunctionComponent, MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObject } from '../../components/queue/object';
+import { QueueObject } from '../../components/queue/Object';
 import {
   documentState,
   currentQueueObjectsSelector,
@@ -25,8 +25,8 @@ export const Content: FunctionComponent = () => {
   const settings = useRecoilValue(documentSettingsState);
 
   useEffect(() => {
-    console.log(settings.scale);
-  }, [settings]);
+    console.log(settings.queueIndex, settings.queuePosition);
+  }, [settings.queueIndex, settings.queuePosition]);
 
   const onMousedown = (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -84,56 +84,10 @@ export const Content: FunctionComponent = () => {
             >
               {objects.map((object) => (
                 <QueueObject
-                  key={object.to.uuid}
-                  object={object.to}
+                  key={object.uuid}
+                  index={settings.queueIndex}
+                  object={object}
                 ></QueueObject>
-                // <div
-                //   key={object.to.uuid}
-                //   className={css`
-                //     position: absolute;
-                //     top: ${object.to.rect.y}px;
-                //     left: ${object.to.rect.x}px;
-                //     width: ${object.to.rect.width}px;
-                //     height: ${object.to.rect.height}px;
-                //   `}
-                // >
-                //   <svg
-                //     style={{
-                //       position: 'absolute',
-                //       top: 0,
-                //       left: 0,
-                //     }}
-                //     width={object.to.rect.width}
-                //     height={object.to.rect.height}
-                //   >
-                //     <g>
-                //       <rect
-                //         width={object.to.rect.width}
-                //         height={object.to.rect.height}
-                //         fill={object.to.fill.color}
-                //         stroke={object.to.stroke.color}
-                //         strokeWidth={object.to.stroke.width}
-                //         strokeDasharray={object.to.stroke.dashArray}
-                //         x={0}
-                //         y={0}
-                //       ></rect>
-                //     </g>
-                //   </svg>
-                //   <div
-                //     style={{
-                //       position: 'absolute',
-                //       top: 0,
-                //       left: 0,
-                //       width: object.to.rect.width,
-                //       height: object.to.rect.height,
-                //       display: 'flex',
-                //       justifyContent: object.to.text.horizontalAlign,
-                //       alignItems: object.to.text.verticalAlign,
-                //     }}
-                //   >
-                //     {object.to.text.text}
-                //   </div>
-                // </div>
               ))}
             </div>
           </div>
