@@ -9,13 +9,19 @@ import {
 import { Popover } from '../../components/popover/Popover';
 import { Toolbar, ToolbarItem } from '../../components/toolbar/Toolbar';
 
-interface ToolbarModel {
+export interface ToolbarModel {
   opened?: boolean;
   label: string;
   node: ReactNode;
 }
 
-export const ToolbarLayout: FunctionComponent = () => {
+export interface ToolbarProps {
+  onItemClicked?: (item: ToolbarModel) => void;
+}
+
+export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
+  onItemClicked,
+}) => {
   const items: ToolbarModel[] = [
     {
       label: 'File',

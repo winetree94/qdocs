@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import { FunctionComponent, MouseEvent, useEffect, useRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObject } from '../queue/Object';
 import {
-  documentState,
-  currentQueueObjectsSelector,
-  queueObjectsByQueueIndexSelector,
-} from '../../store/document';
-import { documentSettingsState } from '../../store/settings';
+  createContext,
+  forwardRef,
+  MouseEvent,
+  useImperativeHandle,
+  useRef,
+} from 'react';
+import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
+import { QueueObject } from '../queue/EditableObject';
+import { QueueDocumentRect } from '../../store/document';
+import { QueueSquareWithEffect } from '../../model/object/rect';
+import { Scaler } from '../scaler/Scaler';
 
 const Selector = styled.div`
   width: 100%;
@@ -19,76 +21,172 @@ const Selector = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-export const Editor: FunctionComponent = () => {
-  const objects = useRecoilValue(currentQueueObjectsSelector);
-  const canvasDiv = useRef<HTMLDivElement>(null);
-  const [document] = useRecoilState(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+export interface QueueEditorContextType {
+  selectedObjectIds: string[];
+  queueIndex: number;
+  scale: number;
+  documentRect: QueueDocumentRect;
+  objects: QueueSquareWithEffect[];
+}
 
-  const onMousedown = (
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ): void => {
-    // console.log(event);
-  };
+export const QueueEditorContext = createContext<QueueEditorContextType>({
+  selectedObjectIds: [],
+  queueIndex: 0,
+  scale: 1,
+  documentRect: {
+    width: 0,
+    height: 0,
+  },
+  objects: [],
+});
 
-  const onDrawEnd = (event: DrawEvent): void => {
-    if (!canvasDiv.current) {
-      return;
-    }
+export interface QueueEditorProps {
+  /**
+   * @description
+   * 현재 큐 인덱스
+   */
+  queueIndex?: number;
 
-    const rect = canvasDiv.current.getBoundingClientRect();
-    const scale = 1 / settings.scale;
-    const x = (event.drawClientX - rect.x) * scale;
-    const y = (event.drawClientY - rect.y) * scale;
-    const width = event.width * scale;
-    const height = event.height * scale;
-    const selectedObjects = objects.filter((object) => {
-      const rect = object.rect;
-      return (
-        rect.x >= x &&
-        rect.y >= y &&
-        rect.x + rect.width <= x + width &&
-        rect.y + rect.height <= y + height
-      );
-    });
+  /**
+   * @description
+   * 문서 크기
+   *
+   *  @default { width: 0, height: 0 }
+   */
+  documentRect?: QueueDocumentRect;
 
-    setSettings({
-      ...settings,
-      selectedObjects: selectedObjects.map((object) => object.uuid),
-    });
-  };
+  /**
+   * @description
+   * 스케일
+   *
+   * @default 1
+   */
+  scale?: number;
 
-  return (
-    <Drawable
-      scale={settings.scale}
-      drawer={<Selector></Selector>}
-      onDrawEnd={(e): void => onDrawEnd(e)}
-      className={css`
-        flex: 1;
-        background: #e9eaed;
-        overflow: auto;
-        display: flex;
-      `}
-    >
-      <div
-        style={{
-          padding: '10px',
-          margin: 'auto',
-        }}
+  /**
+   * @description
+   * 큐 오브젝트
+   *
+   * @default []
+   */
+  objects?: QueueSquareWithEffect[];
+
+  /**
+   * @description
+   * 큐 애니메이션 종료 시 이벤트
+   */
+  onAnimationEnd?: () => void;
+}
+
+export interface QueueEditorRef {
+  /**
+   * @description
+   * 현재 큐의 애니메이션 재생
+   *
+   * @param reverse - 역재생 여부
+   */
+  animate(reverse?: boolean): void;
+
+  /**
+   * @description
+   * 큐 자동 재생
+   */
+  play(): void;
+
+  /**
+   * @description
+   * 현재 큐에서 id 가 일치하는 오브젝트를 선택
+   *
+   * @param ids - 선택할 오브젝트 아이디
+   */
+  select(ids: string[]): void;
+}
+
+export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
+  (
+    {
+      queueIndex = 0,
+      objects = [],
+      documentRect = { width: 0, height: 0 },
+      scale = 1,
+    },
+    ref
+  ) => {
+    const canvasDiv = useRef<HTMLDivElement>(null);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        animate: (): void => {
+          return;
+        },
+        play: (): void => {
+          return;
+        },
+        select: (): void => {
+          return;
+        },
+      }),
+      []
+    );
+
+    const onMousedown = (
+      event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    ): void => {
+      // console.log(event);
+    };
+
+    const onDrawEnd = (event: DrawEvent): void => {
+      if (!canvasDiv.current) {
+        return;
+      }
+
+      const rect = canvasDiv.current.getBoundingClientRect();
+      const absScale = 1 / scale;
+      const x = (event.drawClientX - rect.x) * absScale;
+      const y = (event.drawClientY - rect.y) * absScale;
+      const width = event.width * absScale;
+      const height = event.height * absScale;
+      const selectedObjects = objects.filter((object) => {
+        const rect = object.rect;
+        return (
+          rect.x >= x &&
+          rect.y >= y &&
+          rect.x + rect.width <= x + width &&
+          rect.y + rect.height <= y + height
+        );
+      });
+      // setSettings({
+      //   ...settings,
+      //   selectedObjects: selectedObjects.map((object) => object.uuid),
+      // });
+    };
+
+    return (
+      <Drawable
+        scale={scale}
+        drawer={<Selector></Selector>}
+        onDrawEnd={(e): void => onDrawEnd(e)}
+        className={css`
+          flex: 1;
+          background: #e9eaed;
+          overflow: auto;
+          display: flex;
+        `}
       >
-        <div
-          style={{
-            width: document.documentRect.width * settings.scale,
-            height: document.documentRect.height * settings.scale,
-            background: 'white',
-            flexShrink: 0,
-          }}
+        <Scaler
+          width={documentRect.width}
+          height={documentRect.height}
+          scale={scale}
         >
-          <div
-            className={css`
-              transform-origin: 0 0;
-              transform: scale(${settings.scale});
-            `}
+          <QueueEditorContext.Provider
+            value={{
+              selectedObjectIds: [],
+              documentRect: documentRect,
+              scale: scale,
+              queueIndex: queueIndex,
+              objects: objects,
+            }}
           >
             <div
               ref={canvasDiv}
@@ -99,23 +197,22 @@ export const Editor: FunctionComponent = () => {
                 background: white;
               `}
               style={{
-                width: document.documentRect.width,
-                height: document.documentRect.height,
+                width: documentRect.width,
+                height: documentRect.height,
               }}
             >
               {objects.map((object) => (
                 <QueueObject
                   key={object.uuid}
-                  position={settings.queuePosition}
-                  index={settings.queueIndex}
-                  selected={settings.selectedObjects.includes(object.uuid)}
+                  position={'forward'}
+                  index={queueIndex}
                   object={object}
                 ></QueueObject>
               ))}
             </div>
-          </div>
-        </div>
-      </div>
-    </Drawable>
-  );
-};
+          </QueueEditorContext.Provider>
+        </Scaler>
+      </Drawable>
+    );
+  }
+);

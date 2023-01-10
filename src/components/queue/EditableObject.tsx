@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { css } from '@emotion/css';
 import {
   createContext,
   FunctionComponent,
@@ -9,9 +8,8 @@ import {
   useRef,
   forwardRef,
   MouseEvent,
-  DependencyList,
+  useContext,
 } from 'react';
-import { useRecoilValue } from 'recoil';
 import { animate, linear } from '../../cdk/animation/animate';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import {
@@ -22,8 +20,8 @@ import {
   QueueSquareRect,
   QueueSquareWithEffect,
 } from '../../model/object/rect';
-import { documentSettingsState } from '../../store/settings';
-import styles from './Object.module.scss';
+import { QueueEditorContext } from '../editor/Editor';
+import styles from './EditableObject.module.scss';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -191,7 +189,7 @@ export const getFadeAnimation = (
   };
 };
 
-const useAnimate = (callback: () => void, deps: DependencyList): void => {
+const useAnimate = (callback: () => void): void => {
   const ref = useRef<number>(0);
   useLayoutEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -202,150 +200,150 @@ const useAnimate = (callback: () => void, deps: DependencyList): void => {
   }, [callback]);
 };
 
-export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
-  QueueObjectRef,
-  QueueObjectProps
->(({ children, object, selected, index, onMousedown, position }, ref) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const objectRef = useRef<HTMLDivElement>(null);
+export const QueueObject = forwardRef<QueueObjectRef, QueueObjectProps>(
+  ({ children, object, selected, index, onMousedown, position }, ref) => {
+    const editorContext = useContext(QueueEditorContext);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const objectRef = useRef<HTMLDivElement>(null);
 
-  const [rectFrame, setRectFrame] = useState<number>(0);
-  const [fadeFrame, setFadeFrame] = useState<number>(0);
-  const currentFade = getCurrentFade(object, index);
-  const currentRect = getCurrentRect(object, index);
+    const [rectFrame, setRectFrame] = useState<number>(0);
+    const [fadeFrame, setFadeFrame] = useState<number>(0);
+    const currentFade = getCurrentFade(object, index);
+    const currentRect = getCurrentRect(object, index);
 
-  const rectAnimation = getRectAnimation(object, index, position);
-  const fadeAnimation = getFadeAnimation(object, index, position);
-  const settings = useRecoilValue(documentSettingsState);
+    const rectAnimation = getRectAnimation(object, index, position);
+    const fadeAnimation = getFadeAnimation(object, index, position);
 
-  const onContainerMousedown = (
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ): void => {
-    if (onMousedown) {
-      onMousedown(event);
-    }
-  };
+    const onContainerMousedown = (
+      event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    ): void => {
+      if (onMousedown) {
+        onMousedown(event);
+      }
+    };
 
-  const animateRect = (): void => {
-    cancelAnimationFrame(rectFrame);
-    if (!rectAnimation) {
-      return;
-    }
-    if (!containerRef.current) {
-      return;
-    }
+    const animateRect = (): void => {
+      cancelAnimationFrame(rectFrame);
+      if (!rectAnimation) {
+        return;
+      }
+      if (!containerRef.current) {
+        return;
+      }
 
-    const element = containerRef.current;
-    element.style.left = rectAnimation.fromRect.x + 'px';
-    element.style.top = rectAnimation.fromRect.y + 'px';
-    element.style.width = rectAnimation.fromRect.width + 'px';
-    element.style.height = rectAnimation.fromRect.height + 'px';
-
-    const createdFrame = animate({
-      duration: rectAnimation.moveEffect.duration,
-      timing: linear,
-      draw: (progress) => {
-        element.style.left =
-          rectAnimation.fromRect.x +
-          (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
-            progress +
-          'px';
-        element.style.top =
-          rectAnimation.fromRect.y +
-          (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
-            progress +
-          'px';
-        element.style.width =
-          rectAnimation.fromRect.width +
-          (rectAnimation.moveEffect.rect.width - rectAnimation.fromRect.width) *
-            progress +
-          'px';
-        element.style.height =
-          rectAnimation.fromRect.width +
-          (rectAnimation.moveEffect.rect.height -
-            rectAnimation.fromRect.height) *
-            progress +
-          'px';
-      },
-    });
-
-    setRectFrame(createdFrame);
-  };
-
-  const animateFade = (): void => {
-    cancelAnimationFrame(fadeFrame);
-    if (!fadeAnimation) {
-      return;
-    }
-    if (!objectRef.current) {
-      return;
-    }
-
-    const element = objectRef.current;
-    element.style.opacity = `${fadeAnimation.fromFade.opacity}`;
-
-    const createdFrame = animate({
-      duration: fadeAnimation.fadeEffect.duration,
-      timing: linear,
-      draw: (progress) => {
-        element.style.opacity =
-          fadeAnimation.fromFade.opacity +
-          (fadeAnimation.fadeEffect.fade.opacity -
-            fadeAnimation.fromFade.opacity) *
-            progress +
-          '';
-      },
-    });
-
-    setFadeFrame(createdFrame);
-  };
-
-  useLayoutEffect(() => {
-    if (containerRef.current) {
       const element = containerRef.current;
-      element.style.left = currentRect.x + 'px';
-      element.style.top = currentRect.y + 'px';
-      element.style.width = currentRect.width + 'px';
-      element.style.height = currentRect.height + 'px';
-    }
-    if (objectRef.current) {
+      element.style.left = rectAnimation.fromRect.x + 'px';
+      element.style.top = rectAnimation.fromRect.y + 'px';
+      element.style.width = rectAnimation.fromRect.width + 'px';
+      element.style.height = rectAnimation.fromRect.height + 'px';
+
+      const createdFrame = animate({
+        duration: rectAnimation.moveEffect.duration,
+        timing: linear,
+        draw: (progress) => {
+          element.style.left =
+            rectAnimation.fromRect.x +
+            (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
+              progress +
+            'px';
+          element.style.top =
+            rectAnimation.fromRect.y +
+            (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
+              progress +
+            'px';
+          element.style.width =
+            rectAnimation.fromRect.width +
+            (rectAnimation.moveEffect.rect.width -
+              rectAnimation.fromRect.width) *
+              progress +
+            'px';
+          element.style.height =
+            rectAnimation.fromRect.width +
+            (rectAnimation.moveEffect.rect.height -
+              rectAnimation.fromRect.height) *
+              progress +
+            'px';
+        },
+      });
+
+      setRectFrame(createdFrame);
+    };
+
+    const animateFade = (): void => {
+      cancelAnimationFrame(fadeFrame);
+      if (!fadeAnimation) {
+        return;
+      }
+      if (!objectRef.current) {
+        return;
+      }
+
       const element = objectRef.current;
-      element.style.opacity = `${currentFade.opacity}`;
-    }
-    return () => cancelAnimationFrame(rectFrame);
-  }, [currentRect, rectFrame, currentFade]);
+      element.style.opacity = `${fadeAnimation.fromFade.opacity}`;
 
-  useLayoutEffect(() => {
-    animateRect();
-    animateFade();
-  }, [settings.queueIndex, settings.queuePosition]);
+      const createdFrame = animate({
+        duration: fadeAnimation.fadeEffect.duration,
+        timing: linear,
+        draw: (progress) => {
+          element.style.opacity =
+            fadeAnimation.fromFade.opacity +
+            (fadeAnimation.fadeEffect.fade.opacity -
+              fadeAnimation.fromFade.opacity) *
+              progress +
+            '';
+        },
+      });
 
-  return (
-    <div
-      ref={containerRef}
-      className={styles.container}
-      onMouseDown={onContainerMousedown}
-    >
+      setFadeFrame(createdFrame);
+    };
+
+    useLayoutEffect(() => {
+      if (containerRef.current) {
+        const element = containerRef.current;
+        element.style.left = currentRect.x + 'px';
+        element.style.top = currentRect.y + 'px';
+        element.style.width = currentRect.width + 'px';
+        element.style.height = currentRect.height + 'px';
+      }
+      if (objectRef.current) {
+        const element = objectRef.current;
+        element.style.opacity = `${currentFade.opacity}`;
+      }
+      return (): void => cancelAnimationFrame(rectFrame);
+    }, [currentRect, rectFrame, currentFade]);
+
+    useLayoutEffect(() => {
+      animateRect();
+      animateFade();
+    }, [editorContext.queueIndex]);
+
+    return (
       <div
-        ref={objectRef}
-        style={{
-          background: 'red',
-          width: '100%',
-          height: '100%',
-        }}
+        ref={containerRef}
+        className={styles.container}
+        onMouseDown={onContainerMousedown}
       >
-        <div className={styles.object}></div>
-        <div className={styles.text}>{children}</div>
+        <div
+          ref={objectRef}
+          style={{
+            background: 'red',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <div className={styles.object}></div>
+          <div className={styles.text}>{children}</div>
+        </div>
+        {selected && (
+          <Resizer
+            width={currentRect.width}
+            height={currentRect.height}
+          ></Resizer>
+        )}
       </div>
-      {selected && (
-        <Resizer
-          width={currentRect.width}
-          height={currentRect.height}
-        ></Resizer>
-      )}
-    </div>
-  );
-});
+    );
+  }
+);
 
 export interface QueueSquareObjectProps {
   children: ReactNode;

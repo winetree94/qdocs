@@ -13,7 +13,17 @@ const SubtoolbarButtonStyle = css`
   width: 40px;
 `;
 
-export const SubtoolbarLayout: FunctionComponent = () => {
+export interface QueueSubtoolbarProps {
+  onQueueIndexChange?: (from: number, current: number) => void;
+  onNextQueueClick?: () => void;
+  onPreviousQueueClick?: () => void;
+}
+
+export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
+  onQueueIndexChange,
+  onNextQueueClick,
+  onPreviousQueueClick,
+}) => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const start = Math.max(settings.queueIndex - 2, 0);
   const queues = useRecoilValue(
@@ -45,27 +55,38 @@ export const SubtoolbarLayout: FunctionComponent = () => {
   };
 
   const setCurrentQueueIndex = (index: number): void => {
+    const from = settings.queueIndex;
+    const to = index;
     setSettings({
       ...settings,
-      queueIndex: index,
+      queueIndex: to,
       queuePosition: 'pause',
     });
+    onQueueIndexChange?.(from, to);
   };
 
   const goToPreviousQueue = (): void => {
+    const from = settings.queueIndex;
+    const to = Math.max(settings.queueIndex - 1, 0);
     setSettings({
       ...settings,
-      queueIndex: Math.max(settings.queueIndex - 1, 0),
+      queueIndex: to,
       queuePosition: settings.queueIndex - 1 >= 0 ? 'backward' : 'pause',
     });
+    onQueueIndexChange?.(from, to);
+    onPreviousQueueClick?.();
   };
 
   const goToNextQueue = (): void => {
+    const from = settings.queueIndex;
+    const to = settings.queueIndex + 1;
     setSettings({
       ...settings,
-      queueIndex: settings.queueIndex + 1,
+      queueIndex: to,
       queuePosition: 'forward',
     });
+    onQueueIndexChange?.(from, to);
+    onNextQueueClick?.();
   };
 
   return (
