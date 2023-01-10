@@ -16,6 +16,10 @@ export interface QueueSquareFill {
   color: string;
 }
 
+export interface QueueSquareFade {
+  opacity: number;
+}
+
 export interface QueueSquareStroke {
   dashArray: string;
   width: number;
@@ -35,6 +39,7 @@ export interface QueueSquare extends BaseObject {
   type: 'rect';
   uuid: string;
   rect: QueueSquareRect;
+  fade: QueueSquareFade;
   fill: QueueSquareFill;
   stroke: QueueSquareStroke;
   text: QueueSquareText;
@@ -60,6 +65,11 @@ export interface QueueSquareTextEffect extends BaseQueueEffect {
   text: QueueSquareText;
 }
 
+export interface QueueSquareFadeEffect extends BaseQueueEffect {
+  type: 'fade';
+  fade: QueueSquareFade;
+}
+
 export interface QueueSquareWithEffect extends QueueSquare {
   effects: (
     | CreateEffect
@@ -67,6 +77,7 @@ export interface QueueSquareWithEffect extends QueueSquare {
     | QueueSquareStrokeEffect
     | QueueSquareFillEffect
     | QueueSquareTextEffect
+    | QueueSquareFadeEffect
     | RemoveEffect
   )[];
 }
@@ -100,7 +111,7 @@ export function isExistObjectOnQueue(
   if (index < createEffect.index) {
     return false;
   }
-  if (removeEffect && index > removeEffect.index) {
+  if (removeEffect && index >= removeEffect.index) {
     return false;
   }
   return true;

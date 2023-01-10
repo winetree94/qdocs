@@ -44,6 +44,9 @@ export const documentState = atom<QueueDocument>({
         fill: {
           color: '#ffffff',
         },
+        fade: {
+          opacity: 0,
+        },
         text: {
           text: 'Hello World',
           fontSize: 24,
@@ -56,12 +59,20 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'create',
             duration: 0,
+            index: 0,
+          },
+          {
+            type: 'fade',
+            duration: 500,
             index: 1,
+            fade: {
+              opacity: 1,
+            },
           },
           {
             type: 'move',
-            duration: 200,
-            index: 2,
+            duration: 500,
+            index: 1,
             rect: {
               x: 100,
               y: 100,
@@ -72,7 +83,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'move',
             duration: 1000,
-            index: 3,
+            index: 2,
             rect: {
               x: 200,
               y: 200,
@@ -81,9 +92,36 @@ export const documentState = atom<QueueDocument>({
             },
           },
           {
-            type: 'remove',
+            type: 'fade',
+            duration: 1000,
+            index: 2,
+            fade: {
+              opacity: 0.5,
+            },
+          },
+          {
+            type: 'move',
             duration: 2000,
-            index: 4,
+            index: 3,
+            rect: {
+              x: 400,
+              y: 400,
+              width: 100,
+              height: 100,
+            },
+          },
+          {
+            type: 'fade',
+            duration: 2000,
+            index: 3,
+            fade: {
+              opacity: 0,
+            },
+          },
+          {
+            type: 'remove',
+            duration: 0,
+            index: 5,
           },
         ],
       },
@@ -104,6 +142,9 @@ export const documentState = atom<QueueDocument>({
         fill: {
           color: '#ffffff',
         },
+        fade: {
+          opacity: 0,
+        },
         text: {
           text: 'Hello World',
           fontSize: 24,
@@ -116,12 +157,20 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'create',
             duration: 0,
-            index: 2,
+            index: 1,
+          },
+          {
+            type: 'fade',
+            duration: 500,
+            index: 1,
+            fade: {
+              opacity: 1,
+            },
           },
           {
             type: 'move',
             duration: 1000,
-            index: 3,
+            index: 2,
             rect: {
               x: 1000,
               y: 600,
@@ -130,9 +179,17 @@ export const documentState = atom<QueueDocument>({
             },
           },
           {
+            type: 'fade',
+            duration: 500,
+            index: 2,
+            fade: {
+              opacity: 0.5,
+            },
+          },
+          {
             type: 'move',
             duration: 1000,
-            index: 4,
+            index: 3,
             rect: {
               x: 1000,
               y: 100,
@@ -141,9 +198,17 @@ export const documentState = atom<QueueDocument>({
             },
           },
           {
+            type: 'fade',
+            duration: 1000,
+            index: 3,
+            fade: {
+              opacity: 0,
+            },
+          },
+          {
             type: 'remove',
             duration: 2000,
-            index: 5,
+            index: 4,
           },
         ],
       },

@@ -15,6 +15,8 @@ import { animate, linear } from '../../cdk/animation/animate';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import {
   QueueSquare,
+  QueueSquareFade,
+  QueueSquareFadeEffect,
   QueueSquareMoveEffect,
   QueueSquareRect,
   QueueSquareWithEffect,
@@ -59,6 +61,16 @@ export const getCurrentRect = (
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is QueueSquareMoveEffect => effect.type === 'move')
     .reduce<QueueSquareRect>((_, effect) => effect.rect, object.rect);
+};
+
+export const getCurrentFade = (
+  object: QueueSquareWithEffect,
+  index: number
+): QueueSquareFade => {
+  return object.effects
+    .filter((effect) => effect.index <= index)
+    .filter((effect): effect is QueueSquareFadeEffect => effect.type === 'fade')
+    .reduce<QueueSquareFade>((_, effect) => effect.fade, object.fade);
 };
 
 export const getAnimationTargetEffect = (
@@ -110,16 +122,16 @@ export const getFromRect = (
   }
 };
 
-export interface AnimateModel {
+export interface RectAnimation {
   fromRect: QueueSquareRect;
   moveEffect: QueueSquareMoveEffect;
 }
 
-export const getAnimateModel = (
+export const getRectAnimation = (
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'
-): AnimateModel | null => {
+): RectAnimation | null => {
   if (position === 'pause') {
     return null;
   }
@@ -156,14 +168,66 @@ export const getAnimateModel = (
   };
 };
 
+export interface FadeAnimation {
+  fromFade: QueueSquareFade;
+  fadeEffect: QueueSquareFadeEffect;
+}
+
+export const getFadeAnimation = (
+  object: QueueSquareWithEffect,
+  index: number,
+  position: 'forward' | 'backward' | 'pause'
+): FadeAnimation | null => {
+  if (position === 'pause') {
+    return null;
+  }
+
+  const fromFade = getCurrentFade(
+    object,
+    position === 'forward' ? index - 1 : index + 1
+  );
+
+  const fadeEffect = object.effects.find(
+    (effect): effect is QueueSquareFadeEffect => {
+      const targetIndex = position === 'forward' ? index : index + 1;
+      return effect.index === targetIndex && effect.type === 'fade';
+    }
+  );
+
+  if (!fadeEffect) {
+    return null;
+  }
+
+  const slicedEffect: QueueSquareFadeEffect =
+    position === 'backward'
+      ? {
+          ...fadeEffect,
+          fade: {
+            ...getCurrentFade(object, index),
+          },
+        }
+      : fadeEffect;
+
+  return {
+    fromFade: fromFade,
+    fadeEffect: slicedEffect,
+  };
+};
+
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   QueueObjectRef,
   QueueObjectProps
 >(({ children, object, selected, index, onMousedown, position }, ref) => {
-  const [frame, setFrame] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const objectRef = useRef<HTMLDivElement>(null);
+
+  const [rectFrame, setRectFrame] = useState<number>(0);
+  const [fadeFrame, setFadeFrame] = useState<number>(0);
+  const currentFade = getCurrentFade(object, index);
   const currentRect = getCurrentRect(object, index);
-  const animateModel = getAnimateModel(object, index, position);
-  const container = useRef<HTMLDivElement>(null);
+
+  const rectAnimation = getRectAnimation(object, index, position);
+  const fadeAnimation = getFadeAnimation(object, index, position);
   const settings = useRecoilValue(documentSettingsState);
 
   const onContainerMousedown = (
@@ -174,75 +238,117 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
     }
   };
 
-  const anim = (): void => {
-    if (!animateModel) {
+  const animateRect = (): void => {
+    cancelAnimationFrame(rectFrame);
+    if (!rectAnimation) {
       return;
     }
-    if (!container.current) {
+    if (!containerRef.current) {
       return;
     }
-    cancelAnimationFrame(frame);
 
-    const element = container.current;
-    element.style.left = animateModel.fromRect.x + 'px';
-    element.style.top = animateModel.fromRect.y + 'px';
-    element.style.width = animateModel.fromRect.width + 'px';
-    element.style.height = animateModel.fromRect.height + 'px';
+    const element = containerRef.current;
+    element.style.left = rectAnimation.fromRect.x + 'px';
+    element.style.top = rectAnimation.fromRect.y + 'px';
+    element.style.width = rectAnimation.fromRect.width + 'px';
+    element.style.height = rectAnimation.fromRect.height + 'px';
 
     const createdFrame = animate({
-      duration: animateModel.moveEffect.duration,
+      duration: rectAnimation.moveEffect.duration,
       timing: linear,
       draw: (progress) => {
         element.style.left =
-          animateModel.fromRect.x +
-          (animateModel.moveEffect.rect.x - animateModel.fromRect.x) *
+          rectAnimation.fromRect.x +
+          (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
             progress +
           'px';
         element.style.top =
-          animateModel.fromRect.y +
-          (animateModel.moveEffect.rect.y - animateModel.fromRect.y) *
+          rectAnimation.fromRect.y +
+          (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
             progress +
           'px';
         element.style.width =
-          animateModel.fromRect.width +
-          (animateModel.moveEffect.rect.width - animateModel.fromRect.width) *
+          rectAnimation.fromRect.width +
+          (rectAnimation.moveEffect.rect.width - rectAnimation.fromRect.width) *
             progress +
           'px';
         element.style.height =
-          animateModel.fromRect.width +
-          (animateModel.moveEffect.rect.height - animateModel.fromRect.height) *
+          rectAnimation.fromRect.width +
+          (rectAnimation.moveEffect.rect.height -
+            rectAnimation.fromRect.height) *
             progress +
           'px';
       },
     });
 
-    setFrame(createdFrame);
+    setRectFrame(createdFrame);
+  };
+
+  const animateFade = (): void => {
+    cancelAnimationFrame(fadeFrame);
+    if (!fadeAnimation) {
+      return;
+    }
+    if (!objectRef.current) {
+      return;
+    }
+
+    const element = objectRef.current;
+    element.style.opacity = `${fadeAnimation.fromFade.opacity}`;
+
+    const createdFrame = animate({
+      duration: fadeAnimation.fadeEffect.duration,
+      timing: linear,
+      draw: (progress) => {
+        element.style.opacity =
+          fadeAnimation.fromFade.opacity +
+          (fadeAnimation.fadeEffect.fade.opacity -
+            fadeAnimation.fromFade.opacity) *
+            progress +
+          '';
+      },
+    });
+
+    setFadeFrame(createdFrame);
   };
 
   useLayoutEffect(() => {
-    if (!container.current) {
-      return;
+    if (containerRef.current) {
+      const element = containerRef.current;
+      element.style.left = currentRect.x + 'px';
+      element.style.top = currentRect.y + 'px';
+      element.style.width = currentRect.width + 'px';
+      element.style.height = currentRect.height + 'px';
     }
-    const element = container.current;
-    element.style.left = currentRect.x + 'px';
-    element.style.top = currentRect.y + 'px';
-    element.style.width = currentRect.width + 'px';
-    element.style.height = currentRect.height + 'px';
-    return () => cancelAnimationFrame(frame);
-  }, [currentRect, frame]);
+    if (objectRef.current) {
+      const element = objectRef.current;
+      element.style.opacity = `${currentFade.opacity}`;
+    }
+    return () => cancelAnimationFrame(rectFrame);
+  }, [currentRect, rectFrame, currentFade]);
 
   useLayoutEffect(() => {
-    anim();
+    animateRect();
+    animateFade();
   }, [settings.queueIndex, settings.queuePosition]);
 
   return (
     <div
-      ref={container}
+      ref={containerRef}
       className={styles.container}
       onMouseDown={onContainerMousedown}
     >
-      <div className={styles.object}></div>
-      <div className={styles.text}>{children}</div>
+      <div
+        ref={objectRef}
+        style={{
+          background: 'red',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <div className={styles.object}></div>
+        <div className={styles.text}>{children}</div>
+      </div>
       {selected && (
         <Resizer
           width={currentRect.width}

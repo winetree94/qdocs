@@ -36,6 +36,9 @@ export const LeftPanel: FunctionComponent = () => {
           fill: {
             color: '#ffffff',
           },
+          fade: {
+            opacity: 1,
+          },
           text: {
             text: 'Hello World',
             fontSize: 24,
