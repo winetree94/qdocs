@@ -14,7 +14,6 @@ import { useRecoilValue } from 'recoil';
 import { animate, linear } from '../../cdk/animation/animate';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import {
-  getSumRect,
   QueueSquare,
   QueueSquareMoveEffect,
   QueueSquareRect,
@@ -35,6 +34,7 @@ export const QueueObjectContext = createContext<QueueObjectContextType>({
 
 export interface QueueObjectProps {
   selected?: boolean;
+  position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
   onMousedown?: (
@@ -51,18 +51,40 @@ export const Animator: FunctionComponent = () => {
   return <div></div>;
 };
 
+export const getCurrentRect = (
+  object: QueueSquareWithEffect,
+  index: number
+): QueueSquareRect => {
+  return object.effects
+    .filter((effect) => effect.index <= index)
+    .filter((effect): effect is QueueSquareMoveEffect => effect.type === 'move')
+    .reduce<QueueSquareRect>((_, effect) => effect.rect, object.rect);
+};
+
+export const getFromRect = (
+  object: QueueSquareWithEffect,
+  index: number,
+  position: 'forward' | 'backward' | 'pause'
+): QueueSquareRect => {
+  switch (position) {
+    case 'forward':
+      return getCurrentRect(object, index - 1);
+    case 'backward':
+      return getCurrentRect(object, index + 1);
+    default:
+      return getCurrentRect(object, index);
+  }
+};
+
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   QueueObjectRef,
   QueueObjectProps
->(({ children, object, selected, onMousedown }, ref) => {
+>(({ children, object, selected, index, onMousedown, position }, ref) => {
   const [frame, setFrame] = useState<number>(0);
-  const moveEffect = object.effects.find(
-    (effect): effect is QueueSquareMoveEffect => effect.type === 'move'
-  );
-  const targetObject = getSumRect(object);
+  const currentRect = getCurrentRect(object, index);
+  const fromRect = getFromRect(object, index, position);
   const container = useRef<HTMLDivElement>(null);
   const settings = useRecoilValue(documentSettingsState);
-  const targetRect = moveEffect?.rect ?? targetObject.rect;
 
   const onContainerMousedown = (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -73,38 +95,32 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   };
 
   const anim = (): void => {
-    if (!moveEffect) {
-      return;
-    }
-    if (targetObject === object) {
-      return;
-    }
     if (!container.current) {
       return;
     }
     cancelAnimationFrame(frame);
 
     const element = container.current;
-    element.style.left = object.rect.x + 'px';
-    element.style.top = object.rect.y + 'px';
-    element.style.width = object.rect.width + 'px';
-    element.style.height = object.rect.height + 'px';
+    element.style.left = fromRect.x + 'px';
+    element.style.top = fromRect.y + 'px';
+    element.style.width = fromRect.width + 'px';
+    element.style.height = fromRect.height + 'px';
 
     const createdFrame = animate({
-      duration: moveEffect.duration,
+      duration: 1000,
       timing: linear,
       draw: (progress) => {
         element.style.left =
-          object.rect.x + (moveEffect.rect.x - object.rect.x) * progress + 'px';
+          fromRect.x + (currentRect.x - fromRect.x) * progress + 'px';
         element.style.top =
-          object.rect.y + (moveEffect.rect.y - object.rect.y) * progress + 'px';
+          fromRect.y + (currentRect.y - fromRect.y) * progress + 'px';
         element.style.width =
-          object.rect.width +
-          (moveEffect.rect.width - object.rect.width) * progress +
+          fromRect.width +
+          (currentRect.width - fromRect.width) * progress +
           'px';
         element.style.height =
-          object.rect.width +
-          (moveEffect.rect.height - object.rect.height) * progress +
+          fromRect.width +
+          (currentRect.height - fromRect.height) * progress +
           'px';
       },
     });
@@ -117,17 +133,15 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
       return;
     }
     const element = container.current;
-    element.style.left = targetRect.x + 'px';
-    element.style.top = targetRect.y + 'px';
-    element.style.width = targetRect.width + 'px';
-    element.style.height = targetRect.height + 'px';
+    element.style.left = currentRect.x + 'px';
+    element.style.top = currentRect.y + 'px';
+    element.style.width = currentRect.width + 'px';
+    element.style.height = currentRect.height + 'px';
     return () => cancelAnimationFrame(frame);
-  }, [targetRect, frame]);
+  }, [currentRect, frame]);
 
   useLayoutEffect(() => {
-    if (settings.queuePosition === 'forward') {
-      anim();
-    }
+    anim();
   }, [settings.queueIndex, settings.queuePosition]);
 
   return (
@@ -139,7 +153,10 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
       <div className={styles.object}></div>
       <div className={styles.text}>{children}</div>
       {selected && (
-        <Resizer width={targetRect.width} height={targetRect.height}></Resizer>
+        <Resizer
+          width={currentRect.width}
+          height={currentRect.height}
+        ></Resizer>
       )}
     </div>
   );

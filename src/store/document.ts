@@ -1,7 +1,7 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import { generateUUID } from '../cdk/functions/uuid';
 import {
-  getRectOfIndex,
+  isExistObjectOnQueue,
   QueueSquare,
   QueueSquareWithEffect,
 } from '../model/object/rect';
@@ -172,9 +172,9 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
       }
       const document = get(documentState);
       r.forEach((queue) => {
-        queue.objects = document.objects
-          .map((object) => getRectOfIndex(object, queue.index))
-          .filter((object) => object !== null) as QueueSquare[];
+        queue.objects = document.objects.filter((object) =>
+          isExistObjectOnQueue(object, queue.index)
+        );
       });
       return r;
     };
@@ -186,9 +186,9 @@ export const currentQueueObjectsSelector = selector<QueueSquareWithEffect[]>({
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
-    const result = document.objects
-      .map((object) => getRectOfIndex(object, settings.queueIndex))
-      .filter((object) => object !== null) as QueueSquareWithEffect[];
+    const result = document.objects.filter((object) =>
+      isExistObjectOnQueue(object, settings.queueIndex)
+    );
     return result;
   },
 });

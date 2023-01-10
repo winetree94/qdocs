@@ -25,14 +25,10 @@ export const Content: FunctionComponent = () => {
   const [document] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
-  useEffect(() => {
-    console.log(settings.queueIndex, settings.queuePosition);
-  }, [settings.queueIndex, settings.queuePosition]);
-
   const onMousedown = (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ): void => {
-    console.log(event);
+    // console.log(event);
   };
 
   const onDrawEnd = (event: DrawEvent): void => {
@@ -110,6 +106,7 @@ export const Content: FunctionComponent = () => {
               {objects.map((object) => (
                 <QueueObject
                   key={object.uuid}
+                  position={settings.queuePosition}
                   index={settings.queueIndex}
                   selected={settings.selectedObjects.includes(object.uuid)}
                   object={object}
