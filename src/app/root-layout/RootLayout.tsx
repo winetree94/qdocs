@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { createContext, FunctionComponent, ReactNode, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
-import { Content } from '../content/Content';
+import { Editor } from '../../components/editor/Editor';
 import { LeftPanel } from '../left-panel/LeftPanel';
 import { RightPanel } from '../right-panel/RightPanel';
 import { SubtoolbarLayout } from '../subtoolbar/SubtoolbarLayout';
@@ -47,7 +47,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
           `}
         >
           {!settings.presentationMode ? <LeftPanel></LeftPanel> : null}
-          <Content></Content>
+          <Editor></Editor>
           {!settings.presentationMode ? <RightPanel></RightPanel> : null}
         </div>
       </div>

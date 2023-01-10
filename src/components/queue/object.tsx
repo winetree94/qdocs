@@ -9,6 +9,7 @@ import {
   useRef,
   forwardRef,
   MouseEvent,
+  DependencyList,
 } from 'react';
 import { useRecoilValue } from 'recoil';
 import { animate, linear } from '../../cdk/animation/animate';
@@ -71,30 +72,6 @@ export const getCurrentFade = (
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is QueueSquareFadeEffect => effect.type === 'fade')
     .reduce<QueueSquareFade>((_, effect) => effect.fade, object.fade);
-};
-
-export const getAnimationTargetEffect = (
-  object: QueueSquareWithEffect,
-  index: number,
-  position: 'forward' | 'backward' | 'pause'
-): QueueSquareMoveEffect | null => {
-  if (position === 'pause') {
-    return null;
-  }
-
-  if (position === 'forward') {
-    return (
-      object.effects.find(
-        (effect): effect is QueueSquareMoveEffect =>
-          effect.type === 'move' && effect.index === index
-      ) || null
-    );
-  }
-
-  return object.effects
-    .filter((effect) => effect.index <= index + 1)
-    .filter((effect): effect is QueueSquareMoveEffect => effect.type === 'move')
-    .reduce<QueueSquareMoveEffect | null>((_, effect) => effect, null);
 };
 
 export const getFromRect = (
@@ -212,6 +189,17 @@ export const getFadeAnimation = (
     fromFade: fromFade,
     fadeEffect: slicedEffect,
   };
+};
+
+const useAnimate = (callback: () => void, deps: DependencyList): void => {
+  const ref = useRef<number>(0);
+  useLayoutEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      callback();
+    });
+    ref.current = frame;
+    return () => cancelAnimationFrame(ref.current);
+  }, [callback]);
 };
 
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<

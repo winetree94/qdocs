@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { FunctionComponent, MouseEvent, useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObject } from '../../components/queue/Object';
+import { QueueObject } from '../queue/Object';
 import {
   documentState,
   currentQueueObjectsSelector,
@@ -19,7 +19,7 @@ const Selector = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
 `;
 
-export const Content: FunctionComponent = () => {
+export const Editor: FunctionComponent = () => {
   const objects = useRecoilValue(currentQueueObjectsSelector);
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [document] = useRecoilState(documentState);
