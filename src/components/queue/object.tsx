@@ -61,19 +61,99 @@ export const getCurrentRect = (
     .reduce<QueueSquareRect>((_, effect) => effect.rect, object.rect);
 };
 
+export const getAnimationTargetEffect = (
+  object: QueueSquareWithEffect,
+  index: number,
+  position: 'forward' | 'backward' | 'pause'
+): QueueSquareMoveEffect | null => {
+  if (position === 'pause') {
+    return null;
+  }
+
+  if (position === 'forward') {
+    return (
+      object.effects.find(
+        (effect): effect is QueueSquareMoveEffect =>
+          effect.type === 'move' && effect.index === index
+      ) || null
+    );
+  }
+
+  return object.effects
+    .filter((effect) => effect.index <= index + 1)
+    .filter((effect): effect is QueueSquareMoveEffect => effect.type === 'move')
+    .reduce<QueueSquareMoveEffect | null>((_, effect) => effect, null);
+};
+
 export const getFromRect = (
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'
-): QueueSquareRect => {
+): QueueSquareMoveEffect | null => {
   switch (position) {
     case 'forward':
-      return getCurrentRect(object, index - 1);
+      return (
+        object.effects.find(
+          (effect): effect is QueueSquareMoveEffect =>
+            effect.index === index && effect.type === 'move'
+        ) || null
+      );
     case 'backward':
-      return getCurrentRect(object, index + 1);
+      return (
+        object.effects.find(
+          (effect): effect is QueueSquareMoveEffect =>
+            effect.index === index + 1 && effect.type === 'move'
+        ) || null
+      );
     default:
-      return getCurrentRect(object, index);
+      return null;
   }
+};
+
+export interface AnimateModel {
+  fromRect: QueueSquareRect;
+  moveEffect: QueueSquareMoveEffect;
+}
+
+export const getAnimateModel = (
+  object: QueueSquareWithEffect,
+  index: number,
+  position: 'forward' | 'backward' | 'pause'
+): AnimateModel | null => {
+  if (position === 'pause') {
+    return null;
+  }
+
+  const fromRect = getCurrentRect(
+    object,
+    position === 'forward' ? index - 1 : index + 1
+  );
+
+  const moveEffect = object.effects.find(
+    (effect): effect is QueueSquareMoveEffect => {
+      const targetIndex = position === 'forward' ? index : index + 1;
+      return effect.index === targetIndex && effect.type === 'move';
+    }
+  );
+
+  if (!moveEffect) {
+    return null;
+  }
+
+  const slicedEffect: QueueSquareMoveEffect =
+    position === 'backward'
+      ? {
+          ...moveEffect,
+          rect: {
+            ...getCurrentRect(object, index),
+          },
+        }
+      : moveEffect;
+
+  return {
+    fromRect: fromRect,
+    moveEffect: slicedEffect,
+  };
 };
 
 export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
@@ -82,7 +162,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
 >(({ children, object, selected, index, onMousedown, position }, ref) => {
   const [frame, setFrame] = useState<number>(0);
   const currentRect = getCurrentRect(object, index);
-  const fromRect = getFromRect(object, index, position);
+  const animateModel = getAnimateModel(object, index, position);
   const container = useRef<HTMLDivElement>(null);
   const settings = useRecoilValue(documentSettingsState);
 
@@ -95,32 +175,43 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = forwardRef<
   };
 
   const anim = (): void => {
+    if (!animateModel) {
+      return;
+    }
     if (!container.current) {
       return;
     }
     cancelAnimationFrame(frame);
 
     const element = container.current;
-    element.style.left = fromRect.x + 'px';
-    element.style.top = fromRect.y + 'px';
-    element.style.width = fromRect.width + 'px';
-    element.style.height = fromRect.height + 'px';
+    element.style.left = animateModel.fromRect.x + 'px';
+    element.style.top = animateModel.fromRect.y + 'px';
+    element.style.width = animateModel.fromRect.width + 'px';
+    element.style.height = animateModel.fromRect.height + 'px';
 
     const createdFrame = animate({
-      duration: 1000,
+      duration: animateModel.moveEffect.duration,
       timing: linear,
       draw: (progress) => {
         element.style.left =
-          fromRect.x + (currentRect.x - fromRect.x) * progress + 'px';
+          animateModel.fromRect.x +
+          (animateModel.moveEffect.rect.x - animateModel.fromRect.x) *
+            progress +
+          'px';
         element.style.top =
-          fromRect.y + (currentRect.y - fromRect.y) * progress + 'px';
+          animateModel.fromRect.y +
+          (animateModel.moveEffect.rect.y - animateModel.fromRect.y) *
+            progress +
+          'px';
         element.style.width =
-          fromRect.width +
-          (currentRect.width - fromRect.width) * progress +
+          animateModel.fromRect.width +
+          (animateModel.moveEffect.rect.width - animateModel.fromRect.width) *
+            progress +
           'px';
         element.style.height =
-          fromRect.width +
-          (currentRect.height - fromRect.height) * progress +
+          animateModel.fromRect.width +
+          (animateModel.moveEffect.rect.height - animateModel.fromRect.height) *
+            progress +
           'px';
       },
     });
