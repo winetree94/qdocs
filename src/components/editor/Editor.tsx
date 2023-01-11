@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import {
   createContext,
   forwardRef,
-  MouseEvent,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
@@ -128,6 +127,10 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
     ref
   ) => {
     const canvasDiv = useRef<HTMLDivElement>(null);
+    const [translate, setTranslate] = useState<{ x: number; y: number }>({
+      x: 0,
+      y: 0,
+    });
     const currentQueueObjects = objects.filter((object) =>
       isExistObjectOnQueue(object, queueIndex)
     );
@@ -150,11 +153,61 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
     );
 
     const onMousedown = (
-      event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+      event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+      object: QueueSquareWithEffect
     ): void => {
-      // console.log(event);
+      const selected = selectedObjectIds.includes(object.uuid);
+      const initX = event.clientX;
+      const initY = event.clientY;
+      if (!selected) {
+        setSelectedObjectIds([object.uuid]);
+      }
+      const mover = (event: MouseEvent): void => {
+        const x = event.clientX - initX;
+        const y = event.clientY - initY;
+        const currentScale = 1 / scale;
+        setTranslate({ x: x * currentScale, y: y * currentScale });
+      };
+      const finish = (event: MouseEvent): void => {
+        document.removeEventListener('mousemove', mover);
+        document.removeEventListener('mouseup', finish);
+        setTranslate({ x: 0, y: 0 });
+      };
+
+      document.addEventListener('mousemove', mover);
+      document.addEventListener('mouseup', finish);
     };
 
+    /**
+     * @description
+     * 드로잉 시작 시 시작 지점에 오브젝트가 있으면 드로잉을 취소 (오브젝트 이동 동작을 수행해야 함)
+     */
+    const onDrawStart = (event: DrawEvent, cancel: () => void): void => {
+      if (!canvasDiv.current) {
+        return;
+      }
+      const rect = canvasDiv.current.getBoundingClientRect();
+      const absScale = 1 / scale;
+      const x = (event.drawClientX - rect.x) * absScale;
+      const y = (event.drawClientY - rect.y) * absScale;
+      const hasSelectableObject = objects.some((object) => {
+        const rect = getCurrentRect(object, queueIndex);
+        return (
+          rect.x <= x &&
+          rect.y <= y &&
+          rect.x + rect.width >= x &&
+          rect.y + rect.height >= y
+        );
+      });
+      if (hasSelectableObject) {
+        cancel();
+      }
+    };
+
+    /**
+     * @description
+     * 드로잉 종료 시 범위 내 오브젝트를 선택
+     */
     const onDrawEnd = (event: DrawEvent): void => {
       if (!canvasDiv.current) {
         return;
@@ -185,7 +238,8 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       <Drawable
         scale={scale}
         drawer={<Selector></Selector>}
-        onDrawEnd={(e): void => onDrawEnd(e)}
+        onDrawStart={onDrawStart}
+        onDrawEnd={onDrawEnd}
         className={css`
           flex: 1;
           background: #e9eaed;
@@ -227,7 +281,9 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
                   position={queuePosition}
                   index={queueIndex}
                   selected={selectedObjectIds.includes(object.uuid)}
+                  translate={translate}
                   object={object}
+                  onMousedown={(event): void => onMousedown(event, object)}
                 ></QueueObject>
               ))}
             </div>

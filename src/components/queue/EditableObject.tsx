@@ -29,6 +29,7 @@ export interface QueueObjectProps {
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
+  translate: { x: number; y: number };
   onMousedown?: (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
@@ -40,7 +41,10 @@ export interface QueueObjectRef {
 }
 
 export const QueueObject = forwardRef<QueueObjectRef, QueueObjectProps>(
-  ({ children, object, selected, index, onMousedown, position }, ref) => {
+  (
+    { children, object, selected, index, onMousedown, position, translate },
+    ref
+  ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const objectRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +88,13 @@ export const QueueObject = forwardRef<QueueObjectRef, QueueObjectProps>(
         ref={containerRef}
         className={styles.container}
         onMouseDown={onContainerMousedown}
+        style={
+          selected
+            ? {
+                transform: `translate(${translate.x}px, ${translate.y}px)`,
+              }
+            : {}
+        }
       >
         <div
           ref={objectRef}
