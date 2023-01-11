@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import {
   Fragment,
   FunctionComponent,
@@ -8,6 +7,7 @@ import {
 } from 'react';
 import { Popover } from '../../components/popover/Popover';
 import { Toolbar, ToolbarItem } from '../../components/toolbar/Toolbar';
+import styles from './Toolbar.module.scss';
 
 export interface ToolbarModel {
   opened?: boolean;
@@ -65,35 +65,10 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   }, [target, openedLabel]);
 
   return (
-    <div
-      className={css`
-        display: flex;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      `}
-    >
-      <div
-        className={css`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        `}
-      >
-        the queue
-      </div>
-      <div
-        className={css`
-          display: flex;
-          flex-direction: column;
-          flex: 1 1 auto;
-        `}
-      >
-        <div
-          className={css`
-            margin: 10px;
-          `}
-        >
-          document title
-        </div>
+    <div className={styles.container}>
+      <div className={styles.title}>the queue</div>
+      <div className={styles.rest}>
+        <div className={styles.docTitle}>document title</div>
         <div>
           <Toolbar>
             {items.map((item) => (

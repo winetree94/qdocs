@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import {
   createContext,
   FunctionComponent,
@@ -18,6 +17,7 @@ import { RightPanel } from '../right-panel/RightPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import { documentState } from '../../store/document';
+import styles from './RootLayout.module.scss';
 
 export const RootContext = createContext({});
 
@@ -79,14 +79,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
 
   return (
     <RootContext.Provider value={{}}>
-      <div
-        className={css`
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          height: 100vh;
-        `}
-      >
+      <div className={styles.container}>
         {!settings.presentationMode ? (
           <>
             <QueueToolbar></QueueToolbar>
@@ -96,13 +89,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
             ></QueueSubtoolbar>
           </>
         ) : null}
-        <div
-          className={css`
-            display: flex;
-            flex: 1;
-            min-height: 0;
-          `}
-        >
+        <div className={styles.bottom}>
           {!settings.presentationMode ? <LeftPanel></LeftPanel> : null}
           <QueueEditor
             ref={editorRef}
