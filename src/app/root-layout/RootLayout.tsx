@@ -6,9 +6,13 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
-import { QueueEditor, QueueEditorRef } from '../../components/editor/Editor';
+import {
+  QueueEditor,
+  QueueEditorRef,
+  RectUpdateModel,
+} from '../../components/editor/Editor';
 import { LeftPanel } from '../left-panel/LeftPanel';
 import { RightPanel } from '../right-panel/RightPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
@@ -21,7 +25,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
   const editorRef = useRef<QueueEditorRef>(null);
-  const queueDocument = useRecoilValue(documentState);
+  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   useEffect(() => {
@@ -35,6 +39,38 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       }
     });
   }, [settings, setSettings]);
+
+  const onObjectRectUpdate = (models: RectUpdateModel[]): void => {
+    const newObjects = queueDocument.objects.map((object) => {
+      const model = models.find((model) => model.uuid === object.uuid);
+      if (!model) {
+        return object;
+      }
+      console.log('updated');
+      const slicedObject = { ...object, effects: object.effects.slice(0) };
+      const createEffectIndex = object.effects.findIndex(
+        (effect) => effect.type === 'create'
+      );
+      const moveEffectIndex = object.effects.findIndex(
+        (effect) => effect.type === 'move'
+      );
+      if (createEffectIndex === model.queueIndex) {
+        slicedObject.rect = model.rect;
+      } else {
+        slicedObject.effects[moveEffectIndex] = {
+          ...slicedObject.effects[moveEffectIndex],
+          type: 'move',
+          rect: {
+            ...model.rect,
+          },
+        };
+      }
+      return slicedObject;
+    });
+    console.log(newObjects);
+    setQueueDocument({ ...queueDocument, objects: newObjects });
+    return;
+  };
 
   return (
     <RootContext.Provider value={{}}>
@@ -70,6 +106,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
             documentRect={queueDocument.documentRect}
             scale={settings.scale}
             objects={queueDocument.objects}
+            onObjectRectUpdate={onObjectRectUpdate}
           ></QueueEditor>
           {!settings.presentationMode ? <RightPanel></RightPanel> : null}
         </div>

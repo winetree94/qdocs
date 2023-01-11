@@ -14,6 +14,7 @@ import { QueueObject } from '../queue/EditableObject';
 import { QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
+  QueueSquareRect,
   QueueSquareWithEffect,
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
@@ -46,6 +47,12 @@ export const QueueEditorContext = createContext<QueueEditorContextType>({
   objects: [],
   currentQueueObjects: [],
 });
+
+export interface RectUpdateModel {
+  uuid: string;
+  queueIndex: number;
+  rect: QueueSquareRect;
+}
 
 export interface QueueEditorProps {
   /**
@@ -86,6 +93,12 @@ export interface QueueEditorProps {
 
   /**
    * @description
+   * 오브젝트가 드래그로 움직인 경우 이벤트
+   */
+  onObjectRectUpdate?: (models: RectUpdateModel[]) => void;
+
+  /**
+   * @description
    * 큐 애니메이션 종료 시 이벤트
    */
   onAnimationEnd?: () => void;
@@ -123,6 +136,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       objects = [],
       documentRect = { width: 0, height: 0 },
       scale = 1,
+      onObjectRectUpdate,
     },
     ref
   ) => {
@@ -156,19 +170,43 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
       object: QueueSquareWithEffect
     ): void => {
+      const slicedSelectedObjectIds = [...selectedObjectIds];
       const selected = selectedObjectIds.includes(object.uuid);
       const initX = event.clientX;
       const initY = event.clientY;
+      let diffX = 0;
+      let diffY = 0;
       if (!selected) {
         setSelectedObjectIds([object.uuid]);
+        slicedSelectedObjectIds.push(object.uuid);
       }
       const mover = (event: MouseEvent): void => {
         const x = event.clientX - initX;
         const y = event.clientY - initY;
         const currentScale = 1 / scale;
         setTranslate({ x: x * currentScale, y: y * currentScale });
+        diffX = x * currentScale;
+        diffY = y * currentScale;
       };
       const finish = (event: MouseEvent): void => {
+        const updateModels = objects
+          .filter((object) => slicedSelectedObjectIds.includes(object.uuid))
+          .map<RectUpdateModel>((object) => {
+            const rect = getCurrentRect(object, queueIndex);
+            return {
+              uuid: object.uuid,
+              queueIndex: queueIndex,
+              rect: {
+                x: rect.x + diffX,
+                y: rect.y + diffY,
+                width: rect.width,
+                height: rect.height,
+              },
+            };
+          });
+        if (onObjectRectUpdate) {
+          onObjectRectUpdate(updateModels);
+        }
         document.removeEventListener('mousemove', mover);
         document.removeEventListener('mouseup', finish);
         setTranslate({ x: 0, y: 0 });
