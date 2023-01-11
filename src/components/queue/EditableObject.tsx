@@ -68,7 +68,7 @@ export const QueueObject = forwardRef<QueueObjectRef, QueueObjectProps>(
       }
       if (objectRef.current) {
         const element = objectRef.current;
-        element.style.opacity = `${currentFade.opacity}`;
+        element.style.opacity = `${Math.max(currentFade.opacity, 0.1)}`;
       }
     }, [currentRect, currentFade]);
 

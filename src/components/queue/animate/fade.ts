@@ -1,4 +1,10 @@
-import { RefObject, useLayoutEffect, useState } from 'react';
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { animate, linear } from '../../../cdk/animation/animate';
 import {
   QueueSquareFade,
@@ -67,7 +73,7 @@ export const WithFadeAnimation = (
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'
-): [number, React.Dispatch<React.SetStateAction<number>>] => {
+): [number, Dispatch<SetStateAction<number>>] => {
   const [fadeFrame, setFadeFrame] = useState<number>(0);
   const fadeAnimation = getFadeAnimation(object, index, position);
 
@@ -88,11 +94,13 @@ export const WithFadeAnimation = (
       timing: linear,
       draw: (progress) => {
         element.style.opacity =
-          fadeAnimation.fromFade.opacity +
-          (fadeAnimation.fadeEffect.fade.opacity -
-            fadeAnimation.fromFade.opacity) *
-            progress +
-          '';
+          Math.max(
+            fadeAnimation.fromFade.opacity +
+              (fadeAnimation.fadeEffect.fade.opacity -
+                fadeAnimation.fromFade.opacity) *
+                progress,
+            0.1
+          ) + '';
       },
     });
 
