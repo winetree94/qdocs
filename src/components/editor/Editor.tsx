@@ -7,6 +7,7 @@ import {
   MouseEvent,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
@@ -46,6 +47,12 @@ export interface QueueEditorProps {
    * 현재 큐 인덱스
    */
   queueIndex?: number;
+
+  /**
+   * @description
+   * 애니메이션 방향
+   */
+  queuePosition?: 'forward' | 'backward' | 'pause';
 
   /**
    * @description
@@ -106,6 +113,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
   (
     {
       queueIndex = 0,
+      queuePosition = 'pause',
       objects = [],
       documentRect = { width: 0, height: 0 },
       scale = 1,
@@ -113,6 +121,8 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
     ref
   ) => {
     const canvasDiv = useRef<HTMLDivElement>(null);
+
+    const [selectedObjectIds, setSelectedObjectIds] = useState<string[]>([]);
 
     useImperativeHandle(
       ref,
@@ -156,10 +166,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
           rect.y + rect.height <= y + height
         );
       });
-      // setSettings({
-      //   ...settings,
-      //   selectedObjects: selectedObjects.map((object) => object.uuid),
-      // });
+      setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
     };
 
     return (
@@ -181,7 +188,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
         >
           <QueueEditorContext.Provider
             value={{
-              selectedObjectIds: [],
+              selectedObjectIds: selectedObjectIds,
               documentRect: documentRect,
               scale: scale,
               queueIndex: queueIndex,
@@ -201,10 +208,10 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
                 height: documentRect.height,
               }}
             >
-              {objects.map((object) => (
+              {objects.map((object, i) => (
                 <QueueObject
-                  key={object.uuid}
-                  position={'forward'}
+                  key={object.uuid + queueIndex}
+                  position={queuePosition}
                   index={queueIndex}
                   object={object}
                 ></QueueObject>

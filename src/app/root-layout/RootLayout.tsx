@@ -66,6 +66,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
           <QueueEditor
             ref={editorRef}
             queueIndex={settings.queueIndex}
+            queuePosition={settings.queuePosition}
             documentRect={queueDocument.documentRect}
             scale={settings.scale}
             objects={queueDocument.objects}
