@@ -170,7 +170,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
       object: QueueSquareWithEffect
     ): void => {
-      const slicedSelectedObjectIds = [...selectedObjectIds];
+      let slicedSelectedObjectIds = [...selectedObjectIds];
       const selected = selectedObjectIds.includes(object.uuid);
       const initX = event.clientX;
       const initY = event.clientY;
@@ -178,7 +178,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       let diffY = 0;
       if (!selected) {
         setSelectedObjectIds([object.uuid]);
-        slicedSelectedObjectIds.push(object.uuid);
+        slicedSelectedObjectIds = [object.uuid];
       }
       const mover = (event: MouseEvent): void => {
         const x = event.clientX - initX;
