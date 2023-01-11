@@ -145,6 +145,11 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       finish();
     };
 
+    document.addEventListener('mousemove', mover);
+    document.addEventListener('mouseup', finish, {
+      once: true,
+    });
+
     onDrawStart?.(
       {
         clientX: initEvent.clientX,
@@ -158,11 +163,6 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       },
       cancel
     );
-
-    document.addEventListener('mousemove', mover);
-    document.addEventListener('mouseup', finish, {
-      once: true,
-    });
   };
 
   return (
