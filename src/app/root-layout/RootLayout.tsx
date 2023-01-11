@@ -48,12 +48,12 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       }
       console.log('updated');
       const slicedObject = { ...object, effects: object.effects.slice(0) };
-      const createEffectIndex = object.effects.findIndex(
+      const createEffectIndex = object.effects.find(
         (effect) => effect.type === 'create'
-      );
+      )!.index;
       const moveEffectIndex = object.effects.findIndex(
-        (effect) => effect.type === 'move'
-      );
+        (effect) => effect.type === 'move' && effect.index === model.queueIndex
+      )!;
       if (createEffectIndex === model.queueIndex) {
         slicedObject.rect = model.rect;
       } else {
