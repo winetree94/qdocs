@@ -21,8 +21,8 @@ export interface DrawProps {
   children?: ReactNode;
   className?: string;
   drawer?: ReactNode;
-  onDrawStart?: (event: DrawEvent) => void;
-  onDrawMove?: (event: DrawEvent) => void;
+  onDrawStart?: (event: DrawEvent, cancel: () => void) => void;
+  onDrawMove?: (event: DrawEvent, cancel: () => void) => void;
   onDrawEnd?: (event: DrawEvent) => void;
 }
 
@@ -77,52 +77,14 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       height: 0,
     });
 
-    onDrawStart?.({
-      clientX: initEvent.clientX,
-      clientY: initEvent.clientY,
-      drawClientX: initClientX,
-      drawClientY: initClientY,
-      drawOffsetX: initOffsetX,
-      drawOffsetY: initOffsetY,
-      width: 0,
-      height: 0,
-    });
-
-    const mover = (event: MouseEvent): void => {
-      setIsDrawing(true);
-
-      const movedX = event.clientX - containerRect.x - initOffsetX;
-      const movedY = event.clientY - containerRect.y - initOffsetY;
-      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
-      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
-      const startOffsetX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
-      const startOfssetY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
-      const width = Math.abs(movedX);
-      const height = Math.abs(movedY);
-
-      setPosition({
-        x: startOffsetX,
-        y: startOfssetY,
-        width: width,
-        height: height,
-      });
-
-      onDrawMove?.({
-        drawOffsetX: startOffsetX,
-        drawOffsetY: startOfssetY,
-        drawClientX: startClientX,
-        drawClientY: startClientY,
-        clientX: event.clientX,
-        clientY: event.clientY,
-        width: width,
-        height: height,
-      });
-    };
-
-    const finish = (event: MouseEvent): void => {
+    const finish = (event?: MouseEvent): void => {
       document.removeEventListener('mouseup', finish);
       document.removeEventListener('mousemove', mover);
       setIsDrawing(false);
+
+      if (!event) {
+        return;
+      }
 
       const movedX = event.clientX - containerRect.x - initOffsetX;
       const movedY = event.clientY - containerRect.y - initOffsetY;
@@ -143,6 +105,58 @@ export const Drawable: FunctionComponent<DrawProps> = ({
         width: width,
         height: height,
       });
+    };
+
+    const cancel = (): void => {
+      finish();
+    };
+
+    onDrawStart?.(
+      {
+        clientX: initEvent.clientX,
+        clientY: initEvent.clientY,
+        drawClientX: initClientX,
+        drawClientY: initClientY,
+        drawOffsetX: initOffsetX,
+        drawOffsetY: initOffsetY,
+        width: 0,
+        height: 0,
+      },
+      cancel
+    );
+
+    const mover = (event: MouseEvent): void => {
+      setIsDrawing(true);
+
+      const movedX = event.clientX - containerRect.x - initOffsetX;
+      const movedY = event.clientY - containerRect.y - initOffsetY;
+      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
+      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
+      const startOffsetX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
+      const startOfssetY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
+      const width = Math.abs(movedX);
+      const height = Math.abs(movedY);
+
+      setPosition({
+        x: startOffsetX,
+        y: startOfssetY,
+        width: width,
+        height: height,
+      });
+
+      onDrawMove?.(
+        {
+          drawOffsetX: startOffsetX,
+          drawOffsetY: startOfssetY,
+          drawClientX: startClientX,
+          drawClientY: startClientY,
+          clientX: event.clientX,
+          clientY: event.clientY,
+          width: width,
+          height: height,
+        },
+        cancel
+      );
     };
 
     document.addEventListener('mousemove', mover);
