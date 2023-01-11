@@ -6,6 +6,7 @@ import {
   forwardRef,
   MouseEvent,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -14,6 +15,7 @@ import { QueueObject } from '../queue/EditableObject';
 import { QueueDocumentRect } from '../../store/document';
 import { QueueSquareWithEffect } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
+import { getCurrentRect } from '../queue/animate/rect';
 
 const Selector = styled.div`
   width: 100%;
@@ -150,7 +152,6 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       if (!canvasDiv.current) {
         return;
       }
-
       const rect = canvasDiv.current.getBoundingClientRect();
       const absScale = 1 / scale;
       const x = (event.drawClientX - rect.x) * absScale;
@@ -158,7 +159,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       const width = event.width * absScale;
       const height = event.height * absScale;
       const selectedObjects = objects.filter((object) => {
-        const rect = object.rect;
+        const rect = getCurrentRect(object, queueIndex);
         return (
           rect.x >= x &&
           rect.y >= y &&
@@ -168,6 +169,10 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
       });
       setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
     };
+
+    useLayoutEffect(() => {
+      setSelectedObjectIds([]);
+    }, [queueIndex]);
 
     return (
       <Drawable
@@ -213,6 +218,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
                   key={object.uuid + queueIndex}
                   position={queuePosition}
                   index={queueIndex}
+                  selected={selectedObjectIds.includes(object.uuid)}
                   object={object}
                 ></QueueObject>
               ))}
