@@ -111,7 +111,7 @@ export function isExistObjectOnQueue(
   if (index < createEffect.index) {
     return false;
   }
-  if (removeEffect && index > removeEffect.index) {
+  if (removeEffect && index >= removeEffect.index) {
     return false;
   }
   return true;
