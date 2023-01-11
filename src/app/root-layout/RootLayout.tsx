@@ -29,10 +29,6 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   useEffect(() => {
-    console.log(editorRef);
-  }, []);
-
-  useEffect(() => {
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && settings.presentationMode) {
         setSettings({ ...settings, presentationMode: false });
@@ -46,7 +42,6 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       if (!model) {
         return object;
       }
-      console.log('updated');
       const slicedObject = { ...object, effects: object.effects.slice(0) };
       const createEffectIndex = object.effects.find(
         (effect) => effect.type === 'create'
@@ -67,7 +62,6 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       }
       return slicedObject;
     });
-    console.log(newObjects);
     setQueueDocument({ ...queueDocument, objects: newObjects });
     return;
   };
