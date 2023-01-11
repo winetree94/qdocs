@@ -13,7 +13,10 @@ import {
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
 import { QueueDocumentRect } from '../../store/document';
-import { QueueSquareWithEffect } from '../../model/object/rect';
+import {
+  isExistObjectOnQueue,
+  QueueSquareWithEffect,
+} from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 
@@ -30,6 +33,7 @@ export interface QueueEditorContextType {
   scale: number;
   documentRect: QueueDocumentRect;
   objects: QueueSquareWithEffect[];
+  currentQueueObjects: QueueSquareWithEffect[];
 }
 
 export const QueueEditorContext = createContext<QueueEditorContextType>({
@@ -41,6 +45,7 @@ export const QueueEditorContext = createContext<QueueEditorContextType>({
     height: 0,
   },
   objects: [],
+  currentQueueObjects: [],
 });
 
 export interface QueueEditorProps {
@@ -123,7 +128,9 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
     ref
   ) => {
     const canvasDiv = useRef<HTMLDivElement>(null);
-
+    const currentQueueObjects = objects.filter((object) =>
+      isExistObjectOnQueue(object, queueIndex)
+    );
     const [selectedObjectIds, setSelectedObjectIds] = useState<string[]>([]);
 
     useImperativeHandle(
@@ -198,6 +205,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
               scale: scale,
               queueIndex: queueIndex,
               objects: objects,
+              currentQueueObjects: currentQueueObjects,
             }}
           >
             <div
@@ -213,7 +221,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
                 height: documentRect.height,
               }}
             >
-              {objects.map((object, i) => (
+              {currentQueueObjects.map((object, i) => (
                 <QueueObject
                   key={object.uuid + queueIndex}
                   position={queuePosition}
