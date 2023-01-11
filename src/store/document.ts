@@ -121,7 +121,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'remove',
             duration: 0,
-            index: 5,
+            index: 7,
           },
         ],
       },
@@ -208,7 +208,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'remove',
             duration: 2000,
-            index: 4,
+            index: 8,
           },
         ],
       },

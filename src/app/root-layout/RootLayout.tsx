@@ -48,10 +48,10 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       )!.index;
       const moveEffectIndex = object.effects.findIndex(
         (effect) => effect.type === 'move' && effect.index === model.queueIndex
-      )!;
+      );
       if (createEffectIndex === model.queueIndex) {
         slicedObject.rect = model.rect;
-      } else {
+      } else if (moveEffectIndex !== -1) {
         slicedObject.effects[moveEffectIndex] = {
           ...slicedObject.effects[moveEffectIndex],
           type: 'move',
@@ -59,9 +59,20 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
             ...model.rect,
           },
         };
+      } else {
+        slicedObject.effects.push({
+          type: 'move',
+          index: model.queueIndex,
+          duration: 1000,
+          rect: {
+            ...model.rect,
+          },
+        });
+        slicedObject.effects.sort((a, b) => a.index - b.index);
       }
       return slicedObject;
     });
+    console.log(queueDocument);
     setQueueDocument({ ...queueDocument, objects: newObjects });
     return;
   };
