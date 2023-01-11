@@ -77,6 +77,40 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       height: 0,
     });
 
+    const mover = (event: MouseEvent): void => {
+      setIsDrawing(true);
+
+      const movedX = event.clientX - containerRect.x - initOffsetX;
+      const movedY = event.clientY - containerRect.y - initOffsetY;
+      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
+      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
+      const startOffsetX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
+      const startOfssetY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
+      const width = Math.abs(movedX);
+      const height = Math.abs(movedY);
+
+      setPosition({
+        x: startOffsetX,
+        y: startOfssetY,
+        width: width,
+        height: height,
+      });
+
+      onDrawMove?.(
+        {
+          drawOffsetX: startOffsetX,
+          drawOffsetY: startOfssetY,
+          drawClientX: startClientX,
+          drawClientY: startClientY,
+          clientX: event.clientX,
+          clientY: event.clientY,
+          width: width,
+          height: height,
+        },
+        cancel
+      );
+    };
+
     const finish = (event?: MouseEvent): void => {
       document.removeEventListener('mouseup', finish);
       document.removeEventListener('mousemove', mover);
@@ -124,40 +158,6 @@ export const Drawable: FunctionComponent<DrawProps> = ({
       },
       cancel
     );
-
-    const mover = (event: MouseEvent): void => {
-      setIsDrawing(true);
-
-      const movedX = event.clientX - containerRect.x - initOffsetX;
-      const movedY = event.clientY - containerRect.y - initOffsetY;
-      const startClientX = movedX >= 0 ? initClientX : initClientX + movedX;
-      const startClientY = movedY >= 0 ? initClientY : initClientY + movedY;
-      const startOffsetX = movedX >= 0 ? initOffsetX : initOffsetX + movedX;
-      const startOfssetY = movedY >= 0 ? initOffsetY : initOffsetY + movedY;
-      const width = Math.abs(movedX);
-      const height = Math.abs(movedY);
-
-      setPosition({
-        x: startOffsetX,
-        y: startOfssetY,
-        width: width,
-        height: height,
-      });
-
-      onDrawMove?.(
-        {
-          drawOffsetX: startOffsetX,
-          drawOffsetY: startOfssetY,
-          drawClientX: startClientX,
-          drawClientY: startClientY,
-          clientX: event.clientX,
-          clientY: event.clientY,
-          width: width,
-          height: height,
-        },
-        cancel
-      );
-    };
 
     document.addEventListener('mousemove', mover);
     document.addEventListener('mouseup', finish, {
