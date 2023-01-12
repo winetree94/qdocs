@@ -10,6 +10,7 @@ export const ObjectGroupContext = createContext<ObjectGroupContextType>({
   opened: true,
   setOpened: (opened: boolean) => null,
 });
+ObjectGroupContext.displayName = 'ObjectGroupContext';
 
 export const ObjectGroup: FunctionComponent<{ children: ReactNode }> = (
   props

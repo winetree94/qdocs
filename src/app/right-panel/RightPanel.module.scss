@@ -1,5 +1,6 @@
-.module-scss {
-  @apply py-2 px-4 font-semibold rounded-lg shadow-md text-white bg-orange-500 hover:bg-orange-600;
+.root {
+  @apply flex flex-col gap-2 p-2;
+  width: 200px;
 }
 
 .container {
@@ -7,6 +8,8 @@
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.vertical-slider-box {
-  height: 200px;
+.effect-list {
+  @apply px-3 py-2 border border-solid border-neutral-200;
+  max-height: 300px;
+  overflow-y: auto;
 }

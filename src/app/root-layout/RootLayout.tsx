@@ -100,7 +100,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
             objects={queueDocument.objects}
             onObjectRectUpdate={onObjectRectUpdate}
           ></QueueEditor>
-          {!settings.presentationMode ? <RightPanel></RightPanel> : null}
+          {!settings.presentationMode ? <RightPanel /> : null}
         </div>
       </div>
     </RootContext.Provider>

@@ -11,7 +11,10 @@ import {
 } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
-import { QueueDocumentRect } from '../../store/document';
+import {
+  QueueDocumentRect,
+  selectedObjectIdsState,
+} from '../../store/document';
 import {
   isExistObjectOnQueue,
   QueueSquareRect,
@@ -19,6 +22,7 @@ import {
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
+import { useRecoilState } from 'recoil';
 
 const Selector = styled.div`
   width: 100%;
@@ -47,6 +51,7 @@ export const QueueEditorContext = createContext<QueueEditorContextType>({
   objects: [],
   currentQueueObjects: [],
 });
+QueueEditorContext.displayName = 'QueueEditorContext';
 
 export interface RectUpdateModel {
   uuid: string;
@@ -148,7 +153,10 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
     const currentQueueObjects = objects.filter((object) =>
       isExistObjectOnQueue(object, queueIndex)
     );
-    const [selectedObjectIds, setSelectedObjectIds] = useState<string[]>([]);
+    // const [selectedObjectIds, setSelectedObjectIds] = useState<string[]>([]);
+    const [selectedObjectIds, setSelectedObjectIds] = useRecoilState(
+      selectedObjectIdsState
+    );
 
     useImperativeHandle(
       ref,
@@ -270,7 +278,7 @@ export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
 
     useLayoutEffect(() => {
       setSelectedObjectIds([]);
-    }, [queueIndex]);
+    }, [setSelectedObjectIds, queueIndex]);
 
     return (
       <Drawable

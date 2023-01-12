@@ -257,3 +257,8 @@ export const currentQueueObjectsSelector = selector<QueueSquareWithEffect[]>({
     return result;
   },
 });
+
+export const selectedObjectIdsState = atom<string[]>({
+  key: 'selectedObjectIdsState',
+  default: [],
+});
