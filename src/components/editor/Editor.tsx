@@ -1,17 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import {
-  createContext,
-  forwardRef,
-  useImperativeHandle,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
 import {
+  documentState,
   QueueDocumentRect,
   selectedObjectIdsState,
 } from '../../store/document';
@@ -22,7 +16,8 @@ import {
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { documentSettingsState } from '../../store/settings';
 
 const Selector = styled.div`
   width: 100%;
@@ -40,19 +35,6 @@ export interface QueueEditorContextType {
   currentQueueObjects: QueueSquareWithEffect[];
 }
 
-export const QueueEditorContext = createContext<QueueEditorContextType>({
-  selectedObjectIds: [],
-  queueIndex: 0,
-  scale: 1,
-  documentRect: {
-    width: 0,
-    height: 0,
-  },
-  objects: [],
-  currentQueueObjects: [],
-});
-QueueEditorContext.displayName = 'QueueEditorContext';
-
 export interface RectUpdateModel {
   uuid: string;
   queueIndex: number;
@@ -60,53 +42,7 @@ export interface RectUpdateModel {
 }
 
 export interface QueueEditorProps {
-  /**
-   * @description
-   * 현재 큐 인덱스
-   */
-  queueIndex?: number;
-
-  /**
-   * @description
-   * 애니메이션 방향
-   */
-  queuePosition?: 'forward' | 'backward' | 'pause';
-
-  /**
-   * @description
-   * 문서 크기
-   *
-   *  @default { width: 0, height: 0 }
-   */
-  documentRect?: QueueDocumentRect;
-
-  /**
-   * @description
-   * 스케일
-   *
-   * @default 1
-   */
-  scale?: number;
-
-  /**
-   * @description
-   * 큐 오브젝트
-   *
-   * @default []
-   */
-  objects?: QueueSquareWithEffect[];
-
-  /**
-   * @description
-   * 오브젝트가 드래그로 움직인 경우 이벤트
-   */
   onObjectRectUpdate?: (models: RectUpdateModel[]) => void;
-
-  /**
-   * @description
-   * 큐 애니메이션 종료 시 이벤트
-   */
-  onAnimationEnd?: () => void;
 }
 
 export interface QueueEditorRef {
@@ -133,209 +69,210 @@ export interface QueueEditorRef {
   select(ids: string[]): void;
 }
 
-export const QueueEditor = forwardRef<QueueEditorRef, QueueEditorProps>(
-  (
-    {
-      queueIndex = 0,
-      queuePosition = 'pause',
-      objects = [],
-      documentRect = { width: 0, height: 0 },
-      scale = 1,
-      onObjectRectUpdate,
-    },
-    ref
-  ) => {
-    const canvasDiv = useRef<HTMLDivElement>(null);
-    const [translate, setTranslate] = useState<{ x: number; y: number }>({
-      x: 0,
-      y: 0,
+export const QueueEditor: FunctionComponent = () => {
+  const canvasDiv = useRef<HTMLDivElement>(null);
+  const [translate, setTranslate] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const settings = useRecoilValue(documentSettingsState);
+  const currentQueueObjects = queueDocument.objects.filter((object) =>
+    isExistObjectOnQueue(object, settings.queueIndex)
+  );
+  const [selectedObjectIds, setSelectedObjectIds] = useRecoilState(
+    selectedObjectIdsState
+  );
+
+  const onObjectRectUpdate = (models: RectUpdateModel[]): void => {
+    const newObjects = queueDocument.objects.map((object) => {
+      const model = models.find((model) => model.uuid === object.uuid);
+      if (!model) {
+        return object;
+      }
+      const slicedObject = { ...object, effects: object.effects.slice(0) };
+      const createEffectIndex = object.effects.find(
+        (effect) => effect.type === 'create'
+      )!.index;
+      const moveEffectIndex = object.effects.findIndex(
+        (effect) => effect.type === 'move' && effect.index === model.queueIndex
+      );
+      if (createEffectIndex === model.queueIndex) {
+        slicedObject.rect = model.rect;
+      } else if (moveEffectIndex !== -1) {
+        slicedObject.effects[moveEffectIndex] = {
+          ...slicedObject.effects[moveEffectIndex],
+          type: 'move',
+          rect: {
+            ...model.rect,
+          },
+        };
+      } else {
+        slicedObject.effects.push({
+          type: 'move',
+          index: model.queueIndex,
+          duration: 1000,
+          rect: {
+            ...model.rect,
+          },
+        });
+        slicedObject.effects.sort((a, b) => a.index - b.index);
+      }
+      return slicedObject;
     });
-    const currentQueueObjects = objects.filter((object) =>
-      isExistObjectOnQueue(object, queueIndex)
-    );
-    // const [selectedObjectIds, setSelectedObjectIds] = useState<string[]>([]);
-    const [selectedObjectIds, setSelectedObjectIds] = useRecoilState(
-      selectedObjectIdsState
-    );
+    console.log(queueDocument);
+    setQueueDocument({ ...queueDocument, objects: newObjects });
+    return;
+  };
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        animate: (): void => {
-          return;
-        },
-        play: (): void => {
-          return;
-        },
-        select: (): void => {
-          return;
-        },
-      }),
-      []
-    );
-
-    const onMousedown = (
-      event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-      object: QueueSquareWithEffect
-    ): void => {
-      let slicedSelectedObjectIds = [...selectedObjectIds];
-      const selected = selectedObjectIds.includes(object.uuid);
-      const initX = event.clientX;
-      const initY = event.clientY;
-      let diffX = 0;
-      let diffY = 0;
-      if (!selected) {
-        setSelectedObjectIds([object.uuid]);
-        slicedSelectedObjectIds = [object.uuid];
-      }
-      const mover = (event: MouseEvent): void => {
-        const x = event.clientX - initX;
-        const y = event.clientY - initY;
-        const currentScale = 1 / scale;
-        setTranslate({ x: x * currentScale, y: y * currentScale });
-        diffX = x * currentScale;
-        diffY = y * currentScale;
-      };
-      const finish = (event: MouseEvent): void => {
-        const updateModels = objects
-          .filter((object) => slicedSelectedObjectIds.includes(object.uuid))
-          .map<RectUpdateModel>((object) => {
-            const rect = getCurrentRect(object, queueIndex);
-            return {
-              uuid: object.uuid,
-              queueIndex: queueIndex,
-              rect: {
-                x: rect.x + diffX,
-                y: rect.y + diffY,
-                width: rect.width,
-                height: rect.height,
-              },
-            };
-          });
-        if (onObjectRectUpdate) {
-          onObjectRectUpdate(updateModels);
-        }
-        document.removeEventListener('mousemove', mover);
-        document.removeEventListener('mouseup', finish);
-        setTranslate({ x: 0, y: 0 });
-      };
-
-      document.addEventListener('mousemove', mover);
-      document.addEventListener('mouseup', finish);
+  const onMousedown = (
+    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    object: QueueSquareWithEffect
+  ): void => {
+    let slicedSelectedObjectIds = [...selectedObjectIds];
+    const selected = selectedObjectIds.includes(object.uuid);
+    const initX = event.clientX;
+    const initY = event.clientY;
+    let diffX = 0;
+    let diffY = 0;
+    if (!selected) {
+      setSelectedObjectIds([object.uuid]);
+      slicedSelectedObjectIds = [object.uuid];
+    }
+    const mover = (event: MouseEvent): void => {
+      const x = event.clientX - initX;
+      const y = event.clientY - initY;
+      const currentScale = 1 / settings.scale;
+      setTranslate({ x: x * currentScale, y: y * currentScale });
+      diffX = x * currentScale;
+      diffY = y * currentScale;
+    };
+    const finish = (event: MouseEvent): void => {
+      const updateModels = queueDocument.objects
+        .filter((object) => slicedSelectedObjectIds.includes(object.uuid))
+        .map<RectUpdateModel>((object) => {
+          const rect = getCurrentRect(object, settings.queueIndex);
+          return {
+            uuid: object.uuid,
+            queueIndex: settings.queueIndex,
+            rect: {
+              x: rect.x + diffX,
+              y: rect.y + diffY,
+              width: rect.width,
+              height: rect.height,
+            },
+          };
+        });
+      onObjectRectUpdate(updateModels);
+      document.removeEventListener('mousemove', mover);
+      document.removeEventListener('mouseup', finish);
+      setTranslate({ x: 0, y: 0 });
     };
 
-    /**
-     * @description
-     * 드로잉 시작 시 시작 지점에 오브젝트가 있으면 드로잉을 취소 (오브젝트 이동 동작을 수행해야 함)
-     */
-    const onDrawStart = (event: DrawEvent, cancel: () => void): void => {
-      if (!canvasDiv.current) {
-        return;
-      }
-      const rect = canvasDiv.current.getBoundingClientRect();
-      const absScale = 1 / scale;
-      const x = (event.drawClientX - rect.x) * absScale;
-      const y = (event.drawClientY - rect.y) * absScale;
-      const hasSelectableObject = objects.some((object) => {
-        const rect = getCurrentRect(object, queueIndex);
-        return (
-          rect.x <= x &&
-          rect.y <= y &&
-          rect.x + rect.width >= x &&
-          rect.y + rect.height >= y
-        );
-      });
-      if (hasSelectableObject) {
-        cancel();
-      }
-    };
+    document.addEventListener('mousemove', mover);
+    document.addEventListener('mouseup', finish);
+  };
 
-    /**
-     * @description
-     * 드로잉 종료 시 범위 내 오브젝트를 선택
-     */
-    const onDrawEnd = (event: DrawEvent): void => {
-      if (!canvasDiv.current) {
-        return;
-      }
-      const rect = canvasDiv.current.getBoundingClientRect();
-      const absScale = 1 / scale;
-      const x = (event.drawClientX - rect.x) * absScale;
-      const y = (event.drawClientY - rect.y) * absScale;
-      const width = event.width * absScale;
-      const height = event.height * absScale;
-      const selectedObjects = objects.filter((object) => {
-        const rect = getCurrentRect(object, queueIndex);
-        return (
-          rect.x >= x &&
-          rect.y >= y &&
-          rect.x + rect.width <= x + width &&
-          rect.y + rect.height <= y + height
-        );
-      });
-      setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
-    };
+  /**
+   * @description
+   * 드로잉 시작 시 시작 지점에 오브젝트가 있으면 드로잉을 취소 (오브젝트 이동 동작을 수행해야 함)
+   */
+  const onDrawStart = (event: DrawEvent, cancel: () => void): void => {
+    if (!canvasDiv.current) {
+      return;
+    }
+    const rect = canvasDiv.current.getBoundingClientRect();
+    const absScale = 1 / settings.scale;
+    const x = (event.drawClientX - rect.x) * absScale;
+    const y = (event.drawClientY - rect.y) * absScale;
+    const hasSelectableObject = queueDocument.objects.some((object) => {
+      const rect = getCurrentRect(object, settings.queueIndex);
+      return (
+        rect.x <= x &&
+        rect.y <= y &&
+        rect.x + rect.width >= x &&
+        rect.y + rect.height >= y
+      );
+    });
+    if (hasSelectableObject) {
+      cancel();
+    }
+  };
 
-    useLayoutEffect(() => {
-      setSelectedObjectIds([]);
-    }, [setSelectedObjectIds, queueIndex]);
+  /**
+   * @description
+   * 드로잉 종료 시 범위 내 오브젝트를 선택
+   */
+  const onDrawEnd = (event: DrawEvent): void => {
+    if (!canvasDiv.current) {
+      return;
+    }
+    const rect = canvasDiv.current.getBoundingClientRect();
+    const absScale = 1 / settings.scale;
+    const x = (event.drawClientX - rect.x) * absScale;
+    const y = (event.drawClientY - rect.y) * absScale;
+    const width = event.width * absScale;
+    const height = event.height * absScale;
+    const selectedObjects = queueDocument.objects.filter((object) => {
+      const rect = getCurrentRect(object, settings.queueIndex);
+      return (
+        rect.x >= x &&
+        rect.y >= y &&
+        rect.x + rect.width <= x + width &&
+        rect.y + rect.height <= y + height
+      );
+    });
+    setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
+  };
 
-    return (
-      <Drawable
-        scale={scale}
-        drawer={<Selector></Selector>}
-        onDrawStart={onDrawStart}
-        onDrawEnd={onDrawEnd}
-        className={css`
-          flex: 1;
-          background: #e9eaed;
-          overflow: auto;
-          display: flex;
-        `}
+  useLayoutEffect(() => {
+    setSelectedObjectIds([]);
+  }, [setSelectedObjectIds, settings.queueIndex]);
+
+  return (
+    <Drawable
+      scale={settings.scale}
+      drawer={<Selector></Selector>}
+      onDrawStart={onDrawStart}
+      onDrawEnd={onDrawEnd}
+      className={css`
+        flex: 1;
+        background: #e9eaed;
+        overflow: auto;
+        display: flex;
+      `}
+    >
+      <Scaler
+        width={queueDocument.documentRect.width}
+        height={queueDocument.documentRect.height}
+        scale={settings.scale}
       >
-        <Scaler
-          width={documentRect.width}
-          height={documentRect.height}
-          scale={scale}
+        <div
+          ref={canvasDiv}
+          className={css`
+            position: relative;
+            border: 1px solid gray;
+            box-sizing: border-box;
+            background: white;
+          `}
+          style={{
+            width: queueDocument.documentRect.width,
+            height: queueDocument.documentRect.height,
+          }}
         >
-          <QueueEditorContext.Provider
-            value={{
-              selectedObjectIds: selectedObjectIds,
-              documentRect: documentRect,
-              scale: scale,
-              queueIndex: queueIndex,
-              objects: objects,
-              currentQueueObjects: currentQueueObjects,
-            }}
-          >
-            <div
-              ref={canvasDiv}
-              className={css`
-                position: relative;
-                border: 1px solid gray;
-                box-sizing: border-box;
-                background: white;
-              `}
-              style={{
-                width: documentRect.width,
-                height: documentRect.height,
-              }}
-            >
-              {currentQueueObjects.map((object, i) => (
-                <QueueObject
-                  key={object.uuid + queueIndex}
-                  position={queuePosition}
-                  index={queueIndex}
-                  selected={selectedObjectIds.includes(object.uuid)}
-                  translate={translate}
-                  object={object}
-                  onMousedown={(event): void => onMousedown(event, object)}
-                ></QueueObject>
-              ))}
-            </div>
-          </QueueEditorContext.Provider>
-        </Scaler>
-      </Drawable>
-    );
-  }
-);
+          {currentQueueObjects.map((object, i) => (
+            <QueueObject
+              key={object.uuid + settings.queueIndex}
+              position={settings.queuePosition}
+              index={settings.queueIndex}
+              selected={selectedObjectIds.includes(object.uuid)}
+              translate={translate}
+              object={object}
+              onMousedown={(event): void => onMousedown(event, object)}
+            ></QueueObject>
+          ))}
+        </div>
+      </Scaler>
+    </Drawable>
+  );
+};
