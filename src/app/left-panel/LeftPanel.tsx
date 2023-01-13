@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import classnames from 'classnames';
+import clsx from 'clsx';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Input } from '../../components/input/Input';
 import { Object } from '../../components/object/Object';
@@ -61,7 +61,7 @@ export const LeftPanel: FunctionComponent = () => {
   };
 
   return (
-    <div className={classnames(styles.container)}>
+    <div className={clsx(styles.container)}>
       <Input placeholder="Search Shape" className={styles.input}></Input>
       <ObjectGroup>
         <ObjectGroupTitle>Group Title</ObjectGroupTitle>
