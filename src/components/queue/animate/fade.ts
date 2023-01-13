@@ -70,7 +70,7 @@ export const getFadeAnimation = (
 };
 
 export const WithFadeAnimation = (
-  elementRef: RefObject<HTMLDivElement>,
+  elementRef: RefObject<HTMLElement>,
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'

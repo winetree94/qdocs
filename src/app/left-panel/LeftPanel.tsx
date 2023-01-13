@@ -32,7 +32,7 @@ export const LeftPanel: FunctionComponent = () => {
           stroke: {
             width: 1,
             color: '#000000',
-            dashArray: 'solid',
+            dasharray: 'solid',
           },
           fill: {
             color: '#ffffff',

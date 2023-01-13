@@ -21,7 +21,7 @@ export interface QueueSquareFade {
 }
 
 export interface QueueSquareStroke {
-  dashArray: string;
+  dasharray: string;
   width: number;
   color: string;
 }

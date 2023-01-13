@@ -4,9 +4,7 @@ import {
   ReactNode,
   useLayoutEffect,
   useRef,
-  forwardRef,
   MouseEvent,
-  useImperativeHandle,
 } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import { QueueSquare, QueueSquareWithEffect } from '../../model/object/rect';
@@ -36,94 +34,100 @@ export interface QueueObjectProps {
   object: QueueSquareWithEffect;
 }
 
-export interface QueueObjectRef {
-  animate: () => void;
-}
+export const QueueObject: FunctionComponent<QueueObjectProps> = ({
+  children,
+  object,
+  selected,
+  index,
+  onMousedown,
+  position,
+  translate,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const objectRef = useRef<SVGSVGElement>(null);
 
-export const QueueObject = forwardRef<QueueObjectRef, QueueObjectProps>(
-  (
-    { children, object, selected, index, onMousedown, position, translate },
-    ref
-  ) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const objectRef = useRef<HTMLDivElement>(null);
+  const currentFill = object.fill;
+  const currentStroke = object.stroke;
+  const currentText = object.text;
+  const currentFade = getCurrentFade(object, index);
+  const currentRect = getCurrentRect(object, index);
 
-    const currentFade = getCurrentFade(object, index);
-    const currentRect = getCurrentRect(object, index);
+  WithFadeAnimation(containerRef, object, index, position);
+  WithRectAnimation(containerRef, object, index, position);
 
-    WithFadeAnimation(objectRef, object, index, position);
-    WithRectAnimation(containerRef, object, index, position);
+  const onContainerMousedown = (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ): void => {
+    if (onMousedown) {
+      onMousedown(event);
+    }
+  };
 
-    const onContainerMousedown = (
-      event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-    ): void => {
-      if (onMousedown) {
-        onMousedown(event);
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const element = containerRef.current;
+      element.style.left = currentRect.x + 'px';
+      element.style.top = currentRect.y + 'px';
+      element.style.width = currentRect.width + 'px';
+      element.style.height = currentRect.height + 'px';
+    }
+    if (containerRef.current) {
+      const element = containerRef.current;
+      element.style.opacity = `${Math.max(currentFade.opacity, 0.1)}`;
+    }
+  }, [currentRect, currentFade]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={styles.container}
+      onMouseDown={onContainerMousedown}
+      style={
+        selected
+          ? {
+              transform: `translate(${translate.x}px, ${translate.y}px)`,
+            }
+          : {}
       }
-    };
-
-    useLayoutEffect(() => {
-      if (containerRef.current) {
-        const element = containerRef.current;
-        element.style.left = currentRect.x + 'px';
-        element.style.top = currentRect.y + 'px';
-        element.style.width = currentRect.width + 'px';
-        element.style.height = currentRect.height + 'px';
-      }
-      if (objectRef.current) {
-        const element = objectRef.current;
-        element.style.opacity = `${Math.max(currentFade.opacity, 0.1)}`;
-      }
-    }, [currentRect, currentFade]);
-
-    useImperativeHandle(ref, () => ({
-      animate: (): void => {
-        // animateRect();
-        // animateFade();
-      },
-    }));
-
-    return (
-      <div
-        ref={containerRef}
-        className={styles.container}
-        onMouseDown={onContainerMousedown}
-        style={
-          selected
-            ? {
-                transform: `translate(${translate.x}px, ${translate.y}px)`,
-              }
-            : {}
-        }
+    >
+      <svg
+        ref={objectRef}
+        style={{
+          width: currentRect.width,
+          height: currentRect.height,
+        }}
       >
-        <div
-          ref={objectRef}
-          style={{
-            background: 'red',
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <div className={styles.object}></div>
-          <div className={styles.text}>{children}</div>
-        </div>
-        {selected && (
-          <Resizer
+        <g>
+          <rect
+            x={0}
+            y={0}
             width={currentRect.width}
             height={currentRect.height}
-          ></Resizer>
-        )}
+            fill={currentFill.color}
+            stroke={currentStroke.color}
+            strokeWidth={currentStroke.width}
+            strokeDasharray={currentStroke.dasharray}
+          ></rect>
+        </g>
+      </svg>
+      <div
+        className={styles.text}
+        style={{
+          justifyContent: currentText.verticalAlign,
+          alignItems: currentText.horizontalAlign,
+          fontFamily: currentText.fontFamily,
+          color: currentText.fontColor,
+          fontSize: currentText.fontSize,
+        }}
+      >
+        {currentText.text}
       </div>
-    );
-  }
-);
-
-export interface QueueSquareObjectProps {
-  children: ReactNode;
-}
-
-export const QueueSquareObject: FunctionComponent<QueueSquareObjectProps> = ({
-  children,
-}) => {
-  return <div>{children}</div>;
+      {selected && (
+        <Resizer
+          width={currentRect.width}
+          height={currentRect.height}
+        ></Resizer>
+      )}
+    </div>
+  );
 };

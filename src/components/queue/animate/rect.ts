@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Dispatch,
   RefObject,
@@ -123,6 +122,7 @@ export const WithRectAnimation = (
 
     setRectFrame(createdFrame);
     return () => cancelAnimationFrame(rectFrame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return [rectFrame, setRectFrame];

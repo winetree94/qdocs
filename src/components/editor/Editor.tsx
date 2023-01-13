@@ -120,7 +120,6 @@ export const QueueEditor: FunctionComponent = () => {
       }
       return slicedObject;
     });
-    console.log(queueDocument);
     setQueueDocument({ ...queueDocument, objects: newObjects });
     return;
   };
