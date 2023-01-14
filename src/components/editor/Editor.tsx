@@ -97,9 +97,12 @@ export const QueueEditor: FunctionComponent = () => {
       const moveEffectIndex = object.effects.findIndex(
         (effect) => effect.type === 'move' && effect.index === model.queueIndex
       );
+
       if (createEffectIndex === model.queueIndex) {
         slicedObject.rect = model.rect;
-      } else if (moveEffectIndex !== -1) {
+      }
+
+      if (createEffectIndex !== model.queueIndex && moveEffectIndex !== -1) {
         slicedObject.effects[moveEffectIndex] = {
           ...slicedObject.effects[moveEffectIndex],
           type: 'move',
@@ -107,7 +110,9 @@ export const QueueEditor: FunctionComponent = () => {
             ...model.rect,
           },
         };
-      } else {
+      }
+
+      if (createEffectIndex !== model.queueIndex && moveEffectIndex === -1) {
         slicedObject.effects.push({
           type: 'move',
           index: model.queueIndex,
@@ -118,6 +123,7 @@ export const QueueEditor: FunctionComponent = () => {
         });
         slicedObject.effects.sort((a, b) => a.index - b.index);
       }
+
       return slicedObject;
     });
     setQueueDocument({ ...queueDocument, objects: newObjects });
