@@ -91,6 +91,8 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
       <div
         className="object-shape"
         style={{
+          width: `${currentRect.width + translate.width}px`,
+          height: `${currentRect.height + translate.height}px`,
           opacity: `${currentFade.opacity}`,
         }}
       >
@@ -98,14 +100,14 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
           className="object-rect"
           ref={objectRef}
           width={currentRect.width + translate.width}
-          height={currentRect.height + translate.width}
+          height={currentRect.height + translate.height}
         >
           <g>
             <rect
               x={0}
               y={0}
               width={currentRect.width + translate.width}
-              height={currentRect.height + translate.width}
+              height={currentRect.height + translate.height}
               fill={currentFill.color}
               stroke={currentStroke.color}
               strokeWidth={currentStroke.width}

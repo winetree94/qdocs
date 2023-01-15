@@ -317,7 +317,16 @@ export const QueueEditor: FunctionComponent = () => {
               position={settings.queuePosition}
               index={settings.queueIndex}
               selected={selectedObjectIds.includes(object.uuid)}
-              translate={translate}
+              translate={
+                selectedObjectIds.includes(object.uuid)
+                  ? translate
+                  : {
+                      x: 0,
+                      y: 0,
+                      width: 0,
+                      height: 0,
+                    }
+              }
               object={object}
               onMousedown={(event): void => onMousedown(event, object)}
               onResizeMove={(event): void => onResizeMove(object.uuid, event)}
