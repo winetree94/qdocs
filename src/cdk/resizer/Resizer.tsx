@@ -64,8 +64,8 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
       switch (position) {
         case 'top-left':
           newRect = {
-            x: -diffX,
-            y: -diffY,
+            x: diffX,
+            y: diffY,
             width: -diffX,
             height: -diffY,
           };
@@ -73,7 +73,7 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
         case 'top-middle':
           newRect = {
             x: 0,
-            y: -diffY,
+            y: diffY,
             width: 0,
             height: -diffY,
           };
@@ -81,7 +81,7 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
         case 'top-right':
           newRect = {
             x: 0,
-            y: -diffY,
+            y: diffY,
             width: diffX,
             height: -diffY,
           };
@@ -112,7 +112,7 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
           break;
         case 'bottom-left':
           newRect = {
-            x: -diffX,
+            x: diffX,
             y: 0,
             width: -diffX,
             height: diffY,
@@ -120,7 +120,7 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
           break;
         case 'middle-left':
           newRect = {
-            x: -diffX,
+            x: diffX,
             y: 0,
             width: -diffX,
             height: 0,
