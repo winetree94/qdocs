@@ -2,14 +2,13 @@ import {
   createContext,
   FunctionComponent,
   ReactNode,
-  useLayoutEffect,
   useRef,
   MouseEvent,
 } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import { QueueSquare, QueueSquareWithEffect } from '../../model/object/rect';
-import { getCurrentFade, WithFadeAnimation } from './animate/fade';
-import { getCurrentRect, WithRectAnimation } from './animate/rect';
+import { WithFadeAnimation } from './animate/fade';
+import { WithRectAnimation } from './animate/rect';
 import styles from './EditableObject.module.scss';
 
 export interface QueueObjectContextType {
@@ -35,7 +34,6 @@ export interface QueueObjectProps {
 }
 
 export const QueueObject: FunctionComponent<QueueObjectProps> = ({
-  children,
   object,
   selected,
   index,
@@ -49,11 +47,8 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   const currentFill = object.fill;
   const currentStroke = object.stroke;
   const currentText = object.text;
-  const currentFade = getCurrentFade(object, index);
-  const currentRect = getCurrentRect(object, index);
-
-  WithFadeAnimation(containerRef, object, index, position);
-  WithRectAnimation(containerRef, object, index, position);
+  const currentFade = WithFadeAnimation(object, index, position);
+  const currentRect = WithRectAnimation(object, index, position);
 
   const onContainerMousedown = (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -63,32 +58,21 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
     }
   };
 
-  useLayoutEffect(() => {
-    if (containerRef.current) {
-      const element = containerRef.current;
-      element.style.left = currentRect.x + 'px';
-      element.style.top = currentRect.y + 'px';
-      element.style.width = currentRect.width + 'px';
-      element.style.height = currentRect.height + 'px';
-    }
-    if (containerRef.current) {
-      const element = containerRef.current;
-      element.style.opacity = `${Math.max(currentFade.opacity, 0.1)}`;
-    }
-  }, [currentRect, currentFade]);
-
   return (
     <div
       ref={containerRef}
       className={styles.container}
       onMouseDown={onContainerMousedown}
-      style={
-        selected
-          ? {
-              transform: `translate(${translate.x}px, ${translate.y}px)`,
-            }
-          : {}
-      }
+      style={{
+        top: `${currentRect.y}px`,
+        left: `${currentRect.x}px`,
+        width: `${currentRect.width}px`,
+        height: `${currentRect.height}px`,
+        opacity: `${currentFade.opacity}`,
+        transform: selected
+          ? `translate(${translate.x}px, ${translate.y}px)`
+          : '',
+      }}
     >
       <svg
         ref={objectRef}

@@ -1,11 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { animate, linear } from '../../../cdk/animation/animate';
 import {
   QueueSquareFade,
@@ -70,38 +64,41 @@ export const getFadeAnimation = (
 };
 
 export const WithFadeAnimation = (
-  elementRef: RefObject<HTMLElement>,
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'
-): [number, Dispatch<SetStateAction<number>>] => {
+): QueueSquareFade => {
   const [fadeFrame, setFadeFrame] = useState<number>(0);
+  const currentFade = getCurrentFade(object, index);
+  const [animatedFrame, setAnimatedFrame] = useState<QueueSquareFade>({
+    opacity: Math.max(currentFade.opacity, 0.1),
+  });
   const fadeAnimation = getFadeAnimation(object, index, position);
 
   useLayoutEffect(() => {
     cancelAnimationFrame(fadeFrame);
+    if (position === 'pause') {
+      return;
+    }
     if (!fadeAnimation) {
       return;
     }
-    if (!elementRef.current) {
-      return;
-    }
-
-    const element = elementRef.current;
-    element.style.opacity = `${fadeAnimation.fromFade.opacity}`;
-
+    setAnimatedFrame({
+      opacity: Math.max(fadeAnimation.fromFade.opacity, 0.1),
+    });
     const createdFrame = animate({
       duration: fadeAnimation.fadeEffect.duration,
       timing: linear,
       draw: (progress) => {
-        element.style.opacity =
-          Math.max(
+        setAnimatedFrame({
+          opacity: Math.max(
             fadeAnimation.fromFade.opacity +
               (fadeAnimation.fadeEffect.fade.opacity -
                 fadeAnimation.fromFade.opacity) *
                 progress,
             0.1
-          ) + '';
+          ),
+        });
       },
     });
 
@@ -109,5 +106,5 @@ export const WithFadeAnimation = (
     return () => cancelAnimationFrame(fadeFrame);
   }, []);
 
-  return [fadeFrame, setFadeFrame];
+  return animatedFrame;
 };

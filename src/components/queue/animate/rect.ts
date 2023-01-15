@@ -1,10 +1,5 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useLayoutEffect,
-  useState,
-} from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useLayoutEffect, useState } from 'react';
 import { animate, linear } from '../../../cdk/animation/animate';
 import {
   QueueSquareMoveEffect,
@@ -69,12 +64,14 @@ export const getRectAnimation = (
 };
 
 export const WithRectAnimation = (
-  elementRef: RefObject<HTMLDivElement>,
   object: QueueSquareWithEffect,
   index: number,
   position: 'forward' | 'backward' | 'pause'
-): [number, Dispatch<SetStateAction<number>>] => {
+): QueueSquareRect => {
   const [rectFrame, setRectFrame] = useState<number>(0);
+  const currentRect = getCurrentRect(object, index);
+  const [animatedFrame, setAnimatedFrame] =
+    useState<QueueSquareRect>(currentRect);
   const rectAnimation = getRectAnimation(object, index, position);
 
   useLayoutEffect(() => {
@@ -82,48 +79,41 @@ export const WithRectAnimation = (
     if (!rectAnimation) {
       return;
     }
-    if (!elementRef.current) {
-      return;
-    }
-
-    const element = elementRef.current;
-    element.style.left = rectAnimation.fromRect.x + 'px';
-    element.style.top = rectAnimation.fromRect.y + 'px';
-    element.style.width = rectAnimation.fromRect.width + 'px';
-    element.style.height = rectAnimation.fromRect.height + 'px';
-
+    setAnimatedFrame(rectAnimation.fromRect);
     const createdFrame = animate({
       duration: rectAnimation.moveEffect.duration,
       timing: linear,
       draw: (progress) => {
-        element.style.left =
-          rectAnimation.fromRect.x +
-          (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
-            progress +
-          'px';
-        element.style.top =
-          rectAnimation.fromRect.y +
-          (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
-            progress +
-          'px';
-        element.style.width =
-          rectAnimation.fromRect.width +
-          (rectAnimation.moveEffect.rect.width - rectAnimation.fromRect.width) *
-            progress +
-          'px';
-        element.style.height =
-          rectAnimation.fromRect.width +
-          (rectAnimation.moveEffect.rect.height -
-            rectAnimation.fromRect.height) *
-            progress +
-          'px';
+        setAnimatedFrame({
+          x:
+            rectAnimation.fromRect.x +
+            (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
+              progress,
+          y:
+            rectAnimation.fromRect.y +
+            (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
+              progress,
+          width:
+            rectAnimation.fromRect.width +
+            (rectAnimation.moveEffect.rect.width -
+              rectAnimation.fromRect.width) *
+              progress,
+          height:
+            rectAnimation.fromRect.width +
+            (rectAnimation.moveEffect.rect.height -
+              rectAnimation.fromRect.height) *
+              progress,
+        });
       },
     });
 
     setRectFrame(createdFrame);
-    return () => cancelAnimationFrame(rectFrame);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setAnimatedFrame(rectAnimation.fromRect);
+    return () => {
+      cancelAnimationFrame(rectFrame);
+      setAnimatedFrame(currentRect);
+    };
   }, []);
 
-  return [rectFrame, setRectFrame];
+  return animatedFrame;
 };
