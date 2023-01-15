@@ -115,5 +115,9 @@ export const WithRectAnimation = (
     };
   }, []);
 
+  if (position === 'pause') {
+    return currentRect;
+  }
+
   return animatedFrame;
 };

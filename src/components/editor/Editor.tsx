@@ -76,7 +76,7 @@ export const QueueEditor: FunctionComponent = () => {
     y: 0,
   });
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const settings = useRecoilValue(documentSettingsState);
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
   const currentQueueObjects = queueDocument.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
@@ -127,6 +127,7 @@ export const QueueEditor: FunctionComponent = () => {
       return slicedObject;
     });
     setQueueDocument({ ...queueDocument, objects: newObjects });
+    setSettings({ ...settings, queuePosition: 'pause' });
     return;
   };
 

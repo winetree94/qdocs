@@ -106,5 +106,11 @@ export const WithFadeAnimation = (
     return () => cancelAnimationFrame(fadeFrame);
   }, []);
 
+  if (position === 'pause') {
+    return {
+      opacity: Math.max(currentFade.opacity, 0.1),
+    };
+  }
+
   return animatedFrame;
 };
