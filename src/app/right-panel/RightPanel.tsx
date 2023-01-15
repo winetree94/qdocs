@@ -1,14 +1,20 @@
 import clsx from 'clsx';
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+import { PlusIcon } from '@radix-ui/react-icons';
 import { documentState, selectedObjectIdsState } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 import classes from './RightPanel.module.scss';
+import { Dropdown } from '../../components';
 
 export const RightPanel = (): ReactElement => {
   const queueDocument = useRecoilValue(documentState);
   const selectedObjectIds = useRecoilValue(selectedObjectIdsState);
   const settings = useRecoilValue(documentSettingsState);
+  const [radioValue, setRadioValue] = useState('radio1');
+  const [checkboxCheked, setCheckboxCheked] = useState<
+    boolean | 'indeterminate'
+  >(true);
 
   const selectedObjects = queueDocument.objects.filter((object) =>
     selectedObjectIds.includes(object.uuid)
@@ -47,7 +53,47 @@ export const RightPanel = (): ReactElement => {
       )}
       {currentQueueEffectList && (
         <div>
-          <p className="text-sm">Current queue effect list</p>
+          <div className="flex items-center">
+            <Dropdown>
+              <Dropdown.Trigger className="p-1 hover:bg-slate-200">
+                <PlusIcon />
+              </Dropdown.Trigger>
+              <Dropdown.Content side="left">
+                <Dropdown.Item>Move</Dropdown.Item>
+                <Dropdown.Item>Fade</Dropdown.Item>
+                <Dropdown.Separator />
+                <Dropdown.Label>Label</Dropdown.Label>
+                <Dropdown.Item>
+                  <div>Item</div>
+                  <div className="text-xs text-gray-400 ml-auto">K</div>
+                </Dropdown.Item>
+                <Dropdown.Item>Labeled item1</Dropdown.Item>
+                <Dropdown.Item disabled>Disalbed item</Dropdown.Item>
+                <Dropdown.Separator />
+                <Dropdown.RadioGroup
+                  value={radioValue}
+                  onValueChange={(value): void => {
+                    setRadioValue(value);
+                    console.log(value);
+                  }}
+                >
+                  <Dropdown.RadioItem value="radio1">radio1</Dropdown.RadioItem>
+                  <Dropdown.RadioItem value="radio2">radio2</Dropdown.RadioItem>
+                </Dropdown.RadioGroup>
+                <Dropdown.Separator />
+                <Dropdown.Group>
+                  <Dropdown.CheckboxItem
+                    checked={checkboxCheked}
+                    onCheckedChange={setCheckboxCheked}
+                  >
+                    checkbox item
+                  </Dropdown.CheckboxItem>
+                  <Dropdown.CheckboxItem>checkbox item2</Dropdown.CheckboxItem>
+                </Dropdown.Group>
+              </Dropdown.Content>
+            </Dropdown>
+            <p className="text-sm">Current queue effect list</p>
+          </div>
           <ul className={classes['effect-list']}>
             {currentQueueEffectList.map((currentQueueEffect, index) => (
               <li key={`cqel-${index}`}>
