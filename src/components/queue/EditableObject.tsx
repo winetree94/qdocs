@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import {
   createContext,
   FunctionComponent,
@@ -6,7 +7,11 @@ import {
   MouseEvent,
 } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
-import { QueueSquare, QueueSquareWithEffect } from '../../model/object/rect';
+import {
+  QueueSquare,
+  QueueSquareRect,
+  QueueSquareWithEffect,
+} from '../../model/object/rect';
 import { WithFadeAnimation } from './animate/fade';
 import { WithRectAnimation } from './animate/rect';
 import styles from './EditableObject.module.scss';
@@ -26,10 +31,17 @@ export interface QueueObjectProps {
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
-  translate: { x: number; y: number };
+  translate: QueueSquareRect;
+  scale: number;
   onMousedown?: (
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
+  onResizerMousedown?: (
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => void;
+  onResizeStart?: (event: QueueSquareRect, cancel: () => void) => void;
+  onResizeMove?: (event: QueueSquareRect, cancel: () => void) => void;
+  onResizeEnd?: (event: QueueSquareRect) => void;
   object: QueueSquareWithEffect;
 }
 
@@ -37,9 +49,14 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   object,
   selected,
   index,
-  onMousedown,
   position,
   translate,
+  scale,
+  onMousedown,
+  onResizerMousedown,
+  onResizeStart,
+  onResizeMove,
+  onResizeEnd,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<SVGSVGElement>(null);
@@ -61,55 +78,66 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   return (
     <div
       ref={containerRef}
-      className={styles.container}
+      className={clsx('object-container', styles.container)}
       onMouseDown={onContainerMousedown}
       style={{
         top: `${currentRect.y}px`,
         left: `${currentRect.x}px`,
-        width: `${currentRect.width}px`,
-        height: `${currentRect.height}px`,
-        opacity: `${currentFade.opacity}`,
-        transform: selected
-          ? `translate(${translate.x}px, ${translate.y}px)`
-          : '',
+        width: `${currentRect.width + translate.width}px`,
+        height: `${currentRect.height + translate.height}px`,
+        transform: `translate(${translate.x}px, ${translate.y}px)`,
       }}
     >
-      <svg
-        ref={objectRef}
-        style={{
-          width: currentRect.width,
-          height: currentRect.height,
-        }}
-      >
-        <g>
-          <rect
-            x={0}
-            y={0}
-            width={currentRect.width}
-            height={currentRect.height}
-            fill={currentFill.color}
-            stroke={currentStroke.color}
-            strokeWidth={currentStroke.width}
-            strokeDasharray={currentStroke.dasharray}
-          ></rect>
-        </g>
-      </svg>
       <div
-        className={styles.text}
+        className="object-shape"
         style={{
-          justifyContent: currentText.verticalAlign,
-          alignItems: currentText.horizontalAlign,
-          fontFamily: currentText.fontFamily,
-          color: currentText.fontColor,
-          fontSize: currentText.fontSize,
+          opacity: `${currentFade.opacity}`,
         }}
       >
-        {currentText.text}
+        <svg
+          className="object-rect"
+          ref={objectRef}
+          width={currentRect.width + translate.width}
+          height={currentRect.height + translate.width}
+        >
+          <g>
+            <rect
+              x={0}
+              y={0}
+              width={currentRect.width + translate.width}
+              height={currentRect.height + translate.width}
+              fill={currentFill.color}
+              stroke={currentStroke.color}
+              strokeWidth={currentStroke.width}
+              strokeDasharray={currentStroke.dasharray}
+            ></rect>
+          </g>
+        </svg>
+        <div
+          className={clsx('object-text', styles.text)}
+          style={{
+            justifyContent: currentText.verticalAlign,
+            alignItems: currentText.horizontalAlign,
+            fontFamily: currentText.fontFamily,
+            color: currentText.fontColor,
+            fontSize: currentText.fontSize,
+          }}
+        >
+          {currentText.text}
+        </div>
       </div>
       {selected && (
         <Resizer
-          width={currentRect.width}
-          height={currentRect.height}
+          rect={{
+            x: currentRect.x + translate.x,
+            y: currentRect.y + translate.y,
+            width: currentRect.width + translate.width,
+            height: currentRect.height + translate.height,
+          }}
+          scale={scale}
+          onResizeStart={onResizeStart}
+          onResizeMove={onResizeMove}
+          onResizeEnd={onResizeEnd}
         ></Resizer>
       )}
     </div>

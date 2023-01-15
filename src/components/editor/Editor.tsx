@@ -71,9 +71,11 @@ export interface QueueEditorRef {
 
 export const QueueEditor: FunctionComponent = () => {
   const canvasDiv = useRef<HTMLDivElement>(null);
-  const [translate, setTranslate] = useState<{ x: number; y: number }>({
+  const [translate, setTranslate] = useState<QueueSquareRect>({
     x: 0,
     y: 0,
+    width: 0,
+    height: 0,
   });
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
@@ -149,7 +151,12 @@ export const QueueEditor: FunctionComponent = () => {
       const x = event.clientX - initX;
       const y = event.clientY - initY;
       const currentScale = 1 / settings.scale;
-      setTranslate({ x: x * currentScale, y: y * currentScale });
+      setTranslate({
+        x: x * currentScale,
+        y: y * currentScale,
+        width: 0,
+        height: 0,
+      });
       diffX = x * currentScale;
       diffY = y * currentScale;
     };
@@ -172,7 +179,12 @@ export const QueueEditor: FunctionComponent = () => {
       onObjectRectUpdate(updateModels);
       document.removeEventListener('mousemove', mover);
       document.removeEventListener('mouseup', finish);
-      setTranslate({ x: 0, y: 0 });
+      setTranslate({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      });
     };
 
     document.addEventListener('mousemove', mover);
@@ -231,6 +243,38 @@ export const QueueEditor: FunctionComponent = () => {
     setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
   };
 
+  const onResizeMove = (uuid: string, rect: QueueSquareRect): void => {
+    setTranslate(rect);
+    // console.log(uuid);
+  };
+
+  const onResizeEnd = (
+    object: QueueSquareWithEffect,
+    rect: QueueSquareRect
+  ): void => {
+    const currentRect = getCurrentRect(object, settings.queueIndex);
+    console.log(currentRect, rect);
+    onObjectRectUpdate([
+      {
+        uuid: object.uuid,
+        queueIndex: settings.queueIndex,
+        rect: {
+          x: currentRect.x + rect.x,
+          y: currentRect.y + rect.y,
+          width: currentRect.width + rect.width,
+          height: currentRect.height + rect.height,
+        },
+      },
+    ]);
+    // console.log(uuid, rect);
+    setTranslate({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    });
+  };
+
   useLayoutEffect(() => {
     setSelectedObjectIds([]);
   }, [setSelectedObjectIds, settings.queueIndex]);
@@ -269,12 +313,15 @@ export const QueueEditor: FunctionComponent = () => {
           {currentQueueObjects.map((object, i) => (
             <QueueObject
               key={object.uuid + settings.queueIndex}
+              scale={settings.scale}
               position={settings.queuePosition}
               index={settings.queueIndex}
               selected={selectedObjectIds.includes(object.uuid)}
               translate={translate}
               object={object}
               onMousedown={(event): void => onMousedown(event, object)}
+              onResizeMove={(event): void => onResizeMove(object.uuid, event)}
+              onResizeEnd={(event): void => onResizeEnd(object, event)}
             ></QueueObject>
           ))}
         </div>
