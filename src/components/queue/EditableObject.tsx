@@ -1,11 +1,5 @@
 import clsx from 'clsx';
-import {
-  createContext,
-  FunctionComponent,
-  ReactNode,
-  useRef,
-  MouseEvent,
-} from 'react';
+import { createContext, FunctionComponent, ReactNode, useRef } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import { QueueSquare, QueueSquareRect } from '../../model/object/rect';
 import { WithFadeAnimation } from './animate/fade';
@@ -27,13 +21,16 @@ export interface QueueObjectProps {
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
-  translate: QueueSquareRect;
+  translate?: QueueSquareRect;
   scale: number;
   onMousedown?: (
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
+  onDraggingStart?: (initEvent: MouseEvent, event: MouseEvent) => void;
+  onDraggingMove?: (initEvent: MouseEvent, event: MouseEvent) => void;
+  onDraggingEnd?: (initEvent: MouseEvent, event: MouseEvent) => void;
   onResizerMousedown?: (
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
   onResizeStart?: (event: QueueSquareRect, cancel: () => void) => void;
   onResizeMove?: (event: QueueSquareRect, cancel: () => void) => void;
@@ -46,9 +43,17 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   selected,
   index,
   position,
-  translate,
+  translate = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+  },
   scale,
   onMousedown,
+  onDraggingStart,
+  onDraggingMove,
+  onDraggingEnd,
   onResizerMousedown,
   onResizeStart,
   onResizeMove,
@@ -64,11 +69,42 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   const currentRect = WithRectAnimation(object, index, position);
 
   const onContainerMousedown = (
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ): void => {
     if (onMousedown) {
-      onMousedown(event);
+      onMousedown(initEvent);
     }
+
+    const onMove = (event: MouseEvent): void => {
+      if (onDraggingMove) {
+        onDraggingMove(initEvent.nativeEvent, event);
+      }
+    };
+
+    const checkOnMove = (event: MouseEvent): void => {
+      if (
+        Math.abs(event.clientX - initEvent.clientX) >= 3 ||
+        Math.abs(event.clientY - initEvent.clientY) >= 3
+      ) {
+        if (onDraggingStart) {
+          onDraggingStart(initEvent.nativeEvent, event);
+        }
+        document.removeEventListener('mousemove', checkOnMove);
+        document.addEventListener('mousemove', onMove);
+      }
+    };
+
+    const onUp = (event: MouseEvent): void => {
+      if (onDraggingEnd) {
+        onDraggingEnd(initEvent.nativeEvent, event);
+      }
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('mousemove', checkOnMove);
+    };
+
+    document.addEventListener('mousemove', checkOnMove);
+    document.addEventListener('mouseup', onUp);
   };
 
   return (

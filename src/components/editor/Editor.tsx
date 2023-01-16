@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
@@ -46,6 +47,7 @@ export const QueueEditor: FunctionComponent = () => {
     height: 0,
   });
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const [resizingObjectId, setResizingObjectId] = useState<string | null>(null);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const currentQueueObjects = queueDocument.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
@@ -102,69 +104,62 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueSquare
   ): void => {
-    const selectedObjectIds = [...settings.selectedObjects];
-    const selected = selectedObjectIds.includes(object.uuid);
-    const initX = event.clientX;
-    const initY = event.clientY;
-    let diffX = 0;
-    let diffY = 0;
-
-    if (!selected) {
-      selectedObjectIds.push(object.uuid);
+    const selected = settings.selectedObjects.includes(object.uuid);
+    if (!event.shiftKey) {
       setSettings({
         ...settings,
         selectedObjects: [object.uuid],
       });
-    }
-
-    const mover = (event: MouseEvent): void => {
-      const x = event.clientX - initX;
-      const y = event.clientY - initY;
-      const currentScale = 1 / settings.scale;
-      setTranslate({
-        x: x * currentScale,
-        y: y * currentScale,
-        width: 0,
-        height: 0,
-      });
-      diffX = x * currentScale;
-      diffY = y * currentScale;
-    };
-
-    const finish = (event: MouseEvent): void => {
-      const updateModels = queueDocument.objects
-        .filter((object) => selectedObjectIds.includes(object.uuid))
-        .map<RectUpdateModel>((object) => {
-          const rect = getCurrentRect(object, settings.queueIndex);
-          return {
-            uuid: object.uuid,
-            queueIndex: settings.queueIndex,
-            rect: {
-              x: rect.x + diffX,
-              y: rect.y + diffY,
-              width: rect.width,
-              height: rect.height,
-            },
-          };
-        });
-      updateObjectRects(updateModels);
+    } else {
       setSettings({
         ...settings,
-        selectedObjects: selectedObjectIds,
-        queuePosition: 'pause',
+        selectedObjects: selected
+          ? settings.selectedObjects.filter((id) => id !== object.uuid)
+          : [...settings.selectedObjects, object.uuid],
       });
-      document.removeEventListener('mousemove', mover);
-      document.removeEventListener('mouseup', finish);
-      setTranslate({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-      });
-    };
+    }
+  };
 
-    document.addEventListener('mousemove', mover);
-    document.addEventListener('mouseup', finish);
+  const onObjectDragMove = (initEvent: MouseEvent, event: MouseEvent): void => {
+    const x = event.clientX - initEvent.clientX;
+    const y = event.clientY - initEvent.clientY;
+    const currentScale = 1 / settings.scale;
+    setTranslate({
+      x: x * currentScale,
+      y: y * currentScale,
+      width: 0,
+      height: 0,
+    });
+  };
+
+  const onObjectDragEnd = (initEvent: MouseEvent, event: MouseEvent): void => {
+    const x = event.clientX - initEvent.clientX;
+    const y = event.clientY - initEvent.clientY;
+    const currentScale = 1 / settings.scale;
+    const diffX = x * currentScale;
+    const diffY = y * currentScale;
+    const updateModels = queueDocument.objects
+      .filter((object) => settings.selectedObjects.includes(object.uuid))
+      .map<RectUpdateModel>((object) => {
+        const rect = getCurrentRect(object, settings.queueIndex);
+        return {
+          uuid: object.uuid,
+          queueIndex: settings.queueIndex,
+          rect: {
+            x: rect.x + diffX,
+            y: rect.y + diffY,
+            width: rect.width,
+            height: rect.height,
+          },
+        };
+      });
+    updateObjectRects(updateModels);
+    setTranslate({
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    });
   };
 
   /**
@@ -222,7 +217,11 @@ export const QueueEditor: FunctionComponent = () => {
     });
   };
 
-  const onResizeMove = (uuid: string, rect: QueueSquareRect): void => {
+  const onResizeStart = (object: QueueSquare): void => {
+    setResizingObjectId(object.uuid);
+  };
+
+  const onResizeMove = (object: QueueSquare, rect: QueueSquareRect): void => {
     setTranslate(rect);
   };
 
@@ -246,6 +245,7 @@ export const QueueEditor: FunctionComponent = () => {
       width: 0,
       height: 0,
     });
+    setResizingObjectId(null);
   };
 
   return (
@@ -279,29 +279,30 @@ export const QueueEditor: FunctionComponent = () => {
             height: queueDocument.documentRect.height,
           }}
         >
-          {currentQueueObjects.map((object, i) => (
-            <QueueObject
-              key={object.uuid + settings.queueIndex}
-              scale={settings.scale}
-              position={settings.queuePosition}
-              index={settings.queueIndex}
-              selected={settings.selectedObjects.includes(object.uuid)}
-              translate={
-                settings.selectedObjects.includes(object.uuid)
-                  ? translate
-                  : {
-                      x: 0,
-                      y: 0,
-                      width: 0,
-                      height: 0,
-                    }
-              }
-              object={object}
-              onMousedown={(event): void => onObjectMouseodown(event, object)}
-              onResizeMove={(event): void => onResizeMove(object.uuid, event)}
-              onResizeEnd={(event): void => onResizeEnd(object, event)}
-            ></QueueObject>
-          ))}
+          {currentQueueObjects.map((object, i) => {
+            return (
+              <QueueObject
+                key={object.uuid + settings.queueIndex}
+                scale={settings.scale}
+                position={settings.queuePosition}
+                index={settings.queueIndex}
+                selected={settings.selectedObjects.includes(object.uuid)}
+                translate={
+                  settings.selectedObjects.includes(object.uuid)
+                    ? translate
+                    : undefined
+                }
+                object={object}
+                onMousedown={(event): void => onObjectMouseodown(event, object)}
+                onDraggingStart={onObjectDragMove}
+                onDraggingMove={onObjectDragMove}
+                onDraggingEnd={onObjectDragEnd}
+                onResizeStart={(event): void => onResizeStart(object)}
+                onResizeMove={(event): void => onResizeMove(object, event)}
+                onResizeEnd={(event): void => onResizeEnd(object, event)}
+              ></QueueObject>
+            );
+          })}
         </div>
       </Scaler>
     </Drawable>
