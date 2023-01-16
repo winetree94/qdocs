@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { createContext, FunctionComponent, ReactNode, useRef } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import { QueueSquare, QueueSquareRect } from '../../model/object/rect';
-import { WithFadeAnimation } from './animate/fade';
-import { WithRectAnimation } from './animate/rect';
+import { getCurrentFade } from './animate/fade';
+import { getCurrentRect } from './animate/rect';
 import styles from './EditableObject.module.scss';
 
 export interface QueueObjectContextType {
@@ -65,8 +65,11 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   const currentFill = object.fill;
   const currentStroke = object.stroke;
   const currentText = object.text;
-  const currentFade = WithFadeAnimation(object, index, position);
-  const currentRect = WithRectAnimation(object, index, position);
+  // const currentFade = WithFadeAnimation(object, index, position);
+  // const currentRect = WithRectAnimation(object, index, position);
+  const fade = getCurrentFade(object, index);
+  const currentFade = { opacity: Math.max(fade.opacity, 0.1) };
+  const currentRect = getCurrentRect(object, index);
 
   const onContainerMousedown = (
     initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
