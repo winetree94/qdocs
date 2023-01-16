@@ -7,6 +7,11 @@ import {
 } from '../model/object/rect';
 import { documentSettingsState } from './settings';
 
+export const history: Array<{
+  time: number;
+  undo: () => void;
+}> = [];
+
 export interface QueueDocumentRect {
   width: number;
   height: number;
@@ -214,6 +219,21 @@ export const documentState = atom<QueueDocument>({
       },
     ],
   },
+  effects: [
+    ({ onSet, setSelf }): void => {
+      console.log(document);
+      onSet((newValue, oldValue) => {
+        history.push({
+          time: Date.now(),
+          undo: () => {
+            setSelf(oldValue);
+          },
+        });
+        console.log(history);
+        return;
+      });
+    },
+  ],
 });
 
 export interface Queue {
