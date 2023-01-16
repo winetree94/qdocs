@@ -51,6 +51,7 @@ export const LeftPanel: FunctionComponent = () => {
           effects: [
             {
               type: 'create',
+              timing: 'linear',
               duration: 0,
               index: settings.queueIndex,
             },

@@ -8,6 +8,7 @@ export interface BaseObject {
 export interface BaseQueueEffect {
   index: number;
   duration: number;
+  timing: 'linear';
 }
 
 export interface CreateEffect extends BaseQueueEffect {

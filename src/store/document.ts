@@ -59,12 +59,14 @@ export const documentState = atom<QueueDocument>({
         effects: [
           {
             type: 'create',
+            timing: 'linear',
             duration: 0,
             index: 0,
           },
           {
             type: 'fade',
             duration: 500,
+            timing: 'linear',
             index: 1,
             fade: {
               opacity: 1,
@@ -73,6 +75,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'move',
             duration: 500,
+            timing: 'linear',
             index: 1,
             rect: {
               x: 100,
@@ -84,6 +87,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'move',
             duration: 1000,
+            timing: 'linear',
             index: 2,
             rect: {
               x: 200,
@@ -95,6 +99,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'fade',
             duration: 1000,
+            timing: 'linear',
             index: 2,
             fade: {
               opacity: 0.5,
@@ -103,6 +108,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'move',
             duration: 2000,
+            timing: 'linear',
             index: 3,
             rect: {
               x: 400,
@@ -114,6 +120,7 @@ export const documentState = atom<QueueDocument>({
           {
             type: 'fade',
             duration: 2000,
+            timing: 'linear',
             index: 3,
             fade: {
               opacity: 0,
@@ -121,6 +128,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'remove',
+            timing: 'linear',
             duration: 0,
             index: 7,
           },
@@ -157,11 +165,13 @@ export const documentState = atom<QueueDocument>({
         effects: [
           {
             type: 'create',
+            timing: 'linear',
             duration: 0,
             index: 1,
           },
           {
             type: 'fade',
+            timing: 'linear',
             duration: 500,
             index: 1,
             fade: {
@@ -170,6 +180,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'move',
+            timing: 'linear',
             duration: 1000,
             index: 2,
             rect: {
@@ -181,6 +192,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'fade',
+            timing: 'linear',
             duration: 500,
             index: 2,
             fade: {
@@ -189,6 +201,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'move',
+            timing: 'linear',
             duration: 1000,
             index: 3,
             rect: {
@@ -200,6 +213,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'fade',
+            timing: 'linear',
             duration: 1000,
             index: 3,
             fade: {
@@ -208,6 +222,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'remove',
+            timing: 'linear',
             duration: 2000,
             index: 8,
           },

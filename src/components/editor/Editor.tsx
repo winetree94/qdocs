@@ -51,7 +51,7 @@ export const QueueEditor: FunctionComponent = () => {
     isExistObjectOnQueue(object, settings.queueIndex)
   );
 
-  const onObjectRectUpdate = (models: RectUpdateModel[]): void => {
+  const updateObjectRects = (models: RectUpdateModel[]): void => {
     const newObjects = queueDocument.objects.map((object) => {
       const model = models.find((model) => model.uuid === object.uuid);
       if (!model) {
@@ -84,6 +84,7 @@ export const QueueEditor: FunctionComponent = () => {
           type: 'move',
           index: model.queueIndex,
           duration: 1000,
+          timing: 'linear',
           rect: {
             ...model.rect,
           },
@@ -94,7 +95,6 @@ export const QueueEditor: FunctionComponent = () => {
       return slicedObject;
     });
     setQueueDocument({ ...queueDocument, objects: newObjects });
-    setSettings({ ...settings, queuePosition: 'pause' });
     return;
   };
 
@@ -102,28 +102,22 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueSquare
   ): void => {
-    let slicedSelectedObjectIds = [...settings.selectedObjects];
-    const selected = settings.selectedObjects.includes(object.uuid);
+    const selectedObjectIds = [...settings.selectedObjects];
+    const selected = selectedObjectIds.includes(object.uuid);
     const initX = event.clientX;
     const initY = event.clientY;
     let diffX = 0;
     let diffY = 0;
 
     if (!selected) {
+      selectedObjectIds.push(object.uuid);
       setSettings({
         ...settings,
         selectedObjects: [object.uuid],
       });
-      slicedSelectedObjectIds = [object.uuid];
     }
 
     const mover = (event: MouseEvent): void => {
-      if (
-        Math.abs(event.clientX - initX) < 5 &&
-        Math.abs(event.clientY - initY)
-      ) {
-        return;
-      }
       const x = event.clientX - initX;
       const y = event.clientY - initY;
       const currentScale = 1 / settings.scale;
@@ -139,7 +133,7 @@ export const QueueEditor: FunctionComponent = () => {
 
     const finish = (event: MouseEvent): void => {
       const updateModels = queueDocument.objects
-        .filter((object) => slicedSelectedObjectIds.includes(object.uuid))
+        .filter((object) => selectedObjectIds.includes(object.uuid))
         .map<RectUpdateModel>((object) => {
           const rect = getCurrentRect(object, settings.queueIndex);
           return {
@@ -153,7 +147,12 @@ export const QueueEditor: FunctionComponent = () => {
             },
           };
         });
-      onObjectRectUpdate(updateModels);
+      updateObjectRects(updateModels);
+      setSettings({
+        ...settings,
+        selectedObjects: selectedObjectIds,
+        queuePosition: 'pause',
+      });
       document.removeEventListener('mousemove', mover);
       document.removeEventListener('mouseup', finish);
       setTranslate({
@@ -225,12 +224,11 @@ export const QueueEditor: FunctionComponent = () => {
 
   const onResizeMove = (uuid: string, rect: QueueSquareRect): void => {
     setTranslate(rect);
-    // console.log(uuid);
   };
 
   const onResizeEnd = (object: QueueSquare, rect: QueueSquareRect): void => {
     const currentRect = getCurrentRect(object, settings.queueIndex);
-    onObjectRectUpdate([
+    updateObjectRects([
       {
         uuid: object.uuid,
         queueIndex: settings.queueIndex,
