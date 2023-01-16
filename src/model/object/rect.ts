@@ -43,63 +43,44 @@ export interface QueueSquare extends BaseObject {
   fill: QueueSquareFill;
   stroke: QueueSquareStroke;
   text: QueueSquareText;
-}
-
-export interface QueueSquareMoveEffect extends BaseQueueEffect {
-  type: 'move';
-  rect: QueueSquareRect;
-}
-
-export interface QueueSquareStrokeEffect extends BaseQueueEffect {
-  type: 'stroke';
-  stroke: QueueSquareStroke;
-}
-
-export interface QueueSquareFillEffect extends BaseQueueEffect {
-  type: 'fill';
-  fill: QueueSquareFill;
-}
-
-export interface QueueSquareTextEffect extends BaseQueueEffect {
-  type: 'text';
-  text: QueueSquareText;
-}
-
-export interface QueueSquareFadeEffect extends BaseQueueEffect {
-  type: 'fade';
-  fade: QueueSquareFade;
-}
-
-export interface QueueSquareWithEffect extends QueueSquare {
   effects: (
     | CreateEffect
-    | QueueSquareMoveEffect
-    | QueueSquareStrokeEffect
-    | QueueSquareFillEffect
-    | QueueSquareTextEffect
-    | QueueSquareFadeEffect
+    | MoveEffect
+    | StrokeEffect
+    | FillEffect
+    | TextEffect
+    | FadeEffect
     | RemoveEffect
   )[];
 }
 
-export function getSumRect(
-  object: QueueSquareWithEffect
-): QueueSquareWithEffect {
-  const sliced: QueueSquareWithEffect = { ...object };
-  const moveEffect = object.effects
-    // .filter((effect) => effect.index === index)
-    .find((effect) => effect.type === 'move') as QueueSquareMoveEffect;
-  if (!moveEffect) {
-    return object;
-  }
-  sliced.rect = {
-    ...moveEffect.rect,
-  };
-  return sliced;
+export interface MoveEffect extends BaseQueueEffect {
+  type: 'move';
+  rect: QueueSquareRect;
+}
+
+export interface StrokeEffect extends BaseQueueEffect {
+  type: 'stroke';
+  stroke: QueueSquareStroke;
+}
+
+export interface FillEffect extends BaseQueueEffect {
+  type: 'fill';
+  fill: QueueSquareFill;
+}
+
+export interface TextEffect extends BaseQueueEffect {
+  type: 'text';
+  text: QueueSquareText;
+}
+
+export interface FadeEffect extends BaseQueueEffect {
+  type: 'fade';
+  fade: QueueSquareFade;
 }
 
 export function isExistObjectOnQueue(
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number
 ): boolean {
   const createEffect = object.effects.find(

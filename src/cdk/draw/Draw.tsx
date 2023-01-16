@@ -78,6 +78,13 @@ export const Drawable: FunctionComponent<DrawProps> = ({
     });
 
     const mover = (event: MouseEvent): void => {
+      if (
+        Math.abs(event.clientX - initClientX) < 5 &&
+        Math.abs(event.clientY - initClientY) < 5
+      ) {
+        return;
+      }
+
       setIsDrawing(true);
 
       const movedX = event.clientX - containerRect.x - initOffsetX;

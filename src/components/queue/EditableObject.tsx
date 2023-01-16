@@ -7,11 +7,7 @@ import {
   MouseEvent,
 } from 'react';
 import { Resizer } from '../../cdk/resizer/Resizer';
-import {
-  QueueSquare,
-  QueueSquareRect,
-  QueueSquareWithEffect,
-} from '../../model/object/rect';
+import { QueueSquare, QueueSquareRect } from '../../model/object/rect';
 import { WithFadeAnimation } from './animate/fade';
 import { WithRectAnimation } from './animate/rect';
 import styles from './EditableObject.module.scss';
@@ -42,7 +38,7 @@ export interface QueueObjectProps {
   onResizeStart?: (event: QueueSquareRect, cancel: () => void) => void;
   onResizeMove?: (event: QueueSquareRect, cancel: () => void) => void;
   onResizeEnd?: (event: QueueSquareRect) => void;
-  object: QueueSquareWithEffect;
+  object: QueueSquare;
 }
 
 export const QueueObject: FunctionComponent<QueueObjectProps> = ({

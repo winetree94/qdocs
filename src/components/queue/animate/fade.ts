@@ -3,27 +3,27 @@ import { useLayoutEffect, useState } from 'react';
 import { animate, linear } from '../../../cdk/animation/animate';
 import {
   QueueSquareFade,
-  QueueSquareFadeEffect,
-  QueueSquareWithEffect,
+  FadeEffect,
+  QueueSquare,
 } from '../../../model/object/rect';
 
 export interface FadeAnimation {
   fromFade: QueueSquareFade;
-  fadeEffect: QueueSquareFadeEffect;
+  fadeEffect: FadeEffect;
 }
 
 export const getCurrentFade = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number
 ): QueueSquareFade => {
   return object.effects
     .filter((effect) => effect.index <= index)
-    .filter((effect): effect is QueueSquareFadeEffect => effect.type === 'fade')
+    .filter((effect): effect is FadeEffect => effect.type === 'fade')
     .reduce<QueueSquareFade>((_, effect) => effect.fade, object.fade);
 };
 
 export const getFadeAnimation = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): FadeAnimation | null => {
@@ -36,18 +36,16 @@ export const getFadeAnimation = (
     position === 'forward' ? index - 1 : index + 1
   );
 
-  const fadeEffect = object.effects.find(
-    (effect): effect is QueueSquareFadeEffect => {
-      const targetIndex = position === 'forward' ? index : index + 1;
-      return effect.index === targetIndex && effect.type === 'fade';
-    }
-  );
+  const fadeEffect = object.effects.find((effect): effect is FadeEffect => {
+    const targetIndex = position === 'forward' ? index : index + 1;
+    return effect.index === targetIndex && effect.type === 'fade';
+  });
 
   if (!fadeEffect) {
     return null;
   }
 
-  const slicedEffect: QueueSquareFadeEffect =
+  const slicedEffect: FadeEffect =
     position === 'backward'
       ? {
           ...fadeEffect,
@@ -64,7 +62,7 @@ export const getFadeAnimation = (
 };
 
 export const WithFadeAnimation = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): QueueSquareFade => {

@@ -2,28 +2,28 @@
 import { useLayoutEffect, useState } from 'react';
 import { animate, linear } from '../../../cdk/animation/animate';
 import {
-  QueueSquareMoveEffect,
+  MoveEffect,
   QueueSquareRect,
-  QueueSquareWithEffect,
+  QueueSquare,
 } from '../../../model/object/rect';
 
 export interface RectAnimation {
   fromRect: QueueSquareRect;
-  moveEffect: QueueSquareMoveEffect;
+  moveEffect: MoveEffect;
 }
 
 export const getCurrentRect = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number
 ): QueueSquareRect => {
   return object.effects
     .filter((effect) => effect.index <= index)
-    .filter((effect): effect is QueueSquareMoveEffect => effect.type === 'move')
+    .filter((effect): effect is MoveEffect => effect.type === 'move')
     .reduce<QueueSquareRect>((_, effect) => effect.rect, object.rect);
 };
 
 export const getRectAnimation = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): RectAnimation | null => {
@@ -36,18 +36,16 @@ export const getRectAnimation = (
     position === 'forward' ? index - 1 : index + 1
   );
 
-  const moveEffect = object.effects.find(
-    (effect): effect is QueueSquareMoveEffect => {
-      const targetIndex = position === 'forward' ? index : index + 1;
-      return effect.index === targetIndex && effect.type === 'move';
-    }
-  );
+  const moveEffect = object.effects.find((effect): effect is MoveEffect => {
+    const targetIndex = position === 'forward' ? index : index + 1;
+    return effect.index === targetIndex && effect.type === 'move';
+  });
 
   if (!moveEffect) {
     return null;
   }
 
-  const slicedEffect: QueueSquareMoveEffect =
+  const slicedEffect: MoveEffect =
     position === 'backward'
       ? {
           ...moveEffect,
@@ -64,7 +62,7 @@ export const getRectAnimation = (
 };
 
 export const WithRectAnimation = (
-  object: QueueSquareWithEffect,
+  object: QueueSquare,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): QueueSquareRect => {

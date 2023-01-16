@@ -2,14 +2,13 @@ import clsx from 'clsx';
 import { ReactElement, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { PlusIcon } from '@radix-ui/react-icons';
-import { documentState, selectedObjectIdsState } from '../../store/document';
+import { documentState } from '../../store/document';
 import { documentSettingsState } from '../../store/settings';
 import classes from './RightPanel.module.scss';
 import { Dropdown } from '../../components';
 
 export const RightPanel = (): ReactElement => {
   const queueDocument = useRecoilValue(documentState);
-  const selectedObjectIds = useRecoilValue(selectedObjectIdsState);
   const settings = useRecoilValue(documentSettingsState);
   const [radioValue, setRadioValue] = useState('radio1');
   const [checkboxCheked, setCheckboxCheked] = useState<
@@ -17,7 +16,7 @@ export const RightPanel = (): ReactElement => {
   >(true);
 
   const selectedObjects = queueDocument.objects.filter((object) =>
-    selectedObjectIds.includes(object.uuid)
+    settings.selectedObjects.includes(object.uuid)
   );
   const [firstObject] = selectedObjects;
   const objectPreview = firstObject?.type;

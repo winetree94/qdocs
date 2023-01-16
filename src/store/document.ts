@@ -1,10 +1,6 @@
 import { atom, selector, selectorFamily } from 'recoil';
 import { generateUUID } from '../cdk/functions/uuid';
-import {
-  isExistObjectOnQueue,
-  QueueSquare,
-  QueueSquareWithEffect,
-} from '../model/object/rect';
+import { isExistObjectOnQueue, QueueSquare } from '../model/object/rect';
 import { documentSettingsState } from './settings';
 
 export const history: Array<{
@@ -20,7 +16,7 @@ export interface QueueDocumentRect {
 export interface QueueDocument {
   documentName: string;
   documentRect: QueueDocumentRect;
-  objects: QueueSquareWithEffect[];
+  objects: QueueSquare[];
 }
 
 export const documentState = atom<QueueDocument>({
@@ -42,7 +38,7 @@ export const documentState = atom<QueueDocument>({
           height: 300,
         },
         stroke: {
-          width: 1,
+          width: 50,
           color: '#000000',
           dasharray: 'solid',
         },
@@ -229,7 +225,6 @@ export const documentState = atom<QueueDocument>({
             setSelf(oldValue);
           },
         });
-        console.log(history);
         return;
       });
     },
@@ -266,7 +261,7 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
   },
 });
 
-export const currentQueueObjectsSelector = selector<QueueSquareWithEffect[]>({
+export const currentQueueObjectsSelector = selector<QueueSquare[]>({
   key: 'currentQueueObjects',
   get: ({ get }) => {
     const document = get(documentState);
@@ -276,9 +271,4 @@ export const currentQueueObjectsSelector = selector<QueueSquareWithEffect[]>({
     );
     return result;
   },
-});
-
-export const selectedObjectIdsState = atom<string[]>({
-  key: 'selectedObjectIdsState',
-  default: [],
 });

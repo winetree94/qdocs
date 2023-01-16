@@ -1,22 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
-import {
-  documentState,
-  QueueDocumentRect,
-  selectedObjectIdsState,
-} from '../../store/document';
+import { documentState, QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
   QueueSquareRect,
-  QueueSquareWithEffect,
+  QueueSquare,
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 
 const Selector = styled.div`
@@ -31,42 +27,14 @@ export interface QueueEditorContextType {
   queueIndex: number;
   scale: number;
   documentRect: QueueDocumentRect;
-  objects: QueueSquareWithEffect[];
-  currentQueueObjects: QueueSquareWithEffect[];
+  objects: QueueSquare[];
+  currentQueueObjects: QueueSquare[];
 }
 
 export interface RectUpdateModel {
   uuid: string;
   queueIndex: number;
   rect: QueueSquareRect;
-}
-
-export interface QueueEditorProps {
-  onObjectRectUpdate?: (models: RectUpdateModel[]) => void;
-}
-
-export interface QueueEditorRef {
-  /**
-   * @description
-   * 현재 큐의 애니메이션 재생
-   *
-   * @param reverse - 역재생 여부
-   */
-  animate(reverse?: boolean): void;
-
-  /**
-   * @description
-   * 큐 자동 재생
-   */
-  play(): void;
-
-  /**
-   * @description
-   * 현재 큐에서 id 가 일치하는 오브젝트를 선택
-   *
-   * @param ids - 선택할 오브젝트 아이디
-   */
-  select(ids: string[]): void;
 }
 
 export const QueueEditor: FunctionComponent = () => {
@@ -81,9 +49,6 @@ export const QueueEditor: FunctionComponent = () => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const currentQueueObjects = queueDocument.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
-  );
-  const [selectedObjectIds, setSelectedObjectIds] = useRecoilState(
-    selectedObjectIdsState
   );
 
   const onObjectRectUpdate = (models: RectUpdateModel[]): void => {
@@ -133,21 +98,32 @@ export const QueueEditor: FunctionComponent = () => {
     return;
   };
 
-  const onMousedown = (
+  const onObjectMouseodown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueSquareWithEffect
+    object: QueueSquare
   ): void => {
-    let slicedSelectedObjectIds = [...selectedObjectIds];
-    const selected = selectedObjectIds.includes(object.uuid);
+    let slicedSelectedObjectIds = [...settings.selectedObjects];
+    const selected = settings.selectedObjects.includes(object.uuid);
     const initX = event.clientX;
     const initY = event.clientY;
     let diffX = 0;
     let diffY = 0;
+
     if (!selected) {
-      setSelectedObjectIds([object.uuid]);
+      setSettings({
+        ...settings,
+        selectedObjects: [object.uuid],
+      });
       slicedSelectedObjectIds = [object.uuid];
     }
+
     const mover = (event: MouseEvent): void => {
+      if (
+        Math.abs(event.clientX - initX) < 5 &&
+        Math.abs(event.clientY - initY)
+      ) {
+        return;
+      }
       const x = event.clientX - initX;
       const y = event.clientY - initY;
       const currentScale = 1 / settings.scale;
@@ -160,6 +136,7 @@ export const QueueEditor: FunctionComponent = () => {
       diffX = x * currentScale;
       diffY = y * currentScale;
     };
+
     const finish = (event: MouseEvent): void => {
       const updateModels = queueDocument.objects
         .filter((object) => slicedSelectedObjectIds.includes(object.uuid))
@@ -240,7 +217,10 @@ export const QueueEditor: FunctionComponent = () => {
         rect.y + rect.height <= y + height
       );
     });
-    setSelectedObjectIds(selectedObjects.map((object) => object.uuid));
+    setSettings({
+      ...settings,
+      selectedObjects: selectedObjects.map((object) => object.uuid),
+    });
   };
 
   const onResizeMove = (uuid: string, rect: QueueSquareRect): void => {
@@ -248,12 +228,8 @@ export const QueueEditor: FunctionComponent = () => {
     // console.log(uuid);
   };
 
-  const onResizeEnd = (
-    object: QueueSquareWithEffect,
-    rect: QueueSquareRect
-  ): void => {
+  const onResizeEnd = (object: QueueSquare, rect: QueueSquareRect): void => {
     const currentRect = getCurrentRect(object, settings.queueIndex);
-    console.log(currentRect, rect);
     onObjectRectUpdate([
       {
         uuid: object.uuid,
@@ -266,7 +242,6 @@ export const QueueEditor: FunctionComponent = () => {
         },
       },
     ]);
-    // console.log(uuid, rect);
     setTranslate({
       x: 0,
       y: 0,
@@ -274,10 +249,6 @@ export const QueueEditor: FunctionComponent = () => {
       height: 0,
     });
   };
-
-  useLayoutEffect(() => {
-    setSelectedObjectIds([]);
-  }, [setSelectedObjectIds, settings.queueIndex]);
 
   return (
     <Drawable
@@ -316,9 +287,9 @@ export const QueueEditor: FunctionComponent = () => {
               scale={settings.scale}
               position={settings.queuePosition}
               index={settings.queueIndex}
-              selected={selectedObjectIds.includes(object.uuid)}
+              selected={settings.selectedObjects.includes(object.uuid)}
               translate={
-                selectedObjectIds.includes(object.uuid)
+                settings.selectedObjects.includes(object.uuid)
                   ? translate
                   : {
                       x: 0,
@@ -328,7 +299,7 @@ export const QueueEditor: FunctionComponent = () => {
                     }
               }
               object={object}
-              onMousedown={(event): void => onMousedown(event, object)}
+              onMousedown={(event): void => onObjectMouseodown(event, object)}
               onResizeMove={(event): void => onResizeMove(object.uuid, event)}
               onResizeEnd={(event): void => onResizeEnd(object, event)}
             ></QueueObject>
