@@ -23,15 +23,6 @@ export interface QueueObjectProps {
   children?: ReactNode;
   translate?: QueueSquareRect;
   scale: number;
-  onMousedown?: (
-    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ) => void;
-  onDraggingStart?: (initEvent: MouseEvent, event: MouseEvent) => void;
-  onDraggingMove?: (initEvent: MouseEvent, event: MouseEvent) => void;
-  onDraggingEnd?: (initEvent: MouseEvent, event: MouseEvent) => void;
-  onResizerMousedown?: (
-    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ) => void;
   onResizeStart?: (event: QueueSquareRect, cancel: () => void) => void;
   onResizeMove?: (event: QueueSquareRect, cancel: () => void) => void;
   onResizeEnd?: (event: QueueSquareRect) => void;
@@ -50,11 +41,6 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
     height: 0,
   },
   scale,
-  onMousedown,
-  onDraggingStart,
-  onDraggingMove,
-  onDraggingEnd,
-  onResizerMousedown,
   onResizeStart,
   onResizeMove,
   onResizeEnd,
@@ -71,50 +57,10 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   const currentFade = { opacity: Math.max(fade.opacity, 0.1) };
   const currentRect = getCurrentRect(object, index);
 
-  const onContainerMousedown = (
-    initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ): void => {
-    if (onMousedown) {
-      onMousedown(initEvent);
-    }
-
-    const onMove = (event: MouseEvent): void => {
-      if (onDraggingMove) {
-        onDraggingMove(initEvent.nativeEvent, event);
-      }
-    };
-
-    const checkOnMove = (event: MouseEvent): void => {
-      if (
-        Math.abs(event.clientX - initEvent.clientX) >= 3 ||
-        Math.abs(event.clientY - initEvent.clientY) >= 3
-      ) {
-        if (onDraggingStart) {
-          onDraggingStart(initEvent.nativeEvent, event);
-        }
-        document.removeEventListener('mousemove', checkOnMove);
-        document.addEventListener('mousemove', onMove);
-      }
-    };
-
-    const onUp = (event: MouseEvent): void => {
-      if (onDraggingEnd) {
-        onDraggingEnd(initEvent.nativeEvent, event);
-      }
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      document.removeEventListener('mousemove', checkOnMove);
-    };
-
-    document.addEventListener('mousemove', checkOnMove);
-    document.addEventListener('mouseup', onUp);
-  };
-
   return (
     <div
       ref={containerRef}
       className={clsx('object-container', styles.container)}
-      onMouseDown={onContainerMousedown}
       style={{
         top: `${currentRect.y}px`,
         left: `${currentRect.x}px`,

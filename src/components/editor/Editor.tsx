@@ -284,6 +284,7 @@ export const QueueEditor: FunctionComponent = () => {
             return (
               <Draggable
                 key={object.uuid + settings.queueIndex}
+                onMousedown={(event): void => onObjectMouseodown(event, object)}
                 onDraggingStart={onObjectDragMove}
                 onDraggingMove={onObjectDragMove}
                 onDraggingEnd={onObjectDragEnd}
@@ -299,12 +300,6 @@ export const QueueEditor: FunctionComponent = () => {
                       : undefined
                   }
                   object={object}
-                  onMousedown={(event): void =>
-                    onObjectMouseodown(event, object)
-                  }
-                  // onDraggingStart={onObjectDragMove}
-                  // onDraggingMove={onObjectDragMove}
-                  // onDraggingEnd={onObjectDragEnd}
                   onResizeStart={(event): void => onResizeStart(object)}
                   onResizeMove={(event): void => onResizeMove(object, event)}
                   onResizeEnd={(event): void => onResizeEnd(object, event)}
