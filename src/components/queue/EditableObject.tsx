@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import { createContext, FunctionComponent, ReactNode, useRef } from 'react';
-import { Resizer } from '../../cdk/resizer/Resizer';
 import { QueueSquare, QueueSquareRect } from '../../model/object/rect';
 import { getCurrentFade } from './animate/fade';
 import { getCurrentRect } from './animate/rect';
@@ -17,33 +16,22 @@ export const QueueObjectContext = createContext<QueueObjectContextType>({
 });
 
 export interface QueueObjectProps {
-  selected?: boolean;
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
   translate?: QueueSquareRect;
-  scale: number;
-  onResizeStart?: (event: QueueSquareRect, cancel: () => void) => void;
-  onResizeMove?: (event: QueueSquareRect, cancel: () => void) => void;
-  onResizeEnd?: (event: QueueSquareRect) => void;
   object: QueueSquare;
 }
 
 export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   object,
-  selected,
   index,
-  position,
   translate = {
     x: 0,
     y: 0,
     width: 0,
     height: 0,
   },
-  scale,
-  onResizeStart,
-  onResizeMove,
-  onResizeEnd,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<SVGSVGElement>(null);
@@ -109,7 +97,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
           {currentText.text}
         </div>
       </div>
-      {selected && (
+      {/* {selected && (
         <Resizer
           rect={{
             x: currentRect.x + translate.x,
@@ -122,7 +110,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
           onResizeMove={onResizeMove}
           onResizeEnd={onResizeEnd}
         ></Resizer>
-      )}
+      )} */}
     </div>
   );
 };

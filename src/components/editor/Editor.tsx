@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { QueueObject } from '../queue/EditableObject';
 import { documentState, QueueDocumentRect } from '../../store/document';
@@ -16,6 +16,8 @@ import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { Draggable } from '../queue/Draggable';
+import { Resizer } from '../../cdk/resizer/Resizer';
+import styles from './Editor.module.scss';
 
 const Selector = styled.div`
   width: 100%;
@@ -282,29 +284,43 @@ export const QueueEditor: FunctionComponent = () => {
         >
           {currentQueueObjects.map((object, i) => {
             return (
-              <Draggable
-                key={object.uuid + settings.queueIndex}
-                onMousedown={(event): void => onObjectMouseodown(event, object)}
-                onDraggingStart={onObjectDragMove}
-                onDraggingMove={onObjectDragMove}
-                onDraggingEnd={onObjectDragEnd}
-              >
-                <QueueObject
-                  scale={settings.scale}
-                  position={settings.queuePosition}
-                  index={settings.queueIndex}
-                  selected={settings.selectedObjects.includes(object.uuid)}
-                  translate={
-                    settings.selectedObjects.includes(object.uuid)
-                      ? translate
-                      : undefined
+              <div key={object.uuid + settings.queueIndex}>
+                <Draggable
+                  onMousedown={(event): void =>
+                    onObjectMouseodown(event, object)
                   }
-                  object={object}
-                  onResizeStart={(event): void => onResizeStart(object)}
-                  onResizeMove={(event): void => onResizeMove(object, event)}
-                  onResizeEnd={(event): void => onResizeEnd(object, event)}
-                ></QueueObject>
-              </Draggable>
+                  onDraggingStart={onObjectDragMove}
+                  onDraggingMove={onObjectDragMove}
+                  onDraggingEnd={onObjectDragEnd}
+                >
+                  <QueueObject
+                    position={settings.queuePosition}
+                    index={settings.queueIndex}
+                    translate={
+                      settings.selectedObjects.includes(object.uuid)
+                        ? translate
+                        : undefined
+                    }
+                    object={object}
+                  ></QueueObject>
+                  {settings.selectedObjects.includes(object.uuid) && (
+                    <Resizer
+                      rect={{
+                        x: object.rect.x + translate.x,
+                        y: object.rect.y + translate.y,
+                        width: object.rect.width + translate.width,
+                        height: object.rect.height + translate.height,
+                      }}
+                      scale={settings.scale}
+                      onResizeStart={(event): void => onResizeStart(object)}
+                      onResizeMove={(event): void =>
+                        onResizeMove(object, event)
+                      }
+                      onResizeEnd={(event): void => onResizeEnd(object, event)}
+                    ></Resizer>
+                  )}
+                </Draggable>
+              </div>
             );
           })}
         </div>

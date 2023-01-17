@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 
 export interface DraggableProps {
   children: React.ReactNode;
+  className?: string;
   onMousedown?: (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
@@ -13,6 +14,7 @@ export interface DraggableProps {
 
 export const Draggable: React.FunctionComponent<DraggableProps> = ({
   children,
+  className,
   onMousedown,
   onDraggingStart,
   onDraggingMove,
@@ -67,5 +69,9 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
     [onMousedown, onDraggingStart]
   );
 
-  return <div onMouseDown={onContainerMousedown}>{children}</div>;
+  return (
+    <div className={className} onMouseDown={onContainerMousedown}>
+      {children}
+    </div>
+  );
 };
