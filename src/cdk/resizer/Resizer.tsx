@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { QueueSquareRect } from '../../model/object/rect';
 import styles from './Resizer.module.scss';
 
@@ -35,129 +35,153 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
   onResizeMove,
   onResizeEnd,
 }) => {
-  const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const container = useRef<SVGSVGElement>(null);
+  // shorthands
   const strokeWidth = 15;
   const distance = strokeWidth / 2;
   const margin = 50;
   const actualWidth = rect.width + margin * 2;
   const actualHeight = rect.height + margin * 2;
 
-  const onResizeMousedown = (
-    initEvent: React.MouseEvent<SVGRectElement, globalThis.MouseEvent>,
+  const [init, setInit] = React.useState<{
+    event: MouseEvent;
+    position: ResizerPosition;
+  } | null>(null);
+
+  const cancel = useCallback(() => {
+    setInit(null);
+  }, []);
+
+  const getResizerPosition = (
+    initEvent: MouseEvent,
+    targetEvent: MouseEvent,
+    scale: number,
     position: ResizerPosition
-  ): void => {
-    initEvent.stopPropagation();
+  ): QueueSquareRect => {
+    const diffX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
+    const diffY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
 
-    if (!container.current) {
-      return;
+    switch (position) {
+      case 'top-left':
+        return {
+          x: diffX,
+          y: diffY,
+          width: -diffX,
+          height: -diffY,
+        };
+      case 'top-middle':
+        return {
+          x: 0,
+          y: diffY,
+          width: 0,
+          height: -diffY,
+        };
+      case 'top-right':
+        return {
+          x: 0,
+          y: diffY,
+          width: diffX,
+          height: -diffY,
+        };
+      case 'middle-right':
+        return {
+          x: 0,
+          y: 0,
+          width: diffX,
+          height: 0,
+        };
+      case 'bottom-right':
+        return {
+          x: 0,
+          y: 0,
+          width: diffX,
+          height: diffY,
+        };
+      case 'bottom-middle':
+        return {
+          x: 0,
+          y: 0,
+          width: 0,
+          height: diffY,
+        };
+      case 'bottom-left':
+        return {
+          x: diffX,
+          y: 0,
+          width: -diffX,
+          height: diffY,
+        };
+      case 'middle-left':
+        return {
+          x: diffX,
+          y: 0,
+          width: -diffX,
+          height: 0,
+        };
     }
+  };
 
-    let newRect: QueueSquareRect = { ...rect };
-
-    const mover = (event: MouseEvent): void => {
-      setIsDrawing(true);
-
-      const diffX = (event.clientX - initEvent.clientX) * (1 / scale);
-      const diffY = (event.clientY - initEvent.clientY) * (1 / scale);
-
-      switch (position) {
-        case 'top-left':
-          newRect = {
-            x: diffX,
-            y: diffY,
-            width: -diffX,
-            height: -diffY,
-          };
-          break;
-        case 'top-middle':
-          newRect = {
-            x: 0,
-            y: diffY,
-            width: 0,
-            height: -diffY,
-          };
-          break;
-        case 'top-right':
-          newRect = {
-            x: 0,
-            y: diffY,
-            width: diffX,
-            height: -diffY,
-          };
-          break;
-        case 'middle-right':
-          newRect = {
-            x: 0,
-            y: 0,
-            width: diffX,
-            height: 0,
-          };
-          break;
-        case 'bottom-right':
-          newRect = {
-            x: 0,
-            y: 0,
-            width: diffX,
-            height: diffY,
-          };
-          break;
-        case 'bottom-middle':
-          newRect = {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: diffY,
-          };
-          break;
-        case 'bottom-left':
-          newRect = {
-            x: diffX,
-            y: 0,
-            width: -diffX,
-            height: diffY,
-          };
-          break;
-        case 'middle-left':
-          newRect = {
-            x: diffX,
-            y: 0,
-            width: -diffX,
-            height: 0,
-          };
-          break;
-      }
-
-      onResizeMove?.(newRect, cancel);
-    };
-
-    const finish = (event?: MouseEvent): void => {
-      document.removeEventListener('mouseup', finish);
-      document.removeEventListener('mousemove', mover);
-      setIsDrawing(false);
-
-      if (!event) {
+  const onDocumentMousemove = useCallback(
+    (event: MouseEvent) => {
+      if (!init) {
         return;
       }
+      const rect = getResizerPosition(init.event, event, scale, init.position);
+      onResizeMove?.(rect, cancel);
+    },
+    [init, onResizeMove, scale, cancel]
+  );
 
-      onResizeEnd?.(newRect);
+  const onDocumentMouseup = useCallback(
+    (event: MouseEvent) => {
+      if (!init) {
+        return;
+      }
+      const rect = getResizerPosition(init.event, event, scale, init.position);
+      onResizeEnd?.(rect);
+      setInit(null);
+    },
+    [init, onResizeEnd, scale]
+  );
+
+  useEffect(() => {
+    if (!init) {
+      return;
+    }
+    document.addEventListener('mousemove', onDocumentMousemove);
+    document.addEventListener('mouseup', onDocumentMouseup);
+    return () => {
+      document.removeEventListener('mousemove', onDocumentMousemove);
+      document.removeEventListener('mouseup', onDocumentMouseup);
     };
+  }, [init, onDocumentMousemove, onDocumentMouseup]);
 
-    const cancel = (): void => {
-      finish();
-    };
-
-    document.addEventListener('mousemove', mover);
-    document.addEventListener('mouseup', finish, {
-      once: true,
-    });
-
-    onResizeStart?.(newRect, cancel);
-  };
+  const onResizeMousedown = useCallback(
+    (
+      initEvent: React.MouseEvent<SVGRectElement, globalThis.MouseEvent>,
+      position: ResizerPosition
+    ): void => {
+      initEvent.stopPropagation();
+      if (onResizeStart) {
+        onResizeStart(
+          {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+          },
+          cancel
+        );
+      }
+      setInit({
+        event: initEvent.nativeEvent,
+        position: position,
+      });
+    },
+    [onResizeStart, cancel]
+  );
 
   return (
     <svg
-      ref={container}
       className={styles.canvas}
       style={{
         left: -margin,
