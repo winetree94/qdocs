@@ -1,13 +1,20 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['prettier'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    'prettier',
     'react-app',
     'react-app/jest',
+    'prettier',
   ],
+  settings: {
+    'import/resolver': {
+      node: {
+        paths: ['src'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
   rules: {
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
@@ -31,6 +38,5 @@ module.exports = {
     ],
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-non-null-assertion': 'off',
-    'prettier/prettier': ['error'],
   },
 };
