@@ -4,7 +4,7 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObject } from '../queue/EditableObject';
+import { QueueObject, QueueObjectStyler } from '../queue/EditableObject';
 import { documentState, QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
@@ -18,6 +18,7 @@ import { documentSettingsState } from '../../store/settings';
 import { Draggable } from '../queue/Draggable';
 import { Resizer } from '../../cdk/resizer/Resizer';
 import styles from './Editor.module.scss';
+import { RightPanelPortal } from '../../app/right-panel/RightPanel';
 
 const Selector = styled.div`
   width: 100%;
@@ -302,7 +303,11 @@ export const QueueEditor: FunctionComponent = () => {
                         : undefined
                     }
                     object={object}
-                  ></QueueObject>
+                  >
+                    <RightPanelPortal>
+                      <QueueObjectStyler />
+                    </RightPanelPortal>
+                  </QueueObject>
                   {settings.selectedObjects.includes(object.uuid) && (
                     <Resizer
                       rect={{

@@ -3,10 +3,10 @@ import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { QueueEditor } from '../../components/editor/Editor';
 import { LeftPanel } from '../left-panel/LeftPanel';
-import { RightPanel } from '../right-panel/RightPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
+import { RightPanel, RightPanelProvider } from '../right-panel/RightPanel';
 
 export const RootContext = createContext({});
 
@@ -28,14 +28,16 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
       <div className={styles.container}>
         {!settings.presentationMode ? (
           <>
-            <QueueToolbar></QueueToolbar>
-            <QueueSubtoolbar></QueueSubtoolbar>
+            <QueueToolbar />
+            <QueueSubtoolbar />
           </>
         ) : null}
         <div className={styles.bottom}>
-          {!settings.presentationMode ? <LeftPanel></LeftPanel> : null}
-          <QueueEditor></QueueEditor>
-          {!settings.presentationMode ? <RightPanel /> : null}
+          {!settings.presentationMode ? <LeftPanel /> : null}
+          <RightPanelProvider>
+            <QueueEditor />
+            {!settings.presentationMode ? <RightPanel /> : null}
+          </RightPanelProvider>
         </div>
       </div>
     </RootContext.Provider>

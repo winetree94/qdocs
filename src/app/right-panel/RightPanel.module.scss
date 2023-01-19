@@ -1,15 +1,5 @@
 .root {
-  @apply flex flex-col gap-4 p-2;
+  @apply flex flex-col bg-white;
   width: 200px;
-}
-
-.container {
-  width: 200px;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.effect-list {
-  @apply px-3 py-2 border border-solid border-neutral-200;
-  max-height: 300px;
-  overflow-y: auto;
+  height: 100%;
 }
