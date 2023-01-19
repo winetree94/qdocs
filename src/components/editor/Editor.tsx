@@ -307,23 +307,25 @@ export const QueueEditor: FunctionComponent = () => {
                     <RightPanelPortal>
                       <QueueObjectStyler />
                     </RightPanelPortal>
+                    {settings.selectedObjects.includes(object.uuid) && (
+                      <Resizer
+                        rect={{
+                          x: object.rect.x + translate.x,
+                          y: object.rect.y + translate.y,
+                          width: object.rect.width + translate.width,
+                          height: object.rect.height + translate.height,
+                        }}
+                        scale={settings.scale}
+                        onResizeStart={(event): void => onResizeStart(object)}
+                        onResizeMove={(event): void =>
+                          onResizeMove(object, event)
+                        }
+                        onResizeEnd={(event): void =>
+                          onResizeEnd(object, event)
+                        }
+                      ></Resizer>
+                    )}
                   </QueueObject>
-                  {settings.selectedObjects.includes(object.uuid) && (
-                    <Resizer
-                      rect={{
-                        x: object.rect.x + translate.x,
-                        y: object.rect.y + translate.y,
-                        width: object.rect.width + translate.width,
-                        height: object.rect.height + translate.height,
-                      }}
-                      scale={settings.scale}
-                      onResizeStart={(event): void => onResizeStart(object)}
-                      onResizeMove={(event): void =>
-                        onResizeMove(object, event)
-                      }
-                      onResizeEnd={(event): void => onResizeEnd(object, event)}
-                    ></Resizer>
-                  )}
                 </Draggable>
               </div>
             );
