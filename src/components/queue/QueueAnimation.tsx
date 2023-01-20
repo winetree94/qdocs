@@ -32,7 +32,7 @@ export interface ObjectAnimatableProps {
   children: React.ReactNode;
 }
 
-export const ObjectAnimatable: FunctionComponent<ObjectAnimatableProps> = ({
+export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   children,
   object,
   queueIndex,

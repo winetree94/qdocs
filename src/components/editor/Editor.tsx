@@ -4,7 +4,7 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { LegacyQueueObject, QueueObjectStyler } from '../queue/EditableObject';
+import { QueueObjectStyler } from '../queue/EditableObject';
 import { documentState, QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
@@ -15,12 +15,9 @@ import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
-import { Draggable } from '../queue/Draggable';
-import { ObjectResizer } from '../../cdk/resizer/Resizer';
-import styles from './Editor.module.scss';
 import { RightPanelPortal } from '../../app/right-panel/RightPanel';
 import { Animatable, AnimatableContext } from 'cdk/animation/UseAnimate';
-import { ObjectAnimatable } from 'components/queue/QueueAnimation';
+import { QueueObject } from 'components/queue';
 
 const Selector = styled.div`
   width: 100%;
@@ -292,7 +289,7 @@ export const QueueEditor: FunctionComponent = () => {
           {currentQueueObjects.map((object) => {
             return (
               <div key={object.uuid + settings.queueIndex}>
-                <Draggable
+                <QueueObject.Drag
                   onMousedown={(event): void =>
                     onObjectMouseodown(event, object)
                   }
@@ -300,12 +297,12 @@ export const QueueEditor: FunctionComponent = () => {
                   onDraggingMove={onObjectDragMove}
                   onDraggingEnd={onObjectDragEnd}
                 >
-                  <ObjectAnimatable
+                  <QueueObject.Animator
                     object={object}
                     queueIndex={settings.queueIndex}
                     queuePosition={settings.queuePosition}
                     queueStart={settings.queueStart}>
-                    <LegacyQueueObject
+                    <QueueObject.Legacy
                       start={settings.queueStart}
                       position={settings.queuePosition}
                       index={settings.queueIndex}
@@ -320,7 +317,7 @@ export const QueueEditor: FunctionComponent = () => {
                         <QueueObjectStyler />
                       </RightPanelPortal>
                       {settings.selectedObjects.includes(object.uuid) && (
-                        <ObjectResizer
+                        <QueueObject.Resizer
                           scale={settings.scale}
                           translate={
                             settings.selectedObjects.includes(object.uuid)
@@ -334,11 +331,11 @@ export const QueueEditor: FunctionComponent = () => {
                           onResizeEnd={(event): void =>
                             onResizeEnd(object, event)
                           }
-                        ></ObjectResizer>
+                        ></QueueObject.Resizer>
                       )}
-                    </LegacyQueueObject>
-                  </ObjectAnimatable>
-                </Draggable>
+                    </QueueObject.Legacy>
+                  </QueueObject.Animator>
+                </QueueObject.Drag>
               </div>
             );
           })}
