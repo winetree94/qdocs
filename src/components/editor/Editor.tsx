@@ -4,11 +4,11 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObject, QueueObjectStyler } from '../queue/EditableObject';
+import { LegacyQueueObject, QueueObjectStyler } from '../queue/EditableObject';
 import { documentState, QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
-  QueueSquareRect,
+  QueueRect,
   QueueSquare,
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
@@ -16,9 +16,11 @@ import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { Draggable } from '../queue/Draggable';
-import { Resizer } from '../../cdk/resizer/Resizer';
+import { ObjectResizer } from '../../cdk/resizer/Resizer';
 import styles from './Editor.module.scss';
 import { RightPanelPortal } from '../../app/right-panel/RightPanel';
+import { Animatable, AnimatableContext } from 'cdk/animation/UseAnimate';
+import { ObjectAnimatable } from 'components/queue/QueueAnimation';
 
 const Selector = styled.div`
   width: 100%;
@@ -39,12 +41,12 @@ export interface QueueEditorContextType {
 export interface RectUpdateModel {
   uuid: string;
   queueIndex: number;
-  rect: QueueSquareRect;
+  rect: QueueRect;
 }
 
 export const QueueEditor: FunctionComponent = () => {
   const canvasDiv = useRef<HTMLDivElement>(null);
-  const [translate, setTranslate] = useState<QueueSquareRect>({
+  const [translate, setTranslate] = useState<QueueRect>({
     x: 0,
     y: 0,
     width: 0,
@@ -225,11 +227,11 @@ export const QueueEditor: FunctionComponent = () => {
     setResizingObjectId(object.uuid);
   };
 
-  const onResizeMove = (object: QueueSquare, rect: QueueSquareRect): void => {
+  const onResizeMove = (object: QueueSquare, rect: QueueRect): void => {
     setTranslate(rect);
   };
 
-  const onResizeEnd = (object: QueueSquare, rect: QueueSquareRect): void => {
+  const onResizeEnd = (object: QueueSquare, rect: QueueRect): void => {
     const currentRect = getCurrentRect(object, settings.queueIndex);
     updateObjectRects([
       {
@@ -250,6 +252,10 @@ export const QueueEditor: FunctionComponent = () => {
       height: 0,
     });
     setResizingObjectId(null);
+  };
+
+  const onObjectAnimationEnd = (object: QueueSquare): void => {
+    console.log('animation finished: ', object);
   };
 
   return (
@@ -283,7 +289,7 @@ export const QueueEditor: FunctionComponent = () => {
             height: queueDocument.documentRect.height,
           }}
         >
-          {currentQueueObjects.map((object, i) => {
+          {currentQueueObjects.map((object) => {
             return (
               <div key={object.uuid + settings.queueIndex}>
                 <Draggable
@@ -294,43 +300,57 @@ export const QueueEditor: FunctionComponent = () => {
                   onDraggingMove={onObjectDragMove}
                   onDraggingEnd={onObjectDragEnd}
                 >
-                  <QueueObject
-                    position={settings.queuePosition}
-                    index={settings.queueIndex}
-                    translate={
-                      settings.selectedObjects.includes(object.uuid)
-                        ? translate
-                        : undefined
-                    }
+                  <ObjectAnimatable
                     object={object}
-                  >
-                    <RightPanelPortal>
-                      <QueueObjectStyler />
-                    </RightPanelPortal>
-                    {settings.selectedObjects.includes(object.uuid) && (
-                      <Resizer
-                        rect={{
-                          x: object.rect.x + translate.x,
-                          y: object.rect.y + translate.y,
-                          width: object.rect.width + translate.width,
-                          height: object.rect.height + translate.height,
-                        }}
-                        scale={settings.scale}
-                        onResizeStart={(event): void => onResizeStart(object)}
-                        onResizeMove={(event): void =>
-                          onResizeMove(object, event)
-                        }
-                        onResizeEnd={(event): void =>
-                          onResizeEnd(object, event)
-                        }
-                      ></Resizer>
-                    )}
-                  </QueueObject>
+                    queueIndex={settings.queueIndex}
+                    queuePosition={settings.queuePosition}
+                    queueStart={settings.queueStart}>
+                    <LegacyQueueObject
+                      start={settings.queueStart}
+                      position={settings.queuePosition}
+                      index={settings.queueIndex}
+                      translate={
+                        settings.selectedObjects.includes(object.uuid)
+                          ? translate
+                          : undefined
+                      }
+                      object={object}
+                    >
+                      <RightPanelPortal>
+                        <QueueObjectStyler />
+                      </RightPanelPortal>
+                      {settings.selectedObjects.includes(object.uuid) && (
+                        <ObjectResizer
+                          scale={settings.scale}
+                          translate={
+                            settings.selectedObjects.includes(object.uuid)
+                              ? translate
+                              : undefined
+                          }
+                          onResizeStart={(event): void => onResizeStart(object)}
+                          onResizeMove={(event): void =>
+                            onResizeMove(object, event)
+                          }
+                          onResizeEnd={(event): void =>
+                            onResizeEnd(object, event)
+                          }
+                        ></ObjectResizer>
+                      )}
+                    </LegacyQueueObject>
+                  </ObjectAnimatable>
                 </Draggable>
               </div>
             );
           })}
         </div>
+
+        {/* animator example */}
+        <Animatable duration={1000} start={settings.queueStart}>
+          <AnimatableContext.Consumer>
+            {(progress): string => `${progress}`}
+          </AnimatableContext.Consumer>
+        </Animatable>
+
       </Scaler>
     </Drawable>
   );

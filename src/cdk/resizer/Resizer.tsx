@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { QueueSquareRect } from '../../model/object/rect';
+import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
+import React, { useCallback, useContext, useEffect } from 'react';
+import { QueueRect } from '../../model/object/rect';
 import styles from './Resizer.module.scss';
 
 export interface ResizeEvent {
@@ -12,7 +12,7 @@ export interface ResizeEvent {
 
 export interface ResizerProps {
   scale?: number;
-  rect: QueueSquareRect;
+  translate?: QueueRect;
   onResizeStart?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeMove?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeEnd?: (event: ResizeEvent) => void;
@@ -28,19 +28,20 @@ export type ResizerPosition =
   | 'bottom-middle'
   | 'bottom-right';
 
-export const Resizer: React.FunctionComponent<ResizerProps> = ({
+export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   scale = 1,
-  rect,
+  translate,
   onResizeStart,
   onResizeMove,
   onResizeEnd,
 }) => {
   // shorthands
+  const meta = useContext(QueueAnimatableContext);
   const strokeWidth = 15;
   const distance = strokeWidth / 2;
   const margin = 50;
-  const actualWidth = rect.width + margin * 2;
-  const actualHeight = rect.height + margin * 2;
+  const actualWidth = (meta.rect.width + (translate?.width || 0)) + margin * 2;
+  const actualHeight = meta.rect.height + (translate?.height || 0) + margin * 2;
 
   const [init, setInit] = React.useState<{
     event: MouseEvent;
@@ -56,7 +57,7 @@ export const Resizer: React.FunctionComponent<ResizerProps> = ({
     targetEvent: MouseEvent,
     scale: number,
     position: ResizerPosition
-  ): QueueSquareRect => {
+  ): QueueRect => {
     const diffX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
     const diffY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
 

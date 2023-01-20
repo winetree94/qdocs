@@ -5,28 +5,28 @@ import {
   RemoveEffect,
 } from './object';
 
-export interface QueueSquareRect {
+export interface QueueRect {
   x: number;
   y: number;
   width: number;
   height: number;
 }
 
-export interface QueueSquareFill {
+export interface QueueFill {
   color: string;
 }
 
-export interface QueueSquareFade {
+export interface QueueFade {
   opacity: number;
 }
 
-export interface QueueSquareStroke {
+export interface QueueStroke {
   dasharray: string;
   width: number;
   color: string;
 }
 
-export interface QueueSquareText {
+export interface QueueText {
   text: string;
   fontSize: number;
   fontFamily: string;
@@ -38,11 +38,11 @@ export interface QueueSquareText {
 export interface QueueSquare extends BaseObject {
   type: 'rect';
   uuid: string;
-  rect: QueueSquareRect;
-  fade: QueueSquareFade;
-  fill: QueueSquareFill;
-  stroke: QueueSquareStroke;
-  text: QueueSquareText;
+  rect: QueueRect;
+  fade: QueueFade;
+  fill: QueueFill;
+  stroke: QueueStroke;
+  text: QueueText;
   effects: (
     | CreateEffect
     | MoveEffect
@@ -56,27 +56,27 @@ export interface QueueSquare extends BaseObject {
 
 export interface MoveEffect extends BaseQueueEffect {
   type: 'move';
-  rect: QueueSquareRect;
+  rect: QueueRect;
 }
 
 export interface StrokeEffect extends BaseQueueEffect {
   type: 'stroke';
-  stroke: QueueSquareStroke;
+  stroke: QueueStroke;
 }
 
 export interface FillEffect extends BaseQueueEffect {
   type: 'fill';
-  fill: QueueSquareFill;
+  fill: QueueFill;
 }
 
 export interface TextEffect extends BaseQueueEffect {
   type: 'text';
-  text: QueueSquareText;
+  text: QueueText;
 }
 
 export interface FadeEffect extends BaseQueueEffect {
   type: 'fade';
-  fade: QueueSquareFade;
+  fade: QueueFade;
 }
 
 export function isExistObjectOnQueue(

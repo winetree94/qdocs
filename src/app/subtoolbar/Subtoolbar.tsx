@@ -51,6 +51,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
     const to = index;
     setSettings({
       ...settings,
+      queueStart: -1,
       queueIndex: to,
       queuePosition: 'pause',
     });
@@ -62,6 +63,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
     const to = Math.max(settings.queueIndex - 1, 0);
     setSettings({
       ...settings,
+      queueStart: performance.now(),
       queueIndex: to,
       queuePosition: settings.queueIndex - 1 >= 0 ? 'backward' : 'pause',
     });
@@ -74,6 +76,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
     const to = settings.queueIndex + 1;
     setSettings({
       ...settings,
+      queueStart: performance.now(),
       queueIndex: to,
       queuePosition: 'forward',
     });

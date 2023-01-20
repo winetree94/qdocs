@@ -1,25 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useLayoutEffect, useState } from 'react';
-import { animate, linear } from '../../../cdk/animation/animate';
 import {
   MoveEffect,
-  QueueSquareRect,
+  QueueRect,
   QueueSquare,
 } from '../../../model/object/rect';
 
 export interface RectAnimation {
-  fromRect: QueueSquareRect;
+  fromRect: QueueRect;
   moveEffect: MoveEffect;
 }
 
 export const getCurrentRect = (
   object: QueueSquare,
   index: number
-): QueueSquareRect => {
+): QueueRect => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is MoveEffect => effect.type === 'move')
-    .reduce<QueueSquareRect>((_, effect) => effect.rect, object.rect);
+    .reduce<QueueRect>((_, effect) => effect.rect, object.rect);
 };
 
 export const getRectAnimation = (
@@ -61,61 +59,18 @@ export const getRectAnimation = (
   };
 };
 
-export const WithRectAnimation = (
-  object: QueueSquare,
-  index: number,
-  position: 'forward' | 'backward' | 'pause'
-): QueueSquareRect => {
-  const [rectFrame, setRectFrame] = useState<number>(0);
-  const currentRect = getCurrentRect(object, index);
-  const [animatedFrame, setAnimatedFrame] =
-    useState<QueueSquareRect>(currentRect);
-  const rectAnimation = getRectAnimation(object, index, position);
-
-  useLayoutEffect(() => {
-    cancelAnimationFrame(rectFrame);
-    if (!rectAnimation) {
-      return;
-    }
-    setAnimatedFrame(rectAnimation.fromRect);
-    const createdFrame = animate({
-      duration: rectAnimation.moveEffect.duration,
-      timing: linear,
-      draw: (progress) => {
-        setAnimatedFrame({
-          x:
-            rectAnimation.fromRect.x +
-            (rectAnimation.moveEffect.rect.x - rectAnimation.fromRect.x) *
-              progress,
-          y:
-            rectAnimation.fromRect.y +
-            (rectAnimation.moveEffect.rect.y - rectAnimation.fromRect.y) *
-              progress,
-          width:
-            rectAnimation.fromRect.width +
-            (rectAnimation.moveEffect.rect.width -
-              rectAnimation.fromRect.width) *
-              progress,
-          height:
-            rectAnimation.fromRect.width +
-            (rectAnimation.moveEffect.rect.height -
-              rectAnimation.fromRect.height) *
-              progress,
-        });
-      },
-    });
-
-    setRectFrame(createdFrame);
-    setAnimatedFrame(rectAnimation.fromRect);
-    return () => {
-      cancelAnimationFrame(rectFrame);
-      setAnimatedFrame(currentRect);
-    };
-  }, []);
-
-  if (position === 'pause') {
-    return currentRect;
+export const getAnimatableRect = (
+  progress: number,
+  targetRect: QueueRect,
+  fromRect?: QueueRect,
+): QueueRect => {
+  if (progress < 0 || !fromRect) {
+    return targetRect;
   }
-
-  return animatedFrame;
+  return {
+    x: fromRect.x + (targetRect.x - fromRect.x) * progress,
+    y: fromRect.y + (targetRect.y - fromRect.y) * progress,
+    width: fromRect.width + (targetRect.width - fromRect.width) * progress,
+    height: fromRect.width + (targetRect.height - fromRect.height) * progress,
+  };
 };

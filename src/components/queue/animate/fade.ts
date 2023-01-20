@@ -1,25 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useLayoutEffect, useState } from 'react';
-import { animate, linear } from '../../../cdk/animation/animate';
 import {
-  QueueSquareFade,
+  QueueFade,
   FadeEffect,
   QueueSquare,
 } from '../../../model/object/rect';
 
 export interface FadeAnimation {
-  fromFade: QueueSquareFade;
+  fromFade: QueueFade;
   fadeEffect: FadeEffect;
 }
 
 export const getCurrentFade = (
   object: QueueSquare,
   index: number
-): QueueSquareFade => {
+): QueueFade => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is FadeEffect => effect.type === 'fade')
-    .reduce<QueueSquareFade>((_, effect) => effect.fade, object.fade);
+    .reduce<QueueFade>((_, effect) => effect.fade, object.fade);
 };
 
 export const getFadeAnimation = (
@@ -61,54 +59,23 @@ export const getFadeAnimation = (
   };
 };
 
-export const WithFadeAnimation = (
-  object: QueueSquare,
-  index: number,
-  position: 'forward' | 'backward' | 'pause'
-): QueueSquareFade => {
-  const [fadeFrame, setFadeFrame] = useState<number>(0);
-  const currentFade = getCurrentFade(object, index);
-  const [animatedFrame, setAnimatedFrame] = useState<QueueSquareFade>({
-    opacity: Math.max(currentFade.opacity, 0.1),
-  });
-  const fadeAnimation = getFadeAnimation(object, index, position);
-
-  useLayoutEffect(() => {
-    cancelAnimationFrame(fadeFrame);
-    if (position === 'pause') {
-      return;
-    }
-    if (!fadeAnimation) {
-      return;
-    }
-    setAnimatedFrame({
-      opacity: Math.max(fadeAnimation.fromFade.opacity, 0.1),
-    });
-    const createdFrame = animate({
-      duration: fadeAnimation.fadeEffect.duration,
-      timing: linear,
-      draw: (progress) => {
-        setAnimatedFrame({
-          opacity: Math.max(
-            fadeAnimation.fromFade.opacity +
-              (fadeAnimation.fadeEffect.fade.opacity -
-                fadeAnimation.fromFade.opacity) *
-                progress,
-            0.1
-          ),
-        });
-      },
-    });
-
-    setFadeFrame(createdFrame);
-    return () => cancelAnimationFrame(fadeFrame);
-  }, []);
-
-  if (position === 'pause') {
+export const getAnimatableFade = (
+  progress: number,
+  targetFade: QueueFade,
+  fromFade?: QueueFade,
+): QueueFade => {
+  if (progress < 0 || !fromFade) {
     return {
-      opacity: Math.max(currentFade.opacity, 0.1),
-    };
+      opacity: Math.max(
+        targetFade.opacity,
+        0.1
+      ),
+    };;
   }
-
-  return animatedFrame;
+  return {
+    opacity: Math.max(
+      fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress,
+      0.1
+    ),
+  };
 };

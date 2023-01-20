@@ -134,100 +134,100 @@ export const documentState = atom<QueueDocument>({
           },
         ],
       },
-      {
-        type: 'rect',
-        uuid: generateUUID(),
-        rect: {
-          x: 500,
-          y: 500,
-          width: 100,
-          height: 100,
-        },
-        stroke: {
-          width: 1,
-          color: '#000000',
-          dasharray: 'solid',
-        },
-        fill: {
-          color: '#ffffff',
-        },
-        fade: {
-          opacity: 0,
-        },
-        text: {
-          text: 'Hello World',
-          fontSize: 24,
-          fontColor: '#000000',
-          fontFamily: 'Arial',
-          horizontalAlign: 'center',
-          verticalAlign: 'middle',
-        },
-        effects: [
-          {
-            type: 'create',
-            timing: 'linear',
-            duration: 0,
-            index: 1,
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 500,
-            index: 1,
-            fade: {
-              opacity: 1,
-            },
-          },
-          {
-            type: 'move',
-            timing: 'linear',
-            duration: 1000,
-            index: 2,
-            rect: {
-              x: 1000,
-              y: 600,
-              width: 300,
-              height: 300,
-            },
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 500,
-            index: 2,
-            fade: {
-              opacity: 0.5,
-            },
-          },
-          {
-            type: 'move',
-            timing: 'linear',
-            duration: 1000,
-            index: 3,
-            rect: {
-              x: 1000,
-              y: 100,
-              width: 100,
-              height: 100,
-            },
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 1000,
-            index: 3,
-            fade: {
-              opacity: 0,
-            },
-          },
-          {
-            type: 'remove',
-            timing: 'linear',
-            duration: 2000,
-            index: 8,
-          },
-        ],
-      },
+      // {
+      //   type: 'rect',
+      //   uuid: generateUUID(),
+      //   rect: {
+      //     x: 500,
+      //     y: 500,
+      //     width: 100,
+      //     height: 100,
+      //   },
+      //   stroke: {
+      //     width: 1,
+      //     color: '#000000',
+      //     dasharray: 'solid',
+      //   },
+      //   fill: {
+      //     color: '#ffffff',
+      //   },
+      //   fade: {
+      //     opacity: 0,
+      //   },
+      //   text: {
+      //     text: 'Hello World',
+      //     fontSize: 24,
+      //     fontColor: '#000000',
+      //     fontFamily: 'Arial',
+      //     horizontalAlign: 'center',
+      //     verticalAlign: 'middle',
+      //   },
+      //   effects: [
+      //     {
+      //       type: 'create',
+      //       timing: 'linear',
+      //       duration: 0,
+      //       index: 1,
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 500,
+      //       index: 1,
+      //       fade: {
+      //         opacity: 1,
+      //       },
+      //     },
+      //     {
+      //       type: 'move',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 2,
+      //       rect: {
+      //         x: 1000,
+      //         y: 600,
+      //         width: 300,
+      //         height: 300,
+      //       },
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 500,
+      //       index: 2,
+      //       fade: {
+      //         opacity: 0.5,
+      //       },
+      //     },
+      //     {
+      //       type: 'move',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 3,
+      //       rect: {
+      //         x: 1000,
+      //         y: 100,
+      //         width: 100,
+      //         height: 100,
+      //       },
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 3,
+      //       fade: {
+      //         opacity: 0,
+      //       },
+      //     },
+      //     {
+      //       type: 'remove',
+      //       timing: 'linear',
+      //       duration: 2000,
+      //       index: 8,
+      //     },
+      //   ],
+      // },
     ],
   },
   effects: [

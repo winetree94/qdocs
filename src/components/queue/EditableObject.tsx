@@ -12,15 +12,16 @@ import {
 } from 'react';
 import {
   QueueSquare,
-  QueueSquareFade,
-  QueueSquareFill,
-  QueueSquareRect,
-  QueueSquareStroke,
-  QueueSquareText,
+  QueueFade,
+  QueueFill,
+  QueueRect,
+  QueueStroke,
+  QueueText,
 } from '../../model/object/rect';
 import { getCurrentFade } from './animate/fade';
 import { getCurrentRect } from './animate/rect';
 import styles from './EditableObject.module.scss';
+import { QueueAnimatableContext } from './QueueAnimation';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -30,11 +31,11 @@ export interface QueueObjectContextType {
 }
 
 export interface QueueObjectStyle {
-  fill: QueueSquareFill;
-  storke: QueueSquareStroke;
-  text: QueueSquareText;
-  fade: QueueSquareFade;
-  rect: QueueSquareRect;
+  fill: QueueFill;
+  storke: QueueStroke;
+  text: QueueText;
+  fade: QueueFade;
+  rect: QueueRect;
 }
 
 export const QueueObjectContext = createContext<QueueObjectContextType>({
@@ -55,14 +56,15 @@ export const useQueueObjectContext = (): QueueObjectContextType => {
 };
 
 export interface QueueObjectProps {
+  start: number;
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;
-  translate?: QueueSquareRect;
+  translate?: QueueRect;
   object: QueueSquare;
 }
 
-export const QueueObject: FunctionComponent<QueueObjectProps> = ({
+export const LegacyQueueObject: FunctionComponent<QueueObjectProps> = ({
   children,
   object,
   index,
@@ -73,6 +75,7 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
     height: 0,
   },
 }) => {
+  const meta = useContext(QueueAnimatableContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const isClickInsideRef = useRef(false);
   const objectRef = useRef<SVGSVGElement>(null);
@@ -81,13 +84,13 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
   const currentFill = object.fill;
   const currentStroke = object.stroke;
   const currentText = object.text;
-  // const currentFade = WithFadeAnimation(object, index, position);
-  // const currentRect = WithRectAnimation(object, index, position);
   const fade = getCurrentFade(object, index);
+
   const currentFade = useMemo(
     () => ({ opacity: Math.max(fade.opacity, 0.1) }),
     [fade.opacity]
   );
+
   const currentRect = getCurrentRect(object, index);
   const queueObjectStyle = useMemo(
     () => ({
@@ -115,11 +118,9 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
       if (!isClickInsideRef.current) {
         setSelected(false);
       }
-
       isClickInsideRef.current = false;
     };
     document.addEventListener('click', handleClick);
-
     return () => {
       document.removeEventListener('click', handleClick);
     };
@@ -131,10 +132,10 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
         ref={containerRef}
         className={clsx('object-container', styles.container)}
         style={{
-          top: `${currentRect.y}px`,
-          left: `${currentRect.x}px`,
-          width: `${currentRect.width + translate.width}px`,
-          height: `${currentRect.height + translate.height}px`,
+          top: `${meta.rect.y}px`,
+          left: `${meta.rect.x}px`,
+          width: `${meta.rect.width + translate.width}px`,
+          height: `${meta.rect.height + translate.height}px`,
           transform: `translate(${translate.x}px, ${translate.y}px)`,
         }}
         onClick={(): void => setSelected(true)}
@@ -143,23 +144,23 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
         <div
           className="object-shape"
           style={{
-            width: `${currentRect.width + translate.width}px`,
-            height: `${currentRect.height + translate.height}px`,
-            opacity: `${currentFade.opacity}`,
+            width: `${meta.rect.width + translate.width}px`,
+            height: `${meta.rect.height + translate.height}px`,
+            opacity: `${meta.fade.opacity}`,
           }}
         >
           <svg
             className="object-rect"
             ref={objectRef}
-            width={currentRect.width + translate.width}
-            height={currentRect.height + translate.height}
+            width={meta.rect.width + translate.width}
+            height={meta.rect.height + translate.height}
           >
             <g>
               <rect
                 x={0}
                 y={0}
-                width={currentRect.width + translate.width}
-                height={currentRect.height + translate.height}
+                width={meta.rect.width + translate.width}
+                height={meta.rect.height + translate.height}
                 fill={currentFill.color}
                 stroke={currentStroke.color}
                 strokeWidth={currentStroke.width}
@@ -180,20 +181,6 @@ export const QueueObject: FunctionComponent<QueueObjectProps> = ({
             {currentText.text}
           </div>
         </div>
-        {/* {selected && (
-        <Resizer
-          rect={{
-            x: currentRect.x + translate.x,
-            y: currentRect.y + translate.y,
-            width: currentRect.width + translate.width,
-            height: currentRect.height + translate.height,
-          }}
-          scale={scale}
-          onResizeStart={onResizeStart}
-          onResizeMove={onResizeMove}
-          onResizeEnd={onResizeEnd}
-        ></Resizer>
-      )} */}
         {children}
       </div>
     </QueueObjectContext.Provider>

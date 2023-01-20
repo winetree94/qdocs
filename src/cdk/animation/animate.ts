@@ -1,3 +1,5 @@
+export const pendingAnimations = [];
+
 export interface AnimateOptions {
   duration: number;
   timing: (timeFraction: number) => number;
