@@ -37,6 +37,15 @@ export const LeftPanel: FunctionComponent = () => {
           fill: {
             color: '#ffffff',
           },
+          scale: {
+            scale: 1,
+          },
+          rotate: {
+            x: 0,
+            y: 0,
+            position: 'forward',
+            degree: 0,
+          },
           fade: {
             opacity: 1,
           },

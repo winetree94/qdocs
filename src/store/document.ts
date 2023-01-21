@@ -42,6 +42,15 @@ export const documentState = atom<QueueDocument>({
           color: '#000000',
           dasharray: 'solid',
         },
+        scale: {
+          scale: 1,
+        },
+        rotate: {
+          x: 0,
+          y: 0,
+          position: 'forward',
+          degree: 0,
+        },
         fill: {
           color: '#ffffff',
         },
@@ -150,6 +159,15 @@ export const documentState = atom<QueueDocument>({
         },
         fill: {
           color: '#ffffff',
+        },
+        scale: {
+          scale: 1,
+        },
+        rotate: {
+          x: 0,
+          y: 0,
+          position: 'forward',
+          degree: 0,
         },
         fade: {
           opacity: 0,

@@ -26,6 +26,17 @@ export interface QueueStroke {
   color: string;
 }
 
+export interface QueueRotate {
+  x: number;
+  y: number;
+  position: 'forward' | 'reverse';
+  degree: number;
+}
+
+export interface QueueScale {
+  scale: number;
+}
+
 export interface QueueText {
   text: string;
   fontSize: number;
@@ -41,6 +52,8 @@ export interface QueueSquare extends BaseObject {
   rect: QueueRect;
   fade: QueueFade;
   fill: QueueFill;
+  scale: QueueScale;
+  rotate: QueueRotate;
   stroke: QueueStroke;
   text: QueueText;
   effects: (
@@ -77,6 +90,16 @@ export interface TextEffect extends BaseQueueEffect {
 export interface FadeEffect extends BaseQueueEffect {
   type: 'fade';
   fade: QueueFade;
+}
+
+export interface ScaleEffect extends BaseQueueEffect {
+  type: 'scale';
+  scale: QueueScale;
+}
+
+export interface RotateEffect extends BaseQueueEffect {
+  type: 'rotate';
+  rotate: QueueRotate;
 }
 
 export function isExistObjectOnQueue(
