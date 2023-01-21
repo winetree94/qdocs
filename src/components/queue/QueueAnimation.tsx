@@ -1,4 +1,4 @@
-import { Animatable, AnimatableContext } from 'cdk/animation/UseAnimate';
+import { Animatable } from 'cdk/animation/UseAnimate';
 import { QueueFade, QueueRect, QueueSquare } from 'model/object/rect';
 import { createContext, FunctionComponent, ReactElement } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
@@ -48,28 +48,24 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
     <Animatable
       duration={animatableRect?.moveEffect.duration || 0}
       start={queueStart}>
-      <AnimatableContext.Consumer>
-        {(rectProgress): ReactElement => {
-          return (
-            <Animatable
-              duration={animatableFade?.fadeEffect.duration || 0}
-              start={queueStart}>
-              <AnimatableContext.Consumer>
-                {(fadeProgress): ReactElement => {
-                  return (
-                    <QueueAnimatableContext.Provider value={{
-                      rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
-                      fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
-                    }}>
-                      {children}
-                    </QueueAnimatableContext.Provider>
-                  );
-                }}
-              </AnimatableContext.Consumer>
-            </Animatable>
-          );
-        }}
-      </AnimatableContext.Consumer>
+      {(rectProgress): ReactElement => {
+        return (
+          <Animatable
+            duration={animatableFade?.fadeEffect.duration || 0}
+            start={queueStart}>
+            {(fadeProgress): ReactElement => {
+              return (
+                <QueueAnimatableContext.Provider value={{
+                  rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
+                  fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
+                }}>
+                  {children}
+                </QueueAnimatableContext.Provider>
+              );
+            }}
+          </Animatable>
+        );
+      }}
     </Animatable>
   );
 };

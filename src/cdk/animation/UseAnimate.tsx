@@ -55,7 +55,7 @@ export interface AnimationContextType {
 export const AnimatableContext = createContext<number>(-1);
 
 export interface AnimatorProps {
-  children: React.ReactNode;
+  children: (value: number) => React.ReactNode;
   start: number;
   timing?: 'linear';
   duration?: number;
@@ -91,7 +91,11 @@ export const Animatable: FunctionComponent<AnimatorProps> = ({
   }, [start, animate]);
 
   return (
-    <AnimatableContext.Provider value={progress}>{children}</AnimatableContext.Provider>
+    <AnimatableContext.Provider value={progress}>
+      <AnimatableContext.Consumer>
+        {children}
+      </AnimatableContext.Consumer>
+    </AnimatableContext.Provider>
   );
 };
 

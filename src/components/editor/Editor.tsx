@@ -343,9 +343,9 @@ export const QueueEditor: FunctionComponent = () => {
 
         {/* animator example */}
         <Animatable duration={1000} start={settings.queueStart}>
-          <AnimatableContext.Consumer>
-            {(progress): string => `${progress}`}
-          </AnimatableContext.Consumer>
+          {(progress): React.ReactNode => (
+            <div>{progress}</div>
+          )}
         </Animatable>
 
       </Scaler>
