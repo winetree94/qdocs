@@ -6,7 +6,7 @@ import { LeftPanel } from '../left-panel/LeftPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
-import { RightPanel, RightPanelProvider } from '../right-panel/RightPanel';
+import { RightPanel } from '../right-panel/RightPanel';
 
 export const RootContext = createContext({});
 
@@ -34,10 +34,8 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
         ) : null}
         <div className={styles.bottom}>
           {!settings.presentationMode ? <LeftPanel /> : null}
-          <RightPanelProvider>
-            <QueueEditor />
-            {!settings.presentationMode ? <RightPanel /> : null}
-          </RightPanelProvider>
+          <QueueEditor />
+          {!settings.presentationMode ? <RightPanel /> : null}
         </div>
       </div>
     </RootContext.Provider>

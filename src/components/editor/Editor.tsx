@@ -4,7 +4,6 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { QueueObjectStyler } from '../queue/EditableObject';
 import { documentState, QueueDocumentRect } from '../../store/document';
 import {
   isExistObjectOnQueue,
@@ -15,7 +14,6 @@ import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
-import { RightPanelPortal } from '../../app/right-panel/RightPanel';
 import { Animator } from 'cdk/animation/Animator';
 import { QueueObject } from 'components/queue';
 
@@ -313,9 +311,6 @@ export const QueueEditor: FunctionComponent = () => {
                       }
                       object={object}
                     >
-                      <RightPanelPortal>
-                        <QueueObjectStyler />
-                      </RightPanelPortal>
                       {settings.selectedObjectUUIDs.includes(object.uuid) && (
                         <QueueObject.Resizer
                           scale={settings.scale}
