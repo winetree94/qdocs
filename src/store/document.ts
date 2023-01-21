@@ -82,6 +82,15 @@ export const documentState = atom<QueueDocument>({
             },
           },
           {
+            type: 'scale',
+            duration: 500,
+            timing: 'linear',
+            index: 1,
+            scale: {
+              scale: 2,
+            }
+          },
+          {
             type: 'move',
             duration: 500,
             timing: 'ease-out',

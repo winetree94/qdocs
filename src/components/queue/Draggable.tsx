@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
+import { QueueAnimatableContext } from './QueueAnimation';
 
-export interface DraggableProps {
-  children: React.ReactNode;
-  className?: string;
+export interface DraggableProps extends React.BaseHTMLAttributes<HTMLDivElement> {
   onMousedown?: (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
@@ -14,12 +13,13 @@ export interface DraggableProps {
 
 export const Draggable: React.FunctionComponent<DraggableProps> = ({
   children,
-  className,
   onMousedown,
   onDraggingStart,
   onDraggingMove,
   onDraggingEnd,
+  ...divProps
 }) => {
+  const meta = useContext(QueueAnimatableContext);
   const [initMousedownEvent, setInitMousedownEvent] =
     React.useState<MouseEvent | null>(null);
 
@@ -70,7 +70,13 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
   );
 
   return (
-    <div className={className} onMouseDown={onContainerMousedown}>
+    <div
+      {...divProps}
+      onMouseDown={onContainerMousedown}
+      style={{
+        transform: `scale(${meta.scale.scale})`,
+        transformOrigin: meta.scale.scale === 1 ? undefined : `${meta.rect.width / 2}px ${meta.rect.height / 2}px`,
+      }}>
       {children}
     </div>
   );

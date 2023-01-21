@@ -64,6 +64,8 @@ export interface QueueSquare extends BaseObject {
     | TextEffect
     | FadeEffect
     | RemoveEffect
+    | ScaleEffect
+    | RotateEffect
   )[];
 }
 

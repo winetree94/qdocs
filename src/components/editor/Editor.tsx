@@ -106,6 +106,7 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueSquare
   ): void => {
+    event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey) {
       setSettings({
@@ -289,19 +290,19 @@ export const QueueEditor: FunctionComponent = () => {
           {currentQueueObjects.map((object) => {
             return (
               <QueueObject.Container key={object.uuid}>
-                <QueueObject.Drag
-                  onMousedown={(event): void =>
-                    onObjectMouseodown(event, object)
-                  }
-                  onDraggingStart={onObjectDragMove}
-                  onDraggingMove={onObjectDragMove}
-                  onDraggingEnd={onObjectDragEnd}
-                >
-                  <QueueObject.Animator
-                    object={object}
-                    queueIndex={settings.queueIndex}
-                    queuePosition={settings.queuePosition}
-                    queueStart={settings.queueStart}>
+                <QueueObject.Animator
+                  object={object}
+                  queueIndex={settings.queueIndex}
+                  queuePosition={settings.queuePosition}
+                  queueStart={settings.queueStart}>
+                  <QueueObject.Drag
+                    onMousedown={(event): void =>
+                      onObjectMouseodown(event, object)
+                    }
+                    onDraggingStart={onObjectDragMove}
+                    onDraggingMove={onObjectDragMove}
+                    onDraggingEnd={onObjectDragEnd}
+                  >
                     <QueueObject.Legacy
                       position={settings.queuePosition}
                       index={settings.queueIndex}
@@ -333,8 +334,8 @@ export const QueueEditor: FunctionComponent = () => {
                         ></QueueObject.Resizer>
                       )}
                     </QueueObject.Legacy>
-                  </QueueObject.Animator>
-                </QueueObject.Drag>
+                  </QueueObject.Drag>
+                </QueueObject.Animator>
               </QueueObject.Container>
             );
           })}
