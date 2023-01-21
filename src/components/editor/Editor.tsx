@@ -106,18 +106,18 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueSquare
   ): void => {
-    const selected = settings.selectedObjects.includes(object.uuid);
+    const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey) {
       setSettings({
         ...settings,
-        selectedObjects: [object.uuid],
+        selectedObjectUUIDs: [object.uuid],
       });
     } else {
       setSettings({
         ...settings,
-        selectedObjects: selected
-          ? settings.selectedObjects.filter((id) => id !== object.uuid)
-          : [...settings.selectedObjects, object.uuid],
+        selectedObjectUUIDs: selected
+          ? settings.selectedObjectUUIDs.filter((id) => id !== object.uuid)
+          : [...settings.selectedObjectUUIDs, object.uuid],
       });
     }
   };
@@ -140,9 +140,9 @@ export const QueueEditor: FunctionComponent = () => {
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
-    console.log(settings.selectedObjects);
+    console.log(settings.selectedObjectUUIDs);
     const updateModels = queueDocument.objects
-      .filter((object) => settings.selectedObjects.includes(object.uuid))
+      .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
       .map<RectUpdateModel>((object) => {
         const rect = getCurrentRect(object, settings.queueIndex);
         return {
@@ -216,7 +216,7 @@ export const QueueEditor: FunctionComponent = () => {
     });
     setSettings({
       ...settings,
-      selectedObjects: selectedObjects.map((object) => object.uuid),
+      selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
     });
   };
 
@@ -303,11 +303,10 @@ export const QueueEditor: FunctionComponent = () => {
                     queuePosition={settings.queuePosition}
                     queueStart={settings.queueStart}>
                     <QueueObject.Legacy
-                      start={settings.queueStart}
                       position={settings.queuePosition}
                       index={settings.queueIndex}
                       translate={
-                        settings.selectedObjects.includes(object.uuid)
+                        settings.selectedObjectUUIDs.includes(object.uuid)
                           ? translate
                           : undefined
                       }
@@ -316,11 +315,11 @@ export const QueueEditor: FunctionComponent = () => {
                       <RightPanelPortal>
                         <QueueObjectStyler />
                       </RightPanelPortal>
-                      {settings.selectedObjects.includes(object.uuid) && (
+                      {settings.selectedObjectUUIDs.includes(object.uuid) && (
                         <QueueObject.Resizer
                           scale={settings.scale}
                           translate={
-                            settings.selectedObjects.includes(object.uuid)
+                            settings.selectedObjectUUIDs.includes(object.uuid)
                               ? translate
                               : undefined
                           }

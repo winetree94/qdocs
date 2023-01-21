@@ -18,10 +18,16 @@ import {
   QueueStroke,
   QueueText,
 } from '../../model/object/rect';
-import { getCurrentFade } from './animate/fade';
-import { getCurrentRect } from './animate/rect';
+import {
+  getCurrentFade,
+} from './animate/fade';
+import {
+  getCurrentRect,
+} from './animate/rect';
+import {
+  QueueAnimatableContext,
+} from './QueueAnimation';
 import styles from './EditableObject.module.scss';
-import { QueueAnimatableContext } from './QueueAnimation';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -56,7 +62,6 @@ export const useQueueObjectContext = (): QueueObjectContextType => {
 };
 
 export interface QueueObjectProps {
-  start: number;
   position: 'forward' | 'backward' | 'pause';
   index: number;
   children?: ReactNode;

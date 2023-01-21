@@ -1,11 +1,17 @@
-import { atom } from 'recoil';
+import {
+  atom,
+  selector,
+} from 'recoil';
+import {
+  documentState,
+} from './document';
 
 export interface QueueDocumentSettings {
   queueIndex: number;
   queueStart: number,
   queuePosition: 'forward' | 'backward' | 'pause';
   selectionMode: 'single' | 'multiple' | 'none';
-  selectedObjects: string[];
+  selectedObjectUUIDs: string[];
   scale: number;
   presentationMode: boolean;
 }
@@ -17,7 +23,7 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
     queueStart: 0,
     queuePosition: 'forward',
     selectionMode: 'none',
-    selectedObjects: [],
+    selectedObjectUUIDs: [],
     scale: 0.25,
     presentationMode: false,
   } as QueueDocumentSettings,
@@ -28,4 +34,14 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
       });
     },
   ],
+});
+
+export const getSelectedObjects = selector({
+  key: 'getSelectedObjects',
+  get: ({ get }) => {
+    const queueDocument = get(documentState);
+    const settings = get(documentSettingsState);
+    return queueDocument.objects
+      .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  }
 });
