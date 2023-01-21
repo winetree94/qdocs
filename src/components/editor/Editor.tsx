@@ -288,7 +288,7 @@ export const QueueEditor: FunctionComponent = () => {
         >
           {currentQueueObjects.map((object) => {
             return (
-              <div key={object.uuid}>
+              <QueueObject.Container key={object.uuid}>
                 <QueueObject.Drag
                   onMousedown={(event): void =>
                     onObjectMouseodown(event, object)
@@ -335,7 +335,7 @@ export const QueueEditor: FunctionComponent = () => {
                     </QueueObject.Legacy>
                   </QueueObject.Animator>
                 </QueueObject.Drag>
-              </div>
+              </QueueObject.Container>
             );
           })}
         </div>

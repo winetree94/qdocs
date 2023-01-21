@@ -7,7 +7,7 @@ import { Rect } from './Rect';
 
 export const QueueObject = {
   Drag: Draggable,
-  Conatiner: QueueObjectContainer,
+  Container: QueueObjectContainer,
   Legacy: LegacyQueueObject,
   Animator: ObjectAnimator,
   Rect: Rect,
