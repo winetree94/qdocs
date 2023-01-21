@@ -25,6 +25,9 @@ export const Animator: FunctionComponent<AnimatorProps> = ({
   timing = 'linear',
   duration = 0,
 }: AnimatorProps) => {
+  const now = performance.now();
+  const actived = (now - start) / duration < 1;
+
   const ref = useRef<number>(0);
   const [progress, setProgress] = useState<number>(-1);
 
@@ -46,12 +49,19 @@ export const Animator: FunctionComponent<AnimatorProps> = ({
 
   useLayoutEffect(() => {
     if (!start || start < 0) return;
+    setProgress(0);
     ref.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(ref.current);
-  }, [start, animate]);
+    return () => {
+      setProgress(-1);
+      cancelAnimationFrame(ref.current);
+    };
+  }, [
+    start,
+    animate,
+  ]);
 
   return (
-    <AnimatableContext.Provider value={progress}>
+    <AnimatableContext.Provider value={actived ? Math.max(progress, 0) : progress}>
       <AnimatableContext.Consumer>
         {children}
       </AnimatableContext.Consumer>
