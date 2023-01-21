@@ -16,7 +16,7 @@ import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { RightPanelPortal } from '../../app/right-panel/RightPanel';
-import { Animatable, AnimatableContext } from 'cdk/animation/UseAnimate';
+import { Animator } from 'cdk/animation/Animator';
 import { QueueObject } from 'components/queue';
 
 const Selector = styled.div`
@@ -342,11 +342,11 @@ export const QueueEditor: FunctionComponent = () => {
         </div>
 
         {/* animator example */}
-        <Animatable duration={1000} start={settings.queueStart}>
+        <Animator duration={1000} start={settings.queueStart}>
           {(progress): React.ReactNode => (
             <div>{progress}</div>
           )}
-        </Animatable>
+        </Animator>
 
       </Scaler>
     </Drawable>

@@ -1,4 +1,4 @@
-import { Animatable } from 'cdk/animation/UseAnimate';
+import { Animator } from 'cdk/animation/Animator';
 import { QueueFade, QueueRect, QueueSquare } from 'model/object/rect';
 import { createContext, FunctionComponent, ReactElement } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
@@ -45,12 +45,12 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   const animatableRect = queueStart > 0 ? getRectAnimation(object, queueIndex, queuePosition) : undefined;
 
   return (
-    <Animatable
+    <Animator
       duration={animatableRect?.moveEffect.duration || 0}
       start={queueStart}>
       {(rectProgress): ReactElement => {
         return (
-          <Animatable
+          <Animator
             duration={animatableFade?.fadeEffect.duration || 0}
             start={queueStart}>
             {(fadeProgress): ReactElement => {
@@ -63,9 +63,9 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
                 </QueueAnimatableContext.Provider>
               );
             }}
-          </Animatable>
+          </Animator>
         );
       }}
-    </Animatable>
+    </Animator>
   );
 };
