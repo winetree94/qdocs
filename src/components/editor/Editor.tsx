@@ -288,7 +288,7 @@ export const QueueEditor: FunctionComponent = () => {
         >
           {currentQueueObjects.map((object) => {
             return (
-              <div key={object.uuid + settings.queueIndex}>
+              <div key={object.uuid}>
                 <QueueObject.Drag
                   onMousedown={(event): void =>
                     onObjectMouseodown(event, object)
