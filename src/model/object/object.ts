@@ -1,3 +1,5 @@
+import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
+
 export type ObjectType = '';
 
 export interface BaseObject {
@@ -8,7 +10,7 @@ export interface BaseObject {
 export interface BaseQueueEffect {
   index: number;
   duration: number;
-  timing: 'linear';
+  timing: AnimatorTimingFunctionType;
 }
 
 export interface CreateEffect extends BaseQueueEffect {

@@ -1,3 +1,4 @@
+import { bounce } from './bounce';
 import { easeOut } from './ease-out';
 import { linear } from './linear';
 
@@ -8,6 +9,6 @@ export const getTimingFunction = (
 ): (timeFraction: number) => number => {
   switch (type) {
     case 'linear': return linear;
-    case 'ease-out': return easeOut(linear);
+    case 'ease-out': return easeOut(bounce);
   }
 };

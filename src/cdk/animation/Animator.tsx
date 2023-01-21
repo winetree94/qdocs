@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 import {
+  AnimatorTimingFunctionType,
   getTimingFunction,
 } from './timing';
 
@@ -15,7 +16,7 @@ const AnimatableContext = createContext<number>(-1);
 export interface AnimatorProps {
   children: (value: number) => React.ReactNode;
   start: number;
-  timing?: 'linear';
+  timing?: AnimatorTimingFunctionType;
   duration?: number;
 }
 

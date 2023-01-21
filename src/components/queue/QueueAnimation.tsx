@@ -47,12 +47,14 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   return (
     <Animator
       duration={animatableRect?.moveEffect.duration || 0}
-      start={queueStart}>
+      start={queueStart}
+      timing={animatableRect?.moveEffect.timing}>
       {(rectProgress): ReactElement => {
         return (
           <Animator
             duration={animatableFade?.fadeEffect.duration || 0}
-            start={queueStart}>
+            start={queueStart}
+            timing={animatableFade?.fadeEffect.timing}>
             {(fadeProgress): ReactElement => {
               return (
                 <QueueAnimatableContext.Provider value={{
