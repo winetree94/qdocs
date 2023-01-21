@@ -255,6 +255,70 @@ export const documentState = atom<QueueDocument>({
           },
         ],
       },
+      {
+        type: 'rect',
+        uuid: generateUUID(),
+        rect: {
+          x: 1000,
+          y: 800,
+          width: 300,
+          height: 300,
+        },
+        stroke: {
+          width: 50,
+          color: '#000000',
+          dasharray: 'solid',
+        },
+        scale: {
+          scale: 1,
+        },
+        rotate: {
+          x: 0,
+          y: 0,
+          position: 'forward',
+          degree: 0,
+        },
+        fill: {
+          color: '#ffffff',
+        },
+        fade: {
+          opacity: 0,
+        },
+        text: {
+          text: 'Hello World',
+          fontSize: 24,
+          fontColor: '#000000',
+          fontFamily: 'Arial',
+          horizontalAlign: 'center',
+          verticalAlign: 'middle',
+        },
+        effects: [
+          {
+            type: 'create',
+            timing: 'linear',
+            duration: 0,
+            index: 0,
+          },
+          {
+            type: 'rotate',
+            duration: 1000,
+            index: 1,
+            timing: 'linear',
+            rotate: {
+              x: 0,
+              y: 0,
+              position: 'forward',
+              degree: 180,
+            }
+          },
+          {
+            type: 'remove',
+            timing: 'linear',
+            duration: 0,
+            index: 7,
+          },
+        ],
+      },
     ],
   },
   effects: [
