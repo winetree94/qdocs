@@ -1,5 +1,10 @@
 .root {
-  @apply flex flex-col bg-white;
+  @apply flex flex-col bg-white overflow-y-auto;
   width: 200px;
   height: 100%;
+}
+
+.scroll-list-box {
+  @apply flex flex-col gap-1 px-2 py-1 border border-gray-100 overflow-y-auto;
+  max-height: 170px;
 }
