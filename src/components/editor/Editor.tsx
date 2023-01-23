@@ -107,7 +107,7 @@ export const QueueEditor: FunctionComponent = () => {
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
-    if (!event.shiftKey && !selected) {
+    if (!event.shiftKey) {
       setSettings({
         ...settings,
         selectedObjectUUIDs: [object.uuid],
