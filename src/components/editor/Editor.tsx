@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { css } from '@emotion/css';
 import styled from '@emotion/styled';
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import {
@@ -54,6 +54,10 @@ export const QueueEditor: FunctionComponent = () => {
   const currentQueueObjects = queueDocument!.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
+
+  useLayoutEffect(() => {
+    // queueDocument?.documentRect.width
+  }, []);
 
   const updateObjectRects = (models: RectUpdateModel[]): void => {
     const newObjects = queueDocument!.objects.map((object) => {
@@ -266,10 +270,6 @@ export const QueueEditor: FunctionComponent = () => {
     setTranslateTargets([]);
   };
 
-  const onObjectAnimationEnd = (object: QueueObjectType): void => {
-    console.log('animation finished: ', object);
-  };
-
   return (
     <Drawable
       scale={settings.scale}
@@ -320,8 +320,8 @@ export const QueueEditor: FunctionComponent = () => {
                     onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingEnd={onObjectDragEnd}
                   >
-                    <QueueObject.Rect></QueueObject.Rect>
                     <QueueObject.Text></QueueObject.Text>
+                    <QueueObject.Rect></QueueObject.Rect>
                     <QueueObject.Resizer
                       onResizeStart={(event): void => onResizeStart(object)}
                       onResizeMove={(event): void => onResizeMove(object, event)}

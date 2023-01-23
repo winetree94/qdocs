@@ -171,7 +171,7 @@ export const LeftPanel: FunctionComponent = () => {
               className={styles.canvas}
             >
               <g>
-                <circle cx="15" cy="15" r="13" stroke="black" stroke-width="2" fill="transparent" />
+                <circle cx="15" cy="15" r="13" stroke="black" strokeWidth="2" fill="transparent" />
               </g>
             </svg>
           </Object>

@@ -2,8 +2,12 @@ import clsx from 'clsx';
 import { FunctionComponent, useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
+import { RectProps } from '../Rect';
+import styles from './Circle.module.scss';
 
-export const Circle: FunctionComponent = () => {
+export const Circle: FunctionComponent<RectProps> = ({
+  onRectMousedown,
+}) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
@@ -23,13 +27,15 @@ export const Circle: FunctionComponent = () => {
     >
       <g>
         <ellipse
+          onMouseDown={onRectMousedown}
+          className={clsx(styles.circle)}
           cx={rx + (margin / 2)}
           cy={ry + (margin / 2)}
           rx={rx}
           ry={ry}
           stroke={containerContext.object.stroke.color}
-          stroke-width={containerContext.object.stroke.width}
-          stroke-dasharray={containerContext.object.stroke.dasharray}
+          strokeWidth={containerContext.object.stroke.width}
+          strokeDasharray={containerContext.object.stroke.dasharray}
           fill="transparent"
         >
         </ellipse>
