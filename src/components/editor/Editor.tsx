@@ -11,11 +11,12 @@ import {
   QueueSquare,
 } from '../../model/object/rect';
 import { Scaler } from '../scaler/Scaler';
-import { getCurrentRect } from '../queue/animate/rect';
+import { getCurrentRect, getCurrentScaledRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { Animator } from 'cdk/animation/Animator';
 import { QueueObject } from 'components/queue';
+import { getCurrentScale } from 'components/queue/animate/scale';
 
 const Selector = styled.div`
   width: 100%;
@@ -121,13 +122,18 @@ export const QueueEditor: FunctionComponent = () => {
     }
   };
 
-  const onObjectDragMove = (initEvent: MouseEvent, event: MouseEvent): void => {
+  const onObjectDragMove = (
+    initEvent: MouseEvent,
+    event: MouseEvent,
+    object: QueueSquare,
+  ): void => {
     const x = event.clientX - initEvent.clientX;
     const y = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
+    const objectScale = 1 / getCurrentScale(object, settings.queueIndex).scale;
     setTranslate({
-      x: x * currentScale,
-      y: y * currentScale,
+      x: x * currentScale * objectScale,
+      y: y * currentScale * objectScale,
       width: 0,
       height: 0,
     });
@@ -139,7 +145,6 @@ export const QueueEditor: FunctionComponent = () => {
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
-    console.log(settings.selectedObjectUUIDs);
     const updateModels = queueDocument.objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
       .map<RectUpdateModel>((object) => {
@@ -205,7 +210,7 @@ export const QueueEditor: FunctionComponent = () => {
     const width = event.width * absScale;
     const height = event.height * absScale;
     const selectedObjects = queueDocument.objects.filter((object) => {
-      const rect = getCurrentRect(object, settings.queueIndex);
+      const rect = getCurrentScaledRect(object, settings.queueIndex);
       return (
         rect.x >= x &&
         rect.y >= y &&
@@ -228,6 +233,7 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onResizeEnd = (object: QueueSquare, rect: QueueRect): void => {
+    const currentScale = getCurrentScale(object, settings.queueIndex).scale;
     const currentRect = getCurrentRect(object, settings.queueIndex);
     updateObjectRects([
       {
@@ -297,8 +303,8 @@ export const QueueEditor: FunctionComponent = () => {
                     onMousedown={(event): void =>
                       onObjectMouseodown(event, object)
                     }
-                    onDraggingStart={onObjectDragMove}
-                    onDraggingMove={onObjectDragMove}
+                    onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
+                    onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingEnd={onObjectDragEnd}
                   >
                     <QueueObject.Legacy

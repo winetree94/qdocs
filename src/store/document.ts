@@ -34,8 +34,8 @@ export const documentState = atom<QueueDocument>({
         rect: {
           x: 0,
           y: 0,
-          width: 300,
-          height: 300,
+          width: 100,
+          height: 100,
         },
         stroke: {
           width: 50,
@@ -83,7 +83,7 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'scale',
-            duration: 500,
+            duration: 1000,
             timing: 'linear',
             index: 1,
             scale: {
@@ -92,14 +92,14 @@ export const documentState = atom<QueueDocument>({
           },
           {
             type: 'move',
-            duration: 500,
-            timing: 'ease-out',
+            duration: 1000,
+            timing: 'linear',
             index: 1,
             rect: {
-              x: 100,
-              y: 100,
-              width: 300,
-              height: 300,
+              x: 50,
+              y: 50,
+              width: 100,
+              height: 100,
             },
           },
           {
@@ -108,10 +108,10 @@ export const documentState = atom<QueueDocument>({
             timing: 'linear',
             index: 2,
             rect: {
-              x: 200,
+              x: 50,
               y: 200,
               width: 100,
-              height: 100,
+              height: 400,
             },
           },
           {
@@ -152,173 +152,173 @@ export const documentState = atom<QueueDocument>({
           },
         ],
       },
-      {
-        type: 'rect',
-        uuid: generateUUID(),
-        rect: {
-          x: 500,
-          y: 500,
-          width: 100,
-          height: 100,
-        },
-        stroke: {
-          width: 1,
-          color: '#000000',
-          dasharray: 'solid',
-        },
-        fill: {
-          color: '#ffffff',
-        },
-        scale: {
-          scale: 1,
-        },
-        rotate: {
-          x: 0,
-          y: 0,
-          position: 'forward',
-          degree: 0,
-        },
-        fade: {
-          opacity: 0,
-        },
-        text: {
-          text: 'Hello World',
-          fontSize: 24,
-          fontColor: '#000000',
-          fontFamily: 'Arial',
-          horizontalAlign: 'center',
-          verticalAlign: 'middle',
-        },
-        effects: [
-          {
-            type: 'create',
-            timing: 'linear',
-            duration: 0,
-            index: 1,
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 500,
-            index: 1,
-            fade: {
-              opacity: 1,
-            },
-          },
-          {
-            type: 'move',
-            timing: 'linear',
-            duration: 1000,
-            index: 2,
-            rect: {
-              x: 1000,
-              y: 600,
-              width: 300,
-              height: 300,
-            },
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 500,
-            index: 2,
-            fade: {
-              opacity: 0.5,
-            },
-          },
-          {
-            type: 'move',
-            timing: 'linear',
-            duration: 1000,
-            index: 3,
-            rect: {
-              x: 1000,
-              y: 100,
-              width: 100,
-              height: 100,
-            },
-          },
-          {
-            type: 'fade',
-            timing: 'linear',
-            duration: 1000,
-            index: 3,
-            fade: {
-              opacity: 0,
-            },
-          },
-          {
-            type: 'remove',
-            timing: 'linear',
-            duration: 2000,
-            index: 8,
-          },
-        ],
-      },
-      {
-        type: 'rect',
-        uuid: generateUUID(),
-        rect: {
-          x: 1000,
-          y: 800,
-          width: 300,
-          height: 300,
-        },
-        stroke: {
-          width: 50,
-          color: '#000000',
-          dasharray: 'solid',
-        },
-        scale: {
-          scale: 1,
-        },
-        rotate: {
-          x: 0,
-          y: 0,
-          position: 'forward',
-          degree: 0,
-        },
-        fill: {
-          color: '#ffffff',
-        },
-        fade: {
-          opacity: 0,
-        },
-        text: {
-          text: 'Hello World',
-          fontSize: 24,
-          fontColor: '#000000',
-          fontFamily: 'Arial',
-          horizontalAlign: 'center',
-          verticalAlign: 'middle',
-        },
-        effects: [
-          {
-            type: 'create',
-            timing: 'linear',
-            duration: 0,
-            index: 0,
-          },
-          {
-            type: 'rotate',
-            duration: 1000,
-            index: 1,
-            timing: 'linear',
-            rotate: {
-              x: 0,
-              y: 0,
-              position: 'forward',
-              degree: 180,
-            }
-          },
-          {
-            type: 'remove',
-            timing: 'linear',
-            duration: 0,
-            index: 7,
-          },
-        ],
-      },
+      // {
+      //   type: 'rect',
+      //   uuid: generateUUID(),
+      //   rect: {
+      //     x: 500,
+      //     y: 500,
+      //     width: 100,
+      //     height: 100,
+      //   },
+      //   stroke: {
+      //     width: 1,
+      //     color: '#000000',
+      //     dasharray: 'solid',
+      //   },
+      //   fill: {
+      //     color: '#ffffff',
+      //   },
+      //   scale: {
+      //     scale: 1,
+      //   },
+      //   rotate: {
+      //     x: 0,
+      //     y: 0,
+      //     position: 'forward',
+      //     degree: 0,
+      //   },
+      //   fade: {
+      //     opacity: 0,
+      //   },
+      //   text: {
+      //     text: 'Hello World',
+      //     fontSize: 24,
+      //     fontColor: '#000000',
+      //     fontFamily: 'Arial',
+      //     horizontalAlign: 'center',
+      //     verticalAlign: 'middle',
+      //   },
+      //   effects: [
+      //     {
+      //       type: 'create',
+      //       timing: 'linear',
+      //       duration: 0,
+      //       index: 1,
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 500,
+      //       index: 1,
+      //       fade: {
+      //         opacity: 1,
+      //       },
+      //     },
+      //     {
+      //       type: 'move',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 2,
+      //       rect: {
+      //         x: 1000,
+      //         y: 600,
+      //         width: 300,
+      //         height: 300,
+      //       },
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 500,
+      //       index: 2,
+      //       fade: {
+      //         opacity: 0.5,
+      //       },
+      //     },
+      //     {
+      //       type: 'move',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 3,
+      //       rect: {
+      //         x: 1000,
+      //         y: 100,
+      //         width: 100,
+      //         height: 100,
+      //       },
+      //     },
+      //     {
+      //       type: 'fade',
+      //       timing: 'linear',
+      //       duration: 1000,
+      //       index: 3,
+      //       fade: {
+      //         opacity: 0,
+      //       },
+      //     },
+      //     {
+      //       type: 'remove',
+      //       timing: 'linear',
+      //       duration: 2000,
+      //       index: 8,
+      //     },
+      //   ],
+      // },
+      // {
+      //   type: 'rect',
+      //   uuid: generateUUID(),
+      //   rect: {
+      //     x: 1000,
+      //     y: 800,
+      //     width: 300,
+      //     height: 300,
+      //   },
+      //   stroke: {
+      //     width: 50,
+      //     color: '#000000',
+      //     dasharray: 'solid',
+      //   },
+      //   scale: {
+      //     scale: 1,
+      //   },
+      //   rotate: {
+      //     x: 0,
+      //     y: 0,
+      //     position: 'forward',
+      //     degree: 0,
+      //   },
+      //   fill: {
+      //     color: '#ffffff',
+      //   },
+      //   fade: {
+      //     opacity: 0,
+      //   },
+      //   text: {
+      //     text: 'Hello World',
+      //     fontSize: 24,
+      //     fontColor: '#000000',
+      //     fontFamily: 'Arial',
+      //     horizontalAlign: 'center',
+      //     verticalAlign: 'middle',
+      //   },
+      //   effects: [
+      //     {
+      //       type: 'create',
+      //       timing: 'linear',
+      //       duration: 0,
+      //       index: 0,
+      //     },
+      //     {
+      //       type: 'rotate',
+      //       duration: 1000,
+      //       index: 1,
+      //       timing: 'linear',
+      //       rotate: {
+      //         x: 0,
+      //         y: 0,
+      //         position: 'forward',
+      //         degree: 180,
+      //       }
+      //     },
+      //     {
+      //       type: 'remove',
+      //       timing: 'linear',
+      //       duration: 0,
+      //       index: 7,
+      //     },
+      //   ],
+      // },
     ],
   },
   effects: [
