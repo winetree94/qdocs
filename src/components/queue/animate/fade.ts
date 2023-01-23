@@ -70,7 +70,7 @@ export const getAnimatableFade = (
         targetFade.opacity,
         0.1
       ),
-    };;
+    };
   }
   return {
     opacity: Math.max(

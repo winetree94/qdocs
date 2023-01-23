@@ -1,11 +1,11 @@
 import { Animator } from 'cdk/animation/Animator';
-import { QueueObjectType } from 'model/document';
 import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/object/rect';
-import { createContext, FunctionComponent, ReactElement } from 'react';
+import { createContext, FunctionComponent, ReactElement, useContext } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
 import { getAnimatableRotate, getCurrentRotate, getRotateAnimation } from './animate/rotate';
 import { getAnimatableScale, getCurrentScale, getScaleAnimation } from './animate/scale';
+import { QueueObjectContainerContext } from './Container';
 
 export interface QueueAnimatableContextType {
   rect: QueueRect;
@@ -39,17 +39,17 @@ export interface ObjectAnimatableProps {
   queueStart: number;
   queueIndex: number;
   queuePosition: 'forward' | 'backward' | 'pause';
-  object: QueueObjectType;
   children: React.ReactNode;
 }
 
 export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   children,
-  object,
   queueIndex,
   queuePosition,
   queueStart,
 }) => {
+
+  const { object } = useContext(QueueObjectContainerContext);
   const currentFade = getCurrentFade(object, queueIndex);
   const animatableFade = queueStart > 0 ? getFadeAnimation(object, queueIndex, queuePosition) : undefined;
   const currentRect = getCurrentRect(object, queueIndex);

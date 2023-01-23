@@ -14,7 +14,6 @@ import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect, getCurrentScaledRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
-import { Animator } from 'cdk/animation/Animator';
 import { QueueObject } from 'components/queue';
 import { getCurrentScale } from 'components/queue/animate/scale';
 import { QueueDocumentRect, QueueObjectType } from 'model/document';
@@ -49,8 +48,8 @@ export const QueueEditor: FunctionComponent = () => {
     width: 0,
     height: 0,
   });
+  const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const [resizingObjectId, setResizingObjectId] = useState<string | null>(null);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const currentQueueObjects = queueDocument!.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
@@ -108,7 +107,7 @@ export const QueueEditor: FunctionComponent = () => {
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
-    if (!event.shiftKey) {
+    if (!event.shiftKey && !selected) {
       setSettings({
         ...settings,
         selectedObjectUUIDs: [object.uuid],
@@ -138,6 +137,7 @@ export const QueueEditor: FunctionComponent = () => {
       width: 0,
       height: 0,
     });
+    setTranslateTargets(settings.selectedObjectUUIDs);
   };
 
   const onObjectDragEnd = (
@@ -233,7 +233,9 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onResizeStart = (object: QueueObjectType): void => {
-    setResizingObjectId(object.uuid);
+    setTranslateTargets([
+      object.uuid
+    ]);
   };
 
   const onResizeMove = (object: QueueObjectType, rect: QueueRect): void => {
@@ -261,7 +263,7 @@ export const QueueEditor: FunctionComponent = () => {
       width: 0,
       height: 0,
     });
-    setResizingObjectId(null);
+    setTranslateTargets([]);
   };
 
   const onObjectAnimationEnd = (object: QueueObjectType): void => {
@@ -301,62 +303,36 @@ export const QueueEditor: FunctionComponent = () => {
         >
           {currentQueueObjects.map((object) => {
             return (
-              <QueueObject.Container key={object.uuid}>
+              <QueueObject.Container
+                className='queue-object-root'
+                key={object.uuid}
+                object={object}
+                documentScale={settings.scale}
+                transform={translateTargets.includes(object.uuid) ? translate : undefined}
+                selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
                 <QueueObject.Animator
-                  object={object}
                   queueIndex={settings.queueIndex}
                   queuePosition={settings.queuePosition}
                   queueStart={settings.queueStart}>
                   <QueueObject.Drag
-                    onMousedown={(event): void =>
-                      onObjectMouseodown(event, object)
-                    }
+                    onMousedown={(event): void => onObjectMouseodown(event, object)}
                     onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingEnd={onObjectDragEnd}
                   >
-                    <QueueObject.Legacy
-                      position={settings.queuePosition}
-                      index={settings.queueIndex}
-                      translate={
-                        settings.selectedObjectUUIDs.includes(object.uuid)
-                          ? translate
-                          : undefined
-                      }
-                      object={object}
-                    >
-                      {settings.selectedObjectUUIDs.includes(object.uuid) && (
-                        <QueueObject.Resizer
-                          scale={settings.scale}
-                          translate={
-                            settings.selectedObjectUUIDs.includes(object.uuid)
-                              ? translate
-                              : undefined
-                          }
-                          onResizeStart={(event): void => onResizeStart(object)}
-                          onResizeMove={(event): void =>
-                            onResizeMove(object, event)
-                          }
-                          onResizeEnd={(event): void =>
-                            onResizeEnd(object, event)
-                          }
-                        ></QueueObject.Resizer>
-                      )}
-                    </QueueObject.Legacy>
+                    <QueueObject.Rect></QueueObject.Rect>
+                    <QueueObject.Text></QueueObject.Text>
+                    <QueueObject.Resizer
+                      onResizeStart={(event): void => onResizeStart(object)}
+                      onResizeMove={(event): void => onResizeMove(object, event)}
+                      onResizeEnd={(event): void => onResizeEnd(object, event)}
+                    ></QueueObject.Resizer>
                   </QueueObject.Drag>
                 </QueueObject.Animator>
               </QueueObject.Container>
             );
           })}
         </div>
-
-        {/* animator example */}
-        <Animator duration={1000} start={settings.queueStart}>
-          {(progress): React.ReactNode => (
-            <div>{progress}</div>
-          )}
-        </Animator>
-
       </Scaler>
     </Drawable>
   );

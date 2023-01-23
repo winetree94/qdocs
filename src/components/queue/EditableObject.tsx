@@ -9,7 +9,7 @@ import {
 import { QueueSquare, QueueRect } from '../../model/object/rect';
 import { QueueAnimatableContext } from './QueueAnimation';
 import styles from './EditableObject.module.scss';
-import { QueueObjectType } from 'model/document';
+import { QueueObjectContainerContext } from './Container';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -33,16 +33,12 @@ export const useQueueObjectContext = (): QueueObjectContextType => {
 
 export interface QueueObjectProps {
   position: 'forward' | 'backward' | 'pause';
-  index: number;
   children?: ReactNode;
   translate?: QueueRect;
-  object: QueueObjectType;
 }
 
 export const LegacyQueueObject: FunctionComponent<QueueObjectProps> = ({
   children,
-  object,
-  index,
   translate = {
     x: 0,
     y: 0,
@@ -50,17 +46,15 @@ export const LegacyQueueObject: FunctionComponent<QueueObjectProps> = ({
     height: 0,
   },
 }) => {
+  const { object } = useContext(QueueObjectContainerContext);
   const meta = useContext(QueueAnimatableContext);
-  const containerRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<SVGSVGElement>(null);
 
   const currentFill = object.fill;
   const currentStroke = object.stroke;
-  const currentText = object.text;
 
   return (
     <div
-      ref={containerRef}
       className={clsx('object-container', styles.container)}
       style={{
         top: `${meta.rect.y}px`,
@@ -97,18 +91,6 @@ export const LegacyQueueObject: FunctionComponent<QueueObjectProps> = ({
             ></rect>
           </g>
         </svg>
-        <div
-          className={clsx('object-text', styles.text)}
-          style={{
-            justifyContent: currentText.verticalAlign,
-            alignItems: currentText.horizontalAlign,
-            fontFamily: currentText.fontFamily,
-            color: currentText.fontColor,
-            fontSize: currentText.fontSize,
-          }}
-        >
-          {currentText.text}
-        </div>
       </div>
       {children}
     </div>

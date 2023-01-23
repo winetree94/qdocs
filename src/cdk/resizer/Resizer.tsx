@@ -1,3 +1,4 @@
+import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { QueueRect } from '../../model/object/rect';
@@ -11,8 +12,6 @@ export interface ResizeEvent {
 }
 
 export interface ResizerProps {
-  scale?: number;
-  translate?: QueueRect;
   onResizeStart?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeMove?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeEnd?: (event: ResizeEvent) => void;
@@ -29,19 +28,18 @@ export type ResizerPosition =
   | 'bottom-right';
 
 export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
-  scale = 1,
-  translate,
   onResizeStart,
   onResizeMove,
   onResizeEnd,
 }) => {
   // shorthands
-  const meta = useContext(QueueAnimatableContext);
+  const { transform, selected, documentScale } = useContext(QueueObjectContainerContext);
+  const animation = useContext(QueueAnimatableContext);
   const strokeWidth = 15;
   const distance = strokeWidth / 2;
   const margin = 50;
-  const actualWidth = (meta.rect.width + (translate?.width || 0)) + margin * 2;
-  const actualHeight = meta.rect.height + (translate?.height || 0) + margin * 2;
+  const actualWidth = (animation.rect.width + (transform?.width || 0)) + margin * 2;
+  const actualHeight = animation.rect.height + (transform?.height || 0) + margin * 2;
 
   const [init, setInit] = React.useState<{
     event: MouseEvent;
@@ -129,10 +127,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       if (!init) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, scale, meta.scale.scale, init.position);
+      const rect = getResizerPosition(init.event, event, documentScale, animation.scale.scale, init.position);
       onResizeMove?.(rect, cancel);
     },
-    [init, onResizeMove, scale, meta.scale.scale, cancel]
+    [init, onResizeMove, documentScale, animation.scale.scale, cancel]
   );
 
   const onDocumentMouseup = useCallback(
@@ -140,11 +138,11 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       if (!init) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, scale, meta.scale.scale, init.position);
+      const rect = getResizerPosition(init.event, event, documentScale, animation.scale.scale, init.position);
       onResizeEnd?.(rect);
       setInit(null);
     },
-    [init, onResizeEnd, scale, meta.scale.scale]
+    [init, onResizeEnd, documentScale, animation.scale.scale]
   );
 
   useEffect(() => {
@@ -184,12 +182,16 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     [onResizeStart, cancel]
   );
 
+  if (!selected) {
+    return null;
+  }
+
   return (
     <svg
       className={styles.canvas}
       style={{
-        left: -margin,
-        top: -margin,
+        left: animation.rect.x + transform.x - margin,
+        top: animation.rect.y + transform.y -margin,
       }}
       width={actualWidth}
       height={actualHeight}
