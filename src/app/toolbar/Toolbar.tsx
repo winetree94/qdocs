@@ -133,9 +133,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
                   <Menubar.Portal>
                     <Menubar.Content
                       className={styles.MenubarContent}
-                      align="start"
-                      sideOffset={5}
-                      alignOffset={-3}>
+                      align="start">
                       {item.children.map((child) => (
                         <Menubar.Item
                           key={child.key}
