@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { QueueObjectContainerContext } from './Container';
 import { QueueAnimatableContext } from './QueueAnimation';
 
 export interface DraggableProps extends React.BaseHTMLAttributes<HTMLDivElement> {
@@ -19,6 +20,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
   onDraggingEnd,
   ...divProps
 }) => {
+  const { detail } = useContext(QueueObjectContainerContext);
   const meta = useContext(QueueAnimatableContext);
   const [initMousedownEvent, setInitMousedownEvent] = useState<MouseEvent | null>(null);
 
@@ -57,6 +59,9 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
     (
       initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
     ): void => {
+      if (detail) {
+        return;
+      }
       if (onMousedown) {
         onMousedown(initEvent);
       }
@@ -65,7 +70,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
       }
       setInitMousedownEvent(initEvent.nativeEvent);
     },
-    [onMousedown, onDraggingStart]
+    [onMousedown, onDraggingStart, detail]
   );
 
   return (
