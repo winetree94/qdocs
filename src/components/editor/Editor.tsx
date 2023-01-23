@@ -114,16 +114,30 @@ export const QueueEditor: FunctionComponent = () => {
     if (!event.shiftKey) {
       setSettings({
         ...settings,
+        selectionMode: settings.selectionMode,
         selectedObjectUUIDs: [object.uuid],
       });
     } else {
       setSettings({
         ...settings,
+        selectionMode: 'normal',
         selectedObjectUUIDs: selected
           ? settings.selectedObjectUUIDs.filter((id) => id !== object.uuid)
           : [...settings.selectedObjectUUIDs, object.uuid],
       });
     }
+  };
+
+  const onObjectDoubleClick = (
+    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    object: QueueObjectType,
+  ): void => {
+    event.stopPropagation();
+    setSettings({
+      ...settings,
+      selectionMode: 'detail',
+      selectedObjectUUIDs: [object.uuid],
+    });
   };
 
   const onObjectDragMove = (
@@ -232,6 +246,7 @@ export const QueueEditor: FunctionComponent = () => {
     });
     setSettings({
       ...settings,
+      selectionMode: 'normal',
       selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
     });
   };
@@ -268,6 +283,24 @@ export const QueueEditor: FunctionComponent = () => {
       height: 0,
     });
     setTranslateTargets([]);
+  };
+
+  const onTextEdit = (objectId: string, text: string): void => {
+    const objectIndex = queueDocument!.objects.findIndex((object) => object.uuid === objectId);
+    const object = queueDocument!.objects[objectIndex];
+    const newObject = {
+      ...object,
+      text: {
+        ...object.text,
+        text: text,
+      },
+    };
+    const newObjects = queueDocument!.objects.slice(0);
+    newObjects[objectIndex] = newObject;
+    setQueueDocument({
+      ...queueDocument!,
+      objects: newObjects,
+    });
   };
 
   return (
@@ -307,6 +340,7 @@ export const QueueEditor: FunctionComponent = () => {
                 className='queue-object-root'
                 key={object.uuid}
                 object={object}
+                detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
                 documentScale={settings.scale}
                 transform={translateTargets.includes(object.uuid) ? translate : undefined}
                 selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
@@ -316,12 +350,13 @@ export const QueueEditor: FunctionComponent = () => {
                   queueStart={settings.queueStart}>
                   <QueueObject.Drag
                     onMousedown={(event): void => onObjectMouseodown(event, object)}
+                    onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
                     onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
                     onDraggingEnd={onObjectDragEnd}
                   >
-                    <QueueObject.Text></QueueObject.Text>
                     <QueueObject.Rect></QueueObject.Rect>
+                    <QueueObject.Text onEdit={(e): void => onTextEdit(object.uuid, e)}></QueueObject.Text>
                     <QueueObject.Resizer
                       onResizeStart={(event): void => onResizeStart(object)}
                       onResizeMove={(event): void => onResizeMove(object, event)}

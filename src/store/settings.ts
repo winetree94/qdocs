@@ -10,7 +10,7 @@ export interface QueueDocumentSettings {
   queueIndex: number;
   queueStart: number,
   queuePosition: 'forward' | 'backward' | 'pause';
-  selectionMode: 'single' | 'multiple' | 'detail' | 'none';
+  selectionMode: 'normal' | 'detail';
   selectedObjectUUIDs: string[];
   scale: number;
   presentationMode: boolean;
@@ -22,7 +22,7 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
     queueIndex: 0,
     queueStart: 0,
     queuePosition: 'forward',
-    selectionMode: 'none',
+    selectionMode: 'normal',
     selectedObjectUUIDs: [],
     scale: 0.25,
     presentationMode: false,

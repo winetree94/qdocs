@@ -5,6 +5,7 @@ import { createContext, FunctionComponent } from 'react';
 export interface QueueObjectContainerContextType {
   object: QueueObjectType;
   documentScale: number;
+  detail: boolean;
   selected: boolean;
   transform: QueueRect;
 }
@@ -15,6 +16,7 @@ export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTML
   documentScale: number;
   object: QueueObjectType;
   transform?: QueueRect;
+  detail: boolean;
   selected: boolean;
   children: React.ReactNode;
 }
@@ -27,6 +29,7 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
     width: 0,
     height: 0,
   },
+  detail,
   documentScale,
   object,
   ...props
@@ -35,6 +38,7 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
     <QueueObjectContainerContext.Provider value={{
       object,
       selected,
+      detail,
       transform,
       documentScale
     }}>
