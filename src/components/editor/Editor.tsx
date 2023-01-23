@@ -139,7 +139,10 @@ export const QueueEditor: FunctionComponent = () => {
     });
   };
 
-  const onObjectDragEnd = (initEvent: MouseEvent, event: MouseEvent): void => {
+  const onObjectDragEnd = (
+    initEvent: MouseEvent,
+    event: MouseEvent,
+  ): void => {
     const x = event.clientX - initEvent.clientX;
     const y = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
@@ -160,6 +163,10 @@ export const QueueEditor: FunctionComponent = () => {
           },
         };
       });
+    setSettings({
+      ...settings,
+      queueStart: -1,
+    });
     updateObjectRects(updateModels);
     setTranslate({
       x: 0,

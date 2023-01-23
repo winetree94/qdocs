@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import clsx from 'clsx';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { Input } from '../../components/input/Input';
 import { Object } from '../../components/object/Object';
 import { ObjectGrid } from '../../components/object/ObjectGrid';
@@ -12,22 +12,25 @@ import { generateUUID } from '../../cdk/functions/uuid';
 import styles from './LeftPanel.module.scss';
 
 export const LeftPanel: FunctionComponent = () => {
-  const [document, setDocument] = useRecoilState(documentState);
-  const settings = useRecoilValue(documentSettingsState);
+  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   const createSquare = (): void => {
-    setDocument({
-      ...document!,
+    const uuid = generateUUID();
+    const width = 300;
+    const height = 300;
+    setQueueDocument({
+      ...queueDocument!,
       objects: [
-        ...document!.objects,
+        ...queueDocument!.objects,
         {
           type: 'rect',
-          uuid: generateUUID(),
+          uuid: uuid,
           rect: {
-            x: 0,
-            y: 0,
-            width: 300,
-            height: 300,
+            x: queueDocument!.documentRect.width / 2 - width / 2,
+            y: queueDocument!.documentRect.height / 2 - height / 2,
+            width: width,
+            height: height,
           },
           stroke: {
             width: 1,
@@ -67,6 +70,10 @@ export const LeftPanel: FunctionComponent = () => {
           ],
         },
       ],
+    });
+    setSettings({
+      ...settings,
+      selectedObjectUUIDs: [uuid],
     });
   };
 
