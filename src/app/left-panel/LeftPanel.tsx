@@ -77,6 +77,68 @@ export const LeftPanel: FunctionComponent = () => {
     });
   };
 
+  const createCircle = (): void => {
+    const uuid = generateUUID();
+    const width = 300;
+    const height = 300;
+    setQueueDocument({
+      ...queueDocument!,
+      objects: [
+        ...queueDocument!.objects,
+        {
+          type: 'circle',
+          uuid: uuid,
+          rect: {
+            x: queueDocument!.documentRect.width / 2 - width / 2,
+            y: queueDocument!.documentRect.height / 2 - height / 2,
+            width: width,
+            height: height,
+          },
+          stroke: {
+            width: 1,
+            color: '#000000',
+            dasharray: 'solid',
+          },
+          fill: {
+            color: '#ffffff',
+          },
+          scale: {
+            scale: 1,
+          },
+          rotate: {
+            x: 0,
+            y: 0,
+            position: 'forward',
+            degree: 0,
+          },
+          fade: {
+            opacity: 1,
+          },
+          text: {
+            text: 'Hello World',
+            fontSize: 24,
+            fontColor: '#000000',
+            fontFamily: 'Arial',
+            horizontalAlign: 'center',
+            verticalAlign: 'middle',
+          },
+          effects: [
+            {
+              type: 'create',
+              timing: 'linear',
+              duration: 0,
+              index: settings.queueIndex,
+            },
+          ],
+        },
+      ],
+    });
+    setSettings({
+      ...settings,
+      selectedObjectUUIDs: [uuid],
+    });
+  };
+
   return (
     <div className={clsx(styles.container)}>
       <Input placeholder="Search Shape" className={styles.input}></Input>
@@ -98,6 +160,18 @@ export const LeftPanel: FunctionComponent = () => {
                   strokeWidth="4"
                   fill="transparent"
                 />
+              </g>
+            </svg>
+          </Object>
+          <Object onClick={createCircle}>
+            <svg
+              version="1.1"
+              baseProfile="full"
+              xmlns="http://www.w3.org/2000/svg"
+              className={styles.canvas}
+            >
+              <g>
+                <circle cx="15" cy="15" r="13" stroke="black" stroke-width="2" fill="transparent" />
               </g>
             </svg>
           </Object>
