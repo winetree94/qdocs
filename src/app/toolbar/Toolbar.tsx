@@ -30,6 +30,21 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
       label: <>File</>,
       children: [
         {
+          key: 'new-document',
+          label: <>New document</>,
+          onClick: (): void => {
+            setQueueDocument({
+              documentName: 'Untitled',
+              documentRect: {
+                width: 1920,
+                height: 1080,
+              },
+              objects: [],
+            });
+          },
+          children: [],
+        },
+        {
           key: 'open-document',
           label: <>Open document</>,
           onClick: (): void => {
