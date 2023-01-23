@@ -6,12 +6,25 @@ import { QueueAnimatableContext } from './QueueAnimation';
 export const Text: FunctionComponent = () => {
   const animation = useContext(QueueAnimatableContext);
   const { object, transform } = useContext(QueueObjectContainerContext);
+
+  const verticalAlign = object.text.verticalAlign === 'middle'
+    ? 'center'
+    : object.text.verticalAlign === 'top'
+      ? 'flex-start'
+      : 'flex-end';
+
+  const horizontalAlign = object.text.horizontalAlign === 'center'
+    ? 'center'
+    : object.text.horizontalAlign === 'left'
+      ? 'flex-start'
+      : 'flex-end';
+
   return (
     <div
       className={clsx('object-text', 'flex', 'absolute')}
       style={{
-        justifyContent: object.text.verticalAlign,
-        alignItems: object.text.horizontalAlign,
+        justifyContent: horizontalAlign,
+        alignItems: verticalAlign,
         fontFamily: object.text.fontFamily,
         color: object.text.fontColor,
         fontSize: object.text.fontSize,
