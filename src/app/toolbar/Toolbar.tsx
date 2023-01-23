@@ -1,11 +1,15 @@
 import {
   FunctionComponent,
   ReactNode,
+  useEffect,
+  useState,
 } from 'react';
 import styles from './Toolbar.module.scss';
 import * as Menubar from '@radix-ui/react-menubar';
 import { documentState, QueueDocument } from 'store/document';
 import { useRecoilState } from 'recoil';
+import clsx from 'clsx';
+import { CookieIcon } from '@radix-ui/react-icons';
 
 
 export interface ToolbarModel {
@@ -23,12 +27,35 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   onItemClicked,
 }) => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const [documentTitle, setDocumentTitle] = useState('');
+
+  useEffect(() => {
+    setDocumentTitle(queueDocument?.documentName || '');
+  }, [queueDocument?.documentName]);
+
+  const onTitleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setDocumentTitle(event.target.value);
+  };
+
+  const onTitleInputBlur = (): void => {
+    const previous = (queueDocument?.documentName || '').trim();
+    const current = documentTitle.trim();
+    if (previous !== current) {
+      setQueueDocument({
+        ...queueDocument!,
+        documentName: current,
+      });
+    }
+  };
 
   const items: ToolbarModel[] = [
     {
       key: 'file',
       label: <>File</>,
       children: [
+        // 새로운 문서를 생성
         {
           key: 'new-document',
           label: <>New document</>,
@@ -44,6 +71,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           },
           children: [],
         },
+        // 문서 열기
         {
           key: 'open-document',
           label: <>Open document</>,
@@ -52,7 +80,6 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             input.type = 'file';
             input.click();
             input.addEventListener('change', e => {
-              console.log(e);
               try {
                 if (!input.files) {
                   return;
@@ -75,6 +102,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           },
           children: [],
         },
+        // 문서 저장
         {
           key: 'save-document',
           label: <>Save document</>,
@@ -118,10 +146,21 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   ];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>the queue</div>
-      <div className={styles.rest}>
-        <div className={styles.docTitle}>document title</div>
+    <div className={clsx('flex', styles.container)}>
+      <div className={clsx('flex', 'justify-center', 'items-center', styles.iconContainer)}>
+        <CookieIcon height={40} width={40} />
+      </div>
+      <div className={clsx('flex', 'flex-col', 'flex-auto')}>
+        <div className={clsx('m-2.5')}>
+          <input
+            className={styles.titleInput}
+            disabled={!queueDocument}
+            type="text"
+            value={documentTitle}
+            onChange={onTitleInputChange}
+            onBlur={onTitleInputBlur}
+            />
+        </div>
         <div>
           <Menubar.Root className={styles.MenubarRoot}>
             {
