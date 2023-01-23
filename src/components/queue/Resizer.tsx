@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
 import React, { useCallback, useContext, useEffect } from 'react';
@@ -35,7 +36,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   // shorthands
   const { transform, selected, documentScale } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
-  const strokeWidth = 15;
+
+  const strokeWidth = 20;
   const distance = strokeWidth / 2;
   const margin = 50;
   const actualWidth = (animation.rect.width + (transform?.width || 0)) + margin * 2;
@@ -198,7 +200,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     >
       {/* top left */}
       <rect
-        className={styles.topLeft}
+        className={clsx(styles.resizer, styles.topLeft)}
         x={margin - distance}
         y={margin - distance}
         width={strokeWidth}
@@ -207,7 +209,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* top middle */}
       <rect
-        className={styles.topMiddle}
+        className={clsx(styles.resizer, styles.topMiddle)}
         x={actualWidth / 2 - strokeWidth / 2}
         y={margin - distance}
         width={strokeWidth}
@@ -216,7 +218,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* top right */}
       <rect
-        className={styles.topRight}
+        className={clsx(styles.resizer, styles.topRight)}
         x={actualWidth - margin - (strokeWidth - distance)}
         y={margin - distance}
         width={strokeWidth}
@@ -225,7 +227,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* middle right */}
       <rect
-        className={styles.middleRight}
+        className={clsx(styles.resizer, styles.middleRight)}
         x={actualWidth - margin - (strokeWidth - distance)}
         y={actualHeight / 2 - strokeWidth / 2}
         width={strokeWidth}
@@ -234,7 +236,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* bottom right */}
       <rect
-        className={styles.bottomRight}
+        className={clsx(styles.resizer, styles.bottomRight)}
         x={actualWidth - margin - (strokeWidth - distance)}
         y={actualHeight - margin - (strokeWidth - distance)}
         width={strokeWidth}
@@ -243,7 +245,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* bottom middle */}
       <rect
-        className={styles.bottomMiddle}
+        className={clsx(styles.resizer, styles.bottomMiddle)}
         x={actualWidth / 2 - strokeWidth / 2}
         y={actualHeight - margin - (strokeWidth - distance)}
         width={strokeWidth}
@@ -252,7 +254,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* bottom left */}
       <rect
-        className={styles.bottomLeft}
+        className={clsx(styles.resizer, styles.bottomLeft)}
         x={margin - distance}
         y={actualHeight - margin - (strokeWidth - distance)}
         width={strokeWidth}
@@ -261,7 +263,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       ></rect>
       {/* middle left */}
       <rect
-        className={styles.middleLeft}
+        className={clsx(styles.resizer, styles.middleLeft)}
         x={margin - distance}
         y={actualHeight / 2 - strokeWidth / 2}
         width={strokeWidth}
