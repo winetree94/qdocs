@@ -1,18 +1,18 @@
 import {
-  Fragment,
   FunctionComponent,
   ReactNode,
-  useEffect,
-  useState,
 } from 'react';
-import { Popover } from '../../components/popover/Popover';
-import { Toolbar, ToolbarItem } from '../../components/toolbar/Toolbar';
 import styles from './Toolbar.module.scss';
+import * as Menubar from '@radix-ui/react-menubar';
+import { documentState, QueueDocument } from 'store/document';
+import { useRecoilState } from 'recoil';
+
 
 export interface ToolbarModel {
-  opened?: boolean;
-  label: string;
-  node: ReactNode;
+  key: string;
+  label: ReactNode;
+  onClick?: () => void;
+  children: ToolbarModel[];
 }
 
 export interface ToolbarProps {
@@ -22,47 +22,85 @@ export interface ToolbarProps {
 export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   onItemClicked,
 }) => {
+  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+
   const items: ToolbarModel[] = [
     {
-      label: 'File',
-      node: <>File</>,
+      key: 'file',
+      label: <>File</>,
+      children: [
+        {
+          key: 'open-document',
+          label: <>Open document</>,
+          onClick: (): void => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.click();
+            input.addEventListener('change', e => {
+              console.log(e);
+              try {
+                if (!input.files) {
+                  return;
+                }
+                const file = input.files[0];
+                if (!file) {
+                  return;
+                }
+                const fileReader = new FileReader();
+                fileReader.onload = (e): void => {
+                  const result = e.target?.result as string;
+                  const document = JSON.parse(result) as QueueDocument;
+                  setQueueDocument(document);
+                };
+                fileReader.readAsText(file);
+              } catch (e) {
+                console.warn(e);
+              }
+            });
+          },
+          children: [],
+        },
+        {
+          key: 'save-document',
+          label: <>Save document</>,
+          onClick: (): void => {
+            if (!queueDocument) return;
+            const stringified = JSON.stringify(queueDocument);
+            const blob = new Blob([stringified], { type: 'octet/stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${queueDocument.documentName}.que`;
+            a.click();
+            URL.revokeObjectURL(url);
+          },
+          children: [],
+        }
+      ]
     },
     {
-      label: 'Edit',
-      node: <>Edit</>,
+      key: 'edit',
+      label: <>Edit</>,
+      children: [
+        {
+          key: 'edit-item',
+          label: <>Edit item</>,
+          children: [],
+        }
+      ]
     },
     {
-      label: 'View',
-      node: <>View</>,
+      key: 'view',
+      label: <>View</>,
+      children: [
+        {
+          key: 'view-item',
+          label: <>Edit item</>,
+          children: [],
+        }
+      ]
     },
   ];
-
-  const [target, setTarget] = useState<HTMLButtonElement | null>(null);
-  const [openedLabel, setOpenedLabel] = useState<string>('');
-
-  const openMenu = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    item: ToolbarModel
-  ): void => {
-    if (openedLabel === item.label) {
-      setTarget(null);
-      setOpenedLabel('');
-      return;
-    }
-    setTarget(event.currentTarget);
-    setOpenedLabel(item.label);
-  };
-
-  useEffect(() => {
-    const listener = (event: MouseEvent): void => {
-      if (event.target !== target) {
-        setTarget(null);
-        setOpenedLabel('');
-      }
-    };
-    document.addEventListener('click', listener);
-    return () => document.removeEventListener('click', listener);
-  }, [target, openedLabel]);
 
   return (
     <div className={styles.container}>
@@ -70,22 +108,33 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
       <div className={styles.rest}>
         <div className={styles.docTitle}>document title</div>
         <div>
-          <Toolbar>
-            {items.map((item) => (
-              <Fragment key={item.label}>
-                <ToolbarItem onClick={(event): void => openMenu(event, item)}>
-                  {item.label}
-                </ToolbarItem>
-                <Popover
-                  target={target}
-                  visible={openedLabel === item.label}
-                  useBackdrop={false}
-                >
-                  {item.node}
-                </Popover>
-              </Fragment>
-            ))}
-          </Toolbar>
+          <Menubar.Root className={styles.MenubarRoot}>
+            {
+              items.map((item) => (
+                <Menubar.Menu key={item.key}>
+                  <Menubar.Trigger className={styles.MenubarTrigger}>
+                    {item.label}
+                  </Menubar.Trigger>
+                  <Menubar.Portal>
+                    <Menubar.Content
+                      className={styles.MenubarContent}
+                      align="start"
+                      sideOffset={5}
+                      alignOffset={-3}>
+                      {item.children.map((child) => (
+                        <Menubar.Item
+                          key={child.key}
+                          className={styles.MenubarItem}
+                          onClick={(e): void => child.onClick?.()}>
+                          {child.label}
+                        </Menubar.Item>
+                      ))}
+                    </Menubar.Content>
+                  </Menubar.Portal>
+                </Menubar.Menu>
+              ))
+            }
+          </Menubar.Root>
         </div>
       </div>
     </div>

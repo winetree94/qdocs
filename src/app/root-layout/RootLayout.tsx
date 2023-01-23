@@ -7,12 +7,14 @@ import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
 import { RightPanel } from '../right-panel/RightPanel';
+import { documentState } from 'store/document';
 
 export const RootContext = createContext({});
 
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
+  const [queueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   useEffect(() => {
@@ -29,14 +31,16 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
         {!settings.presentationMode ? (
           <>
             <QueueToolbar />
-            <QueueSubtoolbar />
+            {queueDocument && <QueueSubtoolbar />}
           </>
         ) : null}
-        <div className={styles.bottom}>
-          {!settings.presentationMode ? <LeftPanel /> : null}
-          <QueueEditor />
-          {!settings.presentationMode ? <RightPanel /> : null}
-        </div>
+        {queueDocument && (
+          <div className={styles.bottom}>
+            {!settings.presentationMode ? <LeftPanel /> : null}
+            <QueueEditor />
+            {!settings.presentationMode ? <RightPanel /> : null}
+          </div>
+        )}
       </div>
     </RootContext.Provider>
   );

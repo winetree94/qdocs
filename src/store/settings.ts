@@ -41,7 +41,7 @@ export const getSelectedObjects = selector({
   get: ({ get }) => {
     const queueDocument = get(documentState);
     const settings = get(documentSettingsState);
-    return queueDocument.objects
+    return queueDocument!.objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   }
 });

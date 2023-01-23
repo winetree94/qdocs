@@ -51,12 +51,12 @@ export const QueueEditor: FunctionComponent = () => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [resizingObjectId, setResizingObjectId] = useState<string | null>(null);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
-  const currentQueueObjects = queueDocument.objects.filter((object) =>
+  const currentQueueObjects = queueDocument!.objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
 
   const updateObjectRects = (models: RectUpdateModel[]): void => {
-    const newObjects = queueDocument.objects.map((object) => {
+    const newObjects = queueDocument!.objects.map((object) => {
       const model = models.find((model) => model.uuid === object.uuid);
       if (!model) {
         return object;
@@ -98,7 +98,7 @@ export const QueueEditor: FunctionComponent = () => {
 
       return slicedObject;
     });
-    setQueueDocument({ ...queueDocument, objects: newObjects });
+    setQueueDocument({ ...queueDocument!, objects: newObjects });
   };
 
   const onObjectMouseodown = (
@@ -145,7 +145,7 @@ export const QueueEditor: FunctionComponent = () => {
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
-    const updateModels = queueDocument.objects
+    const updateModels = queueDocument!.objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
       .map<RectUpdateModel>((object) => {
         const rect = getCurrentRect(object, settings.queueIndex);
@@ -181,7 +181,7 @@ export const QueueEditor: FunctionComponent = () => {
     const absScale = 1 / settings.scale;
     const x = (event.drawClientX - rect.x) * absScale;
     const y = (event.drawClientY - rect.y) * absScale;
-    const hasSelectableObject = queueDocument.objects.some((object) => {
+    const hasSelectableObject = queueDocument!.objects.some((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
       return (
         rect.x <= x &&
@@ -209,7 +209,7 @@ export const QueueEditor: FunctionComponent = () => {
     const y = (event.drawClientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
-    const selectedObjects = queueDocument.objects.filter((object) => {
+    const selectedObjects = queueDocument!.objects.filter((object) => {
       const rect = getCurrentScaledRect(object, settings.queueIndex);
       return (
         rect.x >= x &&
@@ -274,8 +274,8 @@ export const QueueEditor: FunctionComponent = () => {
       `}
     >
       <Scaler
-        width={queueDocument.documentRect.width}
-        height={queueDocument.documentRect.height}
+        width={queueDocument!.documentRect.width}
+        height={queueDocument!.documentRect.height}
         scale={settings.scale}
       >
         <div
@@ -287,8 +287,8 @@ export const QueueEditor: FunctionComponent = () => {
             background: white;
           `}
           style={{
-            width: queueDocument.documentRect.width,
-            height: queueDocument.documentRect.height,
+            width: queueDocument!.documentRect.width,
+            height: queueDocument!.documentRect.height,
           }}
         >
           {currentQueueObjects.map((object) => {

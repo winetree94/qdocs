@@ -17,9 +17,9 @@ export const LeftPanel: FunctionComponent = () => {
 
   const createSquare = (): void => {
     setDocument({
-      ...document,
+      ...document!,
       objects: [
-        ...document.objects,
+        ...document!.objects,
         {
           type: 'rect',
           uuid: generateUUID(),
