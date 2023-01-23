@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { QueueObjectType } from 'model/document';
 import {
   MoveEffect,
   QueueRect,
   QueueScale,
-  QueueSquare,
   ScaleEffect,
 } from '../../../model/object/rect';
 
@@ -17,7 +17,7 @@ export interface RectAnimation {
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환
  */
 export const getCurrentRect = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number
 ): QueueRect => {
   return object.effects
@@ -31,7 +31,7 @@ export const getCurrentRect = (
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환 (스케일이 적용된 상태)
  */
 export const getCurrentScaledRect = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number,
 ): QueueRect => {
   const final = object.effects
@@ -61,7 +61,7 @@ export const getCurrentScaledRect = (
 };
 
 export const getRectAnimation = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): RectAnimation | null => {

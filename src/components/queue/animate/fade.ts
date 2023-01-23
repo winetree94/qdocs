@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { QueueObjectType } from 'model/document';
 import {
   QueueFade,
   FadeEffect,
-  QueueSquare,
 } from '../../../model/object/rect';
 
 export interface FadeAnimation {
@@ -11,7 +11,7 @@ export interface FadeAnimation {
 }
 
 export const getCurrentFade = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number
 ): QueueFade => {
   return object.effects
@@ -21,7 +21,7 @@ export const getCurrentFade = (
 };
 
 export const getFadeAnimation = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): FadeAnimation | null => {

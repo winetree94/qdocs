@@ -1,7 +1,7 @@
 import { debounce } from 'cdk/functions/debounce';
 import clsx from 'clsx';
 import { Slider } from 'components';
-import { QueueSquare } from 'model/object/rect';
+import { QueueObjectType } from 'model/document';
 import {
   createContext,
   FormEvent,
@@ -18,7 +18,7 @@ import classes from './RightPanel.module.scss';
 
 // context start
 interface ObjectStylerContextValue {
-  objects: QueueSquare[];
+  objects: QueueObjectType[];
 }
 
 const ObjectStylerContext = createContext<ObjectStylerContextValue | null>(
@@ -40,7 +40,7 @@ const useObjectStylerContext = (): ObjectStylerContextValue => {
 type ObjectStylerElementProps = HTMLAttributes<HTMLDivElement>;
 type StyleChangeValue = { [k: string]: FormDataEntryValue };
 interface ObjectStylerProps extends PropsWithChildren {
-  objects: QueueSquare[];
+  objects: QueueObjectType[];
   onStyleChange?: (value: StyleChangeValue) => void;
 }
 

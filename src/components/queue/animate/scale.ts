@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { QueueObjectType } from 'model/document';
 import {
   QueueScale,
-  QueueSquare,
   ScaleEffect,
 } from '../../../model/object/rect';
 
@@ -11,7 +11,7 @@ export interface ScaleAnimation {
 }
 
 export const getCurrentScale = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number
 ): QueueScale => {
   return object.effects
@@ -21,7 +21,7 @@ export const getCurrentScale = (
 };
 
 export const getScaleAnimation = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): ScaleAnimation | null => {

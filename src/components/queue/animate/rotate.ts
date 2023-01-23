@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { QueueObjectType } from 'model/document';
 import {
   QueueRotate,
-  QueueSquare,
   RotateEffect,
 } from '../../../model/object/rect';
 
@@ -11,7 +11,7 @@ export interface RotateAnimation {
 }
 
 export const getCurrentRotate = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number
 ): QueueRotate => {
   return object.effects
@@ -21,7 +21,7 @@ export const getCurrentRotate = (
 };
 
 export const getRotateAnimation = (
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number,
   position: 'forward' | 'backward' | 'pause'
 ): RotateAnimation | null => {

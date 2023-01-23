@@ -6,10 +6,11 @@ import {
 } from 'react';
 import styles from './Toolbar.module.scss';
 import * as Menubar from '@radix-ui/react-menubar';
-import { documentState, QueueDocument } from 'store/document';
+import { documentState } from 'store/document';
 import { useRecoilState } from 'recoil';
 import clsx from 'clsx';
 import { CookieIcon } from '@radix-ui/react-icons';
+import { QueueDocument } from 'model/document';
 
 
 export interface ToolbarModel {

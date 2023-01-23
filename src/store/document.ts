@@ -1,22 +1,12 @@
+import { QueueDocument, QueueObjectType } from 'model/document';
 import { atom, selector, selectorFamily } from 'recoil';
-import { isExistObjectOnQueue, QueueSquare } from '../model/object/rect';
+import { isExistObjectOnQueue } from '../model/object/rect';
 import { documentSettingsState } from './settings';
 
 export const history: Array<{
   time: number;
   undo: () => void;
 }> = [];
-
-export interface QueueDocumentRect {
-  width: number;
-  height: number;
-}
-
-export interface QueueDocument {
-  documentName: string;
-  documentRect: QueueDocumentRect;
-  objects: QueueSquare[];
-}
 
 export const documentState = atom<QueueDocument | null>({
   key: 'documentState',
@@ -39,7 +29,7 @@ export const documentState = atom<QueueDocument | null>({
 
 export interface Queue {
   index: number;
-  objects: QueueSquare[];
+  objects: QueueObjectType[];
 }
 
 export const queueObjectsByQueueIndexSelector = selectorFamily<
@@ -67,7 +57,7 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
   },
 });
 
-export const currentQueueObjectsSelector = selector<QueueSquare[]>({
+export const currentQueueObjectsSelector = selector<QueueObjectType[]>({
   key: 'currentQueueObjects',
   get: ({ get }) => {
     const document = get(documentState);

@@ -4,7 +4,7 @@ import { css } from '@emotion/css';
 import styled from '@emotion/styled';
 import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { documentState, QueueDocumentRect } from '../../store/document';
+import { documentState } from '../../store/document';
 import {
   isExistObjectOnQueue,
   QueueRect,
@@ -17,6 +17,7 @@ import { documentSettingsState } from '../../store/settings';
 import { Animator } from 'cdk/animation/Animator';
 import { QueueObject } from 'components/queue';
 import { getCurrentScale } from 'components/queue/animate/scale';
+import { QueueDocumentRect, QueueObjectType } from 'model/document';
 
 const Selector = styled.div`
   width: 100%;
@@ -103,7 +104,7 @@ export const QueueEditor: FunctionComponent = () => {
 
   const onObjectMouseodown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueSquare
+    object: QueueObjectType,
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
@@ -125,7 +126,7 @@ export const QueueEditor: FunctionComponent = () => {
   const onObjectDragMove = (
     initEvent: MouseEvent,
     event: MouseEvent,
-    object: QueueSquare,
+    object: QueueObjectType,
   ): void => {
     const x = event.clientX - initEvent.clientX;
     const y = event.clientY - initEvent.clientY;
@@ -231,15 +232,15 @@ export const QueueEditor: FunctionComponent = () => {
     });
   };
 
-  const onResizeStart = (object: QueueSquare): void => {
+  const onResizeStart = (object: QueueObjectType): void => {
     setResizingObjectId(object.uuid);
   };
 
-  const onResizeMove = (object: QueueSquare, rect: QueueRect): void => {
+  const onResizeMove = (object: QueueObjectType, rect: QueueRect): void => {
     setTranslate(rect);
   };
 
-  const onResizeEnd = (object: QueueSquare, rect: QueueRect): void => {
+  const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
     const currentScale = getCurrentScale(object, settings.queueIndex).scale;
     const currentRect = getCurrentRect(object, settings.queueIndex);
     updateObjectRects([
@@ -263,7 +264,7 @@ export const QueueEditor: FunctionComponent = () => {
     setResizingObjectId(null);
   };
 
-  const onObjectAnimationEnd = (object: QueueSquare): void => {
+  const onObjectAnimationEnd = (object: QueueObjectType): void => {
     console.log('animation finished: ', object);
   };
 

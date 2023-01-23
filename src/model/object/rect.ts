@@ -1,3 +1,4 @@
+import { QueueObjectType } from 'model/document';
 import {
   BaseObject,
   BaseQueueEffect,
@@ -105,7 +106,7 @@ export interface RotateEffect extends BaseQueueEffect {
 }
 
 export function isExistObjectOnQueue(
-  object: QueueSquare,
+  object: QueueObjectType,
   index: number
 ): boolean {
   const createEffect = object.effects.find(

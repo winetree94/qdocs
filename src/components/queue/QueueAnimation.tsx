@@ -1,5 +1,6 @@
 import { Animator } from 'cdk/animation/Animator';
-import { QueueFade, QueueRect, QueueRotate, QueueScale, QueueSquare } from 'model/object/rect';
+import { QueueObjectType } from 'model/document';
+import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/object/rect';
 import { createContext, FunctionComponent, ReactElement } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
@@ -38,7 +39,7 @@ export interface ObjectAnimatableProps {
   queueStart: number;
   queueIndex: number;
   queuePosition: 'forward' | 'backward' | 'pause';
-  object: QueueSquare;
+  object: QueueObjectType;
   children: React.ReactNode;
 }
 

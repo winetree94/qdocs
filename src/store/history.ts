@@ -1,5 +1,5 @@
+import { QueueDocument } from 'model/document';
 import { atom } from 'recoil';
-import { QueueDocument } from './document';
 
 export interface QueueDocumentHistory {
   previous: QueueDocument[];

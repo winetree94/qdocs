@@ -9,6 +9,7 @@ import {
 import { QueueSquare, QueueRect } from '../../model/object/rect';
 import { QueueAnimatableContext } from './QueueAnimation';
 import styles from './EditableObject.module.scss';
+import { QueueObjectType } from 'model/document';
 
 export interface QueueObjectContextType {
   to: QueueSquare | null;
@@ -35,7 +36,7 @@ export interface QueueObjectProps {
   index: number;
   children?: ReactNode;
   translate?: QueueRect;
-  object: QueueSquare;
+  object: QueueObjectType;
 }
 
 export const LegacyQueueObject: FunctionComponent<QueueObjectProps> = ({
