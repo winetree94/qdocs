@@ -26,6 +26,12 @@ export const Text: FunctionComponent<TextProps> = ({
       ? 'flex-start'
       : 'flex-end';
 
+  const textAlign = object.text.horizontalAlign === 'center'
+    ? 'center'
+    : object.text.horizontalAlign === 'left'
+      ? 'left'
+      : 'right';
+
   const onKeydown = (
     event: React.KeyboardEvent<HTMLDivElement>
   ): void => {
@@ -88,6 +94,7 @@ export const Text: FunctionComponent<TextProps> = ({
         left: `${animation.rect.x + transform.x}px`,
         width: `${animation.rect.width + transform.width}px`,
         height: `${animation.rect.height + transform.height}px`,
+        textAlign: textAlign,
       }}
       contentEditable={detail}
     >
