@@ -1,3 +1,6 @@
+@import '@radix-ui/colors/blackA.css';
+@import '@radix-ui/colors/mauve.css';
+
 .root {
   background: var(--gray3);
 }
@@ -11,10 +14,6 @@
   background-color: var(--blue5);
   opacity: 0.5;
 }
-
-@import '@radix-ui/colors/blackA.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/violet.css';
 
 .ContextMenuTrigger {
   display: block;
@@ -44,7 +43,7 @@
 .ContextMenuSubTrigger {
   font-size: 13px;
   line-height: 1;
-  color: var(--violet11);
+  color: var(--gray12);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -56,8 +55,8 @@
   outline: none;
 }
 .ContextMenuSubTrigger[data-state='open'] {
-  background-color: var(--violet4);
-  color: var(--violet11);
+  background-color: var(--blue4);
+  color: var(--blue11);
 }
 .ContextMenuItem[data-disabled],
 .ContextMenuCheckboxItem[data-disabled],
@@ -70,8 +69,8 @@
 .ContextMenuCheckboxItem[data-highlighted],
 .ContextMenuRadioItem[data-highlighted],
 .ContextMenuSubTrigger[data-highlighted] {
-  background-color: var(--violet9);
-  color: var(--violet1);
+  background-color: var(--blue10);
+  color: var(--blue1);
 }
 
 .ContextMenuLabel {
@@ -83,7 +82,7 @@
 
 .ContextMenuSeparator {
   height: 1px;
-  background-color: var(--violet6);
+  background-color: var(--gray5);
   margin: 5px;
 }
 

@@ -59,11 +59,11 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
     (
       initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
     ): void => {
-      if (detail) {
-        return;
-      }
       if (onMousedown) {
         onMousedown(initEvent);
+      }
+      if (detail || initEvent.button !== 0) {
+        return;
       }
       if (onDraggingStart) {
         onDraggingStart(initEvent.nativeEvent, initEvent.nativeEvent);

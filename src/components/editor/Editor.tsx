@@ -104,9 +104,8 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueObjectType,
   ): void => {
-    event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
-    if (!event.shiftKey) {
+    if (!event.shiftKey && !selected) {
       setSettings({
         ...settings,
         selectionMode: settings.selectionMode,
@@ -116,9 +115,10 @@ export const QueueEditor: FunctionComponent = () => {
       setSettings({
         ...settings,
         selectionMode: 'normal',
-        selectedObjectUUIDs: selected
-          ? settings.selectedObjectUUIDs.filter((id) => id !== object.uuid)
-          : [...settings.selectedObjectUUIDs, object.uuid],
+        selectedObjectUUIDs: [
+          ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
+          object.uuid,
+        ],
       });
     }
   };
@@ -382,18 +382,46 @@ export const QueueEditor: FunctionComponent = () => {
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content className={styles.ContextMenuContent}>
-          <ContextMenu.Item className={styles.ContextMenuItem}>
-            Back <div className={styles.RightSlot}>⌘+[</div>
-          </ContextMenu.Item>
-          <ContextMenu.Item className={styles.ContextMenuItem} disabled>
-            Foward <div className={styles.RightSlot}>⌘+]</div>
+        <ContextMenu.Item className={styles.ContextMenuItem}>
+            현재 큐에서 삭제
           </ContextMenu.Item>
           <ContextMenu.Item className={styles.ContextMenuItem}>
-            Reload <div className={styles.RightSlot}>⌘+R</div>
+            오브젝트 삭제
           </ContextMenu.Item>
+          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            잘라내기
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            복사
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            붙여넣기
+          </ContextMenu.Item>
+          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            맨 앞으로 가져오기
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            맨 뒤로 보내기
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            앞으로 가져오기
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            뒤로 보내기
+          </ContextMenu.Item>
+          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            그룹
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            그룹 해제
+          </ContextMenu.Item>
+          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
           <ContextMenu.Sub>
             <ContextMenu.SubTrigger className={styles.ContextMenuSubTrigger}>
-              More Tools
+              더보기
               <div className={styles.RightSlot}>
                 <ChevronRightIcon />
               </div>
