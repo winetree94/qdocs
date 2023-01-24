@@ -19,7 +19,7 @@
 }
 
 .slider-track {
-  @apply bg-slate-200;
+  @apply bg-neutral-200;
   position: relative;
   flex-grow: 1;
   border-radius: 9999px;
@@ -34,7 +34,7 @@
 }
 
 .slider-range {
-  @apply bg-slate-600;
+  @apply bg-neutral-700;
   position: absolute;
   border-radius: 9999px;
 
@@ -48,22 +48,22 @@
 }
 
 .slider-thumb {
-  @apply bg-slate-500;
+  @apply bg-neutral-600;
   display: block;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 10px;
 
   &:hover {
-    @apply bg-slate-600;
+    @apply bg-neutral-500;
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 6px #00000030;
+    box-shadow: 0 0 0 4px #00000030;
   }
 
   &:active {
-    box-shadow: 0 0 0 7px #00000030;
+    box-shadow: 0 0 0 6px #00000030;
   }
 }
