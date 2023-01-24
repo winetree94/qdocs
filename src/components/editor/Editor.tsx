@@ -15,6 +15,8 @@ import { documentSettingsState } from '../../store/settings';
 import { QueueObject } from 'components/queue';
 import { getCurrentScale } from 'components/queue/animate/scale';
 import { QueueDocumentRect, QueueObjectType } from 'model/document';
+import * as ContextMenu from '@radix-ui/react-context-menu';
+import { DotFilledIcon, CheckIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
 
@@ -297,78 +299,123 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   return (
-    <Drawable
-      scale={settings.scale}
-      drawer={
-        <div className={clsx(
-          styles.drawer,
-          'w-full',
-          'h-full',
-        )}></div>
-      }
-      onDrawStart={onDrawStart}
-      onDrawEnd={onDrawEnd}
-      className={clsx(
-        styles.root,
-        'flex',
-        'flex-col',
-        'flex-1',
-        'overflow-auto',
-      )}
-    >
-      <Scaler
-        width={queueDocument!.documentRect.width}
-        height={queueDocument!.documentRect.height}
-        scale={settings.scale}
-      >
-        <div
-          ref={canvasDiv}
+    <ContextMenu.Root>
+      <ContextMenu.Trigger
+        className={clsx(
+          'overflow-auto',
+          'flex',
+          'flex-1'
+        )}>
+        <Drawable
+          scale={settings.scale}
+          drawer={
+            <div className={clsx(
+              styles.drawer,
+              'w-full',
+              'h-full',
+            )}></div>
+          }
+          onDrawStart={onDrawStart}
+          onDrawEnd={onDrawEnd}
           className={clsx(
-            styles.canvas,
-            'relative',
-            'box-border',
+            styles.root,
+            'flex',
+            'flex-col',
+            'flex-1',
+            'overflow-auto',
           )}
-          style={{
-            width: queueDocument!.documentRect.width,
-            height: queueDocument!.documentRect.height,
-            background: queueDocument!.documentRect.fill,
-          }}
         >
-          {currentQueueObjects.map((object) => {
-            return (
-              <QueueObject.Container
-                className='queue-object-root'
-                key={object.uuid}
-                object={object}
-                detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
-                documentScale={settings.scale}
-                transform={translateTargets.includes(object.uuid) ? translate : undefined}
-                selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
-                <QueueObject.Animator
-                  queueIndex={settings.queueIndex}
-                  queuePosition={settings.queuePosition}
-                  queueStart={settings.queueStart}>
-                  <QueueObject.Drag
-                    onMousedown={(event): void => onObjectMouseodown(event, object)}
-                    onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
-                    onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                    onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                    onDraggingEnd={onObjectDragEnd}
-                  >
-                    <QueueObject.Rect></QueueObject.Rect>
-                    <QueueObject.Text onEdit={(e): void => onTextEdit(object.uuid, e)}></QueueObject.Text>
-                    <QueueObject.Resizer
-                      onResizeStart={(event): void => onResizeStart(object)}
-                      onResizeMove={(event): void => onResizeMove(object, event)}
-                      onResizeEnd={(event): void => onResizeEnd(object, event)}
-                    ></QueueObject.Resizer>
-                  </QueueObject.Drag>
-                </QueueObject.Animator>
-              </QueueObject.Container>
-            );
-          })}
-        </div>
-      </Scaler>
-    </Drawable>
+          <Scaler
+            width={queueDocument!.documentRect.width}
+            height={queueDocument!.documentRect.height}
+            scale={settings.scale}
+          >
+            <div
+              ref={canvasDiv}
+              className={clsx(
+                styles.canvas,
+                'relative',
+                'box-border',
+              )}
+              style={{
+                width: queueDocument!.documentRect.width,
+                height: queueDocument!.documentRect.height,
+                background: queueDocument!.documentRect.fill,
+              }}
+            >
+              {currentQueueObjects.map((object) => {
+                return (
+                  <QueueObject.Container
+                    className='queue-object-root'
+                    key={object.uuid}
+                    object={object}
+                    detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
+                    documentScale={settings.scale}
+                    transform={translateTargets.includes(object.uuid) ? translate : undefined}
+                    selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
+                    <QueueObject.Animator
+                      queueIndex={settings.queueIndex}
+                      queuePosition={settings.queuePosition}
+                      queueStart={settings.queueStart}>
+                      <QueueObject.Drag
+                        onMousedown={(event): void => onObjectMouseodown(event, object)}
+                        onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
+                        onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
+                        onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
+                        onDraggingEnd={onObjectDragEnd}
+                      >
+                        <QueueObject.Rect></QueueObject.Rect>
+                        <QueueObject.Text onEdit={(e): void => onTextEdit(object.uuid, e)}></QueueObject.Text>
+                        <QueueObject.Resizer
+                          onResizeStart={(event): void => onResizeStart(object)}
+                          onResizeMove={(event): void => onResizeMove(object, event)}
+                          onResizeEnd={(event): void => onResizeEnd(object, event)}
+                        ></QueueObject.Resizer>
+                      </QueueObject.Drag>
+                    </QueueObject.Animator>
+                  </QueueObject.Container>
+                );
+              })}
+            </div>
+          </Scaler>
+        </Drawable>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content className={styles.ContextMenuContent}>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            Back <div className={styles.RightSlot}>⌘+[</div>
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem} disabled>
+            Foward <div className={styles.RightSlot}>⌘+]</div>
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            Reload <div className={styles.RightSlot}>⌘+R</div>
+          </ContextMenu.Item>
+          <ContextMenu.Sub>
+            <ContextMenu.SubTrigger className={styles.ContextMenuSubTrigger}>
+              More Tools
+              <div className={styles.RightSlot}>
+                <ChevronRightIcon />
+              </div>
+            </ContextMenu.SubTrigger>
+            <ContextMenu.Portal>
+              <ContextMenu.SubContent
+                className={styles.ContextMenuSubContent}
+                sideOffset={2}
+                alignOffset={-5}
+              >
+                <ContextMenu.Item className={styles.ContextMenuItem}>
+                  Save Page As… <div className={styles.RightSlot}>⌘+S</div>
+                </ContextMenu.Item>
+                <ContextMenu.Item className={styles.ContextMenuItem}>Create Shortcut…</ContextMenu.Item>
+                <ContextMenu.Item className={styles.ContextMenuItem}>Name Window…</ContextMenu.Item>
+                <ContextMenu.Separator className={styles.ContextMenuSeparator} />
+                <ContextMenu.Item className={styles.ContextMenuItem}>Developer Tools</ContextMenu.Item>
+              </ContextMenu.SubContent>
+            </ContextMenu.Portal>
+          </ContextMenu.Sub>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
   );
 };
