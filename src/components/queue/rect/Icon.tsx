@@ -21,7 +21,14 @@ export const Icon: FunctionComponent<RectProps> = ({
         left: `${animation.rect.x + containerContext.transform.x - (margin / 2)}px`,
       }}
     >
-      <use xlinkHref={`/remixicon.symbol.svg#${containerContext.object.iconType}`}></use>
+      <use
+        onMouseDown={onRectMousedown}
+        href={`/remixicon.symbol.svg#${containerContext.object.iconType}`}
+        fill={containerContext.object.fill.color}
+        // stroke={containerContext.object.stroke.color}
+        // strokeWidth={containerContext.object.stroke.width}
+        // strokeDasharray={containerContext.object.stroke.dasharray}
+      ></use>
     </svg>
   );
 };

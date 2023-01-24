@@ -165,7 +165,7 @@ export const LeftPanel: FunctionComponent = () => {
             dasharray: 'solid',
           },
           fill: {
-            color: '#ffffff',
+            color: '#000000',
           },
           scale: {
             scale: 1,
@@ -262,7 +262,7 @@ export const LeftPanel: FunctionComponent = () => {
           }).map((iconClassName) => (
             <Object onClick={(): void => createIcon(iconClassName)}>
               <svg width={30} height={30}>
-                <use xlinkHref={`/remixicon.symbol.svg#${iconClassName}`}></use>
+                <use href={`/remixicon.symbol.svg#${iconClassName}`}></use>
               </svg>
             </Object>
           ))}
