@@ -5,34 +5,48 @@ import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
 import styles from './Square.module.scss';
 
-export const Square: FunctionComponent<RectProps> = ({
-  onRectMousedown
-}) => {
+export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
-  const margin = containerContext.object.stroke.width * 2;
+  const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
+
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width + containerContext.transform.width + margin}
-      height={animation.rect.height + containerContext.transform.height + margin}
+      width={animation.rect.width + containerContext.transform.width}
+      height={animation.rect.height + containerContext.transform.height}
       style={{
-        top: `${animation.rect.y + containerContext.transform.y - (margin / 2)}px`,
-        left: `${animation.rect.x + containerContext.transform.x - (margin / 2)}px`,
+        top: `${animation.rect.y + containerContext.transform.y}px`,
+        left: `${animation.rect.x + containerContext.transform.x}px`,
       }}
+      viewBox={`0 0 ${
+        animation.rect.width + containerContext.transform.width
+      } ${animation.rect.height + containerContext.transform.height}`}
     >
+      <defs>
+        <clipPath id={strokeClipPathID}>
+          <rect
+            rx={0}
+            ry={0}
+            width={animation.rect.width + containerContext.transform.width}
+            height={animation.rect.height + containerContext.transform.height}
+            fill={containerContext.object.fill.color}
+            stroke={containerContext.object.stroke.color}
+            strokeWidth={containerContext.object.stroke.width * 2}
+          />
+        </clipPath>
+      </defs>
       <g>
         <rect
           className={clsx(styles.rect)}
-          x={margin / 2}
-          y={margin / 2}
           onMouseDown={onRectMousedown}
           width={animation.rect.width + containerContext.transform.width}
           height={animation.rect.height + containerContext.transform.height}
           fill={containerContext.object.fill.color}
           stroke={containerContext.object.stroke.color}
-          strokeWidth={containerContext.object.stroke.width}
+          strokeWidth={containerContext.object.stroke.width * 2}
           strokeDasharray={containerContext.object.stroke.dasharray}
+          clipPath={`url(#${strokeClipPathID})`}
         ></rect>
       </g>
     </svg>
