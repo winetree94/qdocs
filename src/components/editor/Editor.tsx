@@ -336,6 +336,7 @@ export const QueueEditor: FunctionComponent = () => {
     const newObjects = queueDocument!.objects.reduce<QueueObjectType[]>((result, object) => {
       if (!uuids.includes(object.uuid)) {
         result.push(object);
+        return result;
       }
       const newObject: QueueObjectType = {
         ...object,
