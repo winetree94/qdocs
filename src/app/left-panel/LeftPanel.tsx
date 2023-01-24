@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import clsx from 'clsx';
 import { useRecoilState } from 'recoil';
 import { Input } from '../../components/input/Input';
@@ -13,6 +13,7 @@ import styles from './LeftPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
 
 export const LeftPanel: FunctionComponent = () => {
+  const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
@@ -205,7 +206,11 @@ export const LeftPanel: FunctionComponent = () => {
 
   return (
     <div className={clsx(styles.container)}>
-      <Input placeholder="Search Shape" className={styles.input}></Input>
+      <Input
+        placeholder="Search Shape"
+        className={styles.input}
+        value={searchKeyword}
+        onChange={(e): void => setSearchKeyword(e.target.value)}></Input>
       <ObjectGroup>
         <ObjectGroupTitle>Group Title</ObjectGroupTitle>
         <ObjectGrid>
@@ -249,7 +254,12 @@ export const LeftPanel: FunctionComponent = () => {
       <ObjectGroup>
         <ObjectGroupTitle>Remix Icons</ObjectGroupTitle>
         <ObjectGrid>
-          {RemixIconClasses.map((iconClassName) => (
+          {RemixIconClasses.filter((iconClassName) => {
+            if (!searchKeyword) {
+              return true;
+            }
+            return iconClassName.toLowerCase().toLocaleLowerCase().includes(searchKeyword.toLowerCase());
+          }).map((iconClassName) => (
             <Object onClick={(): void => createIcon(iconClassName)}>
               <svg width={30} height={30}>
                 <use xlinkHref={`/remixicon.symbol.svg#${iconClassName}`}></use>
