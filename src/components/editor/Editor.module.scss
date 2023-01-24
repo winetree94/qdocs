@@ -1,3 +1,13 @@
-.objectContainer {
-  // position: relative;
+.root {
+  background: var(--gray3);
+}
+
+.canvas {
+  border: 1px solid var(--gray5),
+}
+
+.drawer {
+  border: 1px solid var(--blue7);
+  background-color: var(--blue5);
+  opacity: 0.5;
 }

@@ -66,6 +66,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
               documentRect: {
                 width: 1920,
                 height: 1080,
+                fill: '#ffffff',
               },
               objects: [],
             });

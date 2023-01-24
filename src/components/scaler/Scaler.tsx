@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import clsx from 'clsx';
 import { FunctionComponent, ReactNode } from 'react';
 
 export interface ScalerProps {
@@ -16,24 +16,20 @@ export const Scaler: FunctionComponent<ScalerProps> = ({
 }) => {
   return (
     <div
-      style={{
-        padding: '10px',
-        margin: 'auto',
-      }}
+      className={clsx('p-2.5', 'm-auto')}
     >
       <div
+        className={clsx('shrink-0')}
         style={{
           width: width * scale,
           height: height * scale,
-          background: 'white',
-          flexShrink: 0,
         }}
       >
         <div
-          className={css`
-            transform-origin: 0 0;
-            transform: scale(${scale});
-          `}
+          className={clsx('origin-top-left')}
+          style={{
+            transform: `scale(${scale})`
+          }}
         >
           {children}
         </div>
