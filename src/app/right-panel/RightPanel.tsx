@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Slider } from 'components';
 import { QueueObjectType } from 'model/document';
 import {
+  ChangeEvent,
   createContext,
   FormEvent,
   HTMLAttributes,
@@ -10,6 +11,7 @@ import {
   ReactElement,
   useCallback,
   useContext,
+  useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
@@ -125,40 +127,74 @@ const ObjectStylerBackgroundColor = (): ReactElement => {
   );
 };
 
-const ObjectStylerStrokeColor = (): ReactElement => {
+const ObjectStylerStroke = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
+  const [width, setWidth] = useState([firstObject.stroke.width]);
+
+  const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setWidth([parseInt(e.currentTarget.value, 10)]);
+  };
 
   return (
     <div>
-      <label>
-        <span>border color</span>
-        <input
-          type="color"
-          name="strokeColor"
-          id="strokeColor"
-          defaultValue={firstObject.stroke.color}
-        />
-      </label>
-    </div>
-  );
-};
-
-const ObjectStylerStrokeWidth = (): ReactElement => {
-  const { objects } = useObjectStylerContext();
-  const [firstObject] = objects;
-
-  return (
-    <div>
-      <label>
-        <span>border width</span>
-        <Slider
-          name="strokeWidth"
-          min={0}
-          max={100}
-          defaultValue={[firstObject.stroke.width]}
-        />
-      </label>
+      <div className="mb-1">
+        <p className="font-medium">Border</p>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div>
+          <input
+            type="text"
+            name="strokeWidth"
+            value={width[0]}
+            readOnly
+            hidden
+          />
+          <p className="text-sm">width</p>
+          <div className="flex items-center gap-2">
+            <div className="w-1/3">
+              <input
+                className="w-full"
+                type="number"
+                value={width[0]}
+                onChange={handleWidthChange}
+              />
+            </div>
+            <div className="flex items-center w-full">
+              <Slider
+                min={0}
+                max={100}
+                value={width}
+                onValueChange={setWidth}
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm">color</p>
+          <div className='w-6 h-6'>
+            <label className={classes['input-color']} style={{backgroundColor: firstObject.stroke.color}}>
+              <input
+                type="color"
+                name="strokeColor"
+                id="strokeColor"
+                className={classes['input-color']}
+                defaultValue={firstObject.stroke.color}
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <p className="text-sm">style</p>
+          <div>
+            <select defaultValue={firstObject.stroke.dasharray}>
+              <option value="solid">--------</option>
+              <option value="">- - - - -</option>
+              <option value="">-- -- --</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -186,8 +222,7 @@ const ObjectStylerOpacity = (): ReactElement => {
 ObjectStyler.EffectList = ObjectStylerEffectList;
 ObjectStyler.CurrentQueueEffect = ObjectStylerCurrentQueueEffect;
 ObjectStyler.BackgroundColor = ObjectStylerBackgroundColor;
-ObjectStyler.StrokeColor = ObjectStylerStrokeColor;
-ObjectStyler.StrokeWidth = ObjectStylerStrokeWidth;
+ObjectStyler.Stroke = ObjectStylerStroke;
 ObjectStyler.Opacity = ObjectStylerOpacity;
 // ------------- styler end -------------
 
@@ -260,8 +295,7 @@ export const RightPanel = ({
                 <hr className="my-2" />
                 <ObjectStyler.BackgroundColor />
                 <hr className="my-2" />
-                <ObjectStyler.StrokeColor />
-                <ObjectStyler.StrokeWidth />
+                <ObjectStyler.Stroke />
                 <hr className="my-2" />
                 <ObjectStyler.Opacity />
               </div>

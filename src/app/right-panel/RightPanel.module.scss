@@ -8,3 +8,12 @@
   @apply flex flex-col gap-1 px-2 py-1 border border-gray-100 overflow-y-auto;
   max-height: 170px;
 }
+
+.input-color {
+  @apply relative cursor-pointer block w-full h-full rounded-md;
+
+  & input {
+    @apply absolute top-0 left-0 w-full h-full;
+    visibility: hidden;
+  }
+}
