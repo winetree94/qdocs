@@ -54,7 +54,7 @@ export const LeftPanel: FunctionComponent = () => {
             opacity: 1,
           },
           text: {
-            text: 'Hello World',
+            text: '',
             fontSize: 24,
             fontColor: '#000000',
             fontFamily: 'Arial',
@@ -116,7 +116,7 @@ export const LeftPanel: FunctionComponent = () => {
             opacity: 1,
           },
           text: {
-            text: 'Hello World',
+            text: '',
             fontSize: 24,
             fontColor: '#000000',
             fontFamily: 'Arial',
@@ -179,7 +179,7 @@ export const LeftPanel: FunctionComponent = () => {
             opacity: 1,
           },
           text: {
-            text: 'Hello World',
+            text: '',
             fontSize: 24,
             fontColor: '#000000',
             fontFamily: 'Arial',
