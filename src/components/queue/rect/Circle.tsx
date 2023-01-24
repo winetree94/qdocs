@@ -36,7 +36,7 @@ export const Circle: FunctionComponent<RectProps> = ({
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width}
           strokeDasharray={containerContext.object.stroke.dasharray}
-          fill="transparent"
+          fill={containerContext.object.fill.color}
         >
         </ellipse>
       </g>
