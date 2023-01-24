@@ -281,6 +281,98 @@ export const QueueEditor: FunctionComponent = () => {
     setTranslateTargets([]);
   };
 
+  const changeObjectIndex = (
+    fromUUIDs: string[],
+    to: 'start' | 'end' | 'forward' | 'backward',
+  ): void => {
+    let objects = queueDocument!.objects.slice(0);
+    switch (to) {
+      case 'start':
+        objects.sort((a, b) => {
+          if (fromUUIDs.includes(a.uuid)) {
+            return 1;
+          }
+          if (fromUUIDs.includes(b.uuid)) {
+            return -1;
+          }
+          return 0;
+        });
+        break;
+      case 'end':
+        objects.sort((a, b) => {
+          if (fromUUIDs.includes(a.uuid)) {
+            return -1;
+          }
+          if (fromUUIDs.includes(b.uuid)) {
+            return 1;
+          }
+          return 0;
+        });
+        break;
+      case 'forward':
+        fromUUIDs.forEach((uuid) => {
+          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
+          const object = objects[objectIndex];
+          objects.splice(objectIndex, 1);
+          objects.splice(Math.min(objectIndex + 1, objects.length), 0, object);
+        });
+        break;
+      case 'backward':
+        fromUUIDs.forEach((uuid) => {
+          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
+          const object = objects[objectIndex];
+          objects.splice(objectIndex, 1);
+          objects.splice(Math.min(objectIndex - 1, objects.length), 0, object);
+        });
+        break;
+    }
+    setQueueDocument({
+      ...queueDocument!,
+      objects,
+    });
+  };
+
+  const removeObjectOnQueue = (uuids: string[]): void => {
+    const newObjects = queueDocument!.objects.reduce<QueueObjectType[]>((result, object) => {
+      if (!uuids.includes(object.uuid)) {
+        result.push(object);
+      }
+      const newObject: QueueObjectType = {
+        ...object,
+        effects: object.effects
+          .filter((effect) => effect.index < settings.queueIndex)
+      };
+      if (newObject.effects.length === 0) {
+        return result;
+      }
+      newObject.effects.push({
+        index: settings.queueIndex,
+        duration: 0,
+        timing: 'linear',
+        type: 'remove',
+      });
+      result.push(newObject);
+      return result;
+    }, []);
+    setSettings({
+      ...settings,
+      selectedObjectUUIDs: [],
+      selectionMode: 'normal',
+    });
+    setQueueDocument({
+      ...queueDocument!,
+      objects: newObjects,
+    });
+  };
+
+  const removeObject = (uuids: string[]): void => {
+    const newObjects = queueDocument!.objects.filter((object) => !uuids.includes(object.uuid));
+    setQueueDocument({
+      ...queueDocument!,
+      objects: newObjects,
+    });
+  };
+
   const onTextEdit = (objectId: string, text: string): void => {
     const objectIndex = queueDocument!.objects.findIndex((object) => object.uuid === objectId);
     const object = queueDocument!.objects[objectIndex];
@@ -353,21 +445,22 @@ export const QueueEditor: FunctionComponent = () => {
                 background: queueDocument!.documentRect.fill,
               }}
             >
-              {currentQueueObjects.map((object) => {
+              {currentQueueObjects.map((object, index) => {
                 return (
-                  <ContextMenu.Root onOpenChange={(open): void => {
-                    if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
-                      setSettings({
-                        ...settings,
-                        selectedObjectUUIDs: [object.uuid],
-                        selectionMode: 'normal',
-                      });
-                    }
-                  }}>
+                  <ContextMenu.Root
+                    key={object.uuid}
+                    onOpenChange={(open): void => {
+                      if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
+                        setSettings({
+                          ...settings,
+                          selectedObjectUUIDs: [object.uuid],
+                          selectionMode: 'normal',
+                        });
+                      }
+                    }}>
                     <ContextMenu.Trigger>
                       <QueueObject.Container
                         className='queue-object-root'
-                        key={object.uuid}
                         object={object}
                         detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
                         documentScale={settings.scale}
@@ -396,12 +489,18 @@ export const QueueEditor: FunctionComponent = () => {
                       </QueueObject.Container>
                     </ContextMenu.Trigger>
                     <ContextMenu.Portal>
-                      <ContextMenu.Content className={styles.ContextMenuContent}
-                        onInteractOutside={(e): void => console.log(e)}>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                      <ContextMenu.Content
+                        className={styles.ContextMenuContent}
+                        onInteractOutside={(e): void => console.log(e)}
+                        onMouseDown={(e): void => e.stopPropagation()}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => removeObjectOnQueue(settings.selectedObjectUUIDs)}>
                           현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
                         </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => removeObject(settings.selectedObjectUUIDs)}>
                           오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
                         </ContextMenu.Item>
                         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
@@ -411,20 +510,25 @@ export const QueueEditor: FunctionComponent = () => {
                         <ContextMenu.Item className={styles.ContextMenuItem}>
                           복사 <div className={styles.RightSlot}>⌘+C</div>
                         </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
-                          붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
-                        </ContextMenu.Item>
                         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
                           맨 앞으로 가져오기
                         </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
                           맨 뒤로 보내기
                         </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
                           앞으로 가져오기
                         </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        <ContextMenu.Item
+                          className={styles.ContextMenuItem}
+                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
                           뒤로 보내기
                         </ContextMenu.Item>
                         <ContextMenu.Separator className={styles.ContextMenuSeparator} />
@@ -476,6 +580,13 @@ export const QueueEditor: FunctionComponent = () => {
           </ContextMenu.Item>
           <ContextMenu.Item className={styles.ContextMenuItem}>
             다시 실행 <div className={styles.RightSlot}>⌘+Shift+Z</div>
+          </ContextMenu.Item>
+          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
+          </ContextMenu.Item>
+          <ContextMenu.Item className={styles.ContextMenuItem}>
+            이 위치로 붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
           </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu.Portal>
