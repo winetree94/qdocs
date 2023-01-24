@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { QueueObjectType } from 'model/document';
 import { QueueRect } from 'model/object/rect';
 import { createContext, FunctionComponent } from 'react';
 
-export interface QueueObjectContainerContextType {
-  object: QueueObjectType;
+export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
+  object: T;
   documentScale: number;
   detail: boolean;
   selected: boolean;

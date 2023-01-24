@@ -10,6 +10,7 @@ import { documentSettingsState } from '../../store/settings';
 import { documentState } from '../../store/document';
 import { generateUUID } from '../../cdk/functions/uuid';
 import styles from './LeftPanel.module.scss';
+import { RemixIconClasses } from 'cdk/icon/factory';
 
 export const LeftPanel: FunctionComponent = () => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
@@ -139,6 +140,69 @@ export const LeftPanel: FunctionComponent = () => {
     });
   };
 
+  const createIcon = (iconClassName: string): void => {
+    const uuid = generateUUID();
+    const width = 300;
+    const height = 300;
+    setQueueDocument({
+      ...queueDocument!,
+      objects: [
+        ...queueDocument!.objects,
+        {
+          type: 'icon',
+          iconType: iconClassName,
+          uuid: uuid,
+          rect: {
+            x: queueDocument!.documentRect.width / 2 - width / 2,
+            y: queueDocument!.documentRect.height / 2 - height / 2,
+            width: width,
+            height: height,
+          },
+          stroke: {
+            width: 1,
+            color: '#000000',
+            dasharray: 'solid',
+          },
+          fill: {
+            color: '#ffffff',
+          },
+          scale: {
+            scale: 1,
+          },
+          rotate: {
+            x: 0,
+            y: 0,
+            position: 'forward',
+            degree: 0,
+          },
+          fade: {
+            opacity: 1,
+          },
+          text: {
+            text: 'Hello World',
+            fontSize: 24,
+            fontColor: '#000000',
+            fontFamily: 'Arial',
+            horizontalAlign: 'center',
+            verticalAlign: 'middle',
+          },
+          effects: [
+            {
+              type: 'create',
+              timing: 'linear',
+              duration: 0,
+              index: settings.queueIndex,
+            },
+          ],
+        },
+      ],
+    });
+    setSettings({
+      ...settings,
+      selectedObjectUUIDs: [uuid],
+    });
+  };
+
   return (
     <div className={clsx(styles.container)}>
       <Input placeholder="Search Shape" className={styles.input}></Input>
@@ -175,20 +239,23 @@ export const LeftPanel: FunctionComponent = () => {
               </g>
             </svg>
           </Object>
+          <Object onClick={(): void => createIcon('ri-cursor-line')}>
+            <svg width={30} height={30}>
+              <use xlinkHref={'/remixicon.symbol.svg#ri-cursor-line'}></use>
+            </svg>
+          </Object>
         </ObjectGrid>
       </ObjectGroup>
       <ObjectGroup>
-        <ObjectGroupTitle>Group Title</ObjectGroupTitle>
+        <ObjectGroupTitle>Remix Icons</ObjectGroupTitle>
         <ObjectGrid>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
-          <Object>Obj1</Object>
+          {RemixIconClasses.map((iconClassName) => (
+            <Object onClick={(): void => createIcon(iconClassName)}>
+              <svg width={30} height={30}>
+                <use xlinkHref={`/remixicon.symbol.svg#${iconClassName}`}></use>
+              </svg>
+            </Object>
+          ))}
         </ObjectGrid>
       </ObjectGroup>
     </div>

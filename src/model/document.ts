@@ -1,7 +1,8 @@
 import { QueueCircle } from './object/circle';
+import { QueueIcon } from './object/icon';
 import { QueueSquare } from './object/rect';
 
-export type QueueObjectType = QueueSquare | QueueCircle;
+export type QueueObjectType = QueueSquare | QueueCircle | QueueIcon;
 
 export interface QueueDocumentRect {
   fill: string;
