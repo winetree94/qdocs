@@ -9,6 +9,7 @@ import { RemixIconClasses } from 'cdk/icon/factory';
 import { createDefaultSquare } from 'model/object/square';
 import { createDefaultCircle } from 'model/object/circle';
 import { createDefaultIcon } from 'model/object/icon';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 export interface QueueObject {
   key: string;
@@ -215,14 +216,25 @@ export const LeftPanel: FunctionComponent = () => {
                   styles.objectList
                 )}>
                 {model.children.map((child) => (
-                  <div
-                    key={child.key}
-                    onClick={child.factory}
-                    className={clsx(
-                      styles.object,
-                    )}>
-                    {child.preview}
-                  </div>
+                  <Tooltip.Provider key={child.key}>
+                    <Tooltip.Root>
+                      <Tooltip.Trigger asChild>
+                        <div
+                          onClick={child.factory}
+                          className={clsx(
+                            styles.object,
+                          )}>
+                          {child.preview}
+                        </div>
+                      </Tooltip.Trigger>
+                      <Tooltip.Portal>
+                        <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
+                          {child.key}
+                          <Tooltip.Arrow className={styles.TooltipArrow} />
+                        </Tooltip.Content>
+                      </Tooltip.Portal>
+                    </Tooltip.Root>
+                  </Tooltip.Provider>
                 ))}
               </div>
             )}
