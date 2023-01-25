@@ -1,11 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { QueueObjectType } from 'model/document';
-import {
-  MoveEffect,
-  QueueRect,
-  QueueScale,
-  ScaleEffect,
-} from '../../../model/object/rect';
+import { MoveEffect, ScaleEffect } from 'model/effect';
+import { QueueObjectType } from 'model/object';
+import { QueueRect, QueueScale } from 'model/property';
 
 export interface RectAnimation {
   fromRect: QueueRect;

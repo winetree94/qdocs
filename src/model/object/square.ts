@@ -2,21 +2,40 @@ import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
+import { QueueObjectType } from '.';
 
-export interface QueueCircle
-  extends WithEffects, WithRect, WithFade, WithFill, WithScale, WithRotation, WithStroke, WithText {
-  type: 'circle';
+export interface QueueSquare extends WithEffects, WithRect, WithFade, WithFill, WithScale, WithRotation, WithStroke, WithText {
+  type: 'rect';
   uuid: string;
 }
 
-export const createDefaultCircle = (
+export function isExistObjectOnQueue(
+  object: QueueObjectType,
+  index: number
+): boolean {
+  const createEffect = object.effects.find(
+    (effect) => effect.type === 'create'
+  )!;
+  const removeEffect = object.effects.find(
+    (effect) => effect.type === 'remove'
+  );
+  if (index < createEffect.index) {
+    return false;
+  }
+  if (removeEffect && index > removeEffect.index) {
+    return false;
+  }
+  return true;
+}
+
+export const createDefaultSquare = (
   documentRect: QueueDocumentRect,
   queueIndex: number,
-): QueueCircle => {
+): QueueSquare => {
   const width = 300;
   const height = 300;
   return {
-    type: 'circle',
+    type: 'rect',
     uuid: generateUUID(),
     rect: {
       x: documentRect.width / 2 - width / 2,

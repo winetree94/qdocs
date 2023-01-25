@@ -1,9 +1,10 @@
 .container {
   width: 200px;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  border-right: 1px solid var(--gray5);
+}
+
+.inputContainer {
+  border-bottom: 1px solid var(--gray5);
 }
 
 .input {
@@ -15,4 +16,61 @@
   margin: 10px;
   width: 30px;
   height: 30px;
+}
+
+.objectGroup {
+
+}
+
+.objectGroupTitle {
+  padding: 0;
+  height: 36px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background: #eee;
+  }
+
+  &:active {
+    background: #ddd;
+  }
+}
+
+.objectGroupArrow {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.objectList {
+  display: grid;
+  grid-template-columns: repeat(4, 25%);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.object {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #eee;
+  }
+
+  &:active {
+    background: #ddd;
+  }
 }

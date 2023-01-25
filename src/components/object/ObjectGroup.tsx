@@ -1,4 +1,3 @@
-import { css } from '@emotion/css';
 import { createContext, FunctionComponent, ReactNode, useState } from 'react';
 
 export interface ObjectGroupContextType {
@@ -25,11 +24,7 @@ export const ObjectGroup: FunctionComponent<{ children: ReactNode }> = (
         setOpened: setOpened,
       }}
     >
-      <div
-        className={css`
-          border-top: 1px solid rgba(0, 0, 0, 0.1);
-        `}
-      >
+      <div>
         {children}
       </div>
     </ObjectGroupContext.Provider>

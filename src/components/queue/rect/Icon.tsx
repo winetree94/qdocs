@@ -10,24 +10,20 @@ export const Icon: FunctionComponent<RectProps> = ({
 }) => {
   const containerContext = useContext<QueueObjectContainerContextType<QueueIcon>>(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
-  const margin = containerContext.object.stroke.width * 2;
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width + containerContext.transform.width + margin}
-      height={animation.rect.height + containerContext.transform.height + margin}
+      width={animation.rect.width + containerContext.transform.width}
+      height={animation.rect.height + containerContext.transform.height}
       style={{
-        top: `${animation.rect.y + containerContext.transform.y - (margin / 2)}px`,
-        left: `${animation.rect.x + containerContext.transform.x - (margin / 2)}px`,
+        top: `${animation.rect.y + containerContext.transform.y}px`,
+        left: `${animation.rect.x + containerContext.transform.x}px`,
       }}
     >
       <use
         onMouseDown={onRectMousedown}
         href={`/remixicon.symbol.svg#${containerContext.object.iconType}`}
         fill={containerContext.object.fill.color}
-        // stroke={containerContext.object.stroke.color}
-        // strokeWidth={containerContext.object.stroke.width}
-        // strokeDasharray={containerContext.object.stroke.dasharray}
       ></use>
     </svg>
   );

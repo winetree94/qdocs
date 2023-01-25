@@ -1,5 +1,5 @@
 import { Animator } from 'cdk/animation/Animator';
-import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/object/rect';
+import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/property';
 import { createContext, FunctionComponent, ReactElement, useContext } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';

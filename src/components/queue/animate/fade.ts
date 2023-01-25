@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { QueueObjectType } from 'model/document';
-import {
-  QueueFade,
-  FadeEffect,
-} from '../../../model/object/rect';
+import { FadeEffect } from 'model/effect';
+import { QueueObjectType } from 'model/object';
+import { QueueFade } from 'model/property';
 
 export interface FadeAnimation {
   fromFade: QueueFade;

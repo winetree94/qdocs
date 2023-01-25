@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { QueueObjectType } from 'model/document';
+import { ScaleEffect } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import {
   QueueScale,
-  ScaleEffect,
-} from '../../../model/object/rect';
+} from 'model/property';
 
 export interface ScaleAnimation {
   fromScale: QueueScale;

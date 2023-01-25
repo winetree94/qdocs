@@ -1,7 +1,7 @@
 import { debounce } from 'cdk/functions/debounce';
 import clsx from 'clsx';
 import { Slider } from 'components';
-import { QueueObjectType } from 'model/document';
+import { QueueObjectType, QueueSquare } from 'model/object';
 import {
   ChangeEvent,
   createContext,
@@ -130,7 +130,13 @@ const ObjectStylerBackgroundColor = (): ReactElement => {
 const ObjectStylerStroke = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
-  const [width, setWidth] = useState([firstObject.stroke.width]);
+
+  const tempType = firstObject as QueueSquare;
+  const [width, setWidth] = useState([tempType.stroke.width]);
+
+  if (firstObject.type === 'icon') {
+    return <></>;
+  }
 
   const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setWidth([parseInt(e.currentTarget.value, 10)]);
@@ -252,22 +258,40 @@ export const RightPanel = ({
       }
 
       // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
-      const updatedModel = {
-        ...object,
-        fill: {
-          ...object.fill,
-          color: value.backgroundColor as string,
-        },
-        stroke: {
-          ...object.stroke,
-          color: value.strokeColor as string,
-          width: parseInt(value.strokeWidth as string),
-        },
-        fade: {
-          ...object.fade,
-          opacity: parseFloat(value.opacity as string),
-        },
-      };
+      const updatedModel = ((): QueueObjectType => {
+        switch (object.type) {
+          case 'rect':
+          case 'circle':
+            return {
+              ...object,
+              fill: {
+                ...object.fill,
+                color: value.backgroundColor as string,
+              },
+              stroke: {
+                ...object.stroke,
+                color: value.strokeColor as string,
+                width: parseInt(value.strokeWidth as string),
+              },
+              fade: {
+                ...object.fade,
+                opacity: parseFloat(value.opacity as string),
+              },
+            };
+          case 'icon':
+            return {
+              ...object,
+              fill: {
+                ...object.fill,
+                color: value.backgroundColor as string,
+              },
+              fade: {
+                ...object.fade,
+                opacity: parseFloat(value.opacity as string),
+              },
+            };
+        }
+      })();
 
       return updatedModel;
     });

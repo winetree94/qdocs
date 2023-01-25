@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
+import { QueueRect } from 'model/property';
 import React, { useCallback, useContext, useEffect } from 'react';
-import { QueueRect } from '../../model/object/rect';
 import styles from './Resizer.module.scss';
 
 export interface ResizeEvent {

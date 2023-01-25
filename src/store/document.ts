@@ -1,6 +1,7 @@
-import { QueueDocument, QueueObjectType } from 'model/document';
+import { QueueDocument } from 'model/document';
+import { QueueObjectType } from 'model/object';
 import { atom, selector, selectorFamily } from 'recoil';
-import { isExistObjectOnQueue } from '../model/object/rect';
+import { isExistObjectOnQueue } from '../model/object/square';
 import { documentSettingsState } from './settings';
 
 export const history: Array<{

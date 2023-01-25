@@ -1,226 +1,106 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useRecoilState } from 'recoil';
 import { Input } from '../../components/input/Input';
-import { Object } from '../../components/object/Object';
-import { ObjectGrid } from '../../components/object/ObjectGrid';
-import { ObjectGroup } from '../../components/object/ObjectGroup';
-import { ObjectGroupTitle } from '../../components/object/ObjectGroupTitle';
 import { documentSettingsState } from '../../store/settings';
 import { documentState } from '../../store/document';
-import { generateUUID } from '../../cdk/functions/uuid';
 import styles from './LeftPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
+import { createDefaultSquare } from 'model/object/square';
+import { createDefaultCircle } from 'model/object/circle';
+import { createDefaultIcon } from 'model/object/icon';
+
+export interface QueueObject {
+  key: string;
+  factory: () => void;
+  preview: React.ReactNode;
+}
+
+export interface QueueObjectGroup {
+  key: string;
+  title: string;
+  children: QueueObject[];
+}
 
 export const LeftPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
-  const createSquare = (): void => {
-    const uuid = generateUUID();
-    const width = 300;
-    const height = 300;
+  const [openedObjectGroupKey, setOpenedObjectGroupKey] = useState<{ [key: string]: boolean; }>({});
+
+  const toggleOpenedObjectGroup = (key: string): void => {
+    setOpenedObjectGroupKey({
+      ...openedObjectGroupKey,
+      [key]: !openedObjectGroupKey[key],
+    });
+  };
+
+  const createSquare = useCallback((): void => {
+    const square = createDefaultSquare(
+      queueDocument!.documentRect,
+      settings.queueIndex,
+    );
     setQueueDocument({
       ...queueDocument!,
       objects: [
         ...queueDocument!.objects,
-        {
-          type: 'rect',
-          uuid: uuid,
-          rect: {
-            x: queueDocument!.documentRect.width / 2 - width / 2,
-            y: queueDocument!.documentRect.height / 2 - height / 2,
-            width: width,
-            height: height,
-          },
-          stroke: {
-            width: 1,
-            color: '#000000',
-            dasharray: 'solid',
-          },
-          fill: {
-            color: '#ffffff',
-          },
-          scale: {
-            scale: 1,
-          },
-          rotate: {
-            x: 0,
-            y: 0,
-            position: 'forward',
-            degree: 0,
-          },
-          fade: {
-            opacity: 1,
-          },
-          text: {
-            text: '',
-            fontSize: 24,
-            fontColor: '#000000',
-            fontFamily: 'Arial',
-            horizontalAlign: 'center',
-            verticalAlign: 'middle',
-          },
-          effects: [
-            {
-              type: 'create',
-              timing: 'linear',
-              duration: 0,
-              index: settings.queueIndex,
-            },
-          ],
-        },
+        square,
       ],
     });
     setSettings({
       ...settings,
-      selectedObjectUUIDs: [uuid],
+      selectedObjectUUIDs: [square.uuid],
     });
-  };
+  }, [queueDocument, settings, setQueueDocument, setSettings]);
 
-  const createCircle = (): void => {
-    const uuid = generateUUID();
-    const width = 300;
-    const height = 300;
+  const createCircle = useCallback((): void => {
+    const circle = createDefaultCircle(
+      queueDocument!.documentRect,
+      settings.queueIndex,
+    );
     setQueueDocument({
       ...queueDocument!,
       objects: [
         ...queueDocument!.objects,
-        {
-          type: 'circle',
-          uuid: uuid,
-          rect: {
-            x: queueDocument!.documentRect.width / 2 - width / 2,
-            y: queueDocument!.documentRect.height / 2 - height / 2,
-            width: width,
-            height: height,
-          },
-          stroke: {
-            width: 1,
-            color: '#000000',
-            dasharray: 'solid',
-          },
-          fill: {
-            color: '#ffffff',
-          },
-          scale: {
-            scale: 1,
-          },
-          rotate: {
-            x: 0,
-            y: 0,
-            position: 'forward',
-            degree: 0,
-          },
-          fade: {
-            opacity: 1,
-          },
-          text: {
-            text: '',
-            fontSize: 24,
-            fontColor: '#000000',
-            fontFamily: 'Arial',
-            horizontalAlign: 'center',
-            verticalAlign: 'middle',
-          },
-          effects: [
-            {
-              type: 'create',
-              timing: 'linear',
-              duration: 0,
-              index: settings.queueIndex,
-            },
-          ],
-        },
+        circle,
       ],
     });
     setSettings({
       ...settings,
-      selectedObjectUUIDs: [uuid],
+      selectedObjectUUIDs: [circle.uuid],
     });
-  };
+  }, [queueDocument, settings, setQueueDocument, setSettings]);
 
-  const createIcon = (iconClassName: string): void => {
-    const uuid = generateUUID();
-    const width = 300;
-    const height = 300;
+  const createIcon = useCallback((iconClassName: string): void => {
+    const icon = createDefaultIcon(
+      queueDocument!.documentRect,
+      settings.queueIndex,
+      iconClassName,
+    );
     setQueueDocument({
       ...queueDocument!,
       objects: [
         ...queueDocument!.objects,
-        {
-          type: 'icon',
-          iconType: iconClassName,
-          uuid: uuid,
-          rect: {
-            x: queueDocument!.documentRect.width / 2 - width / 2,
-            y: queueDocument!.documentRect.height / 2 - height / 2,
-            width: width,
-            height: height,
-          },
-          stroke: {
-            width: 1,
-            color: '#000000',
-            dasharray: 'solid',
-          },
-          fill: {
-            color: '#000000',
-          },
-          scale: {
-            scale: 1,
-          },
-          rotate: {
-            x: 0,
-            y: 0,
-            position: 'forward',
-            degree: 0,
-          },
-          fade: {
-            opacity: 1,
-          },
-          text: {
-            text: '',
-            fontSize: 24,
-            fontColor: '#000000',
-            fontFamily: 'Arial',
-            horizontalAlign: 'center',
-            verticalAlign: 'middle',
-          },
-          effects: [
-            {
-              type: 'create',
-              timing: 'linear',
-              duration: 0,
-              index: settings.queueIndex,
-            },
-          ],
-        },
+        icon,
       ],
     });
     setSettings({
       ...settings,
-      selectedObjectUUIDs: [uuid],
+      selectedObjectUUIDs: [icon.uuid],
     });
-  };
+  }, [queueDocument, settings, setQueueDocument, setSettings]);
 
-  return (
-    <div className={clsx(styles.container)}>
-      <Input
-        placeholder="Search Shape"
-        className={styles.input}
-        value={searchKeyword}
-        onChange={(e): void => setSearchKeyword(e.target.value)}></Input>
-      <ObjectGroup>
-        <ObjectGroupTitle>Group Title</ObjectGroupTitle>
-        <ObjectGrid>
-          <Object onClick={createSquare}>
-            <svg
-              version="1.1"
-              baseProfile="full"
-              xmlns="http://www.w3.org/2000/svg"
-              className={styles.canvas}
-            >
+  const models = useMemo<QueueObjectGroup[]>(() => ([
+    {
+      key: 'Shape',
+      title: 'Shape',
+      children: [
+        {
+          key: 'Rectangle',
+          factory: () => createSquare(),
+          preview: (
+            <svg className={styles.canvas}>
               <g>
                 <rect
                   width="30"
@@ -231,43 +111,98 @@ export const LeftPanel: FunctionComponent = () => {
                 />
               </g>
             </svg>
-          </Object>
-          <Object onClick={createCircle}>
-            <svg
-              version="1.1"
-              baseProfile="full"
-              xmlns="http://www.w3.org/2000/svg"
-              className={styles.canvas}
-            >
+          ),
+        },
+        {
+          key: 'Circle',
+          factory: () => createCircle(),
+          preview: (
+            <svg className={styles.canvas}>
               <g>
                 <circle cx="15" cy="15" r="13" stroke="black" strokeWidth="2" fill="transparent" />
               </g>
             </svg>
-          </Object>
-          <Object onClick={(): void => createIcon('ri-cursor-line')}>
-            <svg width={30} height={30}>
-              <use xlinkHref={'/remixicon.symbol.svg#ri-cursor-line'}></use>
-            </svg>
-          </Object>
-        </ObjectGrid>
-      </ObjectGroup>
-      <ObjectGroup>
-        <ObjectGroupTitle>Remix Icons</ObjectGroupTitle>
-        <ObjectGrid>
-          {RemixIconClasses.filter((iconClassName) => {
-            if (!searchKeyword) {
-              return true;
-            }
-            return iconClassName.toLowerCase().toLocaleLowerCase().includes(searchKeyword.toLowerCase());
-          }).map((iconClassName) => (
-            <Object onClick={(): void => createIcon(iconClassName)}>
-              <svg width={30} height={30}>
-                <use href={`/remixicon.symbol.svg#${iconClassName}`}></use>
-              </svg>
-            </Object>
-          ))}
-        </ObjectGrid>
-      </ObjectGroup>
+          )
+        }
+      ],
+    },
+    {
+      key: 'Remix Icon',
+      title: 'Remix Icon',
+      children: RemixIconClasses.map((iconClassName) => ({
+        key: iconClassName,
+        factory: () => createIcon(iconClassName),
+        preview: (
+          <svg width={30} height={30}>
+            <use href={`/remixicon.symbol.svg#${iconClassName}`}></use>
+          </svg>
+        ),
+      })),
+    }
+  ]), [
+    createIcon,
+    createSquare,
+    createCircle,
+  ]);
+
+  return (
+    <div className={clsx(
+      styles.container,
+      'flex',
+      'flex-col'
+    )}>
+      <div className={clsx(
+        styles.inputContainer
+      )}>
+        <Input
+          placeholder="Search Shape"
+          className={clsx(
+            styles.input,
+          )}
+          value={searchKeyword}
+          onChange={(e): void => setSearchKeyword(e.target.value)}></Input>
+      </div>
+      <div className={clsx(
+        'flex-1',
+        'flex',
+        'flex-col',
+        'overflow-y-auto',
+      )}>
+        {models.map((model) => (
+          <div className={clsx(
+            styles.objectGroup,
+          )}>
+            <div
+              onClick={(e): void => toggleOpenedObjectGroup(model.key)}
+              className={clsx(
+                styles.objectGroupTitle,
+              )}>
+              <i
+                className={clsx(
+                  styles.objectGroupArrow,
+                  !openedObjectGroupKey[model.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'
+                )}></i>
+              {model.title}
+            </div>
+            {!openedObjectGroupKey[model.key] && (
+              <div
+                className={clsx(
+                  styles.objectList
+                )}>
+                {model.children.map((child) => (
+                  <div
+                    onClick={child.factory}
+                    className={clsx(
+                      styles.object,
+                    )}>
+                    {child.preview}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

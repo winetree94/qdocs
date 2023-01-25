@@ -5,21 +5,22 @@ import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import {
   isExistObjectOnQueue,
-  QueueRect,
   QueueSquare,
-} from '../../model/object/rect';
+} from '../../model/object/square';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect, getCurrentScaledRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { QueueObject } from 'components/queue';
 import { getCurrentScale } from 'components/queue/animate/scale';
-import { QueueDocumentRect, QueueObjectType } from 'model/document';
+import { QueueDocumentRect } from 'model/document';
 import * as ContextMenu from '@radix-ui/react-context-menu';
-import { DotFilledIcon, CheckIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
 import { QueueAlert } from 'components/alert/Alert';
+import { QueueRect } from 'model/property';
+import { QueueObjectType } from 'model/object';
 
 export interface QueueEditorContextType {
   selectedObjectIds: string[];

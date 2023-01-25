@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { QueueObjectType } from 'model/document';
-import { QueueRect } from 'model/object/rect';
+import { QueueObjectType } from 'model/object';
+import { QueueRect } from 'model/property';
 import { createContext, FunctionComponent } from 'react';
 
 export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
