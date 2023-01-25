@@ -31,6 +31,7 @@ export const createDefaultCircle = (
     },
     fill: {
       color: '#ffffff',
+      opacity: 1,
     },
     scale: {
       scale: 1,

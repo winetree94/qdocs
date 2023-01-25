@@ -50,6 +50,7 @@ export const createDefaultSquare = (
     },
     fill: {
       color: '#ffffff',
+      opacity: 1,
     },
     scale: {
       scale: 1,

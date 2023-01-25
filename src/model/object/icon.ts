@@ -28,6 +28,7 @@ export const createDefaultIcon = (
     },
     fill: {
       color: '#000000',
+      opacity: 1,
     },
     scale: {
       scale: 1,
