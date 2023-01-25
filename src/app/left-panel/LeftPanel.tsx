@@ -12,6 +12,7 @@ import { createDefaultIcon } from 'model/object/icon';
 
 export interface QueueObject {
   key: string;
+  keyword: string[];
   factory: () => void;
   preview: React.ReactNode;
 }
@@ -91,7 +92,7 @@ export const LeftPanel: FunctionComponent = () => {
     });
   }, [queueDocument, settings, setQueueDocument, setSettings]);
 
-  const models = useMemo<QueueObjectGroup[]>(() => ([
+  const models = useMemo<QueueObjectGroup[]>(() => [
     {
       key: 'Shape',
       title: 'Shape',
@@ -99,6 +100,7 @@ export const LeftPanel: FunctionComponent = () => {
         {
           key: 'Rectangle',
           factory: () => createSquare(),
+          keyword: ['Rectangle'],
           preview: (
             <svg className={styles.canvas}>
               <g>
@@ -115,6 +117,7 @@ export const LeftPanel: FunctionComponent = () => {
         },
         {
           key: 'Circle',
+          keyword: ['Circle'],
           factory: () => createCircle(),
           preview: (
             <svg className={styles.canvas}>
@@ -132,6 +135,7 @@ export const LeftPanel: FunctionComponent = () => {
       children: RemixIconClasses.map((iconClassName) => ({
         key: iconClassName,
         factory: () => createIcon(iconClassName),
+        keyword: [iconClassName],
         preview: (
           <svg width={30} height={30}>
             <use href={`/remixicon.symbol.svg#${iconClassName}`}></use>
@@ -139,11 +143,30 @@ export const LeftPanel: FunctionComponent = () => {
         ),
       })),
     }
-  ]), [
+  ], [
     createIcon,
     createSquare,
     createCircle,
   ]);
+
+  const filteredGroups = useMemo(() => {
+    if (searchKeyword === '') {
+      return models;
+    }
+    return models.reduce<QueueObjectGroup[]>((result, group) => {
+      const filtered = group.children.filter((child) => child.keyword.some(
+        (keyword) => keyword.toLowerCase().includes(searchKeyword.toLowerCase())
+      ));
+      if (filtered.length === 0) {
+        return result;
+      }
+      result.push({
+        ...group,
+        children: filtered,
+      });
+      return result;
+    }, []);
+  }, [models, searchKeyword]);
 
   return (
     <div className={clsx(
@@ -168,7 +191,7 @@ export const LeftPanel: FunctionComponent = () => {
         'flex-col',
         'overflow-y-auto',
       )}>
-        {models.map((model) => (
+        {filteredGroups.map((model) => (
           <div
             key={model.key}
             className={clsx(
