@@ -319,8 +319,12 @@ export const RightPanel = ({
                 <hr className="my-2" />
                 <ObjectStyler.BackgroundColor />
                 <hr className="my-2" />
-                <ObjectStyler.Stroke />
-                <hr className="my-2" />
+                {selectedObjects[0].type !== 'icon' && (
+                  <>
+                    <ObjectStyler.Stroke />
+                    <hr className="my-2" />
+                  </>
+                )}
                 <ObjectStyler.Opacity />
               </div>
             </ObjectStyler>

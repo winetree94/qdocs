@@ -169,9 +169,11 @@ export const LeftPanel: FunctionComponent = () => {
         'overflow-y-auto',
       )}>
         {models.map((model) => (
-          <div className={clsx(
-            styles.objectGroup,
-          )}>
+          <div
+            key={model.key}
+            className={clsx(
+              styles.objectGroup,
+            )}>
             <div
               onClick={(e): void => toggleOpenedObjectGroup(model.key)}
               className={clsx(
@@ -191,6 +193,7 @@ export const LeftPanel: FunctionComponent = () => {
                 )}>
                 {model.children.map((child) => (
                   <div
+                    key={child.key}
                     onClick={child.factory}
                     className={clsx(
                       styles.object,
