@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { MoveEffect, ScaleEffect } from 'model/effect';
+import { MoveEffect } from 'model/effect';
 import { QueueObjectType } from 'model/object';
-import { QueueRect, QueueScale } from 'model/property';
+import { QueueRect } from 'model/property';
 
 export interface RectAnimation {
   fromRect: QueueRect;
@@ -20,40 +20,6 @@ export const getCurrentRect = (
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is MoveEffect => effect.type === 'move')
     .reduce<QueueRect>((_, effect) => effect.rect, object.rect);
-};
-
-/**
- * @description
- * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환 (스케일이 적용된 상태)
- */
-export const getCurrentScaledRect = (
-  object: QueueObjectType,
-  index: number,
-): QueueRect => {
-  const final = object.effects
-    .filter((effect) => effect.index <= index)
-    .filter((effect): effect is (MoveEffect | ScaleEffect) => effect.type === 'move' || effect.type === 'scale')
-    .reduce<{
-      rect: QueueRect;
-      scale: QueueScale;
-    }>((previous, effect) => ({
-      rect: effect.type === 'move' ? effect.rect : previous.rect,
-      scale: effect.type === 'scale' ? effect.scale : previous.scale,
-    }), {
-      rect: object.rect,
-      scale: object.scale,
-    });
-
-  if (!final.scale) {
-    return final.rect;
-  }
-
-  return {
-    x: final.rect.x - (final.rect.width * final.scale.scale - final.rect.width) / 2,
-    y: final.rect.y - (final.rect.height * final.scale.scale - final.rect.height) / 2,
-    width: final.rect.width * final.scale.scale,
-    height: final.rect.height * final.scale.scale,
-  };
 };
 
 export const getRectAnimation = (

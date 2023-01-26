@@ -8,11 +8,10 @@ import {
   QueueSquare,
 } from '../../model/object/square';
 import { Scaler } from '../scaler/Scaler';
-import { getCurrentRect, getCurrentScaledRect } from '../queue/animate/rect';
+import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { QueueObject } from 'components/queue';
-import { getCurrentScale } from 'components/queue/animate/scale';
 import { QueueDocumentRect } from 'model/document';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
@@ -150,10 +149,9 @@ export const QueueEditor: FunctionComponent = () => {
     const x = event.clientX - initEvent.clientX;
     const y = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
-    const objectScale = 1 / getCurrentScale(object, settings.queueIndex).scale;
 
-    const targetX = (x * currentScale * objectScale);
-    const targetY = (y * currentScale * objectScale);
+    const targetX = (x * currentScale);
+    const targetY = (y * currentScale);
 
     const adjacentTargetX = event.shiftKey ? targetX : Math.round(targetX / 30) * 30;
     const adjacentTargetY = event.shiftKey ? targetY : Math.round(targetY / 30) * 30;
@@ -249,7 +247,7 @@ export const QueueEditor: FunctionComponent = () => {
     const width = event.width * absScale;
     const height = event.height * absScale;
     const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => {
-      const rect = getCurrentScaledRect(object, settings.queueIndex);
+      const rect = getCurrentRect(object, settings.queueIndex);
       return (
         rect.x >= x &&
         rect.y >= y &&
@@ -275,7 +273,6 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
-    const currentScale = getCurrentScale(object, settings.queueIndex).scale;
     const currentRect = getCurrentRect(object, settings.queueIndex);
     updateObjectRects([
       {

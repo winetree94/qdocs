@@ -56,13 +56,12 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     initEvent: MouseEvent,
     targetEvent: MouseEvent,
     scale: number,
-    objectScale: number,
     position: ResizerPosition
   ): QueueRect => {
     const originDiffX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
     const originDiffY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
-    const diffX = originDiffX * (1 / objectScale);
-    const diffY = originDiffY * (1 / objectScale);
+    const diffX = originDiffX * (1);
+    const diffY = originDiffY * (1);
 
     switch (position) {
       case 'top-left':
@@ -129,10 +128,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       if (!init) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, documentScale, animation.scale.scale, init.position);
+      const rect = getResizerPosition(init.event, event, documentScale, init.position);
       onResizeMove?.(rect, cancel);
     },
-    [init, onResizeMove, documentScale, animation.scale.scale, cancel]
+    [init, onResizeMove, documentScale, cancel]
   );
 
   const onDocumentMouseup = useCallback(
@@ -140,11 +139,11 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       if (!init) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, documentScale, animation.scale.scale, init.position);
+      const rect = getResizerPosition(init.event, event, documentScale, init.position);
       onResizeEnd?.(rect);
       setInit(null);
     },
-    [init, onResizeEnd, documentScale, animation.scale.scale]
+    [init, onResizeEnd, documentScale]
   );
 
   useEffect(() => {

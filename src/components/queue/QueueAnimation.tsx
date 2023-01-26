@@ -1,16 +1,14 @@
 import { Animator } from 'cdk/animation/Animator';
-import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/property';
+import { QueueFade, QueueRect, QueueRotate } from 'model/property';
 import { createContext, FunctionComponent, ReactElement, useContext } from 'react';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
 import { getAnimatableRotate, getCurrentRotate, getRotateAnimation } from './animate/rotate';
-import { getAnimatableScale, getCurrentScale, getScaleAnimation } from './animate/scale';
 import { QueueObjectContainerContext } from './Container';
 
 export interface QueueAnimatableContextType {
   rect: QueueRect;
   fade: QueueFade;
-  scale: QueueScale;
   rotate: QueueRotate;
 }
 
@@ -23,9 +21,6 @@ export const QueueAnimatableContext = createContext<QueueAnimatableContextType>(
   },
   fade: {
     opacity: 0,
-  },
-  scale: {
-    scale: 1,
   },
   rotate: {
     x: 0,
@@ -54,8 +49,6 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   const animatableFade = queueStart > 0 ? getFadeAnimation(object, queueIndex, queuePosition) : undefined;
   const currentRect = getCurrentRect(object, queueIndex);
   const animatableRect = queueStart > 0 ? getRectAnimation(object, queueIndex, queuePosition) : undefined;
-  const currentScale = getCurrentScale(object, queueIndex);
-  const animatableScale = queueStart > 0 ? getScaleAnimation(object, queueIndex, queuePosition) : undefined;
   const currentRotate = getCurrentRotate(object, queueIndex);
   const animatableRotate = queueStart > 0 ? getRotateAnimation(object, queueIndex, queuePosition) : undefined;
 
@@ -73,28 +66,18 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
             {(fadeProgress): ReactElement => {
               return (
                 <Animator
-                  duration={animatableScale?.scaleEffect.duration || 0}
+                  duration={animatableRotate?.rotateEffect.duration || 0}
                   start={queueStart}
-                  timing={animatableScale?.scaleEffect.timing}>
-                  {(scaleProgress): ReactElement => {
+                  timing={animatableRotate?.rotateEffect.timing}>
+                  {(rotateProgress): ReactElement => {
                     return (
-                      <Animator
-                        duration={animatableRotate?.rotateEffect.duration || 0}
-                        start={queueStart}
-                        timing={animatableRotate?.rotateEffect.timing}>
-                        {(rotateProgress): ReactElement => {
-                          return (
-                            <QueueAnimatableContext.Provider value={{
-                              rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
-                              fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
-                              scale: getAnimatableScale(scaleProgress, currentScale, animatableScale?.fromScale),
-                              rotate: getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate),
-                            }}>
-                              {children}
-                            </QueueAnimatableContext.Provider>
-                          );
-                        }}
-                      </Animator>
+                      <QueueAnimatableContext.Provider value={{
+                        rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
+                        fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
+                        rotate: getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate),
+                      }}>
+                        {children}
+                      </QueueAnimatableContext.Provider>
                     );
                   }}
                 </Animator>
