@@ -151,9 +151,16 @@ export const QueueEditor: FunctionComponent = () => {
     const y = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
     const objectScale = 1 / getCurrentScale(object, settings.queueIndex).scale;
+
+    const targetX = (x * currentScale * objectScale);
+    const targetY = (y * currentScale * objectScale);
+
+    const adjacentTargetX = event.shiftKey ? targetX : Math.round(targetX / 30) * 30;
+    const adjacentTargetY = event.shiftKey ? targetY : Math.round(targetY / 30) * 30;
+
     setTranslate({
-      x: x * currentScale * objectScale,
-      y: y * currentScale * objectScale,
+      x: adjacentTargetX,
+      y: adjacentTargetY,
       width: 0,
       height: 0,
     });
@@ -169,6 +176,10 @@ export const QueueEditor: FunctionComponent = () => {
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
+
+    const adjacentTargetX = event.shiftKey ? diffX : Math.round(diffX / 30) * 30;
+    const adjacentTargetY = event.shiftKey ? diffY : Math.round(diffY / 30) * 30;
+
     const updateModels = queueDocument!.pages[settings.queuePage].objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
       .map<RectUpdateModel>((object) => {
@@ -177,8 +188,8 @@ export const QueueEditor: FunctionComponent = () => {
           uuid: object.uuid,
           queueIndex: settings.queueIndex,
           rect: {
-            x: rect.x + diffX,
-            y: rect.y + diffY,
+            x: rect.x + adjacentTargetX,
+            y: rect.y + adjacentTargetY,
             width: rect.width,
             height: rect.height,
           },
