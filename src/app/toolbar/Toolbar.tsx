@@ -54,12 +54,12 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   const items: ToolbarModel[] = [
     {
       key: 'file',
-      label: <>File</>,
+      label: <>파일</>,
       children: [
         // 새로운 문서를 생성
         {
           key: 'new-document',
-          label: <>New document</>,
+          label: <>새 문서</>,
           onClick: (): void => {
             setQueueDocument({
               documentName: 'Untitled',
@@ -76,7 +76,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         // 문서 열기
         {
           key: 'open-document',
-          label: <>Open document</>,
+          label: <>문서 열기</>,
           onClick: (): void => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -107,7 +107,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         // 문서 저장
         {
           key: 'save-document',
-          label: <>Save document</>,
+          label: <>문서 저장</>,
           onClick: (): void => {
             if (!queueDocument) return;
             const stringified = JSON.stringify(queueDocument);
@@ -125,7 +125,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     },
     {
       key: 'edit',
-      label: <>Edit</>,
+      label: <>수정</>,
       children: [
         {
           key: 'edit-item',
@@ -136,7 +136,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     },
     {
       key: 'view',
-      label: <>View</>,
+      label: <>보기</>,
       children: [
         {
           key: 'view-item',
