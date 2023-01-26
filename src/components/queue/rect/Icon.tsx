@@ -21,6 +21,7 @@ export const Icon: FunctionComponent<RectProps> = ({
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
       }}
+      opacity={containerContext.object.fill.opacity}
     >
       <use
         onMouseDown={onRectMousedown}

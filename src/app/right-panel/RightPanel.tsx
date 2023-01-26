@@ -108,26 +108,74 @@ const ObjectStylerCurrentQueueEffect = ({
   );
 };
 
-const ObjectStylerBackgroundColor = (): ReactElement => {
+const ObjectStylerBackground = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
+  const [opacity, setOpacity] = useState([firstObject.fill.opacity]);
+
+  const handleOpacityChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setOpacity([parseInt(e.currentTarget.value, 10)]);
+  };
 
   return (
     <div>
-      <label>
-        <span>background color</span>
-        <input
-          type="color"
-          name="backgroundColor"
-          id="backgroundColor"
-          defaultValue={firstObject.fill.color}
-        />
-      </label>
+      <div className="mb-1">
+        <p className="font-medium">Background</p>
+      </div>
+      <div className="flex flex-col gap-2">
+        <div>
+          <p className="text-sm">color</p>
+          <div className="w-6 h-6">
+            <label
+              className={classes['input-color']}
+              style={{ backgroundColor: firstObject.fill.color }}
+            >
+              <input
+                type="color"
+                name="backgroundColor"
+                id="backgroundColor"
+                className={classes['input-color']}
+                defaultValue={firstObject.fill.color}
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <input
+            type="text"
+            name="backgroundOpacity"
+            value={opacity[0]}
+            readOnly
+            hidden
+          />
+          <p className="text-sm">opacity</p>
+          <div className="flex items-center gap-2">
+            <div className="w-1/3">
+              <input
+                className="w-full"
+                type="number"
+                step={0.1}
+                value={opacity[0]}
+                onChange={handleOpacityChange}
+              />
+            </div>
+            <div className="flex items-center w-full">
+              <Slider
+                min={0}
+                max={1}
+                step={0.1}
+                value={opacity}
+                onValueChange={setOpacity}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-const ObjectStylerStroke = (): ReactElement => {
+const ObjectStylerStroke = (): ReactElement | null => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
@@ -135,7 +183,7 @@ const ObjectStylerStroke = (): ReactElement => {
   const [width, setWidth] = useState([tempType.stroke.width]);
 
   if (firstObject.type === 'icon') {
-    return <></>;
+    return null;
   }
 
   const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -178,8 +226,11 @@ const ObjectStylerStroke = (): ReactElement => {
         </div>
         <div>
           <p className="text-sm">color</p>
-          <div className='w-6 h-6'>
-            <label className={classes['input-color']} style={{backgroundColor: firstObject.stroke.color}}>
+          <div className="w-6 h-6">
+            <label
+              className={classes['input-color']}
+              style={{ backgroundColor: firstObject.stroke.color }}
+            >
               <input
                 type="color"
                 name="strokeColor"
@@ -227,7 +278,7 @@ const ObjectStylerOpacity = (): ReactElement => {
 
 ObjectStyler.EffectList = ObjectStylerEffectList;
 ObjectStyler.CurrentQueueEffect = ObjectStylerCurrentQueueEffect;
-ObjectStyler.BackgroundColor = ObjectStylerBackgroundColor;
+ObjectStyler.Background = ObjectStylerBackground;
 ObjectStyler.Stroke = ObjectStylerStroke;
 ObjectStyler.Opacity = ObjectStylerOpacity;
 // ------------- styler end -------------
@@ -267,6 +318,7 @@ export const RightPanel = ({
               fill: {
                 ...object.fill,
                 color: value.backgroundColor as string,
+                opacity: parseFloat(value.backgroundOpacity as string),
               },
               stroke: {
                 ...object.stroke,
@@ -323,7 +375,7 @@ export const RightPanel = ({
                 <ObjectStyler.EffectList />
                 <ObjectStyler.CurrentQueueEffect />
                 <hr className="my-2" />
-                <ObjectStyler.BackgroundColor />
+                <ObjectStyler.Background />
                 <hr className="my-2" />
                 {selectedObjects[0].type !== 'icon' && (
                   <>

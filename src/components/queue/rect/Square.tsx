@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { convertHex } from 'components/queue/color/convertHex';
 import { FunctionComponent, useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
@@ -9,6 +10,10 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
+  const fill = convertHex(
+    containerContext.object.fill.color,
+    containerContext.object.fill.opacity
+  );
 
   return (
     <svg
@@ -19,7 +24,9 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         top: `${animation.rect.y + containerContext.transform.y}px`,
         left: `${animation.rect.x + containerContext.transform.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
+        transform: `rotate(${
+          animation.rotate.degree + containerContext.transformRotate.degree
+        }deg)`,
       }}
       viewBox={`0 0 ${
         animation.rect.width + containerContext.transform.width
@@ -32,7 +39,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
             ry={0}
             width={animation.rect.width + containerContext.transform.width}
             height={animation.rect.height + containerContext.transform.height}
-            fill={containerContext.object.fill.color}
+            fill={fill}
             stroke={containerContext.object.stroke.color}
             strokeWidth={containerContext.object.stroke.width * 2}
           />
@@ -44,7 +51,8 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
           onMouseDown={onRectMousedown}
           width={animation.rect.width + containerContext.transform.width}
           height={animation.rect.height + containerContext.transform.height}
-          fill={containerContext.object.fill.color}
+          fill={fill}
+          opacity={containerContext.object.opacity}
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width * 2}
           strokeDasharray={containerContext.object.stroke.dasharray}
