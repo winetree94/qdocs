@@ -1,4 +1,5 @@
-import { FunctionComponent, useCallback, useMemo, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { FunctionComponent, memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useRecoilState } from 'recoil';
 import { Input } from '../../components/input/Input';
@@ -9,6 +10,9 @@ import { RemixIconClasses } from 'cdk/icon/factory';
 import { createDefaultSquare } from 'model/object/square';
 import { createDefaultCircle } from 'model/object/circle';
 import { createDefaultIcon } from 'model/object/icon';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { areEqual, FixedSizeList } from 'react-window';
+import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 export interface QueueObject {
@@ -24,17 +28,110 @@ export interface QueueObjectGroup {
   children: QueueObject[];
 }
 
+export interface FlattenQueueObjectGroup {
+  type: 'group';
+  key: string;
+  title: string;
+}
+
+export interface FlattenQueueObjectRow {
+  type: 'row';
+  key: string;
+  objects: QueueObject[];
+}
+
+export type FlattenData = FlattenQueueObjectGroup | FlattenQueueObjectRow;
+
+export interface FlattenRowProps {
+  index: number;
+  style: React.CSSProperties;
+  data: {
+    flattenData: FlattenData[];
+    closedObjectGroupKey: { [key: string]: boolean; };
+    toggleOpenedObjectGroup: (key: string) => void;
+  };
+}
+
+export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({
+  style,
+  index,
+  data,
+}) => {
+  const flattenData = data.flattenData[index];
+
+  if (flattenData.type === 'group') {
+    return (
+      <div
+        style={style}
+        onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
+        className={clsx(
+          styles.objectGroupTitle,
+        )}>
+        <i
+          className={clsx(
+            styles.objectGroupArrow,
+            data.closedObjectGroupKey[flattenData.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'
+          )}></i>
+        {flattenData.title}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={clsx('flex')}
+      style={style}>
+      {flattenData.objects.map((object) => (
+        <Tooltip.Provider key={object.key}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div
+                onClick={object.factory}
+                className={clsx(
+                  styles.object,
+                )}>
+                {object.preview}
+              </div>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
+                {object.key}
+                <Tooltip.Arrow className={styles.TooltipArrow} />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+      ))}
+    </div>
+  );
+}, areEqual);
+
+// This helper function memoizes incoming props,
+// To avoid causing unnecessary re-renders pure Row components.
+// This is only needed since we are passing multiple props with a wrapper object.
+// If we were only passing a single, stable value (e.g. items),
+// We could just pass the value directly.
+const createItemData = memoize((
+  flattenData: FlattenData[],
+  closedObjectGroupKey: { [key: string]: boolean; },
+  toggleOpenedObjectGroup: (key: string) => void,
+) => ({
+  flattenData,
+  closedObjectGroupKey,
+  toggleOpenedObjectGroup,
+}));
+
 export const LeftPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
-  const [openedObjectGroupKey, setOpenedObjectGroupKey] = useState<{ [key: string]: boolean; }>({});
+  const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{ [key: string]: boolean; }>({});
 
   const toggleOpenedObjectGroup = (key: string): void => {
-    setOpenedObjectGroupKey({
-      ...openedObjectGroupKey,
-      [key]: !openedObjectGroupKey[key],
+    setClosedObjectGroupKey({
+      ...closedObjectGroupKey,
+      [key]: !closedObjectGroupKey[key],
     });
   };
 
@@ -169,6 +266,36 @@ export const LeftPanel: FunctionComponent = () => {
     }, []);
   }, [models, searchKeyword]);
 
+  const flattenItems = useMemo<FlattenData[]>(() => {
+    return filteredGroups.reduce<FlattenData[]>((result, group) => {
+      result.push({
+        type: 'group',
+        key: group.key,
+        title: group.title,
+      });
+      if (closedObjectGroupKey[group.key]) {
+        return result;
+      }
+      const rows = group.children
+        .reduce<QueueObject[][]>((result, child) => {
+          if (!result[result.length - 1] || result[result.length - 1].length >= 4) {
+            result.push([]);
+          }
+          const row = result[result.length - 1];
+          row.push(child);
+          return result;
+        }, []);
+      result.push(...rows.map<FlattenQueueObjectRow>((row) => ({
+        key: row.map((object) => object.key).join('-'),
+        type: 'row',
+        objects: row,
+      })));
+      return result;
+    }, []);
+  }, [filteredGroups, closedObjectGroupKey]);
+
+  const memoizedItemData = createItemData(flattenItems, closedObjectGroupKey, toggleOpenedObjectGroup);
+
   return (
     <div className={clsx(
       styles.container,
@@ -187,59 +314,22 @@ export const LeftPanel: FunctionComponent = () => {
           onChange={(e): void => setSearchKeyword(e.target.value)}></Input>
       </div>
       <div className={clsx(
-        'flex-1',
         'flex',
-        'flex-col',
-        'overflow-y-auto',
+        'flex-1'
       )}>
-        {filteredGroups.map((model) => (
-          <div
-            key={model.key}
-            className={clsx(
-              styles.objectGroup,
-            )}>
-            <div
-              onClick={(e): void => toggleOpenedObjectGroup(model.key)}
-              className={clsx(
-                styles.objectGroupTitle,
-              )}>
-              <i
-                className={clsx(
-                  styles.objectGroupArrow,
-                  !openedObjectGroupKey[model.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'
-                )}></i>
-              {model.title}
-            </div>
-            {!openedObjectGroupKey[model.key] && (
-              <div
-                className={clsx(
-                  styles.objectList
-                )}>
-                {model.children.map((child) => (
-                  <Tooltip.Provider key={child.key}>
-                    <Tooltip.Root>
-                      <Tooltip.Trigger asChild>
-                        <div
-                          onClick={child.factory}
-                          className={clsx(
-                            styles.object,
-                          )}>
-                          {child.preview}
-                        </div>
-                      </Tooltip.Trigger>
-                      <Tooltip.Portal>
-                        <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
-                          {child.key}
-                          <Tooltip.Arrow className={styles.TooltipArrow} />
-                        </Tooltip.Content>
-                      </Tooltip.Portal>
-                    </Tooltip.Root>
-                  </Tooltip.Provider>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+        <AutoSizer>
+          {({ height, width }): ReactNode => (
+            <FixedSizeList
+              itemCount={flattenItems.length}
+              itemSize={50}
+              width={width}
+              height={height}
+              itemKey={(index): string => flattenItems[index].key}
+              itemData={memoizedItemData}>
+              {FlattenRow}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
       </div>
     </div>
   );
