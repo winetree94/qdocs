@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { QueueObjectType } from 'model/object';
-import { QueueRect } from 'model/property';
+import { QueueRect, QueueRotate } from 'model/property';
 import { createContext, FunctionComponent } from 'react';
 
 export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
@@ -9,6 +9,7 @@ export interface QueueObjectContainerContextType<T extends QueueObjectType = any
   documentScale: number;
   detail: boolean;
   selected: boolean;
+  transformRotate: QueueRotate;
   transform: QueueRect;
 }
 
@@ -18,6 +19,7 @@ export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTML
   documentScale: number;
   object: QueueObjectType;
   transform?: QueueRect;
+  rotate?: QueueRotate;
   detail: boolean;
   selected: boolean;
   children: React.ReactNode;
@@ -31,6 +33,10 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
     width: 0,
     height: 0,
   },
+  rotate = {
+    position: 'forward',
+    degree: 0,
+  },
   detail,
   documentScale,
   object,
@@ -42,6 +48,7 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
       selected,
       detail,
       transform,
+      transformRotate: rotate,
       documentScale
     }}>
       <div {...props}>{children}</div>

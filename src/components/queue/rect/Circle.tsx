@@ -21,6 +21,8 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
       style={{
         top: `${animation.rect.y + containerContext.transform.y}px`,
         left: `${animation.rect.x + containerContext.transform.x}px`,
+        transformOrigin: 'center center',
+        transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
       }}
     >
       <defs>

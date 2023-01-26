@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import clsx from 'clsx';
 import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
 import { QueueRect } from 'model/property';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import styles from './Resizer.module.scss';
 
 export interface ResizeEvent {
@@ -12,10 +13,17 @@ export interface ResizeEvent {
   height: number;
 }
 
+export interface RotateEvent {
+  degree: number;
+}
+
 export interface ResizerProps {
   onResizeStart?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeMove?: (event: ResizeEvent, cancel: () => void) => void;
   onResizeEnd?: (event: ResizeEvent) => void;
+  onRotateStart?: (event: RotateEvent, cancel: () => void) => void;
+  onRotateMove?: (event: RotateEvent, cancel: () => void) => void;
+  onRotateEnd?: (event: RotateEvent) => void;
 }
 
 export type ResizerPosition =
@@ -28,28 +36,63 @@ export type ResizerPosition =
   | 'bottom-middle'
   | 'bottom-right';
 
+function angle(cx: number, cy: number, ex: number, ey: number): number {
+  const dy = ey - cy;
+  const dx = ex - cx;
+  let theta = Math.atan2(dy, dx); // range (-PI, PI]
+  theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+  return theta;
+}
+
+export const get360Value = (value: number): number => {
+  let prefix = value;
+  if (value < 0) prefix = 360 + prefix;
+  return prefix;
+};
+
+function angle360(cx: number, cy: number, ex: number, ey: number): number {
+  let theta = angle(cx, cy, ex, ey); // range (-180, 180]
+  if (theta < 0) theta = 360 + theta; // range [0, 360)
+  return theta;
+}
+
 export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   onResizeStart,
   onResizeMove,
   onResizeEnd,
+  onRotateStart,
+  onRotateMove,
+  onRotateEnd
 }) => {
+  const svgRef = useRef<SVGSVGElement>(null);
   // shorthands
-  const { transform, selected, documentScale } = useContext(QueueObjectContainerContext);
+  const { transform, selected, documentScale, transformRotate } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
   const strokeWidth = 20;
   const distance = strokeWidth / 2;
-  const margin = 50;
+  const margin = 100;
   const actualWidth = (animation.rect.width + (transform?.width || 0)) + margin * 2;
   const actualHeight = animation.rect.height + (transform?.height || 0) + margin * 2;
+  const rotate = animation.rotate.degree;
+  console.log(rotate);
 
-  const [init, setInit] = React.useState<{
+  const [initResizeEvent, setInitResizeEvent] = React.useState<{
     event: MouseEvent;
     position: ResizerPosition;
   } | null>(null);
 
-  const cancel = useCallback(() => {
-    setInit(null);
+  const [initRotateEvent, setInitRotateEvent] = React.useState<{
+    event: MouseEvent;
+    position: RotateEvent;
+  } | null>(null);
+
+  const cancelResize = useCallback(() => {
+    setInitResizeEvent(null);
+  }, []);
+
+  const cancelRotate = useCallback(() => {
+    setInitRotateEvent(null);
   }, []);
 
   const getResizerPosition = (
@@ -123,40 +166,40 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     }
   };
 
-  const onDocumentMousemove = useCallback(
+  const onResizeDocumentMousemove = useCallback(
     (event: MouseEvent) => {
-      if (!init) {
+      if (!initResizeEvent) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, documentScale, init.position);
-      onResizeMove?.(rect, cancel);
+      const rect = getResizerPosition(initResizeEvent.event, event, documentScale, initResizeEvent.position);
+      onResizeMove?.(rect, cancelResize);
     },
-    [init, onResizeMove, documentScale, cancel]
+    [initResizeEvent, onResizeMove, documentScale, cancelResize]
   );
 
-  const onDocumentMouseup = useCallback(
+  const onResizeDocumentMouseup = useCallback(
     (event: MouseEvent) => {
-      if (!init) {
+      if (!initResizeEvent) {
         return;
       }
-      const rect = getResizerPosition(init.event, event, documentScale, init.position);
+      const rect = getResizerPosition(initResizeEvent.event, event, documentScale, initResizeEvent.position);
       onResizeEnd?.(rect);
-      setInit(null);
+      setInitResizeEvent(null);
     },
-    [init, onResizeEnd, documentScale]
+    [initResizeEvent, onResizeEnd, documentScale]
   );
 
   useEffect(() => {
-    if (!init) {
+    if (!initResizeEvent) {
       return;
     }
-    document.addEventListener('mousemove', onDocumentMousemove);
-    document.addEventListener('mouseup', onDocumentMouseup);
+    document.addEventListener('mousemove', onResizeDocumentMousemove);
+    document.addEventListener('mouseup', onResizeDocumentMouseup);
     return () => {
-      document.removeEventListener('mousemove', onDocumentMousemove);
-      document.removeEventListener('mouseup', onDocumentMouseup);
+      document.removeEventListener('mousemove', onResizeDocumentMousemove);
+      document.removeEventListener('mouseup', onResizeDocumentMouseup);
     };
-  }, [init, onDocumentMousemove, onDocumentMouseup]);
+  }, [initResizeEvent, onResizeDocumentMousemove, onResizeDocumentMouseup]);
 
   const onResizeMousedown = useCallback(
     (
@@ -172,16 +215,90 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
             width: 0,
             height: 0,
           },
-          cancel
+          cancelResize
         );
       }
-      setInit({
+      setInitResizeEvent({
         event: initEvent.nativeEvent,
         position: position,
       });
     },
-    [onResizeStart, cancel]
+    [onResizeStart, cancelResize]
   );
+
+  const onRotateMousedown = useCallback(
+    (initEvent: React.MouseEvent<SVGRectElement, globalThis.MouseEvent>): void => {
+      initEvent.stopPropagation();
+      if (onRotateStart) {
+        onRotateStart(
+          {
+            degree: 0,
+          },
+          cancelRotate
+        );
+      }
+      const rect = svgRef.current!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angle = angle360(centerX, centerY, initEvent.clientX, initEvent.clientY);
+      setInitRotateEvent({
+        event: initEvent.nativeEvent,
+        position: {
+          degree: angle,
+        }
+      });
+    },
+    [onRotateStart, cancelRotate]
+  );
+
+  const onRotateDocumentMousemove = useCallback(
+    (event: MouseEvent) => {
+      if (!initRotateEvent) {
+        return;
+      }
+      const rect = svgRef.current!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angle = get360Value(
+        angle360(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree
+      );
+      onRotateMove?.({
+        degree: angle,
+      }, cancelRotate);
+    },
+    [initRotateEvent, onRotateMove, cancelRotate]
+  );
+
+  const onRotateDocumentMouseup = useCallback(
+    (event: MouseEvent) => {
+      if (!initRotateEvent) {
+        return;
+      }
+      const rect = svgRef.current!.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angle = get360Value(
+        angle360(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree
+      );
+      onRotateEnd?.({
+        degree: angle,
+      });
+      setInitRotateEvent(null);
+    },
+    [initRotateEvent, onRotateEnd]
+  );
+
+  useEffect(() => {
+    if (!initRotateEvent) {
+      return;
+    }
+    document.addEventListener('mousemove', onRotateDocumentMousemove);
+    document.addEventListener('mouseup', onRotateDocumentMouseup);
+    return () => {
+      document.removeEventListener('mousemove', onRotateDocumentMousemove);
+      document.removeEventListener('mouseup', onRotateDocumentMouseup);
+    };
+  }, [initRotateEvent, onRotateDocumentMousemove, onRotateDocumentMouseup]);
 
   if (!selected) {
     return null;
@@ -189,10 +306,13 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   return (
     <svg
+      ref={svgRef}
       className={styles.canvas}
       style={{
         left: animation.rect.x + transform.x - margin,
-        top: animation.rect.y + transform.y -margin,
+        top: animation.rect.y + transform.y - margin,
+        transformOrigin: 'center center',
+        transform: `rotate(${animation.rotate.degree + transformRotate.degree}deg)`,
       }}
       width={actualWidth}
       height={actualHeight}
@@ -268,6 +388,15 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         width={strokeWidth}
         height={strokeWidth}
         onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}
+      ></rect>
+      {/* rotation */}
+      <rect
+        className={clsx(styles.resizer, styles.rotation)}
+        x={actualWidth - margin - (strokeWidth - distance) + 50}
+        y={actualHeight - margin - (strokeWidth - distance) + 50}
+        width={strokeWidth}
+        height={strokeWidth}
+        onMouseDown={(e): void => onRotateMousedown(e)}
       ></rect>
     </svg>
   );

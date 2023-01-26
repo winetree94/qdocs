@@ -23,8 +23,6 @@ export const QueueAnimatableContext = createContext<QueueAnimatableContextType>(
     opacity: 0,
   },
   rotate: {
-    x: 0,
-    y: 0,
     position: 'forward',
     degree: 0,
   }

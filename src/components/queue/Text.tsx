@@ -12,7 +12,7 @@ export const Text: FunctionComponent<TextProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const animation = useContext(QueueAnimatableContext);
-  const { object, transform, detail } = useContext(QueueObjectContainerContext);
+  const { object, transform, detail, transformRotate } = useContext(QueueObjectContainerContext);
 
   const verticalAlign = object.text.verticalAlign === 'middle'
     ? 'center'
@@ -95,6 +95,8 @@ export const Text: FunctionComponent<TextProps> = ({
         width: `${animation.rect.width + transform.width}px`,
         height: `${animation.rect.height + transform.height}px`,
         textAlign: textAlign,
+        transformOrigin: 'center center',
+        transform: `rotate(${animation.rotate.degree + transformRotate.degree}deg)`,
       }}
       contentEditable={detail}
     >

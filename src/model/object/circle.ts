@@ -34,8 +34,6 @@ export const createDefaultCircle = (
       opacity: 1,
     },
     rotate: {
-      x: 0,
-      y: 0,
       position: 'forward',
       degree: 0,
     },

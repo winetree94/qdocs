@@ -18,6 +18,8 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
       style={{
         top: `${animation.rect.y + containerContext.transform.y}px`,
         left: `${animation.rect.x + containerContext.transform.x}px`,
+        transformOrigin: 'center center',
+        transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
       }}
       viewBox={`0 0 ${
         animation.rect.width + containerContext.transform.width
