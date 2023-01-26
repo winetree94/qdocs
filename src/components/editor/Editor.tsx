@@ -48,7 +48,7 @@ export const QueueEditor: FunctionComponent = () => {
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
-  const currentQueueObjects = queueDocument!.objects.filter((object) =>
+  const currentQueueObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
 
@@ -57,7 +57,7 @@ export const QueueEditor: FunctionComponent = () => {
   }, []);
 
   const updateObjectRects = (models: RectUpdateModel[]): void => {
-    const newObjects = queueDocument!.objects.map((object) => {
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
       const model = models.find((model) => model.uuid === object.uuid);
       if (!model) {
         return object;
@@ -99,7 +99,12 @@ export const QueueEditor: FunctionComponent = () => {
 
       return slicedObject;
     });
-    setQueueDocument({ ...queueDocument!, objects: newObjects });
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: newObjects
+    };
+    setQueueDocument({ ...queueDocument!, pages: newPages });
   };
 
   const onObjectMouseodown = (
@@ -164,7 +169,7 @@ export const QueueEditor: FunctionComponent = () => {
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
-    const updateModels = queueDocument!.objects
+    const updateModels = queueDocument!.pages[settings.queuePage].objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
       .map<RectUpdateModel>((object) => {
         const rect = getCurrentRect(object, settings.queueIndex);
@@ -204,7 +209,7 @@ export const QueueEditor: FunctionComponent = () => {
     const absScale = 1 / settings.scale;
     const x = (event.drawClientX - rect.x) * absScale;
     const y = (event.drawClientY - rect.y) * absScale;
-    const hasSelectableObject = queueDocument!.objects.some((object) => {
+    const hasSelectableObject = queueDocument!.pages[settings.queuePage].objects.some((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
       return (
         rect.x <= x &&
@@ -232,7 +237,7 @@ export const QueueEditor: FunctionComponent = () => {
     const y = (event.drawClientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
-    const selectedObjects = queueDocument!.objects.filter((object) => {
+    const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => {
       const rect = getCurrentScaledRect(object, settings.queueIndex);
       return (
         rect.x >= x &&
@@ -286,7 +291,7 @@ export const QueueEditor: FunctionComponent = () => {
     fromUUIDs: string[],
     to: 'start' | 'end' | 'forward' | 'backward',
   ): void => {
-    let objects = queueDocument!.objects.slice(0);
+    let objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
     switch (to) {
       case 'start':
         objects.sort((a, b) => {
@@ -327,14 +332,19 @@ export const QueueEditor: FunctionComponent = () => {
         });
         break;
     }
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: objects
+    };
     setQueueDocument({
       ...queueDocument!,
-      objects,
+      pages: newPages,
     });
   };
 
   const removeObjectOnQueue = (uuids: string[]): void => {
-    const newObjects = queueDocument!.objects.reduce<QueueObjectType[]>((result, object) => {
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.reduce<QueueObjectType[]>((result, object) => {
       if (!uuids.includes(object.uuid)) {
         result.push(object);
         return result;
@@ -361,23 +371,33 @@ export const QueueEditor: FunctionComponent = () => {
       selectedObjectUUIDs: [],
       selectionMode: 'normal',
     });
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: newObjects
+    };
     setQueueDocument({
       ...queueDocument!,
-      objects: newObjects,
+      pages: newPages,
     });
   };
 
   const removeObject = (uuids: string[]): void => {
-    const newObjects = queueDocument!.objects.filter((object) => !uuids.includes(object.uuid));
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => !uuids.includes(object.uuid));
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: newObjects
+    };
     setQueueDocument({
       ...queueDocument!,
-      objects: newObjects,
+      pages: newPages,
     });
   };
 
   const onTextEdit = (objectId: string, text: string): void => {
-    const objectIndex = queueDocument!.objects.findIndex((object) => object.uuid === objectId);
-    const object = queueDocument!.objects[objectIndex];
+    const objectIndex = queueDocument!.pages[settings.queuePage].objects.findIndex((object) => object.uuid === objectId);
+    const object = queueDocument!.pages[settings.queuePage].objects[objectIndex];
     const newObject = {
       ...object,
       text: {
@@ -385,11 +405,16 @@ export const QueueEditor: FunctionComponent = () => {
         text: text,
       },
     };
-    const newObjects = queueDocument!.objects.slice(0);
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.slice(0);
     newObjects[objectIndex] = newObject;
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: newObjects
+    };
     setQueueDocument({
       ...queueDocument!,
-      objects: newObjects,
+      pages: newPages,
     });
   };
 

@@ -6,8 +6,12 @@ export interface QueueDocumentRect {
   height: number;
 }
 
+export interface QueueDocumentPage {
+  objects: QueueObjectType[];
+}
+
 export interface QueueDocument {
   documentName: string;
   documentRect: QueueDocumentRect;
-  objects: QueueObjectType[];
+  pages: QueueDocumentPage[];
 }

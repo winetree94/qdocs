@@ -48,8 +48,9 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
         });
       }
       const document = get(documentState);
+      const settings = get(documentSettingsState);
       r.forEach((queue) => {
-        queue.objects = document!.objects.filter((object) =>
+        queue.objects = document!.pages[settings.queuePage].objects.filter((object) =>
           isExistObjectOnQueue(object, queue.index)
         );
       });
@@ -63,7 +64,7 @@ export const currentQueueObjectsSelector = selector<QueueObjectType[]>({
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
-    const result = document!.objects.filter((object) =>
+    const result = document!.pages[settings.queuePage].objects.filter((object) =>
       isExistObjectOnQueue(object, settings.queueIndex)
     );
     return result;

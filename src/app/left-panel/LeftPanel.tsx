@@ -140,12 +140,15 @@ export const LeftPanel: FunctionComponent = () => {
       queueDocument!.documentRect,
       settings.queueIndex,
     );
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
+    };
+    newPages[settings.queuePage].objects.push(square);
     setQueueDocument({
       ...queueDocument!,
-      objects: [
-        ...queueDocument!.objects,
-        square,
-      ],
+      pages: newPages
     });
     setSettings({
       ...settings,
@@ -158,12 +161,15 @@ export const LeftPanel: FunctionComponent = () => {
       queueDocument!.documentRect,
       settings.queueIndex,
     );
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
+    };
+    newPages[settings.queuePage].objects.push(circle);
     setQueueDocument({
       ...queueDocument!,
-      objects: [
-        ...queueDocument!.objects,
-        circle,
-      ],
+      pages: newPages,
     });
     setSettings({
       ...settings,
@@ -177,12 +183,15 @@ export const LeftPanel: FunctionComponent = () => {
       settings.queueIndex,
       iconClassName,
     );
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
+    };
+    newPages[settings.queuePage].objects.push(icon);
     setQueueDocument({
       ...queueDocument!,
-      objects: [
-        ...queueDocument!.objects,
-        icon,
-      ],
+      pages: newPages,
     });
     setSettings({
       ...settings,

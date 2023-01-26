@@ -7,6 +7,7 @@ import {
 } from './document';
 
 export interface QueueDocumentSettings {
+  queuePage: number;
   queueIndex: number;
   queueStart: number,
   queuePosition: 'forward' | 'backward' | 'pause';
@@ -19,6 +20,7 @@ export interface QueueDocumentSettings {
 export const documentSettingsState = atom<QueueDocumentSettings>({
   key: 'documentSettingsState',
   default: {
+    queuePage: 0,
     queueIndex: 0,
     queueStart: 0,
     queuePosition: 'forward',
@@ -41,7 +43,7 @@ export const getSelectedObjects = selector({
   get: ({ get }) => {
     const queueDocument = get(documentState);
     const settings = get(documentSettingsState);
-    return queueDocument!.objects
+    return queueDocument!.pages[settings.queuePage].objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   }
 });

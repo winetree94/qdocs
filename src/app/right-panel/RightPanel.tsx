@@ -239,7 +239,7 @@ export const RightPanel = ({
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
   const settings = useRecoilValue(documentSettingsState);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const selectedObjects = queueDocument!.objects.filter((object) =>
+  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid)
   );
   const hasSelectedObjects = selectedObjects.length > 0;
@@ -252,7 +252,7 @@ export const RightPanel = ({
   );
 
   const handleStyleChange = (value: StyleChangeValue): void => {
-    const newObjects = queueDocument!.objects.map((object) => {
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
       if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
         return object;
       }
@@ -296,7 +296,13 @@ export const RightPanel = ({
       return updatedModel;
     });
 
-    setQueueDocument({ ...queueDocument!, objects: newObjects });
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: newObjects
+    };
+
+    setQueueDocument({ ...queueDocument!, pages: newPages });
     setDocumentHistory();
   };
 
