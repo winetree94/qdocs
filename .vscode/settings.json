@@ -1,5 +1,6 @@
 {
   "css.customData": [".vscode/cssCustomData.json"],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "cSpell.words": ["clsx"]
 }
