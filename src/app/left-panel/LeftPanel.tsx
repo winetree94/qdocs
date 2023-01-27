@@ -154,10 +154,11 @@ export const LeftPanel: FunctionComponent = () => {
         iconType?: string
       ) => QueueObjectType
     ): ((iconClassName?: string) => void) => {
-      return () => {
+      return (iconClassName) => {
         const figure = createDefaultShape(
           queueDocument!.documentRect,
-          settings.queueIndex
+          settings.queueIndex,
+          iconClassName,
         );
         const newPages = queueDocument!.pages.slice(0);
         newPages[settings.queuePage] = {
