@@ -20,7 +20,7 @@ import { createDefaultSquare } from 'model/object/square';
 import { createDefaultCircle } from 'model/object/circle';
 import { createDefaultIcon } from 'model/object/icon';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { areEqual, FixedSizeList } from 'react-window';
+import { areEqual, FixedSizeList, ListOnScrollProps } from 'react-window';
 import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { QueueDocumentRect } from 'model/document';
@@ -137,6 +137,7 @@ export const LeftPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const selectedObjects = queueDocument!.pages[
     settings.queuePage
@@ -315,6 +316,10 @@ export const LeftPanel: FunctionComponent = () => {
     toggleOpenedObjectGroup
   );
 
+  const handleScroll = (props: ListOnScrollProps): void => {
+    setListScrollTopState(props.scrollOffset);
+  };
+
   return (
     <div className={clsx(styles.container, 'flex', 'flex-col')}>
       {hasSelectedObjects ? (
@@ -339,6 +344,8 @@ export const LeftPanel: FunctionComponent = () => {
                   height={height}
                   itemKey={(index): string => flattenItems[index].key}
                   itemData={memoizedItemData}
+                  initialScrollOffset={listScrollTopState}
+                  onScroll={handleScroll}
                 >
                   {FlattenRow}
                 </FixedSizeList>
