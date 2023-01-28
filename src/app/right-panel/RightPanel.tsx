@@ -96,7 +96,7 @@ const ObjectStylerCurrentQueueEffect = ({
   );
   return (
     <div {...props}>
-      <p>Current queue effecs</p>
+      <p>Current queue effects</p>
       <ul className={classes['scroll-list-box']}>
         {currentQueueObjectEffects.map((currentQueueObjectEffect) => (
           <li key={currentQueueObjectEffect.type}>
@@ -259,19 +259,44 @@ const ObjectStylerStroke = (): ReactElement | null => {
 const ObjectStylerOpacity = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
+  const [opacity, setOpacity] = useState([firstObject.fill.opacity]);
+
+  const handleOpacityChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setOpacity([parseInt(e.currentTarget.value, 10)]);
+  };
 
   return (
     <div>
-      <label>
-        <span>opacity</span>
-        <Slider
+      <div>
+        <input
+          type="text"
           name="opacity"
-          min={0}
-          max={1}
-          step={0.1}
-          defaultValue={[firstObject.fade.opacity]}
+          value={opacity[0]}
+          readOnly
+          hidden
         />
-      </label>
+        <p className="text-sm">opacity</p>
+        <div className="flex items-center gap-2">
+          <div className="w-1/3">
+            <input
+              className="w-full"
+              type="number"
+              step={0.1}
+              value={opacity[0]}
+              onChange={handleOpacityChange}
+            />
+          </div>
+          <div className="flex items-center w-full">
+            <Slider
+              min={0}
+              max={1}
+              step={0.1}
+              value={opacity}
+              onValueChange={setOpacity}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -290,7 +315,9 @@ export const RightPanel = ({
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
   const settings = useRecoilValue(documentSettingsState);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
+  const selectedObjects = queueDocument!.pages[
+    settings.queuePage
+  ].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid)
   );
   const hasSelectedObjects = selectedObjects.length > 0;
@@ -303,55 +330,57 @@ export const RightPanel = ({
   );
 
   const handleStyleChange = (value: StyleChangeValue): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
-      if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-        return object;
-      }
-
-      // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
-      const updatedModel = ((): QueueObjectType => {
-        switch (object.type) {
-          case 'rect':
-          case 'circle':
-            return {
-              ...object,
-              fill: {
-                ...object.fill,
-                color: value.backgroundColor as string,
-                opacity: parseFloat(value.backgroundOpacity as string),
-              },
-              stroke: {
-                ...object.stroke,
-                color: value.strokeColor as string,
-                width: parseInt(value.strokeWidth as string),
-              },
-              fade: {
-                ...object.fade,
-                opacity: parseFloat(value.opacity as string),
-              },
-            };
-          case 'icon':
-            return {
-              ...object,
-              fill: {
-                ...object.fill,
-                color: value.backgroundColor as string,
-              },
-              fade: {
-                ...object.fade,
-                opacity: parseFloat(value.opacity as string),
-              },
-            };
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
+      (object) => {
+        if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
+          return object;
         }
-      })();
 
-      return updatedModel;
-    });
+        // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
+        const updatedModel = ((): QueueObjectType => {
+          switch (object.type) {
+            case 'rect':
+            case 'circle':
+              return {
+                ...object,
+                fill: {
+                  ...object.fill,
+                  color: value.backgroundColor as string,
+                  opacity: parseFloat(value.backgroundOpacity as string),
+                },
+                stroke: {
+                  ...object.stroke,
+                  color: value.strokeColor as string,
+                  width: parseInt(value.strokeWidth as string),
+                },
+                fade: {
+                  ...object.fade,
+                  opacity: parseFloat(value.opacity as string),
+                },
+              };
+            case 'icon':
+              return {
+                ...object,
+                fill: {
+                  ...object.fill,
+                  color: value.backgroundColor as string,
+                },
+                fade: {
+                  ...object.fade,
+                  opacity: parseFloat(value.opacity as string),
+                },
+              };
+          }
+        })();
+
+        return updatedModel;
+      }
+    );
 
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
       ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
+      objects: newObjects,
     };
 
     setQueueDocument({ ...queueDocument!, pages: newPages });

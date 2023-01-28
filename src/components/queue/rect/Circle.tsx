@@ -27,8 +27,11 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         top: `${animation.rect.y + containerContext.transform.y}px`,
         left: `${animation.rect.x + containerContext.transform.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
+        transform: `rotate(${
+          animation.rotate.degree + containerContext.transformRotate.degree
+        }deg)`,
       }}
+      opacity={containerContext.object.fade.opacity}
     >
       <defs>
         <clipPath id={strokeClipPathID}>
@@ -54,7 +57,6 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
           strokeWidth={containerContext.object.stroke.width * 2}
           strokeDasharray={containerContext.object.stroke.dasharray}
           fill={fill}
-          opacity={containerContext.object.opacity}
           clipPath={`url(#${strokeClipPathID})`}
         />
       </g>

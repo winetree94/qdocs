@@ -31,6 +31,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
       viewBox={`0 0 ${
         animation.rect.width + containerContext.transform.width
       } ${animation.rect.height + containerContext.transform.height}`}
+      opacity={containerContext.object.fade.opacity}
     >
       <defs>
         <clipPath id={strokeClipPathID}>
@@ -52,7 +53,6 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
           width={animation.rect.width + containerContext.transform.width}
           height={animation.rect.height + containerContext.transform.height}
           fill={fill}
-          opacity={containerContext.object.opacity}
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width * 2}
           strokeDasharray={containerContext.object.stroke.dasharray}

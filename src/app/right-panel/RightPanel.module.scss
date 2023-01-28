@@ -10,7 +10,7 @@
 }
 
 .input-color {
-  @apply relative cursor-pointer block w-full h-full rounded-md;
+  @apply relative cursor-pointer block w-full h-full rounded-md border border-gray-100;
 
   & input {
     @apply absolute top-0 left-0 w-full h-full;
