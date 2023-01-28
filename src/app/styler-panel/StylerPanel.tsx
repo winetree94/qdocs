@@ -17,7 +17,7 @@ import {
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { documentSettingsState } from 'store/settings';
-import classes from './RightPanel.module.scss';
+import classes from './StylerPanel.module.scss';
 
 // context start
 interface ObjectStylerContextValue {
@@ -315,7 +315,7 @@ ObjectStyler.Stroke = ObjectStylerStroke;
 ObjectStyler.Opacity = ObjectStylerOpacity;
 // ------------- styler end -------------
 
-export const RightPanel = ({
+export const StylerPanel = ({
   children,
   className,
   ...props

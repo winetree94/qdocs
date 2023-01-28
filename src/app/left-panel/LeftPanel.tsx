@@ -4,7 +4,9 @@ import {
   memo,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import clsx from 'clsx';
@@ -23,6 +25,7 @@ import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { QueueDocumentRect } from 'model/document';
 import { QueueObjectType } from 'model/object';
+import { StylerPanel } from 'app/styler-panel/StylerPanel';
 
 export interface QueueObject {
   key: string;
@@ -135,6 +138,13 @@ export const LeftPanel: FunctionComponent = () => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
+  const selectedObjects = queueDocument!.pages[
+    settings.queuePage
+  ].objects.filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid)
+  );
+  const hasSelectedObjects = selectedObjects.length > 0;
+
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
     [key: string]: boolean;
   }>({});
@@ -158,7 +168,7 @@ export const LeftPanel: FunctionComponent = () => {
         const figure = createDefaultShape(
           queueDocument!.documentRect,
           settings.queueIndex,
-          iconClassName,
+          iconClassName
         );
         const newPages = queueDocument!.pages.slice(0);
         newPages[settings.queuePage] = {
@@ -307,30 +317,36 @@ export const LeftPanel: FunctionComponent = () => {
 
   return (
     <div className={clsx(styles.container, 'flex', 'flex-col')}>
-      <div className={clsx(styles.inputContainer)}>
-        <Input
-          placeholder="Search Shape"
-          className={clsx(styles.input)}
-          value={searchKeyword}
-          onChange={(e): void => setSearchKeyword(e.target.value)}
-        ></Input>
-      </div>
-      <div className={clsx('flex', 'flex-1')}>
-        <AutoSizer>
-          {({ height, width }): ReactNode => (
-            <FixedSizeList
-              itemCount={flattenItems.length}
-              itemSize={50}
-              width={width}
-              height={height}
-              itemKey={(index): string => flattenItems[index].key}
-              itemData={memoizedItemData}
-            >
-              {FlattenRow}
-            </FixedSizeList>
-          )}
-        </AutoSizer>
-      </div>
+      {hasSelectedObjects ? (
+        <StylerPanel />
+      ) : (
+        <>
+          <div className={clsx(styles.inputContainer)}>
+            <Input
+              placeholder="Search Shape"
+              className={clsx(styles.input)}
+              value={searchKeyword}
+              onChange={(e): void => setSearchKeyword(e.target.value)}
+            ></Input>
+          </div>
+          <div className={clsx('flex', 'flex-1')}>
+            <AutoSizer>
+              {({ height, width }): ReactNode => (
+                <FixedSizeList
+                  itemCount={flattenItems.length}
+                  itemSize={50}
+                  width={width}
+                  height={height}
+                  itemKey={(index): string => flattenItems[index].key}
+                  itemData={memoizedItemData}
+                >
+                  {FlattenRow}
+                </FixedSizeList>
+              )}
+            </AutoSizer>
+          </div>
+        </>
+      )}
     </div>
   );
 };
