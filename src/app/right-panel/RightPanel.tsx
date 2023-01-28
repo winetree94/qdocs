@@ -11,6 +11,7 @@ import {
   ReactElement,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -117,6 +118,10 @@ const ObjectStylerBackground = (): ReactElement => {
     setOpacity([parseInt(e.currentTarget.value, 10)]);
   };
 
+  useEffect(() => {
+    setOpacity([firstObject.fill.opacity]);
+  }, [firstObject]);
+
   return (
     <div>
       <div className="mb-1">
@@ -182,13 +187,17 @@ const ObjectStylerStroke = (): ReactElement | null => {
   const tempType = firstObject as QueueSquare;
   const [width, setWidth] = useState([tempType.stroke.width]);
 
-  if (firstObject.type === 'icon') {
-    return null;
-  }
-
   const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setWidth([parseInt(e.currentTarget.value, 10)]);
   };
+
+  useEffect(() => {
+    setWidth([tempType.stroke.width]);
+  }, [tempType]);
+
+  if (firstObject.type === 'icon') {
+    return null;
+  }
 
   return (
     <div>
@@ -259,22 +268,20 @@ const ObjectStylerStroke = (): ReactElement | null => {
 const ObjectStylerOpacity = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
-  const [opacity, setOpacity] = useState([firstObject.fill.opacity]);
+  const [opacity, setOpacity] = useState([firstObject.fade.opacity]);
 
   const handleOpacityChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setOpacity([parseInt(e.currentTarget.value, 10)]);
   };
 
+  useEffect(() => {
+    setOpacity([firstObject.fade.opacity]);
+  }, [firstObject]);
+
   return (
     <div>
       <div>
-        <input
-          type="text"
-          name="opacity"
-          value={opacity[0]}
-          readOnly
-          hidden
-        />
+        <input type="text" name="opacity" value={opacity[0]} readOnly hidden />
         <p className="text-sm">opacity</p>
         <div className="flex items-center gap-2">
           <div className="w-1/3">
