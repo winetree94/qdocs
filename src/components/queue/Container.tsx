@@ -10,6 +10,7 @@ export interface QueueObjectContainerContextType<T extends QueueObjectType = any
   detail: boolean;
   selected: boolean;
   transformRotate: QueueRotate;
+  move?: Pick<QueueRect, 'x' | 'y'>;
   transform: QueueRect;
 }
 
@@ -18,6 +19,7 @@ export const QueueObjectContainerContext = createContext<QueueObjectContainerCon
 export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTMLDivElement> {
   documentScale: number;
   object: QueueObjectType;
+  move?: Pick<QueueRect, 'x' | 'y'>;
   transform?: QueueRect;
   rotate?: QueueRotate;
   detail: boolean;
@@ -27,16 +29,9 @@ export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTML
 export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> = ({
   children,
   selected,
-  transform = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  },
-  rotate = {
-    position: 'forward',
-    degree: 0,
-  },
+  transform,
+  rotate,
+  move,
   detail,
   documentScale,
   object,
@@ -48,6 +43,7 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
       selected,
       detail,
       transform,
+      move,
       transformRotate: rotate,
       documentScale
     }}>

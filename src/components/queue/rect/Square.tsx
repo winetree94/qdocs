@@ -18,19 +18,15 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width + containerContext.transform.width}
-      height={animation.rect.height + containerContext.transform.height}
+      width={animation.rect.width}
+      height={animation.rect.height}
       style={{
-        top: `${animation.rect.y + containerContext.transform.y}px`,
-        left: `${animation.rect.x + containerContext.transform.x}px`,
+        top: `${animation.rect.y}px`,
+        left: `${animation.rect.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${
-          animation.rotate.degree + containerContext.transformRotate.degree
-        }deg)`,
+        transform: `rotate(${animation.rotate.degree}deg)`,
       }}
-      viewBox={`0 0 ${
-        animation.rect.width + containerContext.transform.width
-      } ${animation.rect.height + containerContext.transform.height}`}
+      viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
       opacity={containerContext.object.fade.opacity}
     >
       <defs>
@@ -38,8 +34,8 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
           <rect
             rx={0}
             ry={0}
-            width={animation.rect.width + containerContext.transform.width}
-            height={animation.rect.height + containerContext.transform.height}
+            width={animation.rect.width}
+            height={animation.rect.height}
             fill={fill}
             stroke={containerContext.object.stroke.color}
             strokeWidth={containerContext.object.stroke.width * 2}
@@ -50,8 +46,8 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         <rect
           className={clsx(styles.rect)}
           onMouseDown={onRectMousedown}
-          width={animation.rect.width + containerContext.transform.width}
-          height={animation.rect.height + containerContext.transform.height}
+          width={animation.rect.width}
+          height={animation.rect.height}
           fill={fill}
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width * 2}

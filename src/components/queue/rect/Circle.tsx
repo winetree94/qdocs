@@ -10,8 +10,8 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
-  const rx = (animation.rect.width + containerContext.transform.width) / 2;
-  const ry = (animation.rect.height + containerContext.transform.height) / 2;
+  const rx = animation.rect.width / 2;
+  const ry = animation.rect.height / 2;
   const strokeClipPathID = `stroke-alignment-inner-for-circle-${containerContext.object.uuid}`;
   const fill = convertHex(
     containerContext.object.fill.color,
@@ -21,15 +21,13 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   return (
     <svg
       className={clsx('object-circle', 'absolute')}
-      width={animation.rect.width + containerContext.transform.width}
-      height={animation.rect.height + containerContext.transform.height}
+      width={animation.rect.width}
+      height={animation.rect.height}
       style={{
-        top: `${animation.rect.y + containerContext.transform.y}px`,
-        left: `${animation.rect.x + containerContext.transform.x}px`,
+        top: `${animation.rect.y}px`,
+        left: `${animation.rect.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${
-          animation.rotate.degree + containerContext.transformRotate.degree
-        }deg)`,
+        transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       opacity={containerContext.object.fade.opacity}
     >

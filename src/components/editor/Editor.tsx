@@ -20,7 +20,6 @@ import styles from './Editor.module.scss';
 import { QueueAlert } from 'components/alert/Alert';
 import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
-import { getCurrentRotate } from 'components/queue/animate/rotate';
 
 export interface QueueEditorContextType {
   selectedObjectIds: string[];
@@ -45,16 +44,6 @@ export interface RotateUpdateModel {
 
 export const QueueEditor: FunctionComponent = () => {
   const canvasDiv = useRef<HTMLDivElement>(null);
-  const [translate, setTranslate] = useState<QueueRect>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-  const [rotate, setRotate] = useState<QueueRotate>({
-    position: 'forward',
-    degree: 0,
-  });
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [settings, setSettings] = useRecoilState(documentSettingsState);
@@ -62,9 +51,9 @@ export const QueueEditor: FunctionComponent = () => {
     isExistObjectOnQueue(object, settings.queueIndex)
   );
 
-  useLayoutEffect(() => {
-    // queueDocument?.documentRect.width
-  }, []);
+  const [resizing, setResizing] = useState<QueueRect>(null);
+  const [rotating, setRotating] = useState<QueueRotate>(null);
+  const [moving, setMoving] = useState<Pick<QueueRect, 'x' | 'y'>>(null);
 
   const updateObjectRects = (models: RectUpdateModel[]): void => {
     const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
@@ -208,21 +197,19 @@ export const QueueEditor: FunctionComponent = () => {
     event: MouseEvent,
     object: QueueObjectType,
   ): void => {
-    const x = event.clientX - initEvent.clientX;
-    const y = event.clientY - initEvent.clientY;
+    const diffX = (event.clientX - initEvent.clientX);
+    const diffY = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
 
-    const targetX = (x * currentScale);
-    const targetY = (y * currentScale);
+    const targetX = (diffX * currentScale);
+    const targetY = (diffY * currentScale);
 
     const adjacentTargetX = event.shiftKey ? targetX : Math.round(targetX / 30) * 30;
     const adjacentTargetY = event.shiftKey ? targetY : Math.round(targetY / 30) * 30;
 
-    setTranslate({
+    setMoving({
       x: adjacentTargetX,
       y: adjacentTargetY,
-      width: 0,
-      height: 0,
     });
     setTranslateTargets(settings.selectedObjectUUIDs);
   };
@@ -260,12 +247,7 @@ export const QueueEditor: FunctionComponent = () => {
       queueStart: -1,
     });
     updateObjectRects(updateModels);
-    setTranslate({
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-    });
+    setMoving(null);
   };
 
   /**
@@ -331,33 +313,24 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onResizeMove = (object: QueueObjectType, rect: QueueRect): void => {
-    setTranslate(rect);
+    setResizing(rect);
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
-    const currentRect = getCurrentRect(object, settings.queueIndex);
     updateObjectRects([
       {
         uuid: object.uuid,
         queueIndex: settings.queueIndex,
         rect: {
-          x: currentRect.x + rect.x,
-          y: currentRect.y + rect.y,
-          width: currentRect.width + rect.width,
-          height: currentRect.height + rect.height,
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
         },
       },
     ]);
-    setTranslate({
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-    });
-    setRotate({
-      degree: 0,
-      position: 'forward',
-    });
+    setResizing(null);
+    setRotating(null);
     setTranslateTargets([]);
   };
 
@@ -368,34 +341,25 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onRotateMove = (object: QueueObjectType, rotate: { degree: number }): void => {
-    setRotate({
+    setRotating({
       position: 'forward',
       degree: rotate.degree,
     });
   };
 
   const onRotateEnd = (object: QueueObjectType, rotate: { degree: number }): void => {
-    const currentRotate = getCurrentRotate(object, settings.queueIndex);
     updateObjectRotate([
       {
         uuid: object.uuid,
         queueIndex: settings.queueIndex,
         rotate: {
-          degree: currentRotate.degree + rotate.degree,
+          degree: rotate.degree,
           position: 'forward',
         },
       },
     ]);
-    setRotate({
-      position: 'forward',
-      degree: 0,
-    });
-    setTranslate({
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-    });
+    setRotating(null);
+    setResizing(null);
     setTranslateTargets([]);
   };
 
@@ -603,8 +567,9 @@ export const QueueEditor: FunctionComponent = () => {
                         object={object}
                         detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
                         documentScale={settings.scale}
-                        transform={translateTargets.includes(object.uuid) ? translate : undefined}
-                        rotate={translateTargets.includes(object.uuid) ? rotate : undefined}
+                        move={translateTargets.includes(object.uuid) ? moving : undefined}
+                        transform={translateTargets.includes(object.uuid) ? resizing : undefined}
+                        rotate={translateTargets.includes(object.uuid) ? rotating : undefined}
                         selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
                         <QueueObject.Animator
                           queueIndex={settings.queueIndex}

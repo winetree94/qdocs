@@ -42,7 +42,7 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   queueStart,
 }) => {
 
-  const { object } = useContext(QueueObjectContainerContext);
+  const { object, transform, move, transformRotate } = useContext(QueueObjectContainerContext);
   const currentFade = getCurrentFade(object, queueIndex);
   const animatableFade = queueStart > 0 ? getFadeAnimation(object, queueIndex, queuePosition) : undefined;
   const currentRect = getCurrentRect(object, queueIndex);
@@ -68,11 +68,17 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
                   start={queueStart}
                   timing={animatableRotate?.rotateEffect.timing}>
                   {(rotateProgress): ReactElement => {
+                    const rect = { ...(transform || getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect)) };
+                    const rotate = transformRotate || getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate);
+                    if (move) {
+                      rect.x += move.x;
+                      rect.y += move.y;
+                    }
                     return (
                       <QueueAnimatableContext.Provider value={{
-                        rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
+                        rect: rect,
                         fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
-                        rotate: getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate),
+                        rotate: rotate,
                       }}>
                         {children}
                       </QueueAnimatableContext.Provider>

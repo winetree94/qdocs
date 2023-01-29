@@ -13,13 +13,13 @@ export const Icon: FunctionComponent<RectProps> = ({
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width + containerContext.transform.width}
-      height={animation.rect.height + containerContext.transform.height}
+      width={animation.rect.width}
+      height={animation.rect.height}
       style={{
-        top: `${animation.rect.y + containerContext.transform.y}px`,
-        left: `${animation.rect.x + containerContext.transform.x}px`,
+        top: `${animation.rect.y}px`,
+        left: `${animation.rect.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${animation.rotate.degree + containerContext.transformRotate.degree}deg)`,
+        transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       opacity={containerContext.object.fade.opacity}
     >
