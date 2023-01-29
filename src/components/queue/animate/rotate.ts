@@ -2,7 +2,6 @@
 import { RotateEffect } from 'model/effect';
 import { QueueObjectType } from 'model/object';
 import { QueueRotate } from 'model/property';
-import { get360Value } from '../Resizer';
 
 export interface RotateAnimation {
   fromRotate: QueueRotate;
@@ -67,7 +66,7 @@ export const getAnimatableRotate = (
     return targetScale;
   }
   return {
-    degree: get360Value(fromScale.degree + (targetScale.degree - fromScale.degree) * progress),
+    degree: fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
     position: 'forward',
   };
 };

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { angle } from 'cdk/math/angle';
 import clsx from 'clsx';
 import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
@@ -35,26 +36,6 @@ export type ResizerPosition =
   | 'bottom-left'
   | 'bottom-middle'
   | 'bottom-right';
-
-function angle(cx: number, cy: number, ex: number, ey: number): number {
-  const dy = ey - cy;
-  const dx = ex - cx;
-  let theta = Math.atan2(dy, dx); // range (-PI, PI]
-  theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
-  return theta;
-}
-
-export const get360Value = (value: number): number => {
-  let prefix = value;
-  if (value < 0) prefix = 360 + prefix;
-  return prefix;
-};
-
-function angle360(cx: number, cy: number, ex: number, ey: number): number {
-  let theta = angle(cx, cy, ex, ey); // range (-180, 180]
-  if (theta < 0) theta = 360 + theta; // range [0, 360)
-  return theta;
-}
 
 export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   onResizeStart,
@@ -240,11 +221,11 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       const rect = svgRef.current!.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angle = angle360(centerX, centerY, initEvent.clientX, initEvent.clientY);
+      const degree = angle(centerX, centerY, initEvent.clientX, initEvent.clientY);
       setInitRotateEvent({
         event: initEvent.nativeEvent,
         position: {
-          degree: angle,
+          degree: degree,
         }
       });
     },
@@ -259,11 +240,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       const rect = svgRef.current!.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angle = get360Value(
-        angle360(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree
-      );
+      const degree = angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree;
       onRotateMove?.({
-        degree: angle,
+        degree: degree,
       }, cancelRotate);
     },
     [initRotateEvent, onRotateMove, cancelRotate]
@@ -277,11 +256,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       const rect = svgRef.current!.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const angle = get360Value(
-        angle360(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree
-      );
+      const degree = angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.position.degree;
       onRotateEnd?.({
-        degree: angle,
+        degree: degree,
       });
       setInitRotateEvent(null);
     },
