@@ -1,6 +1,6 @@
 import { debounce } from 'cdk/functions/debounce';
 import clsx from 'clsx';
-import { Slider } from 'components';
+import { EffectControllerBox, Slider } from 'components';
 import { QueueObjectType, QueueSquare } from 'model/object';
 import {
   ChangeEvent,
@@ -40,7 +40,6 @@ const useObjectStylerContext = (): ObjectStylerContextValue => {
 // context end
 
 // ------------- styler start -------------
-type ObjectStylerElementProps = HTMLAttributes<HTMLDivElement>;
 type StyleChangeValue = { [k: string]: FormDataEntryValue };
 interface ObjectStylerProps extends PropsWithChildren {
   objects: QueueObjectType[];
@@ -62,50 +61,6 @@ const ObjectStyler = ({
     <ObjectStylerContext.Provider value={{ objects }}>
       <form onChange={handleStyleChange}>{children}</form>
     </ObjectStylerContext.Provider>
-  );
-};
-
-const ObjectStylerEffectList = ({
-  ...props
-}: ObjectStylerElementProps): ReactElement => {
-  const { objects } = useObjectStylerContext();
-  const [firstObject] = objects;
-
-  return (
-    <div {...props}>
-      <p>Object effects</p>
-      <ul className={classes['scroll-list-box']}>
-        {firstObject.effects.map((effect, index) => (
-          <li key={`effect-${index}`}>
-            <span># {effect.index + 1} </span>
-            <span>{effect.type}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const ObjectStylerCurrentQueueEffect = ({
-  ...props
-}: ObjectStylerElementProps): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
-  const { objects } = useObjectStylerContext();
-  const [firstObject] = objects;
-  const currentQueueObjectEffects = firstObject.effects.filter(
-    (effect) => effect.index === settings.queueIndex
-  );
-  return (
-    <div {...props}>
-      <p>Current queue effects</p>
-      <ul className={classes['scroll-list-box']}>
-        {currentQueueObjectEffects.map((currentQueueObjectEffect) => (
-          <li key={currentQueueObjectEffect.type}>
-            {currentQueueObjectEffect.type}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 };
 
@@ -308,8 +263,6 @@ const ObjectStylerOpacity = (): ReactElement => {
   );
 };
 
-ObjectStyler.EffectList = ObjectStylerEffectList;
-ObjectStyler.CurrentQueueEffect = ObjectStylerCurrentQueueEffect;
 ObjectStyler.Background = ObjectStylerBackground;
 ObjectStyler.Stroke = ObjectStylerStroke;
 ObjectStyler.Opacity = ObjectStylerOpacity;
@@ -403,14 +356,13 @@ export const StylerPanel = ({
     >
       {hasSelectedObjects && (
         <div className="p-2">
+          <EffectControllerBox />
           <div>
             <ObjectStyler
               objects={selectedObjects}
               onStyleChange={handleStyleChange}
             >
               <div className="flex flex-col gap-3">
-                <ObjectStyler.EffectList />
-                <ObjectStyler.CurrentQueueEffect />
                 <hr className="my-2" />
                 <ObjectStyler.Background />
                 <hr className="my-2" />
