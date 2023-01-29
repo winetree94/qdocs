@@ -348,6 +348,7 @@ export const StylerPanel = ({
           switch (object.type) {
             case 'rect':
             case 'circle':
+            case 'line':
               return {
                 ...object,
                 fill: {

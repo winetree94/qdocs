@@ -45,8 +45,8 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
       </defs>
       <g>
         <ellipse
-          onMouseDown={onRectMousedown}
           className={clsx(styles.circle)}
+          onMouseDown={onRectMousedown}
           cx={rx}
           cy={ry}
           rx={rx}

@@ -25,6 +25,7 @@ import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { QueueDocumentRect } from 'model/document';
 import { QueueObjectType } from 'model/object';
+import { createDefaultLine } from 'model/object/line';
 import { StylerPanel } from 'app/styler-panel/StylerPanel';
 
 export interface QueueObject {
@@ -193,6 +194,7 @@ export const LeftPanel: FunctionComponent = () => {
   const createSquare = createFigure(createDefaultSquare);
   const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
+  const createLine = createFigure(createDefaultLine);
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [
@@ -229,6 +231,26 @@ export const LeftPanel: FunctionComponent = () => {
                     cx="15"
                     cy="15"
                     r="13"
+                    stroke="black"
+                    strokeWidth="2"
+                    fill="transparent"
+                  />
+                </g>
+              </svg>
+            ),
+          },
+          {
+            key: 'Line',
+            keyword: ['Line'],
+            factory: () => createLine(),
+            preview: (
+              <svg className={styles.canvas}>
+                <g>
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="42"
+                    y2="42"
                     stroke="black"
                     strokeWidth="2"
                     fill="transparent"
