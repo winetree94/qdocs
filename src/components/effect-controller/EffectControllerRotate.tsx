@@ -1,6 +1,5 @@
 import { RotateEffect } from 'model/effect';
-import { QueueRotate } from 'model/property';
-import { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 export type EffectControllerRotateProps = {
   rotateEffect: RotateEffect;
@@ -10,11 +9,6 @@ export const EffectControllerRotate = ({
   rotateEffect,
 }: EffectControllerRotateProps): ReactElement => {
   const [rotate, setRotate] = useState(Math.round(rotateEffect.rotate.degree));
-  const [position, setPosition] = useState(rotateEffect.rotate.position);
-
-  const handlePositionChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setPosition(e.currentTarget.value as QueueRotate['position']);
-  };
 
   useEffect(() => {
     setRotate(Math.round(rotateEffect.rotate.degree));
@@ -39,31 +33,6 @@ export const EffectControllerRotate = ({
             value={rotate}
             onChange={(e): void => setRotate(parseInt(e.currentTarget.value))}
           />
-        </div>
-      </div>
-      <div>
-        <p className="text-sm">direction of rotation</p>
-        <div>
-          <label className="flex items-center gap-1">
-            <span>forward</span>
-            <input
-              type="radio"
-              name="position"
-              value="forward"
-              checked={position === 'forward'}
-              onChange={handlePositionChange}
-            />
-          </label>
-          <label className="flex items-center gap-1">
-            <span>reverse</span>
-            <input
-              type="radio"
-              name="position"
-              value="reverse"
-              checked={position === 'reverse'}
-              onChange={handlePositionChange}
-            />
-          </label>
         </div>
       </div>
     </>

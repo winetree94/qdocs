@@ -4,8 +4,7 @@ import { debounce } from 'cdk/functions/debounce';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import { Slider } from 'components/slider';
 import { BaseQueueEffect, QueueEffectType } from 'model/effect';
-import { QueueRotate } from 'model/property';
-import { FormEvent, ReactElement, useCallback, useState } from 'react';
+import { FormEvent, ReactElement, useCallback, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { documentSettingsState } from 'store/settings';
@@ -106,58 +105,84 @@ export const EffectControllerBox = (): ReactElement | null => {
     (effect) => effect.index === settings.queueIndex
   );
 
-  const handleEffectChange = useCallback(
-    debounce((value: ChangedValue) => {
-      const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
-        (object) => {
-          if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-            return object;
-          }
-
-          const newEffects = object.effects.map((effect) => {
-            if (effect.index !== settings.queueIndex) {
-              return effect;
+  const debounceEffectChange = useMemo(
+    () =>
+      debounce((value) => {
+        const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
+          (object) => {
+            if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
+              return object;
             }
 
-            const updatedBaseEffect: BaseQueueEffect = {
-              index: effect.index,
-              duration: parseFloat(value.duration as string),
-              timing: value.timingFunction as AnimatorTimingFunctionType,
-            };
-
-            switch (effect.type) {
-              case 'rotate':
-                return {
-                  ...effect,
-                  ...updatedBaseEffect,
-                  scale: {
-                    ...effect.rotate,
-                    degree: parseInt(value.rotate as string),
-                    position: value.position as QueueRotate['position'],
-                  },
-                };
-
-              default:
+            const newEffects = object.effects.map((effect) => {
+              if (effect.index !== settings.queueIndex) {
                 return effect;
-            }
-          });
+              }
 
-          return {
-            ...object,
-            effects: newEffects,
-          };
-        }
-      );
+              const updatedBaseEffect: BaseQueueEffect = {
+                index: effect.index,
+                duration:
+                  parseFloat(value.duration as string) || effect.duration,
+                timing:
+                  (value.timingFunction as AnimatorTimingFunctionType) ||
+                  effect.timing,
+              };
 
-      const newPages = queueDocument!.pages.slice(0);
-      newPages[settings.queuePage] = {
-        ...queueDocument!.pages[settings.queuePage],
-        objects: newObjects,
-      };
+              const updatedEffect = ((): QueueEffectType => {
+                switch (effect.type) {
+                  case 'move':
+                    return {
+                      ...effect,
+                    };
+                  case 'rotate':
+                    return {
+                      ...effect,
+                      rotate: {
+                        ...effect.rotate,
+                        degree:
+                          parseInt(value.rotate as string) ||
+                          effect.rotate.degree,
+                      },
+                    };
 
-      setQueueDocument({ ...queueDocument!, pages: newPages });
-    }, 50),
-    []
+                  default:
+                    return effect;
+                }
+              })();
+
+              return {
+                ...updatedEffect,
+                ...updatedBaseEffect,
+              };
+            });
+
+            return {
+              ...object,
+              effects: newEffects,
+            };
+          }
+        );
+
+        const newPages = queueDocument!.pages.slice(0);
+        newPages[settings.queuePage] = {
+          ...queueDocument!.pages[settings.queuePage],
+          objects: newObjects,
+        };
+
+        setQueueDocument({ ...queueDocument!, pages: newPages });
+      }, 50),
+    [
+      queueDocument,
+      setQueueDocument,
+      settings.queueIndex,
+      settings.queuePage,
+      settings.selectedObjectUUIDs,
+    ]
+  );
+
+  const handleEffectChange = useCallback(
+    (value: ChangedValue) => debounceEffectChange(value),
+    [debounceEffectChange]
   );
 
   if (!hasSelectedObjects) {
