@@ -6,18 +6,20 @@ import {
   WithFill,
   WithRect,
   WithRotation,
+  WithScale,
   WithStroke,
   WithText,
 } from 'model/property';
 
 export interface QueueLine
   extends WithEffects,
-    WithRect,
-    WithFade,
-    WithFill,
-    WithRotation,
-    WithStroke,
-    WithText {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText {
   type: 'line';
   uuid: string;
 }
@@ -49,6 +51,9 @@ export const createDefaultLine = (
     rotate: {
       position: 'forward',
       degree: 0,
+    },
+    scale: {
+      scale: 1,
     },
     fade: {
       opacity: 1,

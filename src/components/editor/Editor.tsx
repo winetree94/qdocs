@@ -161,6 +161,7 @@ export const QueueEditor: FunctionComponent = () => {
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueObjectType,
   ): void => {
+    event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey && !selected) {
       setSettings({

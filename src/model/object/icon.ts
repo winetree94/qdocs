@@ -1,9 +1,9 @@
 import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import { WithFade, WithFill, WithRect, WithRotation, WithText } from 'model/property';
+import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithText } from 'model/property';
 
-export interface QueueIcon extends WithEffects, WithRect, WithFade, WithFill, WithRotation, WithText {
+export interface QueueIcon extends WithEffects, WithRect, WithFade, WithFill, WithScale, WithRotation, WithText {
   type: 'icon';
   iconType: string;
   uuid: string;
@@ -33,6 +33,9 @@ export const createDefaultIcon = (
     rotate: {
       position: 'forward',
       degree: 0,
+    },
+    scale: {
+      scale: 1,
     },
     fade: {
       opacity: 1,

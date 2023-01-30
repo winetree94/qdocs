@@ -4,6 +4,7 @@ import { FillEffect } from './fill';
 import { MoveEffect } from './rect';
 import { RemoveEffect } from './remove';
 import { RotateEffect } from './rotate';
+import { ScaleEffect } from './scale';
 import { StrokeEffect } from './stroke';
 import { TextEffect } from './text';
 
@@ -15,6 +16,7 @@ export * from './rect';
 export * from './remove';
 export * from './rotate';
 export * from './stroke';
+export * from './scale';
 export * from './text';
 
 export type QueueEffectType =
@@ -25,6 +27,7 @@ export type QueueEffectType =
   RemoveEffect |
   RotateEffect |
   StrokeEffect |
+  ScaleEffect |
   TextEffect;
 
 export interface WithEffects {

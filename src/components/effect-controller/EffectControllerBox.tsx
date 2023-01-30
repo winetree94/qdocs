@@ -130,7 +130,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                 return {
                   ...effect,
                   ...updatedBaseEffect,
-                  rotate: {
+                  scale: {
                     ...effect.rotate,
                     degree: parseInt(value.rotate as string),
                     position: value.position as QueueRotate['position'],

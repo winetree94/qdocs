@@ -79,6 +79,8 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
       onMouseDown={onContainerMousedown}
       style={{
         ...(divProps.style || {}),
+        transform: `scale(${meta.scale.scale}) rotate(${meta.rotate.degree || 0}deg)`,
+        transformOrigin: `${meta.rect.x + (meta.rect.width / 2)}px ${meta.rect.y + (meta.rect.height / 2)}px`,
       }}>
       {children}
     </div>

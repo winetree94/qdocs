@@ -1,10 +1,10 @@
 import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import { WithFade, WithFill, WithRect, WithRotation, WithStroke, WithText } from 'model/property';
+import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
 
 export interface QueueCircle
-  extends WithEffects, WithRect, WithFade, WithFill, WithRotation, WithStroke, WithText {
+  extends WithEffects, WithRect, WithFade, WithFill, WithRotation, WithScale, WithStroke, WithText {
   type: 'circle';
   uuid: string;
 }
@@ -36,6 +36,9 @@ export const createDefaultCircle = (
     rotate: {
       position: 'forward',
       degree: 0,
+    },
+    scale: {
+      scale: 1,
     },
     fade: {
       opacity: 1,
