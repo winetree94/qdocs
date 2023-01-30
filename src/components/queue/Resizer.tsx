@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { angle } from 'cdk/math/angle';
 import { center } from 'cdk/math/center';
@@ -7,6 +8,13 @@ import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
 import { QueueRect } from 'model/property';
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import styles from './Resizer.module.scss';
+
+interface ResizeMatrix {
+  a: 0 | 1;
+  b: 0 | 1;
+  c: 0 | 1;
+  d: 0 | 1;
+}
 
 export interface ResizerEvent {
   x: number;
@@ -47,10 +55,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   // shorthands
   const {
-    transform,
     selected,
     documentScale,
-    transformRotate,
   } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
@@ -74,11 +80,57 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   const [initRotateEvent, setInitRotateEvent] = React.useState<{
     event: MouseEvent;
-    // abs
     absRect: QueueRect;
-    // degree
     degree: number;
   } | null>(null);
+
+  const matrix = React.useMemo<ResizeMatrix>(() => {
+    if (!initResizeEvent) {
+      return null;
+    }
+    const position = initResizeEvent.position;
+    const a: 0 | 1 = ['bottom-right', 'top-right', 'middle-right'].includes(position) ? 1 : 0;
+    const b: 0 | 1 = ['bottom-right', 'bottom-left', 'middle-left', 'bottom-middle'].includes(position) ? 1 : 0;
+    const c: 0 | 1 = a === 1 ? 0 : 1;
+    const d: 0 | 1 = b === 1 ? 0 : 1;
+    return { a, b, c, d };
+  }, [initResizeEvent]);
+
+  const startPositionToResize = React.useMemo<{
+    qp0_x: number,
+    qp0_y: number,
+    pp_x: number,
+    pp_y: number,
+  }>(() => {
+    if (!initResizeEvent || !matrix) {
+      return null;
+    }
+    const theta: number = (Math.PI * 2 * rotate) / 360;
+    const cos_t: number = Math.cos(theta);
+    const sin_t: number = Math.sin(theta);
+
+    const l: number = initResizeEvent.rect.x;
+    const t: number = initResizeEvent.rect.y;
+    const w: number = initResizeEvent.rect.width;
+    const h: number = initResizeEvent.rect.height;
+
+    const c0_x = l + w / 2.0;
+    const c0_y = t + h / 2.0;
+
+    const q0_x: number = l + matrix.a * w;
+    const q0_y: number = t + matrix.b * h;
+
+    const p0_x: number = l + matrix.c * w;
+    const p0_y: number = t + matrix.d * h;
+
+    const qp0_x = q0_x * cos_t - q0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
+    const qp0_y = q0_x * sin_t + q0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
+
+    const pp_x = p0_x * cos_t - p0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
+    const pp_y = p0_x * sin_t + p0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
+
+    return { qp0_x, qp0_y, pp_x, pp_y };
+  }, [initResizeEvent, matrix, rotate]);
 
   const getAbsolutePosition = (): QueueRect => {
     const rect = svgRef.current!.getBoundingClientRect();
@@ -100,98 +152,80 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   const getAbsoluteResizerPosition = useCallback(
     (
-      rect: QueueRect,
       initEvent: MouseEvent,
       targetEvent: MouseEvent,
       scale: number,
-      position: ResizerPosition,
     ): ResizerEvent => {
-      const originDiffX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
-      const originDiffY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
-      const diffX = originDiffX;
-      const diffY = originDiffY;
+      const deltaX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
+      const deltaY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
 
-      switch (position) {
-        case 'top-left':
-          return {
-            x: rect.x + diffX,
-            y: rect.y + diffY,
-            width: rect.width + -diffX,
-            height: rect.height + -diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'top-middle':
-          return {
-            x: rect.x,
-            y: rect.y + diffY,
-            width: rect.width,
-            height: rect.height + -diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'top-right':
-          return {
-            x: rect.x,
-            y: rect.y + diffY,
-            width: rect.width + diffX,
-            height: rect.height + -diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'middle-right':
-          return {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width + diffX,
-            height: rect.height,
-            degree: 0,
-            scale: 1,
-          };
-        case 'bottom-right':
-          return {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width + diffX,
-            height: rect.height + diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'bottom-middle':
-          return {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width,
-            height: rect.height + diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'bottom-left':
-          return {
-            x: rect.x + diffX,
-            y: rect.y,
-            width: rect.width + -diffX,
-            height: rect.height + diffY,
-            degree: 0,
-            scale: 1,
-          };
-        case 'middle-left':
-          return {
-            x: rect.x + diffX,
-            y: rect.y,
-            width: rect.width + -diffX,
-            height: rect.height,
-            degree: 0,
-            scale: 1,
-          };
-      }
+      const delta: { x: number; y: number } = {
+        x: deltaX,
+        y: deltaY,
+      };
+
+      const qp_x: number = startPositionToResize.qp0_x + delta.x;
+      const qp_y: number = startPositionToResize.qp0_y + delta.y;
+
+      const cp_x: number = (qp_x + startPositionToResize.pp_x) / 2.0;
+      const cp_y: number = (qp_y + startPositionToResize.pp_y) / 2.0;
+
+      const mtheta: number = (-1 * Math.PI * 2 * rotate) / 360;
+      const cos_mt: number = Math.cos(mtheta);
+      const sin_mt: number = Math.sin(mtheta);
+
+      let q_x: number = qp_x * cos_mt - qp_y * sin_mt - cos_mt * cp_x + sin_mt * cp_y + cp_x;
+      let q_y: number = qp_x * sin_mt + qp_y * cos_mt - sin_mt * cp_x - cos_mt * cp_y + cp_y;
+
+      let p_x: number = startPositionToResize.pp_x * cos_mt - startPositionToResize.pp_y * sin_mt - cos_mt * cp_x + sin_mt * cp_y + cp_x;
+      let p_y: number = startPositionToResize.pp_x * sin_mt + startPositionToResize.pp_y * cos_mt - sin_mt * cp_x - cos_mt * cp_y + cp_y;
+
+      const wtmp: number = matrix.a * (q_x - p_x) + matrix.c * (p_x - q_x);
+      const htmp: number = matrix.b * (q_y - p_y) + matrix.d * (p_y - q_y);
+
+      const w: number = Math.max(wtmp);
+      const h: number = Math.max(htmp);
+
+      const theta: number = -1 * mtheta;
+      const cos_t: number = Math.cos(theta);
+      const sin_t: number = Math.sin(theta);
+
+      const dh_x: number = -sin_t * h;
+      const dh_y: number = cos_t * h;
+
+      const dw_x: number = cos_t * w;
+      const dw_y: number = sin_t * w;
+
+      const qp_x_min: number = startPositionToResize.pp_x + (matrix.a - matrix.c) * dw_x + (matrix.b - matrix.d) * dh_x;
+      const qp_y_min: number = startPositionToResize.pp_y + (matrix.a - matrix.c) * dw_y + (matrix.b - matrix.d) * dh_y;
+
+      const cp_x_min: number = (qp_x_min + startPositionToResize.pp_x) / 2.0;
+      const cp_y_min: number = (qp_y_min + startPositionToResize.pp_y) / 2.0;
+
+      q_x = qp_x_min * cos_mt - qp_y_min * sin_mt - cos_mt * cp_x_min + sin_mt * cp_y_min + cp_x_min;
+      q_y = qp_x_min * sin_mt + qp_y_min * cos_mt - sin_mt * cp_x_min - cos_mt * cp_y_min + cp_y_min;
+
+      p_x = startPositionToResize.pp_x * cos_mt - startPositionToResize.pp_y * sin_mt - cos_mt * cp_x_min + sin_mt * cp_y_min + cp_x_min;
+      p_y = startPositionToResize.pp_x * sin_mt + startPositionToResize.pp_y * cos_mt - sin_mt * cp_x_min - cos_mt * cp_y_min + cp_y_min;
+
+      const l: number = matrix.c * q_x + matrix.a * p_x;
+      const t: number = matrix.d * q_y + matrix.b * p_y;
+
+      return {
+        x: l,
+        y: t,
+        width: w,
+        height: h,
+        degree: 0,
+        scale: 1,
+      };
     },
-    []
+    [matrix, rotate, startPositionToResize]
   );
 
   const onResizeDocumentMousemove = useCallback(
     (event: MouseEvent) => {
-      const rect = getAbsoluteResizerPosition(initResizeEvent.rect, initResizeEvent.event, event, documentScale, initResizeEvent.position);
+      const rect = getAbsoluteResizerPosition(initResizeEvent.event, event, documentScale);
       onResizeMove?.({ ...rect, degree: 0, scale: 0 }, cancelResize);
       setResizingRect(rect);
     },
@@ -200,7 +234,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   const onResizeDocumentMouseup = useCallback(
     (event: MouseEvent) => {
-      const rect = getAbsoluteResizerPosition(initResizeEvent.rect, initResizeEvent.event, event, documentScale, initResizeEvent.position);
+      const rect = getAbsoluteResizerPosition(initResizeEvent.event, event, documentScale);
       onResizeEnd?.({ ...rect, degree: 0, scale: 0 });
       setResizingRect(null);
       setInitResizeEvent(null);
