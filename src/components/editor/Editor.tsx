@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
+import { FunctionComponent, ReactNode, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import {
@@ -42,7 +42,13 @@ export interface RotateUpdateModel {
   rotate: QueueRotate;
 }
 
-export const QueueEditor: FunctionComponent = () => {
+export interface QueueEditorProps {
+  children?: ReactNode;
+}
+
+export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
+  children
+}) => {
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);

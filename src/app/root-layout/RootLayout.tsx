@@ -7,6 +7,8 @@ import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
 import { documentState } from 'store/document';
+import clsx from 'clsx';
+import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 
 export const RootContext = createContext({});
 
@@ -34,9 +36,12 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
           </>
         ) : null}
         {queueDocument && (
-          <div className={styles.bottom}>
+          <div className={clsx('flex', 'flex-1')}>
             {!settings.presentationMode ? <LeftPanel /> : null}
-            <QueueEditor />
+            <div className={clsx('flex', 'flex-1', 'flex-col')}>
+              <QueueEditor />
+              <BottomPanel />
+            </div>
           </div>
         )}
       </div>
