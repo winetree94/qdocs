@@ -150,19 +150,26 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     setInitRotateEvent(null);
   }, []);
 
+  const getDelta = (
+    initEvent: MouseEvent,
+    currentEvent: MouseEvent,
+    scale: number,
+  ): { x: number; y: number } => {
+    const currentX: number = currentEvent.clientX;
+    const currentY: number = currentEvent.clientY;
+    return {
+      x: ['bottom-middle', 'top-middle'].includes(initResizeEvent.position) ? 0 : (currentX - initEvent.clientX) * (1 / scale),
+      y: ['middle-left', 'middle-right'].includes(initResizeEvent.position) ? 0 : (currentY - initEvent.clientY) * (1 / scale)
+    };
+  };
+
   const getAbsoluteResizerPosition = useCallback(
     (
       initEvent: MouseEvent,
       targetEvent: MouseEvent,
       scale: number,
     ): ResizerEvent => {
-      const deltaX = (targetEvent.clientX - initEvent.clientX) * (1 / scale);
-      const deltaY = (targetEvent.clientY - initEvent.clientY) * (1 / scale);
-
-      const delta: { x: number; y: number } = {
-        x: deltaX,
-        y: deltaY,
-      };
+      const delta = getDelta(initEvent, targetEvent, scale);
 
       const qp_x: number = startPositionToResize.qp0_x + delta.x;
       const qp_y: number = startPositionToResize.qp0_y + delta.y;
