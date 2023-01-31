@@ -20,6 +20,7 @@ import styles from './Editor.module.scss';
 import { QueueAlert } from 'components/alert/Alert';
 import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
+import { useSettings } from 'cdk/hooks/settings';
 
 export interface QueueEditorContextType {
   selectedObjectIds: string[];
@@ -52,7 +53,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const { settings, ...setSettings } = useSettings();
   const currentQueueObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
@@ -170,20 +171,12 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey && !selected) {
-      setSettings({
-        ...settings,
-        selectionMode: settings.selectionMode,
-        selectedObjectUUIDs: [object.uuid],
-      });
+      setSettings.setSelectedObjectUUIDs([object.uuid]);
     } else {
-      setSettings({
-        ...settings,
-        selectionMode: 'normal',
-        selectedObjectUUIDs: [
-          ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
-          object.uuid,
-        ],
-      });
+      setSettings.setSelectedObjectUUIDs([
+        ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
+        object.uuid,
+      ]);
     }
   };
 
@@ -192,11 +185,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
     object: QueueObjectType,
   ): void => {
     event.stopPropagation();
-    setSettings({
-      ...settings,
-      selectionMode: 'detail',
-      selectedObjectUUIDs: [object.uuid],
-    });
+    setSettings.setDetailSettingMode(object.uuid);
   };
 
   const onObjectDragMove = (
@@ -249,10 +238,8 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
           },
         };
       });
-    setSettings({
-      ...settings,
-      queueStart: -1,
-    });
+
+    setSettings.stopAnimation();
     updateObjectRects(updateModels);
     setMoving(null);
   };
@@ -306,11 +293,8 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
         rect.y + rect.height <= y + height
       );
     });
-    setSettings({
-      ...settings,
-      selectionMode: 'normal',
-      selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
-    });
+
+    setSettings.setSelectedObjectUUIDs(selectedObjects.map((object) => object.uuid));
   };
 
   const onResizeStart = (object: QueueObjectType): void => {
@@ -449,11 +433,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
       result.push(newObject);
       return result;
     }, []);
-    setSettings({
-      ...settings,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-    });
+    setSettings.setSelectedObjectUUIDs([]);
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
       ...queueDocument!.pages[settings.queuePage],
@@ -505,11 +485,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
     <QueueContextMenu.Root
       onOpenChange={(open): void => {
         if (open) {
-          setSettings({
-            ...settings,
-            selectedObjectUUIDs: [],
-            selectionMode: 'normal',
-          });
+          setSettings.setSelectedObjectUUIDs([]);
         }
       }}>
       <QueueContextMenu.Trigger
@@ -561,11 +537,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                     key={object.uuid}
                     onOpenChange={(open): void => {
                       if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
-                        setSettings({
-                          ...settings,
-                          selectedObjectUUIDs: [object.uuid],
-                          selectionMode: 'normal',
-                        });
+                        setSettings.setSelectedObjectUUIDs([object.uuid]);
                       }
                     }}>
                     <QueueContextMenu.Trigger>

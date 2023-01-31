@@ -3,10 +3,10 @@ import { QueueIconButton } from 'components/button/Button';
 import { FunctionComponent, ReactNode, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
-import { documentSettingsState } from 'store/settings';
 import * as QueueContextMenu from 'components/queue-context-menu/Context';
 import styles from './BottomPanel.module.scss';
 import { QueueToggleGroupItem, QueueToogleGroupRoot } from 'components/toggle-group/ToogleGroup';
+import { useSettings } from 'cdk/hooks/settings';
 
 export interface BottomPanelProps {
   children?: ReactNode;
@@ -16,7 +16,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
   children,
 }) => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const { settings, ...setSettings } = useSettings();
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const createPageAndMove = (): void => {
@@ -30,28 +30,11 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
         }
       ]
     });
-
-    setSettings({
-      ...settings,
-      queuePage: queueDocument!.pages.length,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-      queueStart: -1,
-      queueIndex: 0,
-      queuePosition: 'pause',
-    });
+    setSettings.setQueuePageIndex(queueDocument!.pages.length);
   };
 
   const navigatePage = (index: number): void => {
-    setSettings({
-      ...settings,
-      queuePage: index,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-      queueStart: -1,
-      queueIndex: 0,
-      queuePosition: 'pause',
-    });
+    setSettings.setQueuePageIndex(index);
   };
 
   const movePage = (from: number, to: number): void => {
@@ -63,15 +46,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
       ...queueDocument!,
       pages,
     });
-    setSettings({
-      ...settings,
-      queuePage: to,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-      queueStart: -1,
-      queueIndex: 0,
-      queuePosition: 'pause',
-    });
+    setSettings.setQueuePageIndex(to);
   };
 
   const createPage = (index: number): void => {
@@ -84,15 +59,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
       ...queueDocument!,
       pages,
     });
-    setSettings({
-      ...settings,
-      queuePage: index,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-      queueStart: -1,
-      queueIndex: 0,
-      queuePosition: 'pause',
-    });
+    setSettings.setQueuePageIndex(index);
   };
 
   const removePage = (index: number): void => {
@@ -102,15 +69,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
       ...queueDocument!,
       pages,
     });
-    setSettings({
-      ...settings,
-      queuePage: Math.min(index, pages.length - 1),
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-      queueStart: -1,
-      queueIndex: 0,
-      queuePosition: 'pause',
-    });
+    setSettings.setQueuePageIndex(Math.min(index, pages.length - 1));
   };
 
   const onDragStart = (
