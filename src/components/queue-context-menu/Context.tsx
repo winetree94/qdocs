@@ -1,6 +1,6 @@
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import clsx from 'clsx';
-import { FunctionComponent } from 'react';
+import { forwardRef, FunctionComponent } from 'react';
 import styles from './Context.module.scss';
 
 export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
@@ -15,17 +15,20 @@ export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
   );
 };
 
-export const Trigger: FunctionComponent<ContextMenu.ContextMenuTriggerProps> = ({
+export const Trigger: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuTriggerProps & React.RefAttributes<HTMLSpanElement>
+> = forwardRef(({
   children,
   ...props
-}) => {
+}, ref) => {
   return (
     <ContextMenu.Trigger
+      ref={ref}
       {...props}>
       {children}
     </ContextMenu.Trigger>
   );
-};
+});
 
 export const Portal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
   children,
@@ -39,18 +42,21 @@ export const Portal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
   );
 };
 
-export const Content: FunctionComponent<ContextMenu.ContextMenuContentProps> = ({
+export const Content: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({
   children,
   ...props
-}) => {
+}, ref) => {
   return (
     <ContextMenu.Content
+      ref={ref}
       {...props}
       className={clsx(styles.ContextMenuContent, props.className)}>
       {children}
     </ContextMenu.Content>
   );
-};
+});
 
 export const Item: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
   children,
