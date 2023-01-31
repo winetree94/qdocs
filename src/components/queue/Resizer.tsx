@@ -62,6 +62,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   const rect = animation.rect;
   const rotate = animation.rotate.degree;
+  const scale = animation.scale.scale;
 
   // resizer meta
   const strokeWidth = 20;
@@ -109,10 +110,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     const cos_t: number = Math.cos(theta);
     const sin_t: number = Math.sin(theta);
 
-    const l: number = initResizeEvent.rect.x;
-    const t: number = initResizeEvent.rect.y;
     const w: number = initResizeEvent.rect.width;
     const h: number = initResizeEvent.rect.height;
+    const l: number = initResizeEvent.rect.x;
+    const t: number = initResizeEvent.rect.y;
 
     const c0_x = l + w / 2.0;
     const c0_y = t + h / 2.0;
@@ -350,7 +351,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         left: (resizingRect?.x || rect.x) - margin,
         top: (resizingRect?.y || rect.y) - margin,
         transformOrigin: 'center center',
-        transform: `rotate(${resizingRect?.degree || rotate}deg)`,
+        transform: `rotate(${resizingRect?.degree || rotate}deg) scale(${scale})`,
       }}
       width={actualWidth}
       height={actualHeight}

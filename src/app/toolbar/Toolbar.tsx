@@ -69,6 +69,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
                 fill: '#ffffff',
               },
               pages: [{
+                pageName: 'Page-1',
                 objects: [],
               }],
             });
@@ -163,7 +164,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             value={documentTitle}
             onChange={onTitleInputChange}
             onBlur={onTitleInputBlur}
-            />
+          />
         </div>
         <div>
           <Menubar.Root className={styles.MenubarRoot}>

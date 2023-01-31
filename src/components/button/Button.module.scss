@@ -1,0 +1,44 @@
+@import '@radix-ui/colors/gray.css';
+@import '@radix-ui/colors/whiteA.css';
+
+.QueueButtonBase {
+  @apply flex 
+    items-center 
+    justify-center 
+    border-0 
+    transition-colors;
+
+  background: var(--whiteA1);
+
+  &:hover {
+    background: var(--gray3);
+  }
+
+  &:active {
+    background: var(--gray5);
+  }
+}
+
+.QueueIconButton {
+  &.small {
+    @apply w-8 h-8;
+  }
+  &.medium {
+    @apply w-10 h-10;
+  }
+  &.large {
+    @apply w-12 h-12;
+  }
+}
+
+.QueueButton {
+  &.small {
+    @apply h-8;
+  }
+  &.medium {
+    @apply h-10;
+  }
+  &.large {
+    @apply h-12;
+  }
+}

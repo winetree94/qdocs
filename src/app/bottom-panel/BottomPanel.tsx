@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Button } from 'components/button/Button';
+import { QueueButton, QueueIconButton } from 'components/button/Button';
 import { FunctionComponent, ReactNode } from 'react';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
@@ -23,6 +23,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
       pages: [
         ...queueDocument!.pages,
         {
+          pageName: `Page-${queueDocument!.pages.length + 1}`,
           objects: [],
         }
       ]
@@ -74,6 +75,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
   const createPage = (index: number): void => {
     const pages = [...queueDocument!.pages];
     pages.splice(index, 0, {
+      pageName: `Page-${pages.length + 1}`,
       objects: [],
     });
     setQueueDocument({
@@ -115,15 +117,15 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
         {queueDocument.pages.map((page, index, self) => (
           <QueueContextMenu.Root key={index}>
             <QueueContextMenu.Trigger>
-              <Button
+              <QueueButton
                 key={index}
                 className={clsx(
                   styles.pageButton,
                   settings.queuePage === index && styles.selected,
                 )}
                 onClick={(): void => navigatePage(index)}>
-                {index + 1}
-              </Button>
+                {page.pageName}
+              </QueueButton>
             </QueueContextMenu.Trigger>
             <QueueContextMenu.Portal>
               <QueueContextMenu.Content
@@ -153,11 +155,11 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
         ))}
       </div>
       <div>
-        <Button
+        <QueueIconButton
           className={clsx(styles.pageButton, styles.button)}
           onClick={(): void => createPageAndMove()}>
           Add
-        </Button>
+        </QueueIconButton>
       </div>
     </div>
   );

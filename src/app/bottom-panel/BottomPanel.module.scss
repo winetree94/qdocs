@@ -2,19 +2,6 @@
   @apply flex;
   @apply overflow-x-auto;
   @apply overflow-y-hidden;
-  height: 40px;
-}
-
-.pageButton {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-
-  &.selected {
-    color: red;
-  }
 }
 
 .button {

@@ -1,5 +1,6 @@
-import { css } from '@emotion/css';
+import styles from './Draw.module.scss';
 import { FunctionComponent, ReactNode, useRef, useState } from 'react';
+import clsx from 'clsx';
 
 export interface DrawEvent {
   // fixed
@@ -25,14 +26,6 @@ export interface DrawProps {
   onDrawMove?: (event: DrawEvent, cancel: () => void) => void;
   onDrawEnd?: (event: DrawEvent) => void;
 }
-
-const drawerStyle = css`
-  position: relative;
-`;
-
-const drawStyle = css`
-  position: absolute;
-`;
 
 export const Drawable: FunctionComponent<DrawProps> = ({
   children,
@@ -174,14 +167,14 @@ export const Drawable: FunctionComponent<DrawProps> = ({
 
   return (
     <div
-      className={drawerStyle + ' ' + className}
+      className={clsx(styles.drawer, className)}
       ref={container}
       onMouseDown={onMouseDown}
     >
       {children}
       {isDrawing && (
         <div
-          className={drawStyle}
+          className={styles.draw}
           style={{
             top: position.y,
             left: position.x,
