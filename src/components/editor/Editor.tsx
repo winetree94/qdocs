@@ -13,7 +13,7 @@ import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { QueueObject } from 'components/queue';
 import { QueueDocumentRect } from 'model/document';
-import * as ContextMenu from '@radix-ui/react-context-menu';
+import * as QueueContextMenu from 'components/queue-context-menu/Context';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
@@ -502,7 +502,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   };
 
   return (
-    <ContextMenu.Root
+    <QueueContextMenu.Root
       onOpenChange={(open): void => {
         if (open) {
           setSettings({
@@ -512,7 +512,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
           });
         }
       }}>
-      <ContextMenu.Trigger
+      <QueueContextMenu.Trigger
         className={clsx(
           'overflow-auto',
           'flex',
@@ -557,7 +557,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
             >
               {currentQueueObjects.map((object, index) => {
                 return (
-                  <ContextMenu.Root
+                  <QueueContextMenu.Root
                     key={object.uuid}
                     onOpenChange={(open): void => {
                       if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
@@ -568,7 +568,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                         });
                       }
                     }}>
-                    <ContextMenu.Trigger>
+                    <QueueContextMenu.Trigger>
                       <QueueObject.Container
                         className='queue-object-root'
                         object={object}
@@ -602,109 +602,101 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                           </QueueObject.Drag>
                         </QueueObject.Animator>
                       </QueueObject.Container>
-                    </ContextMenu.Trigger>
-                    <ContextMenu.Portal>
-                      <ContextMenu.Content
-                        className={styles.ContextMenuContent}
+                    </QueueContextMenu.Trigger>
+                    <QueueContextMenu.Portal>
+                      <QueueContextMenu.Content
                         onInteractOutside={(e): void => console.log(e)}
                         onMouseDown={(e): void => e.stopPropagation()}>
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        <QueueContextMenu.Item
                           onClick={(): void => removeObjectOnQueue(settings.selectedObjectUUIDs)}>
                           현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
-                        </ContextMenu.Item>
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item
                           onClick={(): void => removeObject(settings.selectedObjectUUIDs)}>
                           오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
-                        </ContextMenu.Item>
-                        <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Item >
                           잘라내기 <div className={styles.RightSlot}>⌘+T</div>
-                        </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item>
                           복사 <div className={styles.RightSlot}>⌘+C</div>
-                        </ContextMenu.Item>
-                        <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Item
                           onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
                           맨 앞으로 가져오기
-                        </ContextMenu.Item>
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item
                           onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
                           맨 뒤로 보내기
-                        </ContextMenu.Item>
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item
                           onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
                           앞으로 가져오기
-                        </ContextMenu.Item>
-                        <ContextMenu.Item
-                          className={styles.ContextMenuItem}
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item
                           onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
                           뒤로 보내기
-                        </ContextMenu.Item>
-                        <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Item >
                           그룹
-                        </ContextMenu.Item>
-                        <ContextMenu.Item className={styles.ContextMenuItem}>
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item>
                           그룹 해제
-                        </ContextMenu.Item>
-                        <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                        <ContextMenu.Sub>
-                          <ContextMenu.SubTrigger className={styles.ContextMenuSubTrigger}>
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Sub>
+                          <QueueContextMenu.SubTrigger>
                             더보기
                             <div className={styles.RightSlot}>
                               <ChevronRightIcon />
                             </div>
-                          </ContextMenu.SubTrigger>
-                          <ContextMenu.Portal>
-                            <ContextMenu.SubContent
-                              className={styles.ContextMenuSubContent}
+                          </QueueContextMenu.SubTrigger>
+                          <QueueContextMenu.Portal>
+                            <QueueContextMenu.SubContent
                               sideOffset={2}
                               alignOffset={-5}
                             >
-                              <ContextMenu.Item className={styles.ContextMenuItem}>
+                              <QueueContextMenu.Item>
                                 Save Page As… <div className={styles.RightSlot}>⌘+S</div>
-                              </ContextMenu.Item>
-                              <ContextMenu.Item className={styles.ContextMenuItem}>Create Shortcut…</ContextMenu.Item>
-                              <ContextMenu.Item className={styles.ContextMenuItem}>Name Window…</ContextMenu.Item>
-                              <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-                              <ContextMenu.Item className={styles.ContextMenuItem}>Developer Tools</ContextMenu.Item>
-                            </ContextMenu.SubContent>
-                          </ContextMenu.Portal>
-                        </ContextMenu.Sub>
-                      </ContextMenu.Content>
-                    </ContextMenu.Portal>
-                  </ContextMenu.Root>
+                              </QueueContextMenu.Item>
+                              <QueueContextMenu.Item>Create Shortcut…</QueueContextMenu.Item>
+                              <QueueContextMenu.Item>Name Window…</QueueContextMenu.Item>
+                              <QueueContextMenu.Separator />
+                              <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
+                            </QueueContextMenu.SubContent>
+                          </QueueContextMenu.Portal>
+                        </QueueContextMenu.Sub>
+                      </QueueContextMenu.Content>
+                    </QueueContextMenu.Portal>
+                  </QueueContextMenu.Root>
                 );
               })}
             </div>
             <QueueAlert></QueueAlert>
           </Scaler>
         </Drawable>
-      </ContextMenu.Trigger>
-      <ContextMenu.Portal>
-        <ContextMenu.Content className={styles.ContextMenuContent}
+      </QueueContextMenu.Trigger>
+      <QueueContextMenu.Portal>
+        <QueueContextMenu.Content
           onInteractOutside={(e): void => console.log(e)}>
-          <ContextMenu.Item className={styles.ContextMenuItem}>
+          <QueueContextMenu.Item>
             실행 취소 <div className={styles.RightSlot}>⌘+Z</div>
-          </ContextMenu.Item>
-          <ContextMenu.Item className={styles.ContextMenuItem}>
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Item>
             다시 실행 <div className={styles.RightSlot}>⌘+Shift+Z</div>
-          </ContextMenu.Item>
-          <ContextMenu.Separator className={styles.ContextMenuSeparator} />
-          <ContextMenu.Item className={styles.ContextMenuItem}>
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Separator />
+          <QueueContextMenu.Item>
             붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
-          </ContextMenu.Item>
-          <ContextMenu.Item className={styles.ContextMenuItem}>
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Item>
             이 위치로 붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
-          </ContextMenu.Item>
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
-    </ContextMenu.Root>
+          </QueueContextMenu.Item>
+        </QueueContextMenu.Content>
+      </QueueContextMenu.Portal>
+    </QueueContextMenu.Root>
   );
 };
