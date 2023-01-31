@@ -1,11 +1,18 @@
 .container {
   @apply flex;
-  @apply overflow-x-auto;
-  @apply overflow-y-hidden;
+  @apply flex-shrink-0;
 }
 
-.button {
-  padding: 0px 10px;
+.pageHolder {
+  @apply flex;
+  @apply flex-grow;
+  @apply flex-shrink;
+  @apply flex-col;
+  @apply overflow-hidden;
+}
+
+.dragOver {
+  opacity: 0.5;
 }
 
 .Remove {
