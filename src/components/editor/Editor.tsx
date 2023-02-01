@@ -1,15 +1,11 @@
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FunctionComponent, ReactNode, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
-import { documentState } from '../../store/document';
 import {
   isExistObjectOnQueue,
   QueueSquare,
 } from '../../model/object/square';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
-import { useRecoilState } from 'recoil';
 import { QueueObject } from 'components/queue';
 import { QueueDocumentRect } from 'model/document';
 import { QueueContextMenu } from 'components/queue-context-menu/Context';
@@ -19,6 +15,7 @@ import styles from './Editor.module.scss';
 import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/settings';
+import { useQueueDocument } from 'cdk/hooks/queueDocument';
 
 export interface QueueEditorContextType {
   selectedObjectIds: string[];
@@ -50,7 +47,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
 }) => {
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
-  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const { queueDocument, ...setQueueDocument } = useQueueDocument();
   const { settings, ...setSettings } = useSettings();
   const currentQueueObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
@@ -59,108 +56,6 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   const [resizing, setResizing] = useState<QueueRect>(null);
   const [rotating, setRotating] = useState<QueueRotate>(null);
   const [moving, setMoving] = useState<Pick<QueueRect, 'x' | 'y'>>(null);
-
-  const updateObjectRects = (models: RectUpdateModel[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
-      const model = models.find((model) => model.uuid === object.uuid);
-      if (!model) {
-        return object;
-      }
-      const slicedObject = { ...object, effects: object.effects.slice(0) };
-      const createEffectIndex = object.effects.find(
-        (effect) => effect.type === 'create'
-      )!.index;
-      const moveEffectIndex = object.effects.findIndex(
-        (effect) => effect.type === 'move' && effect.index === model.queueIndex
-      );
-
-      if (createEffectIndex === model.queueIndex) {
-        slicedObject.rect = model.rect;
-      }
-
-      if (createEffectIndex !== model.queueIndex && moveEffectIndex !== -1) {
-        slicedObject.effects[moveEffectIndex] = {
-          ...slicedObject.effects[moveEffectIndex],
-          type: 'move',
-          rect: {
-            ...model.rect,
-          },
-        };
-      }
-
-      if (createEffectIndex !== model.queueIndex && moveEffectIndex === -1) {
-        slicedObject.effects.push({
-          type: 'move',
-          index: model.queueIndex,
-          duration: 1000,
-          timing: 'linear',
-          rect: {
-            ...model.rect,
-          },
-        });
-        slicedObject.effects.sort((a, b) => a.index - b.index);
-      }
-
-      return slicedObject;
-    });
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
-    };
-    setQueueDocument({ ...queueDocument!, pages: newPages });
-  };
-
-  const updateObjectRotate = (models: RotateUpdateModel[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
-      const model = models.find((model) => model.uuid === object.uuid);
-      if (!model) {
-        return object;
-      }
-      const slicedObject = { ...object, effects: object.effects.slice(0) };
-      const createEffectIndex = object.effects.find(
-        (effect) => effect.type === 'create'
-      )!.index;
-      const rotateEffectIndex = object.effects.findIndex(
-        (effect) => effect.type === 'rotate' && effect.index === model.queueIndex
-      );
-
-      if (createEffectIndex === model.queueIndex) {
-        slicedObject.rotate = model.rotate;
-      }
-
-      if (createEffectIndex !== model.queueIndex && rotateEffectIndex !== -1) {
-        slicedObject.effects[rotateEffectIndex] = {
-          ...slicedObject.effects[rotateEffectIndex],
-          type: 'rotate',
-          rotate: {
-            ...model.rotate,
-          },
-        };
-      }
-
-      if (createEffectIndex !== model.queueIndex && rotateEffectIndex === -1) {
-        slicedObject.effects.push({
-          type: 'rotate',
-          index: model.queueIndex,
-          duration: 1000,
-          timing: 'linear',
-          rotate: {
-            ...model.rotate,
-          },
-        });
-        slicedObject.effects.sort((a, b) => a.index - b.index);
-      }
-
-      return slicedObject;
-    });
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
-    };
-    setQueueDocument({ ...queueDocument!, pages: newPages });
-  };
 
   const onObjectMouseodown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -238,7 +133,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
       });
 
     setSettings.stopAnimation();
-    updateObjectRects(updateModels);
+    setQueueDocument.updateObjectRects(updateModels);
     setMoving(null);
   };
 
@@ -306,7 +201,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
-    updateObjectRects([
+    setQueueDocument.updateObjectRects([
       {
         uuid: object.uuid,
         queueIndex: settings.queueIndex,
@@ -337,7 +232,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   };
 
   const onRotateEnd = (object: QueueObjectType, rotate: { degree: number }): void => {
-    updateObjectRotate([
+    setQueueDocument.updateObjectRotate([
       {
         uuid: object.uuid,
         queueIndex: settings.queueIndex,
@@ -350,133 +245,6 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
     setRotating(null);
     setResizing(null);
     setTranslateTargets([]);
-  };
-
-  const changeObjectIndex = (
-    fromUUIDs: string[],
-    to: 'start' | 'end' | 'forward' | 'backward',
-  ): void => {
-    let objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
-    switch (to) {
-      case 'start':
-        objects.sort((a, b) => {
-          if (fromUUIDs.includes(a.uuid)) {
-            return 1;
-          }
-          if (fromUUIDs.includes(b.uuid)) {
-            return -1;
-          }
-          return 0;
-        });
-        break;
-      case 'end':
-        objects.sort((a, b) => {
-          if (fromUUIDs.includes(a.uuid)) {
-            return -1;
-          }
-          if (fromUUIDs.includes(b.uuid)) {
-            return 1;
-          }
-          return 0;
-        });
-        break;
-      case 'forward':
-        fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
-          const object = objects[objectIndex];
-          objects.splice(objectIndex, 1);
-          objects.splice(Math.min(objectIndex + 1, objects.length), 0, object);
-        });
-        break;
-      case 'backward':
-        fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
-          const object = objects[objectIndex];
-          objects.splice(objectIndex, 1);
-          objects.splice(Math.min(objectIndex - 1, objects.length), 0, object);
-        });
-        break;
-    }
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: objects
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
-  };
-
-  const removeObjectOnQueue = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.reduce<QueueObjectType[]>((result, object) => {
-      if (!uuids.includes(object.uuid)) {
-        result.push(object);
-        return result;
-      }
-      const newObject: QueueObjectType = {
-        ...object,
-        effects: object.effects
-          .filter((effect) => effect.index < settings.queueIndex)
-      };
-      if (newObject.effects.length === 0) {
-        return result;
-      }
-      newObject.effects.push({
-        index: settings.queueIndex,
-        duration: 0,
-        timing: 'linear',
-        type: 'remove',
-      });
-      result.push(newObject);
-      return result;
-    }, []);
-    setSettings.setSelectedObjectUUIDs([]);
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
-  };
-
-  const removeObject = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => !uuids.includes(object.uuid));
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
-  };
-
-  const onTextEdit = (objectId: string, text: string): void => {
-    const objectIndex = queueDocument!.pages[settings.queuePage].objects.findIndex((object) => object.uuid === objectId);
-    const object = queueDocument!.pages[settings.queuePage].objects[objectIndex];
-    const newObject = {
-      ...object,
-      text: {
-        ...object.text,
-        text: text,
-      },
-    };
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.slice(0);
-    newObjects[objectIndex] = newObject;
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
   };
 
   return (
@@ -560,7 +328,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                             onDraggingEnd={onObjectDragEnd}
                           >
                             <QueueObject.Rect></QueueObject.Rect>
-                            <QueueObject.Text onEdit={(e): void => onTextEdit(object.uuid, e)}></QueueObject.Text>
+                            <QueueObject.Text onEdit={(e): void => setQueueDocument.onTextEdit(object.uuid, e)}></QueueObject.Text>
                             <QueueObject.Resizer
                               onResizeStart={(event): void => onResizeStart(object)}
                               onResizeMove={(event): void => onResizeMove(object, event)}
@@ -578,11 +346,11 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                         onInteractOutside={(e): void => console.log(e)}
                         onMouseDown={(e): void => e.stopPropagation()}>
                         <QueueContextMenu.Item
-                          onClick={(): void => removeObjectOnQueue(settings.selectedObjectUUIDs)}>
+                          onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}>
                           현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => removeObject(settings.selectedObjectUUIDs)}>
+                          onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}>
                           오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
@@ -594,19 +362,19 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
                         <QueueContextMenu.Item
-                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
+                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
                           맨 앞으로 가져오기
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
+                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
                           맨 뒤로 보내기
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
+                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
                           앞으로 가져오기
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
+                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
                           뒤로 보내기
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
