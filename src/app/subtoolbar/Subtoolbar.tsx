@@ -1,3 +1,4 @@
+import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { FunctionComponent } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { QueueIconButton } from '../../components/button/Button';
@@ -87,30 +88,29 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        <QueueIconButton className={styles.btn}>
-          <i className="ri-arrow-go-back-line" />
+        <QueueIconButton>
+          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
         </QueueIconButton>
-        <QueueIconButton className={styles.btn}>
-          <i className="ri-arrow-go-forward-line" />
+        <QueueIconButton >
+          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
         </QueueIconButton>
-        <QueueIconButton className={styles.btn}>
-          <i className="ri-file-copy-line" />
+        <QueueIconButton >
+          <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
         </QueueIconButton>
-        <QueueIconButton className={styles.btn}>
-          <i className="ri-clipboard-line" />
+        <QueueIconButton >
+          <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} />
         </QueueIconButton>
-        <QueueIconButton className={styles.btn} onClick={startPresentationModel}>
-          <i className="ri-slideshow-3-line"></i>
+        <QueueIconButton onClick={startPresentationModel}>
+          <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
         </QueueIconButton>
       </div>
       <div className={styles.center}>
-        <QueueIconButton className={styles.btn} onClick={goToPreviousQueue}>
-          <i className="ri-arrow-left-line" />
+        <QueueIconButton onClick={goToPreviousQueue}>
+          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-line'} />
         </QueueIconButton>
         {queues.map((queue, index) => (
           <QueueIconButton
             key={index}
-            className={styles.btn}
             style={{
               color: queue.index === settings.queueIndex ? 'red' : 'black',
             }}
@@ -119,16 +119,16 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
             {queue.index + 1}
           </QueueIconButton>
         ))}
-        <QueueIconButton className={styles.btn} onClick={goToNextQueue}>
-          <i className="ri-arrow-right-line" />
+        <QueueIconButton onClick={goToNextQueue}>
+          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
         </QueueIconButton>
       </div>
       <div className={styles.right}>
-        <QueueIconButton className={styles.btn} onClick={decreaseScale}>
-          <i className="ri-subtract-line" />
+        <QueueIconButton onClick={decreaseScale}>
+          <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
         </QueueIconButton>
-        <QueueIconButton className={styles.btn} onClick={increaseScale}>
-          <i className="ri-add-line" />
+        <QueueIconButton onClick={increaseScale}>
+          <SvgRemixIcon width={15} height={15} icon={'ri-add-line'} />
         </QueueIconButton>
       </div>
     </div>

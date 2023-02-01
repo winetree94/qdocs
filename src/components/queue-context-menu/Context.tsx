@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { forwardRef, FunctionComponent } from 'react';
 import styles from './Context.module.scss';
 
-export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
+export const QueueContextMenuRoot: FunctionComponent<ContextMenu.ContextMenuProps> = ({
   children,
   ...props
 }) => {
@@ -15,7 +15,7 @@ export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
   );
 };
 
-export const Trigger: React.ForwardRefExoticComponent<
+export const QueueContextMenuTrigger: React.ForwardRefExoticComponent<
   ContextMenu.ContextMenuTriggerProps & React.RefAttributes<HTMLSpanElement>
 > = forwardRef(({
   children,
@@ -30,7 +30,7 @@ export const Trigger: React.ForwardRefExoticComponent<
   );
 });
 
-export const Portal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
+export const QueueContextMenuPortal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
   children,
   ...props
 }) => {
@@ -42,7 +42,7 @@ export const Portal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
   );
 };
 
-export const Content: React.ForwardRefExoticComponent<
+export const QueueContextMenuContent: React.ForwardRefExoticComponent<
   ContextMenu.ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef(({
   children,
@@ -58,7 +58,7 @@ export const Content: React.ForwardRefExoticComponent<
   );
 });
 
-export const Item: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
+export const QueueContextMenuItem: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
   children,
   ...props
 }) => {
@@ -71,7 +71,7 @@ export const Item: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
   );
 };
 
-export const CheckboxItem: FunctionComponent<ContextMenu.ContextMenuCheckboxItemProps> = ({
+export const QueueContextMenuCheckboxItem: FunctionComponent<ContextMenu.ContextMenuCheckboxItemProps> = ({
   children,
   ...props
 }) => {
@@ -84,7 +84,7 @@ export const CheckboxItem: FunctionComponent<ContextMenu.ContextMenuCheckboxItem
   );
 };
 
-export const RadioGroup: FunctionComponent<ContextMenu.ContextMenuRadioGroupProps> = ({
+export const QueueContextMenuRadioGroup: FunctionComponent<ContextMenu.ContextMenuRadioGroupProps> = ({
   children,
   ...props
 }) => {
@@ -96,7 +96,7 @@ export const RadioGroup: FunctionComponent<ContextMenu.ContextMenuRadioGroupProp
   );
 };
 
-export const RadioItem: FunctionComponent<ContextMenu.ContextMenuRadioItemProps> = ({
+export const QueueContextMenuRadioItem: FunctionComponent<ContextMenu.ContextMenuRadioItemProps> = ({
   children,
   ...props
 }) => {
@@ -109,7 +109,7 @@ export const RadioItem: FunctionComponent<ContextMenu.ContextMenuRadioItemProps>
   );
 };
 
-export const Separator: FunctionComponent<ContextMenu.ContextMenuSeparatorProps> = ({
+export const QueueContextMenuSeparator: FunctionComponent<ContextMenu.ContextMenuSeparatorProps> = ({
   children,
   ...props
 }) => {
@@ -122,7 +122,7 @@ export const Separator: FunctionComponent<ContextMenu.ContextMenuSeparatorProps>
   );
 };
 
-export const Sub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
+export const QueueContextMenuSub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
   children,
   ...props
 }) => {
@@ -134,7 +134,7 @@ export const Sub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
   );
 };
 
-export const SubTrigger: FunctionComponent<ContextMenu.ContextMenuSubTriggerProps> = ({
+export const QueueContextMenuSubTrigger: FunctionComponent<ContextMenu.ContextMenuSubTriggerProps> = ({
   children,
   ...props
 }) => {
@@ -147,7 +147,7 @@ export const SubTrigger: FunctionComponent<ContextMenu.ContextMenuSubTriggerProp
   );
 };
 
-export const SubContent: FunctionComponent<ContextMenu.ContextMenuSubContentProps> = ({
+export const QueueContextMenuSubContent: FunctionComponent<ContextMenu.ContextMenuSubContentProps> = ({
   children,
   ...props
 }) => {
@@ -160,4 +160,17 @@ export const SubContent: FunctionComponent<ContextMenu.ContextMenuSubContentProp
   );
 };
 
-export default ContextMenu;
+export const QueueContextMenu = {
+  Root: QueueContextMenuRoot,
+  Trigger: QueueContextMenuTrigger,
+  Portal: QueueContextMenuPortal,
+  Content: QueueContextMenuContent,
+  Item: QueueContextMenuItem,
+  CheckboxItem: QueueContextMenuCheckboxItem,
+  RadioGroup: QueueContextMenuRadioGroup,
+  RadioItem: QueueContextMenuRadioItem,
+  Separator: QueueContextMenuSeparator,
+  Sub: QueueContextMenuSub,
+  SubTrigger: QueueContextMenuSubTrigger,
+  SubContent: QueueContextMenuSubContent,
+};

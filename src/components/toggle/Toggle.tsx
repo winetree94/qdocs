@@ -22,3 +22,8 @@ export const QueueToggleRoot: React.ForwardRefExoticComponent<
     </Toggle.Root>
   );
 });
+
+export const QueueToggle = {
+  Root: QueueToggleRoot,
+};
+

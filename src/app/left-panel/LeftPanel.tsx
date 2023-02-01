@@ -11,7 +11,7 @@ import {
 } from 'react';
 import clsx from 'clsx';
 import { useRecoilState } from 'recoil';
-import { Input } from '../../components/input/Input';
+import { QueueInput } from '../../components/input/Input';
 import { documentSettingsState } from '../../store/settings';
 import { documentState } from '../../store/document';
 import styles from './LeftPanel.module.scss';
@@ -27,6 +27,7 @@ import { QueueDocumentRect } from 'model/document';
 import { QueueObjectType } from 'model/object';
 import { createDefaultLine } from 'model/object/line';
 import { StylerPanel } from 'app/styler-panel/StylerPanel';
+import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 
 export interface QueueObject {
   key: string;
@@ -76,14 +77,16 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
           onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
           className={clsx(styles.objectGroupTitle)}
         >
-          <i
-            className={clsx(
-              styles.objectGroupArrow,
+          <SvgRemixIcon
+            className={styles.objectGroupArrow}
+            width={15}
+            height={15}
+            icon={
               data.closedObjectGroupKey[flattenData.key]
                 ? 'ri-arrow-right-s-line'
                 : 'ri-arrow-down-s-line'
-            )}
-          ></i>
+            }
+          />
           {flattenData.title}
         </div>
       );
@@ -269,9 +272,7 @@ export const LeftPanel: FunctionComponent = () => {
           factory: () => createIcon(iconClassName),
           keyword: [iconClassName],
           preview: (
-            <svg width={30} height={30}>
-              <use href={`/remixicon.symbol.svg#${iconClassName}`}></use>
-            </svg>
+            <SvgRemixIcon width={30} height={30} icon={iconClassName} />
           ),
         })),
       },
@@ -349,12 +350,12 @@ export const LeftPanel: FunctionComponent = () => {
       ) : (
         <>
           <div className={clsx(styles.inputContainer)}>
-            <Input
+            <QueueInput
               placeholder="Search Shape"
               className={clsx(styles.input)}
               value={searchKeyword}
               onChange={(e): void => setSearchKeyword(e.target.value)}
-            ></Input>
+            ></QueueInput>
           </div>
           <div className={clsx('flex', 'flex-1')}>
             <AutoSizer>

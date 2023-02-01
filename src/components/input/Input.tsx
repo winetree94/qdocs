@@ -1,11 +1,24 @@
 import styles from './Input.module.scss';
-import { FunctionComponent } from 'react';
 import clsx from 'clsx';
+import { forwardRef } from 'react';
 
-export const Input: FunctionComponent<React.InputHTMLAttributes<HTMLInputElement>> = ({
+export interface QueueInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  size?: number;
+}
+
+export const QueueInput: React.ForwardRefExoticComponent<
+  QueueInputProps & React.RefAttributes<HTMLInputElement>
+> = forwardRef(({
+  className,
   ...props
-}) => {
+}, ref) => {
   return (
-    <input {...props} className={clsx(styles.input, props.className || '')} />
+    <input
+      ref={ref}
+      {...props}
+      className={clsx(
+        styles.input,
+        className,
+      )} />
   );
-};
+});

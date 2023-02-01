@@ -1,52 +1,85 @@
 import clsx from 'clsx';
-import { FunctionComponent } from 'react';
+import { forwardRef } from 'react';
 import styles from './Button.module.scss';
 
 export const QueueButtonSize = {
+  XSMALL: 'xsmall',
   SMALL: 'small',
   MEDIUM: 'medium',
   LARGE: 'large',
+  XLARGE: 'xlarge',
 } as const;
 
-export interface QueueButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export const QueueButtonColor = {
+  DEFAULT: 'default',
+  BLUE: 'blue',
+  RED: 'red',
+  YELLOW: 'yellow',
+};
+
+export interface BaseQueueButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: typeof QueueButtonSize[keyof typeof QueueButtonSize];
+  color?: typeof QueueButtonColor[keyof typeof QueueButtonColor];
+  round?: boolean;
   children?: React.ReactNode;
 }
 
-export const QueueIconButton: FunctionComponent<QueueButtonProps> = ({
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface QueueIconButtonProps extends BaseQueueButtonProps {
+}
+
+export const QueueIconButton: React.ForwardRefExoticComponent<
+  QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
+> = forwardRef(({
   children,
+  round = false,
   size = 'medium',
+  color = 'default',
   ...props
-}) => {
+}, ref) => {
   return (
     <button
+      ref={ref}
       {...props}
       className={clsx(
         styles.QueueButtonBase,
         styles.QueueIconButton,
         props.className,
         styles[size],
+        styles[color],
+        round ? styles.round : null,
       )}>
       {children}
     </button>
   );
-};
+});
 
-export const QueueButton: FunctionComponent<QueueButtonProps> = ({
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface QueueButtonProps extends BaseQueueButtonProps {
+}
+
+export const QueueButton: React.ForwardRefExoticComponent<
+  QueueButtonProps & React.RefAttributes<HTMLButtonElement>
+> = forwardRef(({
   children,
+  round = false,
   size = 'medium',
+  color = 'default',
   ...props
-}) => {
+}, ref) => {
   return (
     <button
+      ref={ref}
       {...props}
       className={clsx(
         styles.QueueButtonBase,
         styles.QueueButton,
         props.className,
         styles[size],
+        styles[color],
+        round ? styles.round : null,
       )}>
       {children}
     </button>
   );
-};
+});

@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FunctionComponent, ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import { FunctionComponent, ReactNode, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { documentState } from '../../store/document';
 import {
@@ -10,14 +10,12 @@ import {
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { useRecoilState } from 'recoil';
-import { documentSettingsState } from '../../store/settings';
 import { QueueObject } from 'components/queue';
 import { QueueDocumentRect } from 'model/document';
-import * as QueueContextMenu from 'components/queue-context-menu/Context';
+import { QueueContextMenu } from 'components/queue-context-menu/Context';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
-import { QueueAlert } from 'components/alert/Alert';
 import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/settings';
@@ -647,7 +645,6 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                 );
               })}
             </div>
-            <QueueAlert></QueueAlert>
           </Scaler>
         </Drawable>
       </QueueContextMenu.Trigger>

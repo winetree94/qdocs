@@ -2270,4 +2270,4 @@ export const RemixIconClasses = [
   'ri-zoom-out-line',
   'ri-zzz-fill',
   'ri-zzz-line',
-];
+] as const;

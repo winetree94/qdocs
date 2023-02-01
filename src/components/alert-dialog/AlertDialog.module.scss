@@ -1,0 +1,36 @@
+@import '@radix-ui/colors/blackA.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/violet.css';
+@import 'components/dialog/Dialog.module.scss';
+@import 'components/button/Button.module.scss';
+
+.AlertDialogOverlay {
+  @include queue-dialog-overlay;
+}
+
+.AlertDialogContent {
+  @include queue-dialog-content;
+}
+
+.AlertDialogTitle {
+  @include queue-dialog-title;
+}
+
+.AlertDialogDescription {
+  @include queue-dialog-description;
+}
+
+.AlertDialogFooter {
+  @include queue-dialog-footer;
+}
+
+.AlertDialogCancel {
+  @include queue-button-base;
+  @include queue-button;
+}
+
+.AlertDialogAction {
+  @include queue-button-base;
+  @include queue-button;
+}
