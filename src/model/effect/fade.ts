@@ -5,4 +5,3 @@ export interface FadeEffect extends BaseQueueEffect {
   type: 'fade';
   fade: QueueFade;
 }
-
