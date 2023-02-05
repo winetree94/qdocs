@@ -57,9 +57,14 @@ export const Text: FunctionComponent<TextProps> = ({
     onEdit?.(ref.current!.innerHTML);
   };
 
+  const onTextInput = (): void => {
+    onEdit?.(ref.current!.innerHTML);
+  };
+
   useEffect(() => {
     ref.current!.innerHTML = object.text.text;
-  }, [object.text.text]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!detail) {
@@ -84,6 +89,7 @@ export const Text: FunctionComponent<TextProps> = ({
       onKeyDown={onKeydown}
       onBlur={onBlur}
       suppressContentEditableWarning={true}
+      onInput={(): void => onTextInput()}
       style={{
         justifyContent: horizontalAlign,
         alignItems: verticalAlign,
@@ -99,6 +105,7 @@ export const Text: FunctionComponent<TextProps> = ({
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       contentEditable={detail}
+      onMouseDown={(e): void => detail && e.stopPropagation()}
     >
     </div>
   );

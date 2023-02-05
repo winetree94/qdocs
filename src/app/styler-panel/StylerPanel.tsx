@@ -290,7 +290,7 @@ const ObjectStyleText = (): ReactElement => {
   const update = useCallback((text: Partial<QueueText>): void => {
     setQueueDocument.updateObjectProp(
       settings.queuePage, [{
-        uuid: firstObject.uuid,
+        uuid: object.uuid,
         queueIndex: settings.queueIndex,
         props: {
           text: {
@@ -303,7 +303,7 @@ const ObjectStyleText = (): ReactElement => {
       }],
     );
   }, [
-    firstObject.uuid,
+    object.uuid,
     object.text,
     setQueueDocument,
     settings.queueIndex,
