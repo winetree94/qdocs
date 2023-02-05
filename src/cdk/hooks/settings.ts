@@ -81,6 +81,7 @@ export const useSettings = (): UseSettingsHook => {
   ): void => {
     setSettings({
       ...settings,
+      selectionMode: 'normal',
       selectedObjectUUIDs: uuids,
     });
   };
