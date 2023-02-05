@@ -236,12 +236,8 @@ export const QueueEditor: FunctionComponent = () => {
       props: {
         text: {
           text: {
+            ...object.text,
             text,
-            fontColor: object.text.fontColor,
-            fontSize: object.text.fontSize,
-            fontFamily: object.text.fontFamily,
-            horizontalAlign: object.text.horizontalAlign,
-            verticalAlign: object.text.verticalAlign,
           }
         },
       },

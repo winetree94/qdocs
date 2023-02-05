@@ -14,7 +14,6 @@ export const documentState = atom<QueueDocument | null>({
   default: null,
   effects: [
     ({ onSet, setSelf }): void => {
-      console.log(document);
       onSet((newValue, oldValue) => {
         history.push({
           time: Date.now(),
@@ -70,3 +69,14 @@ export const currentQueueObjectsSelector = selector<QueueObjectType[]>({
     return result;
   },
 });
+
+export const getObjectByUUIDSelector = selectorFamily<QueueObjectType | null, string>({
+  key: 'getObjectByUUID',
+  get: (uuid) => ({ get }): QueueObjectType => {
+    const document = get(documentState);
+    const settings = get(documentSettingsState);
+    const result = document!.pages[settings.queuePage].objects.find((object) => object.uuid === uuid);
+    return result || null;
+  }
+});
+

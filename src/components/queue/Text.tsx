@@ -89,7 +89,7 @@ export const Text: FunctionComponent<TextProps> = ({
         alignItems: verticalAlign,
         fontFamily: object.text.fontFamily,
         color: object.text.fontColor,
-        fontSize: object.text.fontSize,
+        fontSize: `${object.text.fontSize}px`,
         top: `${animation.rect.y}px`,
         left: `${animation.rect.x}px`,
         width: `${animation.rect.width}px`,

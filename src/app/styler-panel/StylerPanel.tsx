@@ -1,7 +1,15 @@
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { debounce } from 'cdk/functions/debounce';
+import { useQueueDocument } from 'cdk/hooks/queueDocument';
+import { useSettings } from 'cdk/hooks/settings';
+import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { EffectControllerBox, Slider } from 'components';
+import { QueueInput } from 'components/input/Input';
+import { QueueSelect } from 'components/select/Select';
+import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueObjectType, QueueSquare } from 'model/object';
+import { QueueText } from 'model/property';
 import {
   ChangeEvent,
   createContext,
@@ -15,7 +23,7 @@ import {
   useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { documentState } from 'store/document';
+import { documentState, getObjectByUUIDSelector } from 'store/document';
 import { documentSettingsState } from 'store/settings';
 import classes from './StylerPanel.module.scss';
 
@@ -263,9 +271,149 @@ const ObjectStylerOpacity = (): ReactElement => {
   );
 };
 
+const ObjectStyleText = (): ReactElement => {
+  const { settings } = useSettings();
+  const { queueDocument, ...setQueueDocument } = useQueueDocument();
+  const { objects } = useObjectStylerContext();
+  const [firstObject] = objects;
+  const object = useRecoilValue(getObjectByUUIDSelector(firstObject.uuid));
+
+  const [currentText, setCurrentText] = useState(object.text);
+
+  const updateCurrentText = (text: Partial<QueueText>): void => {
+    setCurrentText({
+      ...currentText,
+      ...text,
+    });
+  };
+
+  const update = useCallback((text: Partial<QueueText>): void => {
+    setQueueDocument.updateObjectProp(
+      settings.queuePage, [{
+        uuid: firstObject.uuid,
+        queueIndex: settings.queueIndex,
+        props: {
+          text: {
+            text: {
+              ...object.text,
+              ...text,
+            },
+          },
+        },
+      }],
+    );
+  }, [
+    firstObject.uuid,
+    object.text,
+    setQueueDocument,
+    settings.queueIndex,
+    settings.queuePage,
+  ]);
+
+  useEffect(() => {
+    if (
+      currentText.fontColor !== object.text.fontColor ||
+      currentText.fontFamily !== object.text.fontFamily ||
+      currentText.fontSize !== object.text.fontSize ||
+      currentText.horizontalAlign !== object.text.horizontalAlign ||
+      currentText.verticalAlign !== object.text.verticalAlign
+    ) {
+      update(currentText);
+    }
+  }, [currentText, object.text, update]);
+
+  return (
+    <div>
+      <div>
+        <h3>
+          Text Settings
+        </h3>
+      </div>
+      <div>
+        <QueueSelect.Root
+          value={currentText.fontFamily}
+          onValueChange={(value): void => updateCurrentText({ fontFamily: value })}
+        >
+          <QueueSelect.Trigger className="SelectTrigger" aria-label="Food">
+            <QueueSelect.Value placeholder="Select a fruit…" />
+            <QueueSelect.Icon className="SelectIcon">
+              <ChevronDownIcon />
+            </QueueSelect.Icon>
+          </QueueSelect.Trigger>
+          <QueueSelect.Portal>
+            <QueueSelect.Content className="SelectContent">
+              <QueueSelect.Viewport className="SelectViewport">
+                <QueueSelect.Group>
+                  <QueueSelect.Item value="Arial">Arial</QueueSelect.Item>
+                  <QueueSelect.Item value="Inter">Inter</QueueSelect.Item>
+                  <QueueSelect.Item value="Roboto">Roboto</QueueSelect.Item>
+                </QueueSelect.Group>
+              </QueueSelect.Viewport>
+            </QueueSelect.Content>
+          </QueueSelect.Portal>
+        </QueueSelect.Root>
+      </div>
+      <div>
+        <div>
+          가로 정렬
+        </div>
+        <QueueToggleGroup.Root
+          type='single'
+          value={currentText.horizontalAlign}
+          onValueChange={(value: 'left' | 'center' | 'right'): void => updateCurrentText({ horizontalAlign: value || currentText.horizontalAlign })}
+        >
+          <QueueToggleGroup.Item value='left' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-left'} />
+          </QueueToggleGroup.Item>
+          <QueueToggleGroup.Item value='center' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-center'} />
+          </QueueToggleGroup.Item>
+          <QueueToggleGroup.Item value='right' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-right'} />
+          </QueueToggleGroup.Item>
+        </QueueToggleGroup.Root>
+      </div>
+      <div>
+        <div>세로 정렬</div>
+        <QueueToggleGroup.Root
+          type='single'
+          value={currentText.verticalAlign}
+          onValueChange={(value: 'top' | 'middle' | 'bottom'): void => updateCurrentText({ verticalAlign: value || currentText.verticalAlign })}
+        >
+          <QueueToggleGroup.Item value='top' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-top'} />
+          </QueueToggleGroup.Item>
+          <QueueToggleGroup.Item value='middle' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-vertically'} />
+          </QueueToggleGroup.Item>
+          <QueueToggleGroup.Item value='bottom' size='small'>
+            <SvgRemixIcon width={15} height={15} icon={'ri-align-bottom'} />
+          </QueueToggleGroup.Item>
+        </QueueToggleGroup.Root>
+      </div>
+      <div>
+        <div>
+          색상
+        </div>
+        <input
+          type="color"
+          value={currentText.fontColor}
+          onChange={(e): void => updateCurrentText({ fontColor: e.target.value })} />
+      </div>
+      <div>
+        <QueueInput
+          value={currentText.fontSize}
+          type='number'
+          onChange={(e): void => updateCurrentText({ fontSize: Number(e.target.value) })} />
+      </div>
+    </div>
+  );
+};
+
 ObjectStyler.Background = ObjectStylerBackground;
 ObjectStyler.Stroke = ObjectStylerStroke;
 ObjectStyler.Opacity = ObjectStylerOpacity;
+ObjectStyler.Text = ObjectStyleText;
 // ------------- styler end -------------
 
 export const StylerPanel = ({
@@ -373,6 +521,7 @@ export const StylerPanel = ({
                   </>
                 )}
                 <ObjectStyler.Opacity />
+                <ObjectStyler.Text />
               </div>
             </ObjectStyler>
           </div>

@@ -103,12 +103,12 @@ export const useQueueDocument = (): UseQueueDocument => {
         }
         // 이펙트로 지원 안되는 속성인 경우 무조건 루트에 반영
         if (!OBJECT_SUPPORTED_EFFECTS[objectType].includes(key as OBJECT_EFFECTS)) {
-          (slicedObject as any)[key as OBJECT_PROPERTIES] = (value as any)[key] || (slicedObject as any)[key];
+          (slicedObject as any)[key] = (value as any)[key] || (slicedObject as any)[key];
           return;
         }
         // 생성 이펙트에서 수정한 경우 무조건 루트에 반영
         if (createEffectIndex === model.queueIndex) {
-          (slicedObject as any)[key as OBJECT_PROPERTIES] = (value as any)[key] || (slicedObject as any)[key];
+          (slicedObject as any)[key] = (value as any)[key] || (slicedObject as any)[key];
           return;
         }
         // 삭제 이후의 이펙트를 수정하려고 한 경우 중단
@@ -127,7 +127,7 @@ export const useQueueDocument = (): UseQueueDocument => {
           index: model.queueIndex,
           duration: value.duration || existEffect?.duration || 1000,
           timing: value.timing || existEffect?.timing || 'linear',
-          [key]: (value as any)[key] || (existEffect as any)?.[key],
+          [key]: { ...((value as any)[key] || (existEffect as any)?.[key]) },
         } as QueueEffectType;
 
         if (effectIndex !== -1) {
