@@ -103,6 +103,7 @@ export const Text: FunctionComponent<TextProps> = ({
         textAlign: textAlign,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg)`,
+        opacity: `${animation.fade.opacity}`,
       }}
       contentEditable={detail}
       onMouseDown={(e): void => detail && e.stopPropagation()}
