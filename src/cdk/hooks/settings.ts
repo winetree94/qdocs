@@ -44,6 +44,13 @@ export interface UseSettingsHook {
    * @param uuid - 선택할 오브젝트 UUID
    */
   setDetailSettingMode: (uuid: string) => void;
+
+  /**
+   * @description
+   * 스케일 변경
+   * @param scale - 변경할 스케일
+   */
+  setScale: (scale: number) => void;
 }
 
 export const useSettings = (): UseSettingsHook => {
@@ -103,12 +110,22 @@ export const useSettings = (): UseSettingsHook => {
     });
   };
 
+  const setScale = (
+    scale: number,
+  ): void => {
+    setSettings({
+      ...settings,
+      scale,
+    });
+  };
+
   return {
     settings,
     setQueueIndex,
     setQueuePageIndex,
     setSelectedObjectUUIDs,
     setDetailSettingMode,
-    stopAnimation
+    stopAnimation,
+    setScale
   };
 };

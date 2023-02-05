@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import {
   isExistObjectOnQueue,
@@ -16,6 +16,7 @@ import { useSettings } from 'cdk/hooks/settings';
 import { useQueueDocument } from 'cdk/hooks/queueDocument';
 
 export const QueueEditor: FunctionComponent = () => {
+  const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const { queueDocument, ...setQueueDocument } = useQueueDocument();
@@ -27,6 +28,16 @@ export const QueueEditor: FunctionComponent = () => {
   const [resizing, setResizing] = useState<QueueRect>(null);
   const [rotating, setRotating] = useState<QueueRotate>(null);
   const [moving, setMoving] = useState<Pick<QueueRect, 'x' | 'y'>>(null);
+
+  // 최초 렌더링 시 스케일 계산
+  useLayoutEffect(() => {
+    const root = rootRef.current!;
+    const scale = Math.min(
+      root.clientWidth / (queueDocument!.documentRect.width + 20),
+      root.clientHeight / (queueDocument!.documentRect.height + 20),
+    );
+    setSettings.setScale(scale);
+  }, []);
 
   const onObjectMouseodown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -252,6 +263,7 @@ export const QueueEditor: FunctionComponent = () => {
         }
       }}>
       <QueueContextMenu.Trigger
+        ref={rootRef}
         className={clsx(
           'overflow-auto',
           'flex',
