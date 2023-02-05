@@ -18,7 +18,7 @@ export const getCurrentRect = (
 ): QueueRect => {
   return object.effects
     .filter((effect) => effect.index <= index)
-    .filter((effect): effect is MoveEffect => effect.type === 'move')
+    .filter((effect): effect is MoveEffect => effect.type === 'rect')
     .reduce<QueueRect>((_, effect) => effect.rect, object.rect);
 };
 
@@ -38,7 +38,7 @@ export const getRectAnimation = (
 
   const moveEffect = object.effects.find((effect): effect is MoveEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
-    return effect.index === targetIndex && effect.type === 'move';
+    return effect.index === targetIndex && effect.type === 'rect';
   });
 
   if (!moveEffect) {
@@ -48,11 +48,11 @@ export const getRectAnimation = (
   const slicedEffect: MoveEffect =
     position === 'backward'
       ? {
-          ...moveEffect,
-          rect: {
-            ...getCurrentRect(object, index),
-          },
-        }
+        ...moveEffect,
+        rect: {
+          ...getCurrentRect(object, index),
+        },
+      }
       : moveEffect;
 
   return {

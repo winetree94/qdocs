@@ -107,31 +107,31 @@ const addableEffectTypes: {
   label: string;
   type: QueueEffectType['type'];
 }[] = [
-  {
-    label: 'fade',
-    type: 'fade',
-  },
-  {
-    label: 'fill',
-    type: 'fill',
-  },
-  {
-    label: 'move',
-    type: 'move',
-  },
-  {
-    label: 'rotate',
-    type: 'rotate',
-  },
-  {
-    label: 'scale',
-    type: 'scale',
-  },
-  {
-    label: 'stroke',
-    type: 'stroke',
-  },
-];
+    {
+      label: 'fade',
+      type: 'fade',
+    },
+    {
+      label: 'fill',
+      type: 'fill',
+    },
+    {
+      label: 'rect',
+      type: 'rect',
+    },
+    {
+      label: 'rotate',
+      type: 'rotate',
+    },
+    {
+      label: 'scale',
+      type: 'scale',
+    },
+    {
+      label: 'stroke',
+      type: 'stroke',
+    },
+  ];
 
 const createEffect = (
   effectType: QueueEffectType['type'],
@@ -157,14 +157,14 @@ const createEffect = (
           initialFade?.type === 'fade' ? initialFade.fade : queueObject.fade,
       };
     }
-    case 'move': {
+    case 'rect': {
       const initialRect = queueObject.effects.reduce(
         (rect, effect) => {
           if (effect.index > queueIndex) {
             return rect;
           }
 
-          if (effect.type === 'move') {
+          if (effect.type === 'rect') {
             return {
               width: rect.width + effect.rect.width,
               height: rect.height + effect.rect.height,
@@ -181,7 +181,7 @@ const createEffect = (
       );
       return {
         ...baseQueueEffect,
-        type: 'move',
+        type: 'rect',
         rect: initialRect,
       };
     }
@@ -260,7 +260,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                         opacity: parseFloat(value.fadeOpacity as string),
                       },
                     };
-                  case 'move':
+                  case 'rect':
                     return {
                       ...effect,
                     };

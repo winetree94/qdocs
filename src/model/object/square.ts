@@ -4,7 +4,15 @@ import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
 import { QueueObjectType } from '.';
 
-export interface QueueSquare extends WithEffects, WithRect, WithFade, WithFill, WithRotation, WithScale, WithStroke, WithText {
+export interface QueueSquare
+  extends WithEffects,
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText {
   type: 'rect';
   uuid: string;
 }

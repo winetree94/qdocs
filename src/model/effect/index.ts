@@ -18,6 +18,7 @@ export * from './rotate';
 export * from './stroke';
 export * from './scale';
 export * from './text';
+export * from './meta';
 
 export type QueueEffectType =
   CreateEffect |

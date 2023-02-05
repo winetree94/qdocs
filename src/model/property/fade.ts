@@ -1,7 +1,9 @@
+import { OBJECT_PROPERTY_META } from './meta';
+
 export interface QueueFade {
   opacity: number;
 }
 
 export interface WithFade {
-  fade: QueueFade;
+  [OBJECT_PROPERTY_META.FADE]: QueueFade;
 }

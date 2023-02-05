@@ -6,5 +6,6 @@ import { QueueSquare } from './square';
 export * from './circle';
 export * from './icon';
 export * from './square';
+export * from './meta';
 
 export type QueueObjectType = QueueSquare | QueueCircle | QueueIcon | QueueLine;

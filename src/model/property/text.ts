@@ -1,3 +1,5 @@
+import { OBJECT_PROPERTY_META } from './meta';
+
 export interface QueueText {
   text: string;
   fontSize: number;
@@ -8,5 +10,5 @@ export interface QueueText {
 }
 
 export interface WithText {
-  text: QueueText;
+  [OBJECT_PROPERTY_META.TEXT]: QueueText;
 }

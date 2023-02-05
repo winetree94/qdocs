@@ -1,3 +1,5 @@
+import { OBJECT_PROPERTY_META } from './meta';
+
 export interface QueueRect {
   x: number;
   y: number;
@@ -6,5 +8,5 @@ export interface QueueRect {
 }
 
 export interface WithRect {
-  rect: QueueRect;
+  [OBJECT_PROPERTY_META.RECT]: QueueRect;
 };

@@ -1,13 +1,11 @@
-import { FunctionComponent, ReactNode, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import {
   isExistObjectOnQueue,
-  QueueSquare,
 } from '../../model/object/square';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { QueueObject } from 'components/queue';
-import { QueueDocumentRect } from 'model/document';
 import { QueueContextMenu } from 'components/queue-context-menu/Context';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
@@ -17,34 +15,7 @@ import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/settings';
 import { useQueueDocument } from 'cdk/hooks/queueDocument';
 
-export interface QueueEditorContextType {
-  selectedObjectIds: string[];
-  queueIndex: number;
-  scale: number;
-  documentRect: QueueDocumentRect;
-  objects: QueueSquare[];
-  currentQueueObjects: QueueSquare[];
-}
-
-export interface RectUpdateModel {
-  uuid: string;
-  queueIndex: number;
-  rect: QueueRect;
-}
-
-export interface RotateUpdateModel {
-  uuid: string;
-  queueIndex: number;
-  rotate: QueueRotate;
-}
-
-export interface QueueEditorProps {
-  children?: ReactNode;
-}
-
-export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
-  children
-}) => {
+export const QueueEditor: FunctionComponent = () => {
   const canvasDiv = useRef<HTMLDivElement>(null);
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const { queueDocument, ...setQueueDocument } = useQueueDocument();
@@ -118,22 +89,29 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
 
     const updateModels = queueDocument!.pages[settings.queuePage].objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
-      .map<RectUpdateModel>((object) => {
+      .map((object) => {
         const rect = getCurrentRect(object, settings.queueIndex);
         return {
           uuid: object.uuid,
-          queueIndex: settings.queueIndex,
           rect: {
-            x: rect.x + adjacentTargetX,
-            y: rect.y + adjacentTargetY,
-            width: rect.width,
-            height: rect.height,
+            rect: {
+              x: rect.x + adjacentTargetX,
+              y: rect.y + adjacentTargetY,
+              width: rect.width,
+              height: rect.height,
+            },
           },
         };
       });
 
     setSettings.stopAnimation();
-    setQueueDocument.updateObjectRects(updateModels);
+    setQueueDocument.updateObjectProp(settings.queuePage, updateModels.map((model) => ({
+      uuid: model.uuid,
+      queueIndex: settings.queueIndex,
+      props: {
+        rect: model.rect,
+      }
+    })));
     setMoving(null);
   };
 
@@ -201,18 +179,20 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
-    setQueueDocument.updateObjectRects([
-      {
-        uuid: object.uuid,
-        queueIndex: settings.queueIndex,
+    setQueueDocument.updateObjectProp(settings.queuePage, [{
+      uuid: object.uuid,
+      queueIndex: settings.queueIndex,
+      props: {
         rect: {
-          x: rect.x,
-          y: rect.y,
-          width: rect.width,
-          height: rect.height,
-        },
-      },
-    ]);
+          rect: {
+            x: rect.x,
+            y: rect.y,
+            width: rect.width,
+            height: rect.height,
+          }
+        }
+      }
+    }]);
     setResizing(null);
     setRotating(null);
     setTranslateTargets([]);
@@ -232,19 +212,40 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
   };
 
   const onRotateEnd = (object: QueueObjectType, rotate: { degree: number }): void => {
-    setQueueDocument.updateObjectRotate([
-      {
-        uuid: object.uuid,
-        queueIndex: settings.queueIndex,
+    setQueueDocument.updateObjectProp(settings.queuePage, [{
+      uuid: object.uuid,
+      queueIndex: settings.queueIndex,
+      props: {
         rotate: {
-          degree: rotate.degree,
-          position: 'forward',
+          rotate: {
+            degree: rotate.degree,
+            position: 'forward',
+          },
         },
       },
-    ]);
+    }]);
     setRotating(null);
     setResizing(null);
     setTranslateTargets([]);
+  };
+
+  const onTextEdit = (object: QueueObjectType, text: string): void => {
+    setQueueDocument.updateObjectProp(settings.queuePage, [{
+      uuid: object.uuid,
+      queueIndex: settings.queueIndex,
+      props: {
+        text: {
+          text: {
+            text,
+            fontColor: object.text.fontColor,
+            fontSize: object.text.fontSize,
+            fontFamily: object.text.fontFamily,
+            horizontalAlign: object.text.horizontalAlign,
+            verticalAlign: object.text.verticalAlign,
+          }
+        },
+      },
+    }]);
   };
 
   return (
@@ -328,7 +329,7 @@ export const QueueEditor: FunctionComponent<QueueEditorProps> = ({
                             onDraggingEnd={onObjectDragEnd}
                           >
                             <QueueObject.Rect></QueueObject.Rect>
-                            <QueueObject.Text onEdit={(e): void => setQueueDocument.onTextEdit(object.uuid, e)}></QueueObject.Text>
+                            <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)}></QueueObject.Text>
                             <QueueObject.Resizer
                               onResizeStart={(event): void => onResizeStart(object)}
                               onResizeMove={(event): void => onResizeMove(object, event)}

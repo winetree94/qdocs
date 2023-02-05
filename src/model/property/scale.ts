@@ -1,7 +1,9 @@
+import { OBJECT_PROPERTY_META } from './meta';
+
 export interface QueueScale {
   scale: number;
 }
 
 export interface WithScale {
-  scale: QueueScale;
+  [OBJECT_PROPERTY_META.SCALE]: QueueScale;
 }

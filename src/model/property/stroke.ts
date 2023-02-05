@@ -1,3 +1,7 @@
+import {
+  OBJECT_PROPERTY_META,
+} from './meta';
+
 export interface QueueStroke {
   dasharray: string;
   width: number;
@@ -5,5 +9,5 @@ export interface QueueStroke {
 }
 
 export interface WithStroke {
-  stroke: QueueStroke;
+  [OBJECT_PROPERTY_META.STROKE]: QueueStroke;
 }
