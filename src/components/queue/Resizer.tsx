@@ -73,6 +73,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const actualWidth = (resizingRect?.width || rect.width) + margin * 2;
   const actualHeight = (resizingRect?.height || rect.height) + margin * 2;
 
+  const [rotatingDegree, setRotatingDegree] = React.useState<number | null>(null);
+
   const [initResizeEvent, setInitResizeEvent] = React.useState<{
     event: MouseEvent;
     rect: QueueRect;
@@ -309,8 +311,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     (event: MouseEvent) => {
       const { absRect } = initRotateEvent;
       const [centerX, centerY] = center(absRect.x, absRect.y, absRect.width, absRect.height);
-      const degree = angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree;
-      onRotateMove?.({ ...absRect, degree: degree, scale: 0, }, cancelRotate);
+      const degree = Math.ceil(angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree);
+      const adjacent = Math.round(degree / 5) * 5;
+      setRotatingDegree(event.shiftKey ? degree : adjacent);
+      onRotateMove?.({ ...absRect, degree: event.shiftKey ? degree : adjacent, scale: 0, }, cancelRotate);
     },
     [initRotateEvent, onRotateMove, cancelRotate]
   );
@@ -319,8 +323,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     (event: MouseEvent) => {
       const { absRect } = initRotateEvent;
       const [centerX, centerY] = center(absRect.x, absRect.y, absRect.width, absRect.height);
-      const degree = angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree;
-      onRotateEnd?.({ ...absRect, degree: degree, scale: 0, });
+      const degree = Math.ceil(angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree);
+      const adjacent = Math.round(degree / 5) * 5;
+      setRotatingDegree(null);
+      onRotateEnd?.({ ...absRect, degree: event.shiftKey ? degree : adjacent, scale: 0, });
       setInitRotateEvent(null);
     },
     [initRotateEvent, onRotateEnd]
@@ -344,99 +350,113 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   }
 
   return (
-    <svg
-      ref={svgRef}
-      className={styles.canvas}
-      style={{
-        left: (resizingRect?.x || rect.x) - margin,
-        top: (resizingRect?.y || rect.y) - margin,
-        transformOrigin: 'center center',
-        transform: `rotate(${resizingRect?.degree || rotate}deg) scale(${scale})`,
-      }}
-      width={actualWidth}
-      height={actualHeight}
-    >
-      {/* top left */}
-      <rect
-        className={clsx(styles.resizer, styles.topLeft)}
-        x={margin - distance}
-        y={margin - distance}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}
-      ></rect>
-      {/* top middle */}
-      <rect
-        className={clsx(styles.resizer, styles.topMiddle)}
-        x={actualWidth / 2 - strokeWidth / 2}
-        y={margin - distance}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}
-      ></rect>
-      {/* top right */}
-      <rect
-        className={clsx(styles.resizer, styles.topRight)}
-        x={actualWidth - margin - (strokeWidth - distance)}
-        y={margin - distance}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}
-      ></rect>
-      {/* middle right */}
-      <rect
-        className={clsx(styles.resizer, styles.middleRight)}
-        x={actualWidth - margin - (strokeWidth - distance)}
-        y={actualHeight / 2 - strokeWidth / 2}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'middle-right')}
-      ></rect>
-      {/* bottom right */}
-      <rect
-        className={clsx(styles.resizer, styles.bottomRight)}
-        x={actualWidth - margin - (strokeWidth - distance)}
-        y={actualHeight - margin - (strokeWidth - distance)}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'bottom-right')}
-      ></rect>
-      {/* bottom middle */}
-      <rect
-        className={clsx(styles.resizer, styles.bottomMiddle)}
-        x={actualWidth / 2 - strokeWidth / 2}
-        y={actualHeight - margin - (strokeWidth - distance)}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'bottom-middle')}
-      ></rect>
-      {/* bottom left */}
-      <rect
-        className={clsx(styles.resizer, styles.bottomLeft)}
-        x={margin - distance}
-        y={actualHeight - margin - (strokeWidth - distance)}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}
-      ></rect>
-      {/* middle left */}
-      <rect
-        className={clsx(styles.resizer, styles.middleLeft)}
-        x={margin - distance}
-        y={actualHeight / 2 - strokeWidth / 2}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}
-      ></rect>
-      {/* rotation */}
-      <rect
-        className={clsx(styles.resizer, styles.rotation)}
-        x={actualWidth - margin - (strokeWidth - distance) + 50}
-        y={actualHeight - margin - (strokeWidth - distance) + 50}
-        width={strokeWidth}
-        height={strokeWidth}
-        onMouseDown={(e): void => onRotateMousedown(e)}
-      ></rect>
-    </svg>
+    <>
+      <svg
+        ref={svgRef}
+        className={styles.canvas}
+        style={{
+          left: (resizingRect?.x || rect.x) - margin,
+          top: (resizingRect?.y || rect.y) - margin,
+          transformOrigin: 'center center',
+          transform: `rotate(${resizingRect?.degree || rotate}deg) scale(${scale})`,
+        }}
+        width={actualWidth}
+        height={actualHeight}
+      >
+        {/* top left */}
+        <rect
+          className={clsx(styles.resizer, styles.topLeft)}
+          x={margin - distance}
+          y={margin - distance}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}
+        ></rect>
+        {/* top middle */}
+        <rect
+          className={clsx(styles.resizer, styles.topMiddle)}
+          x={actualWidth / 2 - strokeWidth / 2}
+          y={margin - distance}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}
+        ></rect>
+        {/* top right */}
+        <rect
+          className={clsx(styles.resizer, styles.topRight)}
+          x={actualWidth - margin - (strokeWidth - distance)}
+          y={margin - distance}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}
+        ></rect>
+        {/* middle right */}
+        <rect
+          className={clsx(styles.resizer, styles.middleRight)}
+          x={actualWidth - margin - (strokeWidth - distance)}
+          y={actualHeight / 2 - strokeWidth / 2}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'middle-right')}
+        ></rect>
+        {/* bottom right */}
+        <rect
+          className={clsx(styles.resizer, styles.bottomRight)}
+          x={actualWidth - margin - (strokeWidth - distance)}
+          y={actualHeight - margin - (strokeWidth - distance)}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-right')}
+        ></rect>
+        {/* bottom middle */}
+        <rect
+          className={clsx(styles.resizer, styles.bottomMiddle)}
+          x={actualWidth / 2 - strokeWidth / 2}
+          y={actualHeight - margin - (strokeWidth - distance)}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-middle')}
+        ></rect>
+        {/* bottom left */}
+        <rect
+          className={clsx(styles.resizer, styles.bottomLeft)}
+          x={margin - distance}
+          y={actualHeight - margin - (strokeWidth - distance)}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}
+        ></rect>
+        {/* middle left */}
+        <rect
+          className={clsx(styles.resizer, styles.middleLeft)}
+          x={margin - distance}
+          y={actualHeight / 2 - strokeWidth / 2}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}
+        ></rect>
+        {/* rotation */}
+        <rect
+          className={clsx(styles.resizer, styles.rotation)}
+          x={actualWidth - margin - (strokeWidth - distance) + 50}
+          y={actualHeight - margin - (strokeWidth - distance) + 50}
+          width={strokeWidth}
+          height={strokeWidth}
+          onMouseDown={(e): void => onRotateMousedown(e)}
+        ></rect>
+      </svg>
+      {rotatingDegree !== null && (
+        <div
+          className={clsx(styles.RotationDegree)}
+          style={{
+            left: (resizingRect?.x || rect.x) - margin,
+            top: (resizingRect?.y || rect.y) - margin + animation.rect.height,
+            width: actualWidth,
+            height: actualHeight
+          }}>
+          {rotatingDegree}°
+        </div>
+      )}
+    </>
   );
 };

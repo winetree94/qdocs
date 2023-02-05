@@ -36,3 +36,10 @@
   cursor: crosshair;
   fill: var(--violet9);
 }
+
+.RotationDegree {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
