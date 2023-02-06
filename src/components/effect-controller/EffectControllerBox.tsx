@@ -3,7 +3,11 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { debounce } from 'cdk/functions/debounce';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import { Slider } from 'components/slider';
-import { BaseQueueEffect, QueueEffectType } from 'model/effect';
+import {
+  BaseQueueEffect,
+  OBJECT_EFFECT_META,
+  QueueEffectType,
+} from 'model/effect';
 import {
   FormEvent,
   ReactElement,
@@ -16,7 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { documentSettingsState } from 'store/settings';
 import { Dropdown } from 'components/dropdown';
-import { QueueObjectType } from 'model/object';
+import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 
 // TODO 중복되는 타입 분리
 type ChangedValue = { [k: string]: FormDataEntryValue };
@@ -102,36 +106,6 @@ export const EffectController = ({
     </div>
   );
 };
-
-const addableEffectTypes: {
-  label: string;
-  type: QueueEffectType['type'];
-}[] = [
-    {
-      label: 'fade',
-      type: 'fade',
-    },
-    {
-      label: 'fill',
-      type: 'fill',
-    },
-    {
-      label: 'rect',
-      type: 'rect',
-    },
-    {
-      label: 'rotate',
-      type: 'rotate',
-    },
-    {
-      label: 'scale',
-      type: 'scale',
-    },
-    {
-      label: 'stroke',
-      type: 'stroke',
-    },
-  ];
 
 const createEffect = (
   effectType: QueueEffectType['type'],
@@ -225,9 +199,15 @@ export const EffectControllerBox = (): ReactElement | null => {
   const currentQueueObjectEffects = firstObject.effects.filter(
     (effect) => effect.index === settings.queueIndex
   );
+  const addableEffectTypes = Object.values(
+    OBJECT_ADDABLE_EFFECTS[firstObject.type]
+  );
   const currentQueueObjectEffectTypes = currentQueueObjectEffects.map(
     (currentQueueObjectEffect) => currentQueueObjectEffect.type
   );
+  const createEffectIndex = firstObject.effects.find(
+    (effect) => effect.type === OBJECT_EFFECT_META.CREATE
+  ).index;
 
   const debounceEffectChange = useMemo(
     () =>
@@ -371,23 +351,24 @@ export const EffectControllerBox = (): ReactElement | null => {
         <div className="flex justify-between">
           <p className="font-medium">Queue effects</p>
           <Dropdown>
-            <Dropdown.Trigger className="flex items-center">
+            <Dropdown.Trigger
+              className="flex items-center disabled:cursor-not-allowed"
+              disabled={createEffectIndex === settings.queueIndex}
+            >
               <PlusIcon />
             </Dropdown.Trigger>
             <Dropdown.Content side="right">
               {addableEffectTypes.map((effectType) => {
-                if (currentQueueObjectEffectTypes.includes(effectType.type)) {
+                if (currentQueueObjectEffectTypes.includes(effectType)) {
                   return null;
                 }
 
                 return (
                   <Dropdown.Item
-                    key={effectType.label}
-                    onClick={(): void =>
-                      handleAddEffectItemClick(effectType.type)
-                    }
+                    key={effectType}
+                    onClick={(): void => handleAddEffectItemClick(effectType)}
                   >
-                    {effectType.label}
+                    {effectType}
                   </Dropdown.Item>
                 );
               })}
