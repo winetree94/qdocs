@@ -29,8 +29,8 @@ export const Scaler: FunctionComponent<ScalerProps> = ({
           styles.ActualSizer,
         )}
         style={{
-          width: width * scale,
-          height: height * scale,
+          maxWidth: width * scale,
+          maxHeight: height * scale,
         }}
       >
         <div
