@@ -1,23 +1,18 @@
-@import '@radix-ui/colors/blackA.css';
-@import '@radix-ui/colors/gray.css';
-@import '@radix-ui/colors/blue.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/violet.css';
-
-.container {
+.Container {
+  @apply flex;
   border-bottom: 1px solid var(--gray5);
   background-color: var(--gray1);
 }
 
-.iconContainer {
+.LogoContainer {
+  @apply flex justify-center items-center;
   width: 74px;
 }
 
-.titleInput {
-  background: var(--gray1);
-  outline: none;
+.ContentContainer {
+  @apply flex flex-col flex-auto;
+}
 
-  &:hover {
-    background: var(--gray3);
-  }
+.TitleContainer {
+  @apply m-2.5;
 }

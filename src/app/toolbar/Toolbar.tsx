@@ -8,9 +8,10 @@ import styles from './Toolbar.module.scss';
 import { documentState } from 'store/document';
 import { useRecoilState } from 'recoil';
 import clsx from 'clsx';
-import { CookieIcon } from '@radix-ui/react-icons';
 import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
+import { QueueInput } from 'components/input/Input';
+import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 
 
 export interface ToolbarModel {
@@ -51,114 +52,71 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     }
   };
 
-  const items: ToolbarModel[] = [
-    {
-      key: 'file',
-      label: <>파일</>,
-      children: [
-        // 새로운 문서를 생성
-        {
-          key: 'new-document',
-          label: <>새 문서</>,
-          onClick: (): void => {
-            setQueueDocument({
-              documentName: 'Untitled',
-              documentRect: {
-                width: 1920,
-                height: 1080,
-                fill: '#ffffff',
-              },
-              pages: [{
-                pageName: 'Page-1',
-                objects: [],
-              }],
-            });
-          },
-          children: [],
-        },
-        // 문서 열기
-        {
-          key: 'open-document',
-          label: <>문서 열기</>,
-          onClick: (): void => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.click();
-            input.addEventListener('change', e => {
-              try {
-                if (!input.files) {
-                  return;
-                }
-                const file = input.files[0];
-                if (!file) {
-                  return;
-                }
-                const fileReader = new FileReader();
-                fileReader.onload = (e): void => {
-                  const result = e.target?.result as string;
-                  const document = JSON.parse(result) as QueueDocument;
-                  setQueueDocument(document);
-                };
-                fileReader.readAsText(file);
-              } catch (e) {
-                console.warn(e);
-              }
-            });
-          },
-          children: [],
-        },
-        // 문서 저장
-        {
-          key: 'save-document',
-          label: <>문서 저장</>,
-          onClick: (): void => {
-            if (!queueDocument) return;
-            const stringified = JSON.stringify(queueDocument);
-            const blob = new Blob([stringified], { type: 'octet/stream' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${queueDocument.documentName}.que`;
-            a.click();
-            URL.revokeObjectURL(url);
-          },
-          children: [],
+  const createNewDocument = (): void => {
+    setQueueDocument({
+      documentName: 'Untitled',
+      documentRect: {
+        width: 1920,
+        height: 1080,
+        fill: '#ffffff',
+      },
+      pages: [{
+        pageName: 'Page-1',
+        objects: [],
+      }],
+    });
+  };
+
+  const openDocument = (): void => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.click();
+    input.addEventListener('change', e => {
+      try {
+        if (!input.files) {
+          return;
         }
-      ]
-    },
-    {
-      key: 'edit',
-      label: <>수정</>,
-      children: [
-        {
-          key: 'edit-item',
-          label: <>Edit item</>,
-          children: [],
+        const file = input.files[0];
+        if (!file) {
+          return;
         }
-      ]
-    },
-    {
-      key: 'view',
-      label: <>보기</>,
-      children: [
-        {
-          key: 'view-item',
-          label: <>Edit item</>,
-          children: [],
-        }
-      ]
-    },
-  ];
+        const fileReader = new FileReader();
+        fileReader.onload = (e): void => {
+          const result = e.target?.result as string;
+          const document = JSON.parse(result) as QueueDocument;
+          setQueueDocument(document);
+        };
+        fileReader.readAsText(file);
+      } catch (e) {
+        console.warn(e);
+      }
+    });
+  };
+
+  const saveDocument = (): void => {
+    if (!queueDocument) return;
+    const stringified = JSON.stringify(queueDocument);
+    const blob = new Blob([stringified], { type: 'octet/stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${queueDocument.documentName}.que`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const closeDocument = (): void => {
+    setQueueDocument(null);
+  };
 
   return (
-    <div className={clsx('flex', styles.container)}>
-      <div className={clsx('flex', 'justify-center', 'items-center', styles.iconContainer)}>
-        <CookieIcon height={40} width={40} />
+    <div className={clsx(styles.Container)}>
+      <div className={clsx(styles.LogoContainer)}>
+        <SvgRemixIcon icon='ri-file-ppt-line' width={40} height={40} />
       </div>
-      <div className={clsx('flex', 'flex-col', 'flex-auto')}>
-        <div className={clsx('m-2.5')}>
-          <input
-            className={styles.titleInput}
+      <div className={clsx(styles.ContentContainer)}>
+        <div className={clsx(styles.TitleContainer)}>
+          <QueueInput
             disabled={!queueDocument}
             type="text"
             value={documentTitle}
@@ -166,30 +124,99 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             onBlur={onTitleInputBlur}
           />
         </div>
-        <div>
-          <QueueMenubar.Root className={styles.MenubarRoot}>
-            {
-              items.map((item) => (
-                <QueueMenubar.Menu key={item.key}>
-                  <QueueMenubar.Trigger>
-                    {item.label}
-                  </QueueMenubar.Trigger>
-                  <QueueMenubar.Portal>
-                    <QueueMenubar.Content align="start">
-                      {item.children.map((child) => (
-                        <QueueMenubar.Item
-                          key={child.key}
-                          onClick={(e): void => child.onClick?.()}>
-                          {child.label}
-                        </QueueMenubar.Item>
-                      ))}
-                    </QueueMenubar.Content>
-                  </QueueMenubar.Portal>
-                </QueueMenubar.Menu>
-              ))
-            }
-          </QueueMenubar.Root>
-        </div>
+        <QueueMenubar.Root>
+          <QueueMenubar.Menu>
+            <QueueMenubar.Trigger>
+              파일
+            </QueueMenubar.Trigger>
+            <QueueMenubar.Portal>
+              <QueueMenubar.Content align="start">
+                <QueueMenubar.Item onClick={createNewDocument}>
+                  새 문서
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item onClick={openDocument}>
+                  문서 열기
+                </QueueMenubar.Item>
+                <QueueMenubar.Item onClick={saveDocument}>
+                  문서 저장
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item onClick={closeDocument}>
+                  문서 닫기
+                </QueueMenubar.Item>
+              </QueueMenubar.Content>
+            </QueueMenubar.Portal>
+          </QueueMenubar.Menu>
+
+          <QueueMenubar.Menu>
+            <QueueMenubar.Trigger>
+              수정
+            </QueueMenubar.Trigger>
+            <QueueMenubar.Portal>
+              <QueueMenubar.Content align="start">
+                <QueueMenubar.Item>
+                  실행 취소
+                </QueueMenubar.Item>
+                <QueueMenubar.Item>
+                  다시 실행
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item>
+                  붙여넣기
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item>
+                  제목 수정
+                </QueueMenubar.Item>
+                <QueueMenubar.Item>
+                  페이지 설정
+                </QueueMenubar.Item>
+              </QueueMenubar.Content>
+            </QueueMenubar.Portal>
+          </QueueMenubar.Menu>
+
+          <QueueMenubar.Menu>
+            <QueueMenubar.Trigger>
+              보기
+            </QueueMenubar.Trigger>
+            <QueueMenubar.Portal>
+              <QueueMenubar.Content align="start">
+                <QueueMenubar.Item>
+                  프레젠테이션 모드 시작
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item>
+                  전체 화면
+                </QueueMenubar.Item>
+              </QueueMenubar.Content>
+            </QueueMenubar.Portal>
+          </QueueMenubar.Menu>
+
+          <QueueMenubar.Menu>
+            <QueueMenubar.Trigger>
+              도움말
+            </QueueMenubar.Trigger>
+            <QueueMenubar.Portal>
+              <QueueMenubar.Content align="start">
+                <QueueMenubar.Item>
+                  키보드 단축키
+                </QueueMenubar.Item>
+                <QueueMenubar.Item>
+                  웹 사이트
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item>
+                  업데이트 확인
+                </QueueMenubar.Item>
+                <QueueMenubar.Separator />
+                <QueueMenubar.Item>
+                  정보
+                </QueueMenubar.Item>
+              </QueueMenubar.Content>
+            </QueueMenubar.Portal>
+          </QueueMenubar.Menu>
+        </QueueMenubar.Root>
       </div>
     </div>
   );

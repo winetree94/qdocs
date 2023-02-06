@@ -1,5 +1,6 @@
 import * as Menubar from '@radix-ui/react-menubar';
 import clsx from 'clsx';
+import { QueueButtonProps } from 'components/button/Button';
 import React from 'react';
 import styles from './Menubar.module.scss';
 
@@ -28,13 +29,24 @@ export const Menu: React.FC<Menubar.ScopedProps<Menubar.MenubarMenuProps>> = ({ 
 };
 
 export const Trigger: React.ForwardRefExoticComponent<
-  Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+  QueueButtonProps & Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
+> = React.forwardRef(({
+  children,
+  size = 'small',
+  color = 'default',
+  className,
+  ...props
+}, ref) => {
   return (
     <Menubar.Trigger
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarTrigger, className)}
+      className={clsx(
+        styles.MenubarTrigger,
+        styles[size],
+        styles[color],
+        className
+      )}
     >
       {children}
     </Menubar.Trigger>

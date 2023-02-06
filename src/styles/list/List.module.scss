@@ -1,0 +1,30 @@
+@mixin list-item {
+  font-size: 13px;
+  line-height: 1;
+  color: var(--gray12);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 0 5px;
+  position: relative;
+  padding-left: 25px;
+  user-select: none;
+  outline: none;
+}
+
+@mixin list-item-disabled {
+  color: var(--gray8);
+  pointer-events: 'none';
+}
+
+@mixin list-item-hover {
+  background-color: var(--blue10);
+  color: var(--blue1);
+}
+
+@mixin list-separator {
+  height: 1px;
+  background-color: var(--gray5);
+  margin: 5px;
+}
