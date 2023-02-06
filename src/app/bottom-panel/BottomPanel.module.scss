@@ -5,11 +5,15 @@
 }
 
 .pageHolder {
+  @apply flex 
+    flex-grow 
+    flex-shrink 
+    flex-col 
+    min-w-0;
+}
+
+.Pages {
   @apply flex;
-  @apply flex-grow;
-  @apply flex-shrink;
-  @apply flex-col;
-  @apply overflow-hidden;
 }
 
 .dragOver {

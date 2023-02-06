@@ -10,6 +10,8 @@ import { useSettings } from 'cdk/hooks/settings';
 import { EditPageNameDialog } from 'app/dialogs/EditPageNameDialog';
 import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { cloneDeep } from 'lodash';
 
 export interface BottomPanelProps {
   children?: ReactNode;
@@ -24,20 +26,6 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
 
   const [editNamePageIndex, setEditNamePageIndex] = useState<number>(-1);
   const [deleteConfirmPageIndex, setDeleteConfirmPageIndex] = useState<number>(-1);
-
-  const createPageAndMove = (): void => {
-    setQueueDocument({
-      ...queueDocument!,
-      pages: [
-        ...queueDocument!.pages,
-        {
-          pageName: `Page-${queueDocument!.pages.length + 1}`,
-          objects: [],
-        }
-      ]
-    });
-    setSettings.setQueuePageIndex(queueDocument!.pages.length);
-  };
 
   const navigatePage = (index: number): void => {
     setSettings.setQueuePageIndex(index);
@@ -113,6 +101,17 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
     setEditNamePageIndex(-1);
   };
 
+  const onPageCopy = (index: number): void => {
+    const cloned = cloneDeep(queueDocument.pages[index]);
+    cloned.pageName = `${cloned.pageName} (copy)`;
+    const pages = [...queueDocument!.pages];
+    setQueueDocument({
+      ...queueDocument!,
+      pages: [...pages.slice(0, index + 1), cloned, ...pages.slice(index + 1)],
+    });
+    setSettings.setQueuePageIndex(index + 1);
+  };
+
   const onPageDeleteSubmit = (index: number): void => {
     removePage(index);
     setDeleteConfirmPageIndex(-1);
@@ -126,65 +125,77 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = ({
           value={`${settings.queuePage}`}
           onValueChange={(value): void => navigatePage(Number(value))}
         >
-          {queueDocument.pages.map((page, index, self) => (
-            <QueueContextMenu.Root key={index}>
-              <QueueContextMenu.Trigger
-                className={clsx(
-                  'page-item',
-                  dragOverIndex === index && styles.dragOver,
-                )}
-                draggable="true"
-                data-index={index}
-                onDragStart={(e): void => onDragStart(e, index)}
-                onDragEnter={(): void => setDragOverIndex(index)}
-                onDragEnd={(): void => setDragOverIndex(-1)}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-                onDoubleClick={(): void => setEditNamePageIndex(index)}>
-                <QueueToggleGroup.Item
-                  value={`${index}`}
-                  size='small'>
-                  {page.pageName}
-                </QueueToggleGroup.Item>
-              </QueueContextMenu.Trigger>
-              <QueueContextMenu.Portal>
-                <QueueContextMenu.Content>
-                  <QueueContextMenu.Item onClick={(): void => movePage(index, Math.max(index - 1, 0))}>
-                    페이지를 왼쪽으로 이동
-                  </QueueContextMenu.Item>
-                  <QueueContextMenu.Item onClick={(): void => movePage(index, Math.min(index + 1, self.length - 1))}>
-                    페이지를 오른쪽으로 이동
-                  </QueueContextMenu.Item>
-                  <QueueContextMenu.Separator />
-                  <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index, 0))}>
-                    왼쪽에 페이지 추가
-                  </QueueContextMenu.Item>
-                  <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index + 1, self.length))}>
-                    오른쪽에 페이지 추가
-                  </QueueContextMenu.Item>
-                  <QueueContextMenu.Separator />
-                  <QueueContextMenu.Item onClick={(): void => setEditNamePageIndex(index)}>
-                    페이지 이름 변경
-                  </QueueContextMenu.Item>
-                  {queueDocument!.pages.length >= 2 && (
-                    <>
-                      <QueueContextMenu.Separator />
-                      <QueueContextMenu.Item
-                        className={styles.Remove}
-                        onClick={(): void => setDeleteConfirmPageIndex(index)}>
-                        페이지 삭제
-                      </QueueContextMenu.Item>
-                    </>
-                  )}
-                </QueueContextMenu.Content>
-              </QueueContextMenu.Portal>
-            </QueueContextMenu.Root>
-          ))}
+          <QueueScrollArea.Root>
+            <QueueScrollArea.Viewport>
+              <div className={clsx(styles.Pages)}>
+                {queueDocument.pages.map((page, index, self) => (
+                  <QueueContextMenu.Root key={index}>
+                    <QueueContextMenu.Trigger
+                      className={clsx(
+                        'page-item',
+                        dragOverIndex === index && styles.dragOver,
+                      )}
+                      draggable="true"
+                      data-index={index}
+                      onDragStart={(e): void => onDragStart(e, index)}
+                      onDragEnter={(): void => setDragOverIndex(index)}
+                      onDragEnd={(): void => setDragOverIndex(-1)}
+                      onDragOver={onDragOver}
+                      onDrop={onDrop}
+                      onDoubleClick={(): void => setEditNamePageIndex(index)}>
+                      <QueueToggleGroup.Item
+                        value={`${index}`}
+                        size='small'>
+                        {page.pageName}
+                      </QueueToggleGroup.Item>
+                    </QueueContextMenu.Trigger>
+                    <QueueContextMenu.Portal>
+                      <QueueContextMenu.Content>
+                        <QueueContextMenu.Item onClick={(): void => movePage(index, Math.max(index - 1, 0))}>
+                          페이지를 왼쪽으로 이동
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item onClick={(): void => movePage(index, Math.min(index + 1, self.length - 1))}>
+                          페이지를 오른쪽으로 이동
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index, 0))}>
+                          왼쪽에 페이지 추가
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index + 1, self.length))}>
+                          오른쪽에 페이지 추가
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Separator />
+                        <QueueContextMenu.Item onClick={(): void => onPageCopy(index)}>
+                          페이지 복제
+                        </QueueContextMenu.Item>
+                        <QueueContextMenu.Item onClick={(): void => setEditNamePageIndex(index)}>
+                          페이지 이름 변경
+                        </QueueContextMenu.Item>
+                        {queueDocument!.pages.length >= 2 && (
+                          <>
+                            <QueueContextMenu.Separator />
+                            <QueueContextMenu.Item
+                              className={styles.Remove}
+                              onClick={(): void => setDeleteConfirmPageIndex(index)}>
+                              페이지 삭제
+                            </QueueContextMenu.Item>
+                          </>
+                        )}
+                      </QueueContextMenu.Content>
+                    </QueueContextMenu.Portal>
+                  </QueueContextMenu.Root>
+                ))}
+              </div>
+            </QueueScrollArea.Viewport>
+            <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
+              <QueueScrollArea.Thumb />
+            </QueueScrollArea.Scrollbar>
+          </QueueScrollArea.Root>
         </QueueToggleGroup.Root>
       </div>
       <div>
         <QueueIconButton
-          onClick={(): void => createPageAndMove()}>
+          onClick={(): void => createPage(queueDocument.pages.length)}>
           <SvgRemixIcon icon='ri-add-fill' />
         </QueueIconButton>
       </div>
