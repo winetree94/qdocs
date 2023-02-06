@@ -3,7 +3,7 @@ import { QueueIconButton } from 'components/button/Button';
 import { FunctionComponent, ReactNode, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
-import { QueueContextMenu } from 'components/queue-context-menu/Context';
+import { QueueContextMenu } from 'components/context-menu/Context';
 import styles from './BottomPanel.module.scss';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { useSettings } from 'cdk/hooks/settings';

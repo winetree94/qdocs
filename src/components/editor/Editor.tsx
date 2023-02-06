@@ -6,7 +6,7 @@ import {
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { QueueObject } from 'components/queue';
-import { QueueContextMenu } from 'components/queue-context-menu/Context';
+import { QueueContextMenu } from 'components/context-menu/Context';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
