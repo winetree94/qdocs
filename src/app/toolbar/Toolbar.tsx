@@ -5,12 +5,12 @@ import {
   useState,
 } from 'react';
 import styles from './Toolbar.module.scss';
-import * as Menubar from '@radix-ui/react-menubar';
 import { documentState } from 'store/document';
 import { useRecoilState } from 'recoil';
 import clsx from 'clsx';
 import { CookieIcon } from '@radix-ui/react-icons';
 import { QueueDocument } from 'model/document';
+import { QueueMenubar } from 'components/menu-bar/Menubar';
 
 
 export interface ToolbarModel {
@@ -167,31 +167,28 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           />
         </div>
         <div>
-          <Menubar.Root className={styles.MenubarRoot}>
+          <QueueMenubar.Root className={styles.MenubarRoot}>
             {
               items.map((item) => (
-                <Menubar.Menu key={item.key}>
-                  <Menubar.Trigger className={styles.MenubarTrigger}>
+                <QueueMenubar.Menu key={item.key}>
+                  <QueueMenubar.Trigger>
                     {item.label}
-                  </Menubar.Trigger>
-                  <Menubar.Portal>
-                    <Menubar.Content
-                      className={styles.MenubarContent}
-                      align="start">
+                  </QueueMenubar.Trigger>
+                  <QueueMenubar.Portal>
+                    <QueueMenubar.Content align="start">
                       {item.children.map((child) => (
-                        <Menubar.Item
+                        <QueueMenubar.Item
                           key={child.key}
-                          className={styles.MenubarItem}
                           onClick={(e): void => child.onClick?.()}>
                           {child.label}
-                        </Menubar.Item>
+                        </QueueMenubar.Item>
                       ))}
-                    </Menubar.Content>
-                  </Menubar.Portal>
-                </Menubar.Menu>
+                    </QueueMenubar.Content>
+                  </QueueMenubar.Portal>
+                </QueueMenubar.Menu>
               ))
             }
-          </Menubar.Root>
+          </QueueMenubar.Root>
         </div>
       </div>
     </div>
