@@ -33,8 +33,8 @@ export const QueueEditor: FunctionComponent = () => {
   useLayoutEffect(() => {
     const root = rootRef.current!;
     const scale = Math.min(
-      root.clientWidth / (queueDocument!.documentRect.width + 20),
-      root.clientHeight / (queueDocument!.documentRect.height + 20),
+      root.clientWidth / (queueDocument!.documentRect.width + 40),
+      root.clientHeight / (queueDocument!.documentRect.height + 40),
     );
     setSettings.setScale(scale);
   }, []);
@@ -265,6 +265,7 @@ export const QueueEditor: FunctionComponent = () => {
       <QueueContextMenu.Trigger
         ref={rootRef}
         className={clsx(
+          styles.Root,
           'overflow-auto',
           'flex',
           'flex-1'

@@ -36,9 +36,11 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
           </>
         ) : null}
         {queueDocument && (
-          <div className={clsx('flex', 'flex-1')}>
-            {!settings.presentationMode ? <LeftPanel /> : null}
-            <div className={clsx('flex', 'flex-1', 'flex-col')}>
+          <div className={clsx(styles.Content)}>
+            <div className={clsx(styles.Left)}>
+              {!settings.presentationMode ? <LeftPanel /> : null}
+            </div>
+            <div className={clsx(styles.Right)}>
               <QueueEditor />
               <BottomPanel />
             </div>

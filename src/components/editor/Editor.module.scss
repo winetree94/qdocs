@@ -5,6 +5,14 @@
   background: var(--gray3);
 }
 
+.Root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  overflow: hidden;
+  min-width: 0;
+}
+
 .canvas {
   border: 1px solid var(--gray5);
 }
