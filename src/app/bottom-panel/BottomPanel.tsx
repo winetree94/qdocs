@@ -6,7 +6,7 @@ import { documentState } from 'store/document';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import styles from './BottomPanel.module.scss';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
-import { useSettings } from 'cdk/hooks/settings';
+import { useSettings } from 'cdk/hooks/useSettings';
 import { EditPageNameDialog } from 'app/dialogs/EditPageNameDialog';
 import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';

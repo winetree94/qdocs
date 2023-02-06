@@ -12,8 +12,8 @@ import clsx from 'clsx';
 import styles from './Editor.module.scss';
 import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
-import { useSettings } from 'cdk/hooks/settings';
-import { useQueueDocument } from 'cdk/hooks/queueDocument';
+import { useSettings } from 'cdk/hooks/useSettings';
+import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
 export const QueueEditor: FunctionComponent = () => {

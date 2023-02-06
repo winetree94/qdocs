@@ -18,7 +18,7 @@ import { OBJECT_SUPPORTED_EFFECTS, OBJECT_SUPPORTED_PROPERTIES, QueueObjectType 
 import { OBJECT_PROPERTIES, QueueRect, QueueRotate } from 'model/property';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
-import { useSettings } from './settings';
+import { useSettings } from './useSettings';
 
 export interface RectUpdateModel {
   uuid: string;
