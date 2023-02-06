@@ -19,11 +19,21 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   useEffect(() => {
-    document.addEventListener('keydown', (event) => {
+    const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && settings.presentationMode) {
         setSettings({ ...settings, presentationMode: false });
       }
-    });
+    };
+    const onContextmenu = (event: MouseEvent): void => {
+      event.preventDefault();
+    };
+    const cleaner = (): void => {
+      document.removeEventListener('keydown', onKeydown);
+      document.removeEventListener('contextmenu', onContextmenu);
+    };
+    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('contextmenu', onContextmenu);
+    return cleaner;
   }, [settings, setSettings]);
 
   return (
