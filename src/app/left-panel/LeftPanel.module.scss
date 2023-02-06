@@ -73,6 +73,14 @@
 @import '@radix-ui/colors/blackA.css';
 @import '@radix-ui/colors/violet.css';
 
+.ScrollAreaRoot {
+  @apply flex flex-1;
+}
+
+.ScrollAreaViewport {
+  @apply flex flex-1;
+}
+
 /* reset */
 button {
   all: unset;

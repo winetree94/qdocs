@@ -1,17 +1,17 @@
 @import '@radix-ui/colors/blackA.css';
 @import '@radix-ui/colors/mauve.css';
 
-.root {
-  @apply flex flex-1 flex-col overflow-auto;
+.ScrollAreaRoot {
+  @apply w-full h-full;
   background: var(--gray3);
 }
 
+.Drawable {
+  @apply flex-1 flex-col table-cell align-middle;
+}
+
 .Root {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  overflow: hidden;
-  min-width: 0;
+  @apply flex flex-1 flex-col overflow-hidden min-w-0;
 }
 
 .fullscreen {

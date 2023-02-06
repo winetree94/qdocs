@@ -28,6 +28,7 @@ import { QueueObjectType } from 'model/object';
 import { createDefaultLine } from 'model/object/line';
 import { StylerPanel } from 'app/styler-panel/StylerPanel';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
 export interface QueueObject {
   key: string;
@@ -357,24 +358,38 @@ export const LeftPanel: FunctionComponent = () => {
               onChange={(e): void => setSearchKeyword(e.target.value)}
             ></QueueInput>
           </div>
-          <div className={clsx('flex', 'flex-1')}>
-            <AutoSizer>
-              {({ height, width }): ReactNode => (
-                <FixedSizeList
-                  itemCount={flattenItems.length}
-                  itemSize={50}
-                  width={width}
-                  height={height}
-                  itemKey={(index): string => flattenItems[index].key}
-                  itemData={memoizedItemData}
-                  initialScrollOffset={listScrollTopState}
-                  onScroll={handleScroll}
-                >
-                  {FlattenRow}
-                </FixedSizeList>
-              )}
-            </AutoSizer>
-          </div>
+          <QueueScrollArea.Root
+            className={clsx(
+              styles.ScrollAreaRoot
+            )}>
+            <QueueScrollArea.Viewport className={clsx(
+              styles.ScrollAreaViewport
+            )}>
+              <AutoSizer>
+                {({ height, width }): ReactNode => (
+                  <FixedSizeList
+                    itemCount={flattenItems.length}
+                    itemSize={50}
+                    width={width}
+                    height={height}
+                    itemKey={(index): string => flattenItems[index].key}
+                    itemData={memoizedItemData}
+                    initialScrollOffset={listScrollTopState}
+                    onScroll={handleScroll}
+                  >
+                    {FlattenRow}
+                  </FixedSizeList>
+                )}
+              </AutoSizer>
+            </QueueScrollArea.Viewport>
+            <QueueScrollArea.Scrollbar orientation="vertical">
+              <QueueScrollArea.Thumb />
+            </QueueScrollArea.Scrollbar>
+            <QueueScrollArea.Scrollbar orientation="horizontal">
+              <QueueScrollArea.Thumb />
+            </QueueScrollArea.Scrollbar>
+            <QueueScrollArea.Corner />
+          </QueueScrollArea.Root>
         </>
       )}
     </div>

@@ -14,6 +14,7 @@ import { QueueRect, QueueRotate } from 'model/property';
 import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/settings';
 import { useQueueDocument } from 'cdk/hooks/queueDocument';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
 export const QueueEditor: FunctionComponent = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -288,166 +289,174 @@ export const QueueEditor: FunctionComponent = () => {
       <QueueContextMenu.Trigger
         ref={rootRef}
         className={clsx(
-          styles.Root,
-          'overflow-auto',
-          'flex',
-          'flex-1'
+          styles.Root
         )}>
-        <Drawable
-          scale={settings.scale}
-          drawer={
-            <div className={clsx(
-              styles.drawer,
-              'w-full',
-              'h-full',
-            )}></div>
-          }
-          onDrawStart={onDrawStart}
-          onDrawEnd={onDrawEnd}
-          className={clsx(
-            styles.root,
-            settings.presentationMode ? styles.fullscreen : '',
-          )}
-        >
-          <Scaler
-            width={queueDocument!.documentRect.width}
-            height={queueDocument!.documentRect.height}
-            scale={settings.scale}
-            className={clsx(
-              settings.presentationMode ? styles.scaleFull : '',
-            )}
-          >
-            <div
-              ref={canvasDiv}
+        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
+          <QueueScrollArea.Viewport className={clsx('flex')}>
+            <Drawable
+              scale={settings.scale}
+              drawer={
+                <div className={clsx(
+                  styles.drawer,
+                  'w-full',
+                  'h-full',
+                )}></div>
+              }
+              onDrawStart={onDrawStart}
+              onDrawEnd={onDrawEnd}
               className={clsx(
-                styles.canvas,
-                'relative',
-                'box-border',
+                styles.Drawable,
+                settings.presentationMode ? styles.fullscreen : '',
               )}
-              style={{
-                width: queueDocument!.documentRect.width,
-                height: queueDocument!.documentRect.height,
-                background: queueDocument!.documentRect.fill,
-              }}
             >
-              {currentQueueObjects.map((object, index) => {
-                return (
-                  <QueueContextMenu.Root
-                    key={object.uuid}
-                    onOpenChange={(open): void => {
-                      if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
-                        setSettings.setSelectedObjectUUIDs([object.uuid]);
-                      }
-                    }}>
-                    <QueueContextMenu.Trigger>
-                      <QueueObject.Container
-                        className='queue-object-root'
-                        object={object}
-                        detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
-                        documentScale={settings.scale}
-                        move={translateTargets.includes(object.uuid) ? moving : undefined}
-                        transform={translateTargets.includes(object.uuid) ? resizing : undefined}
-                        rotate={translateTargets.includes(object.uuid) ? rotating : undefined}
-                        selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
-                        <QueueObject.Animator
-                          queueIndex={settings.queueIndex}
-                          queuePosition={settings.queuePosition}
-                          queueStart={settings.queueStart}>
-                          <QueueObject.Drag
-                            onMousedown={(event): void => onObjectMouseodown(event, object)}
-                            onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
-                            onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                            onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                            onDraggingEnd={onObjectDragEnd}
-                          >
-                            <QueueObject.Rect></QueueObject.Rect>
-                            <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)}></QueueObject.Text>
-                            <QueueObject.Resizer
-                              onResizeStart={(event): void => onResizeStart(object)}
-                              onResizeMove={(event): void => onResizeMove(object, event)}
-                              onResizeEnd={(event): void => onResizeEnd(object, event)}
-                              onRotateStart={(event): void => onRotateStart(object)}
-                              onRotateMove={(event): void => onRotateMove(object, event)}
-                              onRotateEnd={(event): void => onRotateEnd(object, event)}
-                            ></QueueObject.Resizer>
-                          </QueueObject.Drag>
-                        </QueueObject.Animator>
-                      </QueueObject.Container>
-                    </QueueContextMenu.Trigger>
-                    <QueueContextMenu.Portal>
-                      <QueueContextMenu.Content
-                        onInteractOutside={(e): void => console.log(e)}
-                        onMouseDown={(e): void => e.stopPropagation()}>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}>
-                          현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}>
-                          오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item >
-                          잘라내기 <div className={styles.RightSlot}>⌘+T</div>
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item>
-                          복사 <div className={styles.RightSlot}>⌘+C</div>
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
-                          맨 앞으로 가져오기
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
-                          맨 뒤로 보내기
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
-                          앞으로 가져오기
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
-                          뒤로 보내기
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item >
-                          그룹
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Item>
-                          그룹 해제
-                        </QueueContextMenu.Item>
-                        <QueueContextMenu.Separator />
-                        <QueueContextMenu.Sub>
-                          <QueueContextMenu.SubTrigger>
-                            더보기
-                            <div className={styles.RightSlot}>
-                              <ChevronRightIcon />
-                            </div>
-                          </QueueContextMenu.SubTrigger>
-                          <QueueContextMenu.Portal>
-                            <QueueContextMenu.SubContent
-                              sideOffset={2}
-                              alignOffset={-5}
-                            >
-                              <QueueContextMenu.Item>
-                                Save Page As… <div className={styles.RightSlot}>⌘+S</div>
-                              </QueueContextMenu.Item>
-                              <QueueContextMenu.Item>Create Shortcut…</QueueContextMenu.Item>
-                              <QueueContextMenu.Item>Name Window…</QueueContextMenu.Item>
-                              <QueueContextMenu.Separator />
-                              <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
-                            </QueueContextMenu.SubContent>
-                          </QueueContextMenu.Portal>
-                        </QueueContextMenu.Sub>
-                      </QueueContextMenu.Content>
-                    </QueueContextMenu.Portal>
-                  </QueueContextMenu.Root>
-                );
-              })}
-            </div>
-          </Scaler>
-        </Drawable>
+              <Scaler
+                width={queueDocument!.documentRect.width}
+                height={queueDocument!.documentRect.height}
+                scale={settings.scale}
+                className={clsx(
+                  settings.presentationMode ? styles.scaleFull : '',
+                )}
+              >
+                <div
+                  ref={canvasDiv}
+                  className={clsx(
+                    styles.canvas,
+                    'relative',
+                    'box-border',
+                  )}
+                  style={{
+                    width: queueDocument!.documentRect.width,
+                    height: queueDocument!.documentRect.height,
+                    background: queueDocument!.documentRect.fill,
+                  }}
+                >
+                  {currentQueueObjects.map((object, index) => {
+                    return (
+                      <QueueContextMenu.Root
+                        key={object.uuid}
+                        onOpenChange={(open): void => {
+                          if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
+                            setSettings.setSelectedObjectUUIDs([object.uuid]);
+                          }
+                        }}>
+                        <QueueContextMenu.Trigger>
+                          <QueueObject.Container
+                            className='queue-object-root'
+                            object={object}
+                            detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
+                            documentScale={settings.scale}
+                            move={translateTargets.includes(object.uuid) ? moving : undefined}
+                            transform={translateTargets.includes(object.uuid) ? resizing : undefined}
+                            rotate={translateTargets.includes(object.uuid) ? rotating : undefined}
+                            selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
+                            <QueueObject.Animator
+                              queueIndex={settings.queueIndex}
+                              queuePosition={settings.queuePosition}
+                              queueStart={settings.queueStart}>
+                              <QueueObject.Drag
+                                onMousedown={(event): void => onObjectMouseodown(event, object)}
+                                onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
+                                onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
+                                onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
+                                onDraggingEnd={onObjectDragEnd}
+                              >
+                                <QueueObject.Rect></QueueObject.Rect>
+                                <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)}></QueueObject.Text>
+                                <QueueObject.Resizer
+                                  onResizeStart={(event): void => onResizeStart(object)}
+                                  onResizeMove={(event): void => onResizeMove(object, event)}
+                                  onResizeEnd={(event): void => onResizeEnd(object, event)}
+                                  onRotateStart={(event): void => onRotateStart(object)}
+                                  onRotateMove={(event): void => onRotateMove(object, event)}
+                                  onRotateEnd={(event): void => onRotateEnd(object, event)}
+                                ></QueueObject.Resizer>
+                              </QueueObject.Drag>
+                            </QueueObject.Animator>
+                          </QueueObject.Container>
+                        </QueueContextMenu.Trigger>
+                        <QueueContextMenu.Portal>
+                          <QueueContextMenu.Content
+                            onInteractOutside={(e): void => console.log(e)}
+                            onMouseDown={(e): void => e.stopPropagation()}>
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}>
+                              현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}>
+                              오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Separator />
+                            <QueueContextMenu.Item >
+                              잘라내기 <div className={styles.RightSlot}>⌘+T</div>
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item>
+                              복사 <div className={styles.RightSlot}>⌘+C</div>
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Separator />
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
+                              맨 앞으로 가져오기
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
+                              맨 뒤로 보내기
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
+                              앞으로 가져오기
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item
+                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
+                              뒤로 보내기
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Separator />
+                            <QueueContextMenu.Item >
+                              그룹
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item>
+                              그룹 해제
+                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Separator />
+                            <QueueContextMenu.Sub>
+                              <QueueContextMenu.SubTrigger>
+                                더보기
+                                <div className={styles.RightSlot}>
+                                  <ChevronRightIcon />
+                                </div>
+                              </QueueContextMenu.SubTrigger>
+                              <QueueContextMenu.Portal>
+                                <QueueContextMenu.SubContent
+                                  sideOffset={2}
+                                  alignOffset={-5}
+                                >
+                                  <QueueContextMenu.Item>
+                                    Save Page As… <div className={styles.RightSlot}>⌘+S</div>
+                                  </QueueContextMenu.Item>
+                                  <QueueContextMenu.Item>Create Shortcut…</QueueContextMenu.Item>
+                                  <QueueContextMenu.Item>Name Window…</QueueContextMenu.Item>
+                                  <QueueContextMenu.Separator />
+                                  <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
+                                </QueueContextMenu.SubContent>
+                              </QueueContextMenu.Portal>
+                            </QueueContextMenu.Sub>
+                          </QueueContextMenu.Content>
+                        </QueueContextMenu.Portal>
+                      </QueueContextMenu.Root>
+                    );
+                  })}
+                </div>
+              </Scaler>
+            </Drawable>
+          </QueueScrollArea.Viewport>
+          <QueueScrollArea.Scrollbar orientation="vertical">
+            <QueueScrollArea.Thumb />
+          </QueueScrollArea.Scrollbar>
+          <QueueScrollArea.Scrollbar orientation="horizontal">
+            <QueueScrollArea.Thumb />
+          </QueueScrollArea.Scrollbar>
+          <QueueScrollArea.Corner />
+        </QueueScrollArea.Root>
       </QueueContextMenu.Trigger>
       <QueueContextMenu.Portal>
         <QueueContextMenu.Content
