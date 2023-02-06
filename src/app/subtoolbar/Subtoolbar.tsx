@@ -45,6 +45,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
       ...settings,
       presentationMode: true,
     });
+    document.documentElement.requestFullscreen();
   };
 
   const setCurrentQueueIndex = (index: number): void => {

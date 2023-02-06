@@ -1,0 +1,11 @@
+.Root {
+  @apply p-2.5 m-auto;
+}
+
+.ActualSizer {
+  @apply overflow-hidden;
+}
+
+.ScaledContent {
+  @apply origin-top-left;
+}

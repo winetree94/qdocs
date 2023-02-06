@@ -1,4 +1,4 @@
-import { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import {
   isExistObjectOnQueue,
@@ -240,6 +240,29 @@ export const QueueEditor: FunctionComponent = () => {
     setTranslateTargets([]);
   };
 
+  // const [fullscreenScale, setFullscreenScale] = useState(1);
+
+  useEffect(() => {
+    if (!settings.presentationMode) {
+      return;
+    }
+    const resize = (): void => {
+      console.log(document.body.clientWidth, document.body.clientHeight);
+      const scale = Math.min(
+        document.body.clientWidth / queueDocument!.documentRect.width,
+        document.body.clientHeight / queueDocument!.documentRect.height,
+      );
+      console.log(scale);
+      setSettings.setScale(scale);
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(document.body);
+    resize();
+    return () => observer.disconnect();
+  }, [
+    settings.presentationMode,
+  ]);
+
   const onTextEdit = (object: QueueObjectType, text: string): void => {
     setQueueDocument.updateObjectProp(settings.queuePage, [{
       uuid: object.uuid,
@@ -283,16 +306,16 @@ export const QueueEditor: FunctionComponent = () => {
           onDrawEnd={onDrawEnd}
           className={clsx(
             styles.root,
-            'flex',
-            'flex-col',
-            'flex-1',
-            'overflow-auto',
+            settings.presentationMode ? styles.fullscreen : '',
           )}
         >
           <Scaler
             width={queueDocument!.documentRect.width}
             height={queueDocument!.documentRect.height}
             scale={settings.scale}
+            className={clsx(
+              settings.presentationMode ? styles.scaleFull : '',
+            )}
           >
             <div
               ref={canvasDiv}

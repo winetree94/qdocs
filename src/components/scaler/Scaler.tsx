@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 import { FunctionComponent, ReactNode } from 'react';
+import styles from './Scaler.module.scss';
 
 export interface ScalerProps {
   width: number;
   height: number;
   scale: number;
+  className?: string;
   children?: ReactNode;
 }
 
@@ -12,23 +14,31 @@ export const Scaler: FunctionComponent<ScalerProps> = ({
   scale,
   width,
   height,
+  className,
   children,
 }) => {
   return (
     <div
-      className={clsx('p-2.5', 'm-auto')}
+      className={clsx(
+        styles.Root,
+        className
+      )}
     >
       <div
-        className={clsx('shrink-0')}
+        className={clsx(
+          styles.ActualSizer,
+        )}
         style={{
           width: width * scale,
           height: height * scale,
         }}
       >
         <div
-          className={clsx('origin-top-left')}
+          className={clsx(
+            styles.ScaledContent
+          )}
           style={{
-            transform: `scale(${scale})`
+            transform: `scale(${scale})`,
           }}
         >
           {children}
