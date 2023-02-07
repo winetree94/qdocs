@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import {
   QueueDocument,
 } from 'model/document';
 import {
+  BaseQueueEffect,
   FadeEffect,
   MoveEffect,
   OBJECT_EFFECTS,
@@ -47,6 +49,7 @@ export interface UpdateObjectProp {
 
 export interface UseQueueDocument {
   readonly queueDocument: QueueDocument;
+  readonly selectedObjects: QueueObjectType[],
   changeObjectIndex: (
     fromUUIDs: string[],
     to: 'start' | 'end' | 'forward' | 'backward',
@@ -98,7 +101,7 @@ export const useQueueDocument = (): UseQueueDocument => {
       Object.entries(model.props).forEach(([key, value]) => {
         // 지원 안되는 속성인 경우 중단
         if (!OBJECT_SUPPORTED_PROPERTIES[objectType].includes(key as OBJECT_PROPERTIES)) {
-          console.warn('object type not supported');
+          console.warn(`object type not supported. type is '${objectType}'`, );
           return;
         }
         // 이펙트로 지원 안되는 속성인 경우 무조건 루트에 반영
@@ -253,8 +256,15 @@ export const useQueueDocument = (): UseQueueDocument => {
     });
   };
 
+  const selectedObjects = queueDocument.pages[
+    settings.queuePage
+  ].objects.filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid)
+  );
+
   return {
     queueDocument,
+    selectedObjects,
     changeObjectIndex,
     removeObjectOnQueue,
     removeObject,

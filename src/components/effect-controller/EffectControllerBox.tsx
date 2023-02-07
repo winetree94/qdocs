@@ -2,7 +2,6 @@ import { PlusIcon } from '@radix-ui/react-icons';
 import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { debounce } from 'cdk/functions/debounce';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
-import { Slider } from 'components/slider';
 import {
   BaseQueueEffect,
   OBJECT_EFFECT_META,
@@ -12,7 +11,6 @@ import {
   FormEvent,
   ReactElement,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -21,30 +19,28 @@ import { documentState } from 'store/document';
 import { documentSettingsState } from 'store/settings';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
+import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 
 // TODO 중복되는 타입 분리
 type ChangedValue = { [k: string]: FormDataEntryValue };
 type EffectControllerProps = {
+  uuid: string;
   effect: QueueEffectType;
   onEffectChange?: (value: ChangedValue) => void;
 };
 
 export const EffectController = ({
+  uuid,
   effect,
   onEffectChange,
 }: EffectControllerProps): ReactElement => {
   const [open, setOpen] = useState(false);
-  const [duration, setDuration] = useState([effect.duration / 1000]);
 
   const handleEffectChange = (event: FormEvent<HTMLFormElement>): void => {
     const formData = new FormData(event.currentTarget);
 
     onEffectChange?.(Object.fromEntries(formData));
   };
-
-  useEffect(() => {
-    setDuration([effect.duration / 1000]);
-  }, [effect.duration]);
 
   return (
     <div className="flex flex-col">
@@ -60,38 +56,7 @@ export const EffectController = ({
           className="flex flex-col gap-2 p-1 bg-gray-100"
           onChange={handleEffectChange}
         >
-          <div>
-            <p className="text-sm">duration</p>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                name="duration"
-                value={duration[0] * 1000}
-                readOnly
-                hidden
-              />
-              <div className="w-5/12">
-                <input
-                  className="w-full"
-                  type="number"
-                  step={0.1}
-                  value={duration[0]}
-                  onChange={(e): void =>
-                    setDuration([parseFloat(e.currentTarget.value)])
-                  }
-                />
-              </div>
-              <div className="flex items-center w-full">
-                <Slider
-                  min={0}
-                  max={10}
-                  step={0.1}
-                  value={duration}
-                  onValueChange={(value): void => setDuration(value)}
-                />
-              </div>
-            </div>
-          </div>
+          <EffectControllerDuration effect={effect} uuid={uuid} />
           <div>
             <p className="text-sm">timing function</p>
             <select name="timingFunction" defaultValue={effect.timing}>
@@ -378,6 +343,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         <div className="flex flex-col gap-1">
           {currentQueueObjectEffects.map((currentQueueObjectEffect) => (
             <EffectController
+              uuid={firstObject.uuid}
               key={currentQueueObjectEffect.type}
               effect={currentQueueObjectEffect}
               onEffectChange={handleEffectChange}
