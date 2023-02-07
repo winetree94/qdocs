@@ -209,6 +209,57 @@ export const QueueAlertDialogFooter: React.ForwardRefExoticComponent<
   );
 });
 
+export interface QueueSimpleAlertDialogProps {
+  title: string;
+  description: string;
+  opened?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (opened: boolean) => void;
+  onAction?: () => void;
+}
+
+export const QueueSimpleAlertDialog: React.FC<QueueSimpleAlertDialogProps> = ({
+  title,
+  description,
+  opened = false,
+  defaultOpen = false,
+  onOpenChange,
+  onAction,
+}) => {
+  return (
+    <QueueAlertDialog.Root
+      open={opened}
+      onOpenChange={onOpenChange}
+      defaultOpen={defaultOpen}
+    >
+      <QueueAlertDialog.Overlay />
+      <QueueAlertDialog.Content asChild={false}>
+        <QueueAlertDialog.Title>
+          {title}
+        </QueueAlertDialog.Title>
+        <QueueAlertDialog.Description>
+          {description}
+        </QueueAlertDialog.Description>
+        <QueueAlertDialog.Footer>
+          <QueueAlertDialog.Cancel
+            size='small'
+            color='red'
+          >
+            취소
+          </QueueAlertDialog.Cancel>
+          <QueueAlertDialog.Action
+            size='small'
+            color='blue'
+            onClick={onAction}
+          >
+            확인
+          </QueueAlertDialog.Action>
+        </QueueAlertDialog.Footer>
+      </ QueueAlertDialog.Content>
+    </QueueAlertDialog.Root>
+  );
+};
+
 export const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
   Trigger: QueueAlertDialogTrigger,
@@ -220,4 +271,5 @@ export const QueueAlertDialog = {
   Title: QueueAlertDialogTitle,
   Description: QueueAlertDialogDescription,
   Footer: QueueAlertDialogFooter,
+  SimpleAlert: QueueSimpleAlertDialog,
 };

@@ -12,6 +12,7 @@ import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
 
 
 export interface ToolbarModel {
@@ -30,6 +31,8 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
 }) => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [documentTitle, setDocumentTitle] = useState('');
+
+  const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
 
   useEffect(() => {
     setDocumentTitle(queueDocument?.documentName || '');
@@ -52,7 +55,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     }
   };
 
-  const createNewDocument = (): void => {
+  const createDocument = (): void => {
     setQueueDocument({
       documentName: 'Untitled',
       documentRect: {
@@ -67,11 +70,23 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     });
   };
 
-  const openDocument = (): void => {
+  const onNewDocumentClick = (): void => {
+    if (queueDocument) {
+      setAlertDialog({
+        title: '현재 열려있는 문서가 있습니다.',
+        description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
+        onAction: createDocument,
+      });
+      return;
+    }
+    createDocument();
+  };
+
+  const startFileChooser = (): void => {
     const input = document.createElement('input');
     input.type = 'file';
     input.click();
-    input.addEventListener('change', e => {
+    const onFileSelected = (): void => {
       try {
         if (!input.files) {
           return;
@@ -90,10 +105,23 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
       } catch (e) {
         console.warn(e);
       }
-    });
+    };
+    input.addEventListener('change', onFileSelected, { once: true });
   };
 
-  const saveDocument = (): void => {
+  const onOpenDcoumentClick = (): void => {
+    if (queueDocument) {
+      setAlertDialog({
+        title: '현재 열려있는 문서가 있습니다.',
+        description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
+        onAction: startFileChooser,
+      });
+      return;
+    }
+    startFileChooser();
+  };
+
+  const onSaveDocumentClick = (): void => {
     if (!queueDocument) return;
     const stringified = JSON.stringify(queueDocument);
     const blob = new Blob([stringified], { type: 'octet/stream' });
@@ -105,8 +133,20 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  const closeDocument = (): void => {
+  const clearDocument = (): void => {
     setQueueDocument(null);
+  };
+
+  const onCloseDocumentClick = (): void => {
+    if (queueDocument) {
+      setAlertDialog({
+        title: '현재 열려있는 문서가 있습니다.',
+        description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
+        onAction: clearDocument,
+      });
+      return;
+    }
+    clearDocument();
   };
 
   return (
@@ -131,18 +171,18 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             </QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item onClick={createNewDocument}>
+                <QueueMenubar.Item onClick={onNewDocumentClick}>
                   새 문서
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={openDocument}>
+                <QueueMenubar.Item onClick={onOpenDcoumentClick}>
                   문서 열기
                 </QueueMenubar.Item>
-                <QueueMenubar.Item onClick={saveDocument}>
+                <QueueMenubar.Item onClick={onSaveDocumentClick}>
                   문서 저장
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={closeDocument}>
+                <QueueMenubar.Item onClick={onCloseDocumentClick}>
                   문서 닫기
                 </QueueMenubar.Item>
               </QueueMenubar.Content>
@@ -218,6 +258,14 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           </QueueMenubar.Menu>
         </QueueMenubar.Root>
       </div>
+      {alertDialog && (
+        <QueueAlertDialog.SimpleAlert
+          title={alertDialog.title}
+          description={alertDialog.description}
+          onAction={alertDialog.onAction}
+          opened={!!alertDialog}
+          onOpenChange={(opened): void => !opened && setAlertDialog(null)} />
+      )}
     </div>
   );
 };
