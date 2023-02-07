@@ -105,6 +105,7 @@ export const Text: FunctionComponent<TextProps> = ({
         transform: `rotate(${animation.rotate.degree}deg)`,
         opacity: `${animation.fade.opacity}`,
       }}
+      spellCheck="false"
       contentEditable={detail}
       onMouseDown={(e): void => detail && e.stopPropagation()}
     >
