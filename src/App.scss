@@ -4,8 +4,8 @@
 
 // disable gesture / swipe history back
 html {
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
 }
 body {
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
 }
