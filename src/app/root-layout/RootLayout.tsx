@@ -33,6 +33,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
     };
     document.addEventListener('keydown', onKeydown);
     document.addEventListener('contextmenu', onContextmenu);
+    window.onbeforeunload = (): string => 'beforeUnload';
     return cleaner;
   }, [settings, setSettings]);
 
