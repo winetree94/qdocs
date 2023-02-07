@@ -1,0 +1,23 @@
+.Container {
+  @apply mt-5;
+}
+
+.RatioContainer {
+  @apply flex items-center;
+}
+
+.TemplateContainer {
+  @apply mt-5;
+}
+
+.RatioSelector {
+  @apply flex-1 ml-2.5 justify-between;
+}
+
+.TemplateGroup {
+  @apply grid grid-cols-4 h-60 border;
+  border-color: var(--gray5);
+  .TemplateItem {
+    @apply h-20;
+  }
+}

@@ -1,27 +1,21 @@
 @import '@radix-ui/colors/blackA.css';
 @import '@radix-ui/colors/mauve.css';
 @import '@radix-ui/colors/violet.css';
+@import 'components/button/Button.module.scss';
 
 .SelectTrigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  padding: 0 15px;
-  font-size: 13px;
-  line-height: 1;
-  height: 35px;
-  gap: 5px;
-  background-color: white;
-  color: var(--violet11);
-  box-shadow: 0 2px 10px var(--blackA7);
+  @include queue-button-base;
+  @include queue-button;
 }
+
 .SelectTrigger:hover {
   background-color: var(--mauve3);
 }
+
 .SelectTrigger:focus {
   box-shadow: 0 0 0 2px black;
 }
+
 .SelectTrigger[data-placeholder] {
   color: var(--violet9);
 }
