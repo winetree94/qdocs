@@ -7,19 +7,14 @@ import {
   OBJECT_EFFECT_META,
   QueueEffectType,
 } from 'model/effect';
-import {
-  FormEvent,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { FormEvent, ReactElement, useCallback, useMemo, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { documentSettingsState } from 'store/settings';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
+import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 
 // TODO 중복되는 타입 분리
 type ChangedValue = { [k: string]: FormDataEntryValue };
@@ -57,14 +52,7 @@ export const EffectController = ({
           onChange={handleEffectChange}
         >
           <EffectControllerDuration effect={effect} uuid={uuid} />
-          <div>
-            <p className="text-sm">timing function</p>
-            <select name="timingFunction" defaultValue={effect.timing}>
-              <option value="linear">linear</option>
-              <option value="ease">ease</option>
-              <option value="ease-in">ease-in</option>
-            </select>
-          </div>
+          <EffectControllerTimingFunction effect={effect} uuid={uuid} />
           <EffectControllerIndex effect={effect} />
         </form>
       )}

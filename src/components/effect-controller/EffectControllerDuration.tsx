@@ -31,21 +31,25 @@ export const EffectControllerDuration = ({
   const debouncedUpdateEffect = useMemo(
     () =>
       debounce((duration: number) => {
-        console.log('냐냥이?1');
         setQueueDocument.updateObjectProp(settings.queuePage, [
           {
             uuid,
             queueIndex: settings.queueIndex,
             props: {
               [effect.type]: {
-                ...effect,
                 duration,
               },
             },
           },
         ]);
       }, 500),
-    [setQueueDocument, settings.queuePage, settings.queueIndex, effect, uuid]
+    [
+      setQueueDocument,
+      settings.queuePage,
+      settings.queueIndex,
+      effect.type,
+      uuid,
+    ]
   );
 
   const handleDurationChange = useCallback(

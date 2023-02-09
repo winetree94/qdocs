@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import {
   QueueDocument,
 } from 'model/document';
 import {
-  BaseQueueEffect,
   FadeEffect,
   MoveEffect,
   OBJECT_EFFECTS,
