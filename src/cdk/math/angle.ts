@@ -2,7 +2,7 @@ export const angle = (
   cx: number,
   cy: number,
   ex: number,
-  ey: number,
+  ey: number
 ): number => {
   const dy = ey - cy;
   const dx = ex - cx;

@@ -12,8 +12,7 @@ const CustomSlider = forwardRef<HTMLScriptElement, SliderPrimitive.SliderProps>(
       <SliderPrimitive.Slider
         {...props}
         className={clsx(classes['slider-root'], className)}
-        ref={forwardedRef}
-      >
+        ref={forwardedRef}>
         <SliderPrimitive.Track className={classes['slider-track']}>
           <SliderPrimitive.Range className={classes['slider-range']} />
         </SliderPrimitive.Track>

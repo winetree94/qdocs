@@ -27,8 +27,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
-      opacity={containerContext.object.fade.opacity}
-    >
+      opacity={containerContext.object.fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <rect
@@ -52,8 +51,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width * 2}
           strokeDasharray={containerContext.object.stroke.dasharray}
-          clipPath={`url(#${strokeClipPathID})`}
-        ></rect>
+          clipPath={`url(#${strokeClipPathID})`}></rect>
       </g>
     </svg>
   );

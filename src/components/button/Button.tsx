@@ -17,7 +17,8 @@ export const QueueButtonColor = {
   YELLOW: 'yellow',
 };
 
-export interface BaseQueueButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface BaseQueueButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: typeof QueueButtonSize[keyof typeof QueueButtonSize];
   color?: typeof QueueButtonColor[keyof typeof QueueButtonColor];
   round?: boolean;
@@ -25,61 +26,57 @@ export interface BaseQueueButtonProps extends React.ButtonHTMLAttributes<HTMLBut
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueueIconButtonProps extends BaseQueueButtonProps {
-}
+export interface QueueIconButtonProps extends BaseQueueButtonProps {}
 
 export const QueueIconButton: React.ForwardRefExoticComponent<
   QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({
-  children,
-  round = false,
-  size = 'medium',
-  color = 'default',
-  ...props
-}, ref) => {
-  return (
-    <button
-      ref={ref}
-      {...props}
-      className={clsx(
-        styles.QueueButtonBase,
-        styles.QueueIconButton,
-        props.className,
-        styles[size],
-        styles[color],
-        round ? styles.round : null,
-      )}>
-      {children}
-    </button>
-  );
-});
+> = forwardRef(
+  (
+    { children, round = false, size = 'medium', color = 'default', ...props },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={clsx(
+          styles.QueueButtonBase,
+          styles.QueueIconButton,
+          props.className,
+          styles[size],
+          styles[color],
+          round ? styles.round : null
+        )}>
+        {children}
+      </button>
+    );
+  }
+);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueueButtonProps extends BaseQueueButtonProps {
-}
+export interface QueueButtonProps extends BaseQueueButtonProps {}
 
 export const QueueButton: React.ForwardRefExoticComponent<
   QueueButtonProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({
-  children,
-  round = false,
-  size = 'medium',
-  color = 'default',
-  ...props
-}, ref) => {
-  return (
-    <button
-      ref={ref}
-      {...props}
-      className={clsx(
-        styles.QueueButtonBase,
-        styles.QueueButton,
-        props.className,
-        styles[size],
-        styles[color],
-        round ? styles.round : null,
-      )}>
-      {children}
-    </button>
-  );
-});
+> = forwardRef(
+  (
+    { children, round = false, size = 'medium', color = 'default', ...props },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={clsx(
+          styles.QueueButtonBase,
+          styles.QueueButton,
+          props.className,
+          styles[size],
+          styles[color],
+          round ? styles.round : null
+        )}>
+        {children}
+      </button>
+    );
+  }
+);

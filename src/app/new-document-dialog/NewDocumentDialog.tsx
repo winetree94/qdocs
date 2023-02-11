@@ -8,7 +8,8 @@ import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 
-export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
+export interface NewDocumentDialogProps
+  extends Omit<Dialog.DialogProps, 'children'> {
   onSubmit?: () => void;
 }
 
@@ -16,28 +17,25 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
   onSubmit,
   ...props
 }) => {
-
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
-  const [documentTemplate, setDocumentTemplate] = React.useState<string>('empty');
+  const [documentTemplate, setDocumentTemplate] =
+    React.useState<string>('empty');
 
   return (
     <QueueDialog.Root {...props}>
       <QueueDialog.Portal>
         <QueueDialog.Overlay />
         <QueueDialog.Content>
-          <QueueDialog.Title>
-            새 문서 설정
-          </QueueDialog.Title>
+          <QueueDialog.Title>새 문서 설정</QueueDialog.Title>
           <div className={styles.Container}>
             <div className={styles.RatioContainer}>
-              <h6>
-                문서 크기 비율
-              </h6>
+              <h6>문서 크기 비율</h6>
               <QueueSelect.Root
                 value={documentRatio}
-                onValueChange={(value): void => setDocumentRatio(value)}
-              >
-                <QueueSelect.Trigger className={styles.RatioSelector} aria-label="Food">
+                onValueChange={(value): void => setDocumentRatio(value)}>
+                <QueueSelect.Trigger
+                  className={styles.RatioSelector}
+                  aria-label="Food">
                   <QueueSelect.Value />
                   <QueueSelect.Icon className="SelectIcon">
                     <ChevronDownIcon />
@@ -47,9 +45,15 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
                   <QueueSelect.Content className="SelectContent">
                     <QueueSelect.Viewport className="SelectViewport">
                       <QueueSelect.Group>
-                        <QueueSelect.Item value="16:9">와이드 (16:9)</QueueSelect.Item>
-                        <QueueSelect.Item value="16:10">와이드 (16:10)</QueueSelect.Item>
-                        <QueueSelect.Item value="4:3">35mm (4:3)</QueueSelect.Item>
+                        <QueueSelect.Item value="16:9">
+                          와이드 (16:9)
+                        </QueueSelect.Item>
+                        <QueueSelect.Item value="16:10">
+                          와이드 (16:10)
+                        </QueueSelect.Item>
+                        <QueueSelect.Item value="4:3">
+                          35mm (4:3)
+                        </QueueSelect.Item>
                       </QueueSelect.Group>
                     </QueueSelect.Viewport>
                   </QueueSelect.Content>
@@ -61,8 +65,7 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
                 type="single"
                 value={documentTemplate}
                 onValueChange={(value): void => setDocumentTemplate(value)}
-                className={clsx(styles.TemplateGroup)}
-              >
+                className={clsx(styles.TemplateGroup)}>
                 <QueueToggleGroup.Item
                   className={styles.TemplateItem}
                   value="empty">
@@ -88,15 +91,15 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
           <QueueDialog.Footer>
             <QueueButton
               type="button"
-              size='small'
-              color='red'
+              size="small"
+              color="red"
               onClick={(): void => props.onOpenChange?.(false)}>
               취소
             </QueueButton>
             <QueueButton
               type="submit"
-              size='small'
-              color='blue'
+              size="small"
+              color="blue"
               onClick={(): void => {
                 onSubmit?.();
                 props.onOpenChange?.(false);

@@ -1,9 +1,4 @@
-import {
-  FunctionComponent,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import styles from './Toolbar.module.scss';
 import { documentState } from 'store/document';
 import { useRecoilState } from 'recoil';
@@ -12,9 +7,14 @@ import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
-import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
-
+import {
+  QueueAlertDialog,
+  QueueSimpleAlertDialogProps,
+} from 'components/alert-dialog/AlertDialog';
+import {
+  NewDocumentDialog,
+  NewDocumentDialogProps,
+} from 'app/new-document-dialog/NewDocumentDialog';
 
 export interface ToolbarModel {
   key: string;
@@ -33,8 +33,10 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
   const [documentTitle, setDocumentTitle] = useState('');
 
-  const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
-  const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
+  const [alertDialog, setAlertDialog] =
+    useState<QueueSimpleAlertDialogProps>(null);
+  const [newDocumentDialogProps, setNewDocumentDialogProps] =
+    useState<NewDocumentDialogProps>(null);
 
   useEffect(() => {
     setDocumentTitle(queueDocument?.documentName || '');
@@ -65,10 +67,12 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         height: 1080,
         fill: '#ffffff',
       },
-      pages: [{
-        pageName: 'Page-1',
-        objects: [],
-      }],
+      pages: [
+        {
+          pageName: 'Page-1',
+          objects: [],
+        },
+      ],
     });
   };
 
@@ -76,10 +80,12 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     if (queueDocument) {
       setAlertDialog({
         title: '현재 열려있는 문서가 있습니다.',
-        description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
-        onAction: () => setNewDocumentDialogProps({
-          onSubmit: createDocument,
-        }),
+        description:
+          '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
+        onAction: () =>
+          setNewDocumentDialogProps({
+            onSubmit: createDocument,
+          }),
       });
       return;
     }
@@ -158,7 +164,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   return (
     <div className={clsx(styles.Container)}>
       <div className={clsx(styles.LogoContainer)}>
-        <SvgRemixIcon icon='ri-file-ppt-line' width={40} height={40} />
+        <SvgRemixIcon icon="ri-file-ppt-line" width={40} height={40} />
       </div>
       <div className={clsx(styles.ContentContainer)}>
         <div className={clsx(styles.TitleContainer)}>
@@ -172,9 +178,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         </div>
         <QueueMenubar.Root>
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>
-              파일
-            </QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>파일</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
                 <QueueMenubar.Item onClick={onNewDocumentClick}>
@@ -196,69 +200,41 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>
-              수정
-            </QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>수정</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>
-                  실행 취소
-                </QueueMenubar.Item>
-                <QueueMenubar.Item>
-                  다시 실행
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>실행 취소</QueueMenubar.Item>
+                <QueueMenubar.Item>다시 실행</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>
-                  붙여넣기
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>붙여넣기</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>
-                  제목 수정
-                </QueueMenubar.Item>
-                <QueueMenubar.Item>
-                  페이지 설정
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>제목 수정</QueueMenubar.Item>
+                <QueueMenubar.Item>페이지 설정</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>
-              보기
-            </QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>보기</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>
-                  프레젠테이션 모드 시작
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>프레젠테이션 모드 시작</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>
-                  전체 화면
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>전체 화면</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>
-              도움말
-            </QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>도움말</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>
-                  키보드 단축키
-                </QueueMenubar.Item>
-                <QueueMenubar.Item>
-                  웹 사이트
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>키보드 단축키</QueueMenubar.Item>
+                <QueueMenubar.Item>웹 사이트</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>
-                  업데이트 확인
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>업데이트 확인</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>
-                  정보
-                </QueueMenubar.Item>
+                <QueueMenubar.Item>정보</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -270,14 +246,18 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           description={alertDialog.description}
           onAction={alertDialog.onAction}
           opened={!!alertDialog}
-          onOpenChange={(opened): void => !opened && setAlertDialog(null)} />
+          onOpenChange={(opened): void => !opened && setAlertDialog(null)}
+        />
       )}
 
       {newDocumentDialogProps && (
         <NewDocumentDialog
           {...newDocumentDialogProps}
           open={!!newDocumentDialogProps}
-          onOpenChange={(opened): void => !opened && setNewDocumentDialogProps(null)} />
+          onOpenChange={(opened): void =>
+            !opened && setNewDocumentDialogProps(null)
+          }
+        />
       )}
     </div>
   );

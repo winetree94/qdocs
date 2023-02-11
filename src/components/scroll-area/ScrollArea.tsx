@@ -10,11 +10,7 @@ export const Root: React.ForwardRefExoticComponent<
     <ScrollArea.Root
       {...props}
       ref={ref}
-      className={clsx(
-        className,
-        styles.ScrollAreaRoot,
-      )}
-    >
+      className={clsx(className, styles.ScrollAreaRoot)}>
       {children}
     </ScrollArea.Root>
   );
@@ -27,11 +23,7 @@ export const Viewport: React.ForwardRefExoticComponent<
     <ScrollArea.Viewport
       {...props}
       ref={ref}
-      className={clsx(
-        className,
-        styles.ScrollAreaViewport,
-      )}
-    >
+      className={clsx(className, styles.ScrollAreaViewport)}>
       {children}
     </ScrollArea.Viewport>
   );
@@ -44,11 +36,7 @@ export const Scrollbar: React.ForwardRefExoticComponent<
     <ScrollArea.Scrollbar
       {...props}
       ref={ref}
-      className={clsx(
-        className,
-        styles.ScrollAreaScrollbar,
-      )}
-    >
+      className={clsx(className, styles.ScrollAreaScrollbar)}>
       {children}
     </ScrollArea.Scrollbar>
   );
@@ -61,16 +49,11 @@ export const Thumb: React.ForwardRefExoticComponent<
     <ScrollArea.Thumb
       {...props}
       ref={ref}
-      className={clsx(
-        className,
-        styles.ScrollAreaThumb,
-      )}
-    >
+      className={clsx(className, styles.ScrollAreaThumb)}>
       {children}
     </ScrollArea.Thumb>
   );
 });
-
 
 export const Corner: React.ForwardRefExoticComponent<
   ScrollArea.ScrollAreaCornerProps & React.RefAttributes<HTMLDivElement>
@@ -79,11 +62,7 @@ export const Corner: React.ForwardRefExoticComponent<
     <ScrollArea.Corner
       {...props}
       ref={ref}
-      className={clsx(
-        className,
-        styles.ScrollAreaCorner,
-      )}
-    >
+      className={clsx(className, styles.ScrollAreaCorner)}>
       {children}
     </ScrollArea.Corner>
   );

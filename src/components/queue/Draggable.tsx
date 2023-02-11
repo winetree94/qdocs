@@ -3,7 +3,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { QueueObjectContainerContext } from './Container';
 import { QueueAnimatableContext } from './QueueAnimation';
 
-export interface DraggableProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface DraggableProps
+  extends React.BaseHTMLAttributes<HTMLDivElement> {
   onMousedown?: (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
@@ -22,7 +23,8 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
 }) => {
   const { detail } = useContext(QueueObjectContainerContext);
   const meta = useContext(QueueAnimatableContext);
-  const [initMousedownEvent, setInitMousedownEvent] = useState<MouseEvent | null>(null);
+  const [initMousedownEvent, setInitMousedownEvent] =
+    useState<MouseEvent | null>(null);
 
   const onDocumentMousemove = useCallback(
     (event: MouseEvent) => {

@@ -96,8 +96,7 @@ const ObjectStylerBackground = (): ReactElement => {
           <div className="w-6 h-6">
             <label
               className={classes['input-color']}
-              style={{ backgroundColor: firstObject.fill.color }}
-            >
+              style={{ backgroundColor: firstObject.fill.color }}>
               <input
                 type="color"
                 name="backgroundColor"
@@ -201,8 +200,7 @@ const ObjectStylerStroke = (): ReactElement | null => {
           <div className="w-6 h-6">
             <label
               className={classes['input-color']}
-              style={{ backgroundColor: firstObject.stroke.color }}
-            >
+              style={{ backgroundColor: firstObject.stroke.color }}>
               <input
                 type="color"
                 name="strokeColor"
@@ -287,28 +285,31 @@ const ObjectStyleText = (): ReactElement => {
     });
   };
 
-  const update = useCallback((text: Partial<QueueText>): void => {
-    setQueueDocument.updateObjectProp(
-      settings.queuePage, [{
-        uuid: object.uuid,
-        queueIndex: settings.queueIndex,
-        props: {
-          text: {
+  const update = useCallback(
+    (text: Partial<QueueText>): void => {
+      setQueueDocument.updateObjectProp(settings.queuePage, [
+        {
+          uuid: object.uuid,
+          queueIndex: settings.queueIndex,
+          props: {
             text: {
-              ...object.text,
-              ...text,
+              text: {
+                ...object.text,
+                ...text,
+              },
             },
           },
         },
-      }],
-    );
-  }, [
-    object.uuid,
-    object.text,
-    setQueueDocument,
-    settings.queueIndex,
-    settings.queuePage,
-  ]);
+      ]);
+    },
+    [
+      object.uuid,
+      object.text,
+      setQueueDocument,
+      settings.queueIndex,
+      settings.queuePage,
+    ]
+  );
 
   useEffect(() => {
     if (
@@ -325,15 +326,14 @@ const ObjectStyleText = (): ReactElement => {
   return (
     <div>
       <div>
-        <h3>
-          Text Settings
-        </h3>
+        <h3>Text Settings</h3>
       </div>
       <div>
         <QueueSelect.Root
           value={currentText.fontFamily}
-          onValueChange={(value): void => updateCurrentText({ fontFamily: value })}
-        >
+          onValueChange={(value): void =>
+            updateCurrentText({ fontFamily: value })
+          }>
           <QueueSelect.Trigger className="SelectTrigger" aria-label="Food">
             <QueueSelect.Value placeholder="Select a fruit…" />
             <QueueSelect.Icon className="SelectIcon">
@@ -354,21 +354,22 @@ const ObjectStyleText = (): ReactElement => {
         </QueueSelect.Root>
       </div>
       <div>
-        <div>
-          가로 정렬
-        </div>
+        <div>가로 정렬</div>
         <QueueToggleGroup.Root
-          type='single'
+          type="single"
           value={currentText.horizontalAlign}
-          onValueChange={(value: 'left' | 'center' | 'right'): void => updateCurrentText({ horizontalAlign: value || currentText.horizontalAlign })}
-        >
-          <QueueToggleGroup.Item value='left' size='small'>
+          onValueChange={(value: 'left' | 'center' | 'right'): void =>
+            updateCurrentText({
+              horizontalAlign: value || currentText.horizontalAlign,
+            })
+          }>
+          <QueueToggleGroup.Item value="left" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-left'} />
           </QueueToggleGroup.Item>
-          <QueueToggleGroup.Item value='center' size='small'>
+          <QueueToggleGroup.Item value="center" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-center'} />
           </QueueToggleGroup.Item>
-          <QueueToggleGroup.Item value='right' size='small'>
+          <QueueToggleGroup.Item value="right" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-right'} />
           </QueueToggleGroup.Item>
         </QueueToggleGroup.Root>
@@ -376,35 +377,42 @@ const ObjectStyleText = (): ReactElement => {
       <div>
         <div>세로 정렬</div>
         <QueueToggleGroup.Root
-          type='single'
+          type="single"
           value={currentText.verticalAlign}
-          onValueChange={(value: 'top' | 'middle' | 'bottom'): void => updateCurrentText({ verticalAlign: value || currentText.verticalAlign })}
-        >
-          <QueueToggleGroup.Item value='top' size='small'>
+          onValueChange={(value: 'top' | 'middle' | 'bottom'): void =>
+            updateCurrentText({
+              verticalAlign: value || currentText.verticalAlign,
+            })
+          }>
+          <QueueToggleGroup.Item value="top" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-top'} />
           </QueueToggleGroup.Item>
-          <QueueToggleGroup.Item value='middle' size='small'>
+          <QueueToggleGroup.Item value="middle" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-vertically'} />
           </QueueToggleGroup.Item>
-          <QueueToggleGroup.Item value='bottom' size='small'>
+          <QueueToggleGroup.Item value="bottom" size="small">
             <SvgRemixIcon width={15} height={15} icon={'ri-align-bottom'} />
           </QueueToggleGroup.Item>
         </QueueToggleGroup.Root>
       </div>
       <div>
-        <div>
-          색상
-        </div>
+        <div>색상</div>
         <input
           type="color"
           value={currentText.fontColor}
-          onChange={(e): void => updateCurrentText({ fontColor: e.target.value })} />
+          onChange={(e): void =>
+            updateCurrentText({ fontColor: e.target.value })
+          }
+        />
       </div>
       <div>
         <QueueInput
           value={currentText.fontSize}
-          type='number'
-          onChange={(e): void => updateCurrentText({ fontSize: Number(e.target.value) })} />
+          type="number"
+          onChange={(e): void =>
+            updateCurrentText({ fontSize: Number(e.target.value) })
+          }
+        />
       </div>
     </div>
   );
@@ -500,16 +508,14 @@ export const StylerPanel = ({
     <div
       id="right-panel-root"
       className={clsx(classes.root, className)}
-      {...props}
-    >
+      {...props}>
       {hasSelectedObjects && (
         <div className="p-2">
           <EffectControllerBox />
           <div>
             <ObjectStyler
               objects={selectedObjects}
-              onStyleChange={handleStyleChange}
-            >
+              onStyleChange={handleStyleChange}>
               <div className="flex flex-col gap-3">
                 <hr className="my-2" />
                 <ObjectStyler.Background />

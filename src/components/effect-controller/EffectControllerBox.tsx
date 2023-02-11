@@ -42,15 +42,13 @@ export const EffectController = ({
       <button
         type="button"
         className="flex-1 hover:bg-gray-100"
-        onClick={(): void => setOpen((prev) => !prev)}
-      >
+        onClick={(): void => setOpen((prev) => !prev)}>
         <span>{effect.type}</span>
       </button>
       {open && (
         <form
           className="flex flex-col gap-2 p-1 bg-gray-100"
-          onChange={handleEffectChange}
-        >
+          onChange={handleEffectChange}>
           <EffectControllerDuration effect={effect} uuid={uuid} />
           <EffectControllerTimingFunction effect={effect} uuid={uuid} />
           <EffectControllerIndex effect={effect} />
@@ -306,8 +304,7 @@ export const EffectControllerBox = (): ReactElement | null => {
           <Dropdown>
             <Dropdown.Trigger
               className="flex items-center disabled:cursor-not-allowed"
-              disabled={createEffectIndex === settings.queueIndex}
-            >
+              disabled={createEffectIndex === settings.queueIndex}>
               <PlusIcon />
             </Dropdown.Trigger>
             <Dropdown.Content side="right">
@@ -319,8 +316,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                 return (
                   <Dropdown.Item
                     key={effectType}
-                    onClick={(): void => handleAddEffectItemClick(effectType)}
-                  >
+                    onClick={(): void => handleAddEffectItemClick(effectType)}>
                     {effectType}
                   </Dropdown.Item>
                 );

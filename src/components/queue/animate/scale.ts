@@ -44,11 +44,11 @@ export const getScaleAnimation = (
   const slicedEffect: ScaleEffect =
     position === 'backward'
       ? {
-        ...scaleEffect,
-        scale: {
-          ...getCurrentScale(object, index),
-        },
-      }
+          ...scaleEffect,
+          scale: {
+            ...getCurrentScale(object, index),
+          },
+        }
       : scaleEffect;
 
   return {
@@ -60,7 +60,7 @@ export const getScaleAnimation = (
 export const getAnimatableScale = (
   progress: number,
   targetScale: QueueScale,
-  fromScale?: QueueScale,
+  fromScale?: QueueScale
 ): QueueScale => {
   if (progress < 0 || !fromScale) {
     return targetScale;

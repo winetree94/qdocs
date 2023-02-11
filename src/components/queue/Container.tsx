@@ -4,7 +4,9 @@ import { QueueObjectType } from 'model/object';
 import { QueueRect, QueueRotate } from 'model/property';
 import { createContext, FunctionComponent } from 'react';
 
-export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
+export interface QueueObjectContainerContextType<
+  T extends QueueObjectType = any
+> {
   object: T;
   documentScale: number;
   detail: boolean;
@@ -14,9 +16,13 @@ export interface QueueObjectContainerContextType<T extends QueueObjectType = any
   transform: QueueRect;
 }
 
-export const QueueObjectContainerContext = createContext<QueueObjectContainerContextType>({} as QueueObjectContainerContextType);
+export const QueueObjectContainerContext =
+  createContext<QueueObjectContainerContextType>(
+    {} as QueueObjectContainerContextType
+  );
 
-export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface QueueObjectContainerProps
+  extends React.BaseHTMLAttributes<HTMLDivElement> {
   documentScale: number;
   object: QueueObjectType;
   move?: Pick<QueueRect, 'x' | 'y'>;
@@ -26,7 +32,9 @@ export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTML
   selected: boolean;
   children: React.ReactNode;
 }
-export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> = ({
+export const QueueObjectContainer: FunctionComponent<
+  QueueObjectContainerProps
+> = ({
   children,
   selected,
   transform,
@@ -38,15 +46,16 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
   ...props
 }) => {
   return (
-    <QueueObjectContainerContext.Provider value={{
-      object,
-      selected,
-      detail,
-      transform,
-      move,
-      transformRotate: rotate,
-      documentScale
-    }}>
+    <QueueObjectContainerContext.Provider
+      value={{
+        object,
+        selected,
+        detail,
+        transform,
+        move,
+        transformRotate: rotate,
+        documentScale,
+      }}>
       <div {...props}>{children}</div>
     </QueueObjectContainerContext.Provider>
   );

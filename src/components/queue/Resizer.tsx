@@ -50,14 +50,11 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   onResizeEnd,
   onRotateStart,
   onRotateMove,
-  onRotateEnd
+  onRotateEnd,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   // shorthands
-  const {
-    selected,
-    documentScale,
-  } = useContext(QueueObjectContainerContext);
+  const { selected, documentScale } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
   const rect = animation.rect;
@@ -68,12 +65,16 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const strokeWidth = 20;
   const distance = strokeWidth / 2;
   const margin = 100;
-  const [resizingRect, setResizingRect] = React.useState<ResizerEvent | null>(null);
+  const [resizingRect, setResizingRect] = React.useState<ResizerEvent | null>(
+    null
+  );
 
   const actualWidth = (resizingRect?.width || rect.width) + margin * 2;
   const actualHeight = (resizingRect?.height || rect.height) + margin * 2;
 
-  const [rotatingDegree, setRotatingDegree] = React.useState<number | null>(null);
+  const [rotatingDegree, setRotatingDegree] = React.useState<number | null>(
+    null
+  );
 
   const [initResizeEvent, setInitResizeEvent] = React.useState<{
     event: MouseEvent;
@@ -92,18 +93,29 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       return null;
     }
     const position = initResizeEvent.position;
-    const a: 0 | 1 = ['bottom-right', 'top-right', 'middle-right'].includes(position) ? 1 : 0;
-    const b: 0 | 1 = ['bottom-right', 'bottom-left', 'middle-left', 'bottom-middle'].includes(position) ? 1 : 0;
+    const a: 0 | 1 = ['bottom-right', 'top-right', 'middle-right'].includes(
+      position
+    )
+      ? 1
+      : 0;
+    const b: 0 | 1 = [
+      'bottom-right',
+      'bottom-left',
+      'middle-left',
+      'bottom-middle',
+    ].includes(position)
+      ? 1
+      : 0;
     const c: 0 | 1 = a === 1 ? 0 : 1;
     const d: 0 | 1 = b === 1 ? 0 : 1;
     return { a, b, c, d };
   }, [initResizeEvent]);
 
   const startPositionToResize = React.useMemo<{
-    qp0_x: number,
-    qp0_y: number,
-    pp_x: number,
-    pp_y: number,
+    qp0_x: number;
+    qp0_y: number;
+    pp_x: number;
+    pp_y: number;
   }>(() => {
     if (!initResizeEvent || !matrix) {
       return null;
@@ -126,11 +138,15 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     const p0_x: number = l + matrix.c * w;
     const p0_y: number = t + matrix.d * h;
 
-    const qp0_x = q0_x * cos_t - q0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
-    const qp0_y = q0_x * sin_t + q0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
+    const qp0_x =
+      q0_x * cos_t - q0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
+    const qp0_y =
+      q0_x * sin_t + q0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
 
-    const pp_x = p0_x * cos_t - p0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
-    const pp_y = p0_x * sin_t + p0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
+    const pp_x =
+      p0_x * cos_t - p0_y * sin_t - c0_x * cos_t + c0_y * sin_t + c0_x;
+    const pp_y =
+      p0_x * sin_t + p0_y * cos_t - c0_x * sin_t - c0_y * cos_t + c0_y;
 
     return { qp0_x, qp0_y, pp_x, pp_y };
   }, [initResizeEvent, matrix, rotate]);
@@ -156,13 +172,17 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const getDelta = (
     initEvent: MouseEvent,
     currentEvent: MouseEvent,
-    scale: number,
+    scale: number
   ): { x: number; y: number } => {
     const currentX: number = currentEvent.clientX;
     const currentY: number = currentEvent.clientY;
     return {
-      x: ['bottom-middle', 'top-middle'].includes(initResizeEvent.position) ? 0 : (currentX - initEvent.clientX) * (1 / scale),
-      y: ['middle-left', 'middle-right'].includes(initResizeEvent.position) ? 0 : (currentY - initEvent.clientY) * (1 / scale)
+      x: ['bottom-middle', 'top-middle'].includes(initResizeEvent.position)
+        ? 0
+        : (currentX - initEvent.clientX) * (1 / scale),
+      y: ['middle-left', 'middle-right'].includes(initResizeEvent.position)
+        ? 0
+        : (currentY - initEvent.clientY) * (1 / scale),
     };
   };
 
@@ -170,7 +190,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
     (
       initEvent: MouseEvent,
       targetEvent: MouseEvent,
-      scale: number,
+      scale: number
     ): ResizerEvent => {
       const delta = getDelta(initEvent, targetEvent, scale);
 
@@ -184,11 +204,23 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       const cos_mt: number = Math.cos(mtheta);
       const sin_mt: number = Math.sin(mtheta);
 
-      let q_x: number = qp_x * cos_mt - qp_y * sin_mt - cos_mt * cp_x + sin_mt * cp_y + cp_x;
-      let q_y: number = qp_x * sin_mt + qp_y * cos_mt - sin_mt * cp_x - cos_mt * cp_y + cp_y;
+      let q_x: number =
+        qp_x * cos_mt - qp_y * sin_mt - cos_mt * cp_x + sin_mt * cp_y + cp_x;
+      let q_y: number =
+        qp_x * sin_mt + qp_y * cos_mt - sin_mt * cp_x - cos_mt * cp_y + cp_y;
 
-      let p_x: number = startPositionToResize.pp_x * cos_mt - startPositionToResize.pp_y * sin_mt - cos_mt * cp_x + sin_mt * cp_y + cp_x;
-      let p_y: number = startPositionToResize.pp_x * sin_mt + startPositionToResize.pp_y * cos_mt - sin_mt * cp_x - cos_mt * cp_y + cp_y;
+      let p_x: number =
+        startPositionToResize.pp_x * cos_mt -
+        startPositionToResize.pp_y * sin_mt -
+        cos_mt * cp_x +
+        sin_mt * cp_y +
+        cp_x;
+      let p_y: number =
+        startPositionToResize.pp_x * sin_mt +
+        startPositionToResize.pp_y * cos_mt -
+        sin_mt * cp_x -
+        cos_mt * cp_y +
+        cp_y;
 
       const wtmp: number = matrix.a * (q_x - p_x) + matrix.c * (p_x - q_x);
       const htmp: number = matrix.b * (q_y - p_y) + matrix.d * (p_y - q_y);
@@ -206,17 +238,43 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       const dw_x: number = cos_t * w;
       const dw_y: number = sin_t * w;
 
-      const qp_x_min: number = startPositionToResize.pp_x + (matrix.a - matrix.c) * dw_x + (matrix.b - matrix.d) * dh_x;
-      const qp_y_min: number = startPositionToResize.pp_y + (matrix.a - matrix.c) * dw_y + (matrix.b - matrix.d) * dh_y;
+      const qp_x_min: number =
+        startPositionToResize.pp_x +
+        (matrix.a - matrix.c) * dw_x +
+        (matrix.b - matrix.d) * dh_x;
+      const qp_y_min: number =
+        startPositionToResize.pp_y +
+        (matrix.a - matrix.c) * dw_y +
+        (matrix.b - matrix.d) * dh_y;
 
       const cp_x_min: number = (qp_x_min + startPositionToResize.pp_x) / 2.0;
       const cp_y_min: number = (qp_y_min + startPositionToResize.pp_y) / 2.0;
 
-      q_x = qp_x_min * cos_mt - qp_y_min * sin_mt - cos_mt * cp_x_min + sin_mt * cp_y_min + cp_x_min;
-      q_y = qp_x_min * sin_mt + qp_y_min * cos_mt - sin_mt * cp_x_min - cos_mt * cp_y_min + cp_y_min;
+      q_x =
+        qp_x_min * cos_mt -
+        qp_y_min * sin_mt -
+        cos_mt * cp_x_min +
+        sin_mt * cp_y_min +
+        cp_x_min;
+      q_y =
+        qp_x_min * sin_mt +
+        qp_y_min * cos_mt -
+        sin_mt * cp_x_min -
+        cos_mt * cp_y_min +
+        cp_y_min;
 
-      p_x = startPositionToResize.pp_x * cos_mt - startPositionToResize.pp_y * sin_mt - cos_mt * cp_x_min + sin_mt * cp_y_min + cp_x_min;
-      p_y = startPositionToResize.pp_x * sin_mt + startPositionToResize.pp_y * cos_mt - sin_mt * cp_x_min - cos_mt * cp_y_min + cp_y_min;
+      p_x =
+        startPositionToResize.pp_x * cos_mt -
+        startPositionToResize.pp_y * sin_mt -
+        cos_mt * cp_x_min +
+        sin_mt * cp_y_min +
+        cp_x_min;
+      p_y =
+        startPositionToResize.pp_x * sin_mt +
+        startPositionToResize.pp_y * cos_mt -
+        sin_mt * cp_x_min -
+        cos_mt * cp_y_min +
+        cp_y_min;
 
       const l: number = matrix.c * q_x + matrix.a * p_x;
       const t: number = matrix.d * q_y + matrix.b * p_y;
@@ -235,16 +293,30 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
 
   const onResizeDocumentMousemove = useCallback(
     (event: MouseEvent) => {
-      const rect = getAbsoluteResizerPosition(initResizeEvent.event, event, documentScale);
+      const rect = getAbsoluteResizerPosition(
+        initResizeEvent.event,
+        event,
+        documentScale
+      );
       onResizeMove?.({ ...rect, degree: 0, scale: 0 }, cancelResize);
       setResizingRect(rect);
     },
-    [initResizeEvent, onResizeMove, documentScale, cancelResize, getAbsoluteResizerPosition]
+    [
+      initResizeEvent,
+      onResizeMove,
+      documentScale,
+      cancelResize,
+      getAbsoluteResizerPosition,
+    ]
   );
 
   const onResizeDocumentMouseup = useCallback(
     (event: MouseEvent) => {
-      const rect = getAbsoluteResizerPosition(initResizeEvent.event, event, documentScale);
+      const rect = getAbsoluteResizerPosition(
+        initResizeEvent.event,
+        event,
+        documentScale
+      );
       onResizeEnd?.({ ...rect, degree: 0, scale: 0 });
       setResizingRect(null);
       setInitResizeEvent(null);
@@ -292,12 +364,24 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   );
 
   const onRotateMousedown = useCallback(
-    (initEvent: React.MouseEvent<SVGRectElement, globalThis.MouseEvent>): void => {
+    (
+      initEvent: React.MouseEvent<SVGRectElement, globalThis.MouseEvent>
+    ): void => {
       initEvent.stopPropagation();
       const rect = getAbsolutePosition();
-      const [centerX, centerY] = center(rect.x, rect.y, rect.width, rect.height);
-      const degree = angle(centerX, centerY, initEvent.clientX, initEvent.clientY);
-      onRotateStart?.({ ...rect, degree: degree, scale: 0, }, cancelRotate);
+      const [centerX, centerY] = center(
+        rect.x,
+        rect.y,
+        rect.width,
+        rect.height
+      );
+      const degree = angle(
+        centerX,
+        centerY,
+        initEvent.clientX,
+        initEvent.clientY
+      );
+      onRotateStart?.({ ...rect, degree: degree, scale: 0 }, cancelRotate);
       setInitRotateEvent({
         event: initEvent.nativeEvent,
         absRect: rect,
@@ -310,11 +394,22 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const onRotateDocumentMousemove = useCallback(
     (event: MouseEvent) => {
       const { absRect } = initRotateEvent;
-      const [centerX, centerY] = center(absRect.x, absRect.y, absRect.width, absRect.height);
-      const degree = Math.ceil(angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree);
+      const [centerX, centerY] = center(
+        absRect.x,
+        absRect.y,
+        absRect.width,
+        absRect.height
+      );
+      const degree = Math.ceil(
+        angle(centerX, centerY, event.clientX, event.clientY) -
+          initRotateEvent.degree
+      );
       const adjacent = Math.round(degree / 5) * 5;
       setRotatingDegree(event.shiftKey ? degree : adjacent);
-      onRotateMove?.({ ...absRect, degree: event.shiftKey ? degree : adjacent, scale: 0, }, cancelRotate);
+      onRotateMove?.(
+        { ...absRect, degree: event.shiftKey ? degree : adjacent, scale: 0 },
+        cancelRotate
+      );
     },
     [initRotateEvent, onRotateMove, cancelRotate]
   );
@@ -322,11 +417,23 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const onRotateDocumentMouseup = useCallback(
     (event: MouseEvent) => {
       const { absRect } = initRotateEvent;
-      const [centerX, centerY] = center(absRect.x, absRect.y, absRect.width, absRect.height);
-      const degree = Math.ceil(angle(centerX, centerY, event.clientX, event.clientY) - initRotateEvent.degree);
+      const [centerX, centerY] = center(
+        absRect.x,
+        absRect.y,
+        absRect.width,
+        absRect.height
+      );
+      const degree = Math.ceil(
+        angle(centerX, centerY, event.clientX, event.clientY) -
+          initRotateEvent.degree
+      );
       const adjacent = Math.round(degree / 5) * 5;
       setRotatingDegree(null);
-      onRotateEnd?.({ ...absRect, degree: event.shiftKey ? degree : adjacent, scale: 0, });
+      onRotateEnd?.({
+        ...absRect,
+        degree: event.shiftKey ? degree : adjacent,
+        scale: 0,
+      });
       setInitRotateEvent(null);
     },
     [initRotateEvent, onRotateEnd]
@@ -358,11 +465,12 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           left: (resizingRect?.x || rect.x) - margin,
           top: (resizingRect?.y || rect.y) - margin,
           transformOrigin: 'center center',
-          transform: `rotate(${resizingRect?.degree || rotate}deg) scale(${scale})`,
+          transform: `rotate(${
+            resizingRect?.degree || rotate
+          }deg) scale(${scale})`,
         }}
         width={actualWidth}
-        height={actualHeight}
-      >
+        height={actualHeight}>
         {/* top left */}
         <rect
           className={clsx(styles.resizer, styles.topLeft)}
@@ -370,8 +478,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={margin - distance}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}
-        ></rect>
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}></rect>
         {/* top middle */}
         <rect
           className={clsx(styles.resizer, styles.topMiddle)}
@@ -379,8 +486,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={margin - distance}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}
-        ></rect>
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}></rect>
         {/* top right */}
         <rect
           className={clsx(styles.resizer, styles.topRight)}
@@ -388,8 +494,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={margin - distance}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}
-        ></rect>
+          onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}></rect>
         {/* middle right */}
         <rect
           className={clsx(styles.resizer, styles.middleRight)}
@@ -397,8 +502,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight / 2 - strokeWidth / 2}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'middle-right')}
-        ></rect>
+          onMouseDown={(e): void =>
+            onResizeMousedown(e, 'middle-right')
+          }></rect>
         {/* bottom right */}
         <rect
           className={clsx(styles.resizer, styles.bottomRight)}
@@ -406,8 +512,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-right')}
-        ></rect>
+          onMouseDown={(e): void =>
+            onResizeMousedown(e, 'bottom-right')
+          }></rect>
         {/* bottom middle */}
         <rect
           className={clsx(styles.resizer, styles.bottomMiddle)}
@@ -415,8 +522,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-middle')}
-        ></rect>
+          onMouseDown={(e): void =>
+            onResizeMousedown(e, 'bottom-middle')
+          }></rect>
         {/* bottom left */}
         <rect
           className={clsx(styles.resizer, styles.bottomLeft)}
@@ -424,8 +532,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}
-        ></rect>
+          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}></rect>
         {/* middle left */}
         <rect
           className={clsx(styles.resizer, styles.middleLeft)}
@@ -433,8 +540,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight / 2 - strokeWidth / 2}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}
-        ></rect>
+          onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}></rect>
         {/* rotation */}
         <rect
           className={clsx(styles.resizer, styles.rotation)}
@@ -442,8 +548,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           y={actualHeight - margin - (strokeWidth - distance) + 50}
           width={strokeWidth}
           height={strokeWidth}
-          onMouseDown={(e): void => onRotateMousedown(e)}
-        ></rect>
+          onMouseDown={(e): void => onRotateMousedown(e)}></rect>
       </svg>
       {rotatingDegree !== null && (
         <div
@@ -452,7 +557,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
             left: (resizingRect?.x || rect.x) - margin,
             top: (resizingRect?.y || rect.y) - margin + animation.rect.height,
             width: actualWidth,
-            height: actualHeight
+            height: actualHeight,
           }}>
           {rotatingDegree}°
         </div>

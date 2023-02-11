@@ -2,5 +2,7 @@
   "css.customData": [".vscode/cssCustomData.json"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["clsx"]
+  "cSpell.words": ["clsx"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }

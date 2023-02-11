@@ -76,8 +76,7 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
         <div
           style={style}
           onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
-          className={clsx(styles.objectGroupTitle)}
-        >
+          className={clsx(styles.objectGroupTitle)}>
           <SvgRemixIcon
             className={styles.objectGroupArrow}
             width={15}
@@ -106,8 +105,7 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
               <Tooltip.Portal>
                 <Tooltip.Content
                   className={styles.TooltipContent}
-                  sideOffset={5}
-                >
+                  sideOffset={5}>
                   {object.key}
                   <Tooltip.Arrow className={styles.TooltipArrow} />
                 </Tooltip.Content>
@@ -272,9 +270,7 @@ export const LeftPanel: FunctionComponent = () => {
           key: iconClassName,
           factory: () => createIcon(iconClassName),
           keyword: [iconClassName],
-          preview: (
-            <SvgRemixIcon width={30} height={30} icon={iconClassName} />
-          ),
+          preview: <SvgRemixIcon width={30} height={30} icon={iconClassName} />,
         })),
       },
     ],
@@ -355,16 +351,13 @@ export const LeftPanel: FunctionComponent = () => {
               placeholder="Search Shape"
               className={clsx(styles.input)}
               value={searchKeyword}
-              onChange={(e): void => setSearchKeyword(e.target.value)}
-            ></QueueInput>
+              onChange={(e): void =>
+                setSearchKeyword(e.target.value)
+              }></QueueInput>
           </div>
-          <QueueScrollArea.Root
-            className={clsx(
-              styles.ScrollAreaRoot
-            )}>
-            <QueueScrollArea.Viewport className={clsx(
-              styles.ScrollAreaViewport
-            )}>
+          <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
+            <QueueScrollArea.Viewport
+              className={clsx(styles.ScrollAreaViewport)}>
               <AutoSizer>
                 {({ height, width }): ReactNode => (
                   <FixedSizeList
@@ -375,8 +368,7 @@ export const LeftPanel: FunctionComponent = () => {
                     itemKey={(index): string => flattenItems[index].key}
                     itemData={memoizedItemData}
                     initialScrollOffset={listScrollTopState}
-                    onScroll={handleScroll}
-                  >
+                    onScroll={handleScroll}>
                     {FlattenRow}
                   </FixedSizeList>
                 )}

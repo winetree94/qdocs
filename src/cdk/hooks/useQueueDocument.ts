@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  QueueDocument,
-} from 'model/document';
+import { QueueDocument } from 'model/document';
 import {
   FadeEffect,
   MoveEffect,
@@ -14,7 +12,11 @@ import {
   StrokeEffect,
   TextEffect,
 } from 'model/effect';
-import { OBJECT_SUPPORTED_EFFECTS, OBJECT_SUPPORTED_PROPERTIES, QueueObjectType } from 'model/object';
+import {
+  OBJECT_SUPPORTED_EFFECTS,
+  OBJECT_SUPPORTED_PROPERTIES,
+  QueueObjectType,
+} from 'model/object';
 import { OBJECT_PROPERTIES, QueueRect, QueueRotate } from 'model/property';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
@@ -47,21 +49,14 @@ export interface UpdateObjectProp {
 
 export interface UseQueueDocument {
   readonly queueDocument: QueueDocument;
-  readonly selectedObjects: QueueObjectType[],
+  readonly selectedObjects: QueueObjectType[];
   changeObjectIndex: (
     fromUUIDs: string[],
-    to: 'start' | 'end' | 'forward' | 'backward',
+    to: 'start' | 'end' | 'forward' | 'backward'
   ) => void;
-  removeObjectOnQueue: (
-    uuids: string[]
-  ) => void;
-  removeObject: (
-    uuids: string[]
-  ) => void;
-  updateObjectProp: (
-    pageIndex: number,
-    models: UpdateObjectProp[]
-  ) => void;
+  removeObjectOnQueue: (uuids: string[]) => void;
+  removeObject: (uuids: string[]) => void;
+  updateObjectProp: (pageIndex: number, models: UpdateObjectProp[]) => void;
 }
 
 /**
@@ -81,7 +76,9 @@ export const useQueueDocument = (): UseQueueDocument => {
       objects: queueDocument!.pages[pageIndex].objects.slice(0),
     };
     models.forEach((model) => {
-      const objectIndex = slicedPage.objects.findIndex((object) => object.uuid === model.uuid);
+      const objectIndex = slicedPage.objects.findIndex(
+        (object) => object.uuid === model.uuid
+      );
       const slicedObject = {
         ...slicedPage.objects[objectIndex],
         effects: slicedPage.objects[objectIndex].effects.slice(0),
@@ -89,27 +86,35 @@ export const useQueueDocument = (): UseQueueDocument => {
       const objectType = slicedObject.type;
 
       const createEffectIndex = slicedObject.effects.find(
-        (effect) => effect.type === OBJECT_EFFECT_META.CREATE,
+        (effect) => effect.type === OBJECT_EFFECT_META.CREATE
       )!.index;
 
       const removeEffectIndex = slicedObject.effects.findIndex(
-        (effect) => effect.type === OBJECT_EFFECT_META.REMOVE,
+        (effect) => effect.type === OBJECT_EFFECT_META.REMOVE
       );
 
       Object.entries(model.props).forEach(([key, value]) => {
         // 지원 안되는 속성인 경우 중단
-        if (!OBJECT_SUPPORTED_PROPERTIES[objectType].includes(key as OBJECT_PROPERTIES)) {
-          console.warn(`object type not supported. type is '${objectType}'`, );
+        if (
+          !OBJECT_SUPPORTED_PROPERTIES[objectType].includes(
+            key as OBJECT_PROPERTIES
+          )
+        ) {
+          console.warn(`object type not supported. type is '${objectType}'`);
           return;
         }
         // 이펙트로 지원 안되는 속성인 경우 무조건 루트에 반영
-        if (!OBJECT_SUPPORTED_EFFECTS[objectType].includes(key as OBJECT_EFFECTS)) {
-          (slicedObject as any)[key] = (value as any)[key] || (slicedObject as any)[key];
+        if (
+          !OBJECT_SUPPORTED_EFFECTS[objectType].includes(key as OBJECT_EFFECTS)
+        ) {
+          (slicedObject as any)[key] =
+            (value as any)[key] || (slicedObject as any)[key];
           return;
         }
         // 생성 이펙트에서 수정한 경우 무조건 루트에 반영
         if (createEffectIndex === model.queueIndex) {
-          (slicedObject as any)[key] = (value as any)[key] || (slicedObject as any)[key];
+          (slicedObject as any)[key] =
+            (value as any)[key] || (slicedObject as any)[key];
           return;
         }
         // 삭제 이후의 이펙트를 수정하려고 한 경우 중단
@@ -152,7 +157,7 @@ export const useQueueDocument = (): UseQueueDocument => {
 
   const changeObjectIndex = (
     fromUUIDs: string[],
-    to: 'start' | 'end' | 'forward' | 'backward',
+    to: 'start' | 'end' | 'forward' | 'backward'
   ): void => {
     const objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
     switch (to) {
@@ -180,7 +185,9 @@ export const useQueueDocument = (): UseQueueDocument => {
         break;
       case 'forward':
         fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
+          const objectIndex = objects.findIndex(
+            (object) => object.uuid === uuid
+          );
           const object = objects[objectIndex];
           objects.splice(objectIndex, 1);
           objects.splice(Math.min(objectIndex + 1, objects.length), 0, object);
@@ -188,7 +195,9 @@ export const useQueueDocument = (): UseQueueDocument => {
         break;
       case 'backward':
         fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
+          const objectIndex = objects.findIndex(
+            (object) => object.uuid === uuid
+          );
           const object = objects[objectIndex];
           objects.splice(objectIndex, 1);
           objects.splice(Math.min(objectIndex - 1, objects.length), 0, object);
@@ -198,7 +207,7 @@ export const useQueueDocument = (): UseQueueDocument => {
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
       ...queueDocument!.pages[settings.queuePage],
-      objects: objects
+      objects: objects,
     };
     setQueueDocument({
       ...queueDocument!,
@@ -207,15 +216,18 @@ export const useQueueDocument = (): UseQueueDocument => {
   };
 
   const removeObjectOnQueue = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.reduce<QueueObjectType[]>((result, object) => {
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.reduce<
+      QueueObjectType[]
+    >((result, object) => {
       if (!uuids.includes(object.uuid)) {
         result.push(object);
         return result;
       }
       const newObject: QueueObjectType = {
         ...object,
-        effects: object.effects
-          .filter((effect) => effect.index < settings.queueIndex)
+        effects: object.effects.filter(
+          (effect) => effect.index < settings.queueIndex
+        ),
       };
       if (newObject.effects.length === 0) {
         return result;
@@ -233,7 +245,7 @@ export const useQueueDocument = (): UseQueueDocument => {
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
       ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
+      objects: newObjects,
     };
     setQueueDocument({
       ...queueDocument!,
@@ -242,11 +254,13 @@ export const useQueueDocument = (): UseQueueDocument => {
   };
 
   const removeObject = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => !uuids.includes(object.uuid));
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.filter(
+      (object) => !uuids.includes(object.uuid)
+    );
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
       ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects
+      objects: newObjects,
     };
     setQueueDocument({
       ...queueDocument!,

@@ -13,13 +13,13 @@ import {
 
 export interface QueueLine
   extends WithEffects,
-  WithRect,
-  WithFade,
-  WithFill,
-  WithRotation,
-  WithScale,
-  WithStroke,
-  WithText {
+    WithRect,
+    WithFade,
+    WithFill,
+    WithRotation,
+    WithScale,
+    WithStroke,
+    WithText {
   type: 'line';
   uuid: string;
 }

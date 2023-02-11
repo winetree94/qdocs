@@ -1,8 +1,12 @@
-import { FunctionComponent, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import {
-  isExistObjectOnQueue,
-} from '../../model/object/square';
+  FunctionComponent,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
+import { isExistObjectOnQueue } from '../../model/object/square';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
 import { QueueObject } from 'components/queue';
@@ -22,7 +26,9 @@ export const QueueEditor: FunctionComponent = () => {
   const [translateTargets, setTranslateTargets] = useState<string[]>([]);
   const { queueDocument, ...setQueueDocument } = useQueueDocument();
   const { settings, ...setSettings } = useSettings();
-  const currentQueueObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
+  const currentQueueObjects = queueDocument!.pages[
+    settings.queuePage
+  ].objects.filter((object) =>
     isExistObjectOnQueue(object, settings.queueIndex)
   );
 
@@ -35,14 +41,14 @@ export const QueueEditor: FunctionComponent = () => {
     const root = rootRef.current!;
     const scale = Math.min(
       root.clientWidth / (queueDocument!.documentRect.width + 40),
-      root.clientHeight / (queueDocument!.documentRect.height + 40),
+      root.clientHeight / (queueDocument!.documentRect.height + 40)
     );
     setSettings.setScale(scale);
   }, []);
 
   const onObjectMouseodown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueObjectType,
+    object: QueueObjectType
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
@@ -58,7 +64,7 @@ export const QueueEditor: FunctionComponent = () => {
 
   const onObjectDoubleClick = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueObjectType,
+    object: QueueObjectType
   ): void => {
     event.stopPropagation();
     setSettings.setDetailSettingMode(object.uuid);
@@ -67,17 +73,21 @@ export const QueueEditor: FunctionComponent = () => {
   const onObjectDragMove = (
     initEvent: MouseEvent,
     event: MouseEvent,
-    object: QueueObjectType,
+    object: QueueObjectType
   ): void => {
-    const diffX = (event.clientX - initEvent.clientX);
+    const diffX = event.clientX - initEvent.clientX;
     const diffY = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
 
-    const targetX = (diffX * currentScale);
-    const targetY = (diffY * currentScale);
+    const targetX = diffX * currentScale;
+    const targetY = diffY * currentScale;
 
-    const adjacentTargetX = event.shiftKey ? targetX : Math.round(targetX / 30) * 30;
-    const adjacentTargetY = event.shiftKey ? targetY : Math.round(targetY / 30) * 30;
+    const adjacentTargetX = event.shiftKey
+      ? targetX
+      : Math.round(targetX / 30) * 30;
+    const adjacentTargetY = event.shiftKey
+      ? targetY
+      : Math.round(targetY / 30) * 30;
 
     setMoving({
       x: adjacentTargetX,
@@ -86,18 +96,19 @@ export const QueueEditor: FunctionComponent = () => {
     setTranslateTargets(settings.selectedObjectUUIDs);
   };
 
-  const onObjectDragEnd = (
-    initEvent: MouseEvent,
-    event: MouseEvent,
-  ): void => {
+  const onObjectDragEnd = (initEvent: MouseEvent, event: MouseEvent): void => {
     const x = event.clientX - initEvent.clientX;
     const y = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
     const diffX = x * currentScale;
     const diffY = y * currentScale;
 
-    const adjacentTargetX = event.shiftKey ? diffX : Math.round(diffX / 30) * 30;
-    const adjacentTargetY = event.shiftKey ? diffY : Math.round(diffY / 30) * 30;
+    const adjacentTargetX = event.shiftKey
+      ? diffX
+      : Math.round(diffX / 30) * 30;
+    const adjacentTargetY = event.shiftKey
+      ? diffY
+      : Math.round(diffY / 30) * 30;
 
     const updateModels = queueDocument!.pages[settings.queuePage].objects
       .filter((object) => settings.selectedObjectUUIDs.includes(object.uuid))
@@ -117,13 +128,16 @@ export const QueueEditor: FunctionComponent = () => {
       });
 
     setSettings.stopAnimation();
-    setQueueDocument.updateObjectProp(settings.queuePage, updateModels.map((model) => ({
-      uuid: model.uuid,
-      queueIndex: settings.queueIndex,
-      props: {
-        rect: model.rect,
-      }
-    })));
+    setQueueDocument.updateObjectProp(
+      settings.queuePage,
+      updateModels.map((model) => ({
+        uuid: model.uuid,
+        queueIndex: settings.queueIndex,
+        props: {
+          rect: model.rect,
+        },
+      }))
+    );
     setMoving(null);
   };
 
@@ -139,7 +153,9 @@ export const QueueEditor: FunctionComponent = () => {
     const absScale = 1 / settings.scale;
     const x = (event.drawClientX - rect.x) * absScale;
     const y = (event.drawClientY - rect.y) * absScale;
-    const hasSelectableObject = queueDocument!.pages[settings.queuePage].objects.some((object) => {
+    const hasSelectableObject = queueDocument!.pages[
+      settings.queuePage
+    ].objects.some((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
       return (
         rect.x <= x &&
@@ -167,7 +183,9 @@ export const QueueEditor: FunctionComponent = () => {
     const y = (event.drawClientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
-    const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => {
+    const selectedObjects = queueDocument!.pages[
+      settings.queuePage
+    ].objects.filter((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
       return (
         rect.x >= x &&
@@ -177,13 +195,13 @@ export const QueueEditor: FunctionComponent = () => {
       );
     });
 
-    setSettings.setSelectedObjectUUIDs(selectedObjects.map((object) => object.uuid));
+    setSettings.setSelectedObjectUUIDs(
+      selectedObjects.map((object) => object.uuid)
+    );
   };
 
   const onResizeStart = (object: QueueObjectType): void => {
-    setTranslateTargets([
-      object.uuid
-    ]);
+    setTranslateTargets([object.uuid]);
   };
 
   const onResizeMove = (object: QueueObjectType, rect: QueueRect): void => {
@@ -191,51 +209,59 @@ export const QueueEditor: FunctionComponent = () => {
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: QueueRect): void => {
-    setQueueDocument.updateObjectProp(settings.queuePage, [{
-      uuid: object.uuid,
-      queueIndex: settings.queueIndex,
-      props: {
-        rect: {
+    setQueueDocument.updateObjectProp(settings.queuePage, [
+      {
+        uuid: object.uuid,
+        queueIndex: settings.queueIndex,
+        props: {
           rect: {
-            x: rect.x,
-            y: rect.y,
-            width: rect.width,
-            height: rect.height,
-          }
-        }
-      }
-    }]);
+            rect: {
+              x: rect.x,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height,
+            },
+          },
+        },
+      },
+    ]);
     setResizing(null);
     setRotating(null);
     setTranslateTargets([]);
   };
 
   const onRotateStart = (object: QueueObjectType): void => {
-    setTranslateTargets([
-      object.uuid
-    ]);
+    setTranslateTargets([object.uuid]);
   };
 
-  const onRotateMove = (object: QueueObjectType, rotate: { degree: number }): void => {
+  const onRotateMove = (
+    object: QueueObjectType,
+    rotate: { degree: number }
+  ): void => {
     setRotating({
       position: 'forward',
       degree: rotate.degree,
     });
   };
 
-  const onRotateEnd = (object: QueueObjectType, rotate: { degree: number }): void => {
-    setQueueDocument.updateObjectProp(settings.queuePage, [{
-      uuid: object.uuid,
-      queueIndex: settings.queueIndex,
-      props: {
-        rotate: {
+  const onRotateEnd = (
+    object: QueueObjectType,
+    rotate: { degree: number }
+  ): void => {
+    setQueueDocument.updateObjectProp(settings.queuePage, [
+      {
+        uuid: object.uuid,
+        queueIndex: settings.queueIndex,
+        props: {
           rotate: {
-            degree: rotate.degree,
-            position: 'forward',
+            rotate: {
+              degree: rotate.degree,
+              position: 'forward',
+            },
           },
         },
       },
-    }]);
+    ]);
     setRotating(null);
     setResizing(null);
     setTranslateTargets([]);
@@ -251,7 +277,7 @@ export const QueueEditor: FunctionComponent = () => {
       console.log(document.body.clientWidth, document.body.clientHeight);
       const scale = Math.min(
         document.body.clientWidth / queueDocument!.documentRect.width,
-        document.body.clientHeight / queueDocument!.documentRect.height,
+        document.body.clientHeight / queueDocument!.documentRect.height
       );
       console.log(scale);
       setSettings.setScale(scale);
@@ -260,23 +286,23 @@ export const QueueEditor: FunctionComponent = () => {
     observer.observe(document.body);
     resize();
     return () => observer.disconnect();
-  }, [
-    settings.presentationMode,
-  ]);
+  }, [settings.presentationMode]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
-    setQueueDocument.updateObjectProp(settings.queuePage, [{
-      uuid: object.uuid,
-      queueIndex: settings.queueIndex,
-      props: {
-        text: {
+    setQueueDocument.updateObjectProp(settings.queuePage, [
+      {
+        uuid: object.uuid,
+        queueIndex: settings.queueIndex,
+        props: {
           text: {
-            ...object.text,
-            text,
-          }
+            text: {
+              ...object.text,
+              text,
+            },
+          },
         },
       },
-    }]);
+    ]);
   };
 
   return (
@@ -286,90 +312,130 @@ export const QueueEditor: FunctionComponent = () => {
           setSettings.setSelectedObjectUUIDs([]);
         }
       }}>
-      <QueueContextMenu.Trigger
-        ref={rootRef}
-        className={clsx(
-          styles.Root
-        )}>
+      <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
         <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
               scale={settings.scale}
               drawer={
-                <div className={clsx(
-                  styles.drawer,
-                  'w-full',
-                  'h-full',
-                )}></div>
+                <div className={clsx(styles.drawer, 'w-full', 'h-full')}></div>
               }
               onDrawStart={onDrawStart}
               onDrawEnd={onDrawEnd}
               className={clsx(
                 styles.Drawable,
-                settings.presentationMode ? styles.fullscreen : '',
-              )}
-            >
+                settings.presentationMode ? styles.fullscreen : ''
+              )}>
               <Scaler
                 width={queueDocument!.documentRect.width}
                 height={queueDocument!.documentRect.height}
                 scale={settings.scale}
                 className={clsx(
-                  settings.presentationMode ? styles.scaleFull : '',
-                )}
-              >
+                  settings.presentationMode ? styles.scaleFull : ''
+                )}>
                 <div
                   ref={canvasDiv}
-                  className={clsx(
-                    styles.canvas,
-                    'relative',
-                    'box-border',
-                  )}
+                  className={clsx(styles.canvas, 'relative', 'box-border')}
                   style={{
                     width: queueDocument!.documentRect.width,
                     height: queueDocument!.documentRect.height,
                     background: queueDocument!.documentRect.fill,
-                  }}
-                >
+                  }}>
                   {currentQueueObjects.map((object, index) => {
                     return (
                       <QueueContextMenu.Root
                         key={object.uuid}
                         onOpenChange={(open): void => {
-                          if (open && !settings.selectedObjectUUIDs.includes(object.uuid)) {
+                          if (
+                            open &&
+                            !settings.selectedObjectUUIDs.includes(object.uuid)
+                          ) {
                             setSettings.setSelectedObjectUUIDs([object.uuid]);
                           }
                         }}>
                         <QueueContextMenu.Trigger>
                           <QueueObject.Container
-                            className='queue-object-root'
+                            className="queue-object-root"
                             object={object}
-                            detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
+                            detail={
+                              settings.selectionMode === 'detail' &&
+                              settings.selectedObjectUUIDs.includes(object.uuid)
+                            }
                             documentScale={settings.scale}
-                            move={translateTargets.includes(object.uuid) ? moving : undefined}
-                            transform={translateTargets.includes(object.uuid) ? resizing : undefined}
-                            rotate={translateTargets.includes(object.uuid) ? rotating : undefined}
-                            selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
+                            move={
+                              translateTargets.includes(object.uuid)
+                                ? moving
+                                : undefined
+                            }
+                            transform={
+                              translateTargets.includes(object.uuid)
+                                ? resizing
+                                : undefined
+                            }
+                            rotate={
+                              translateTargets.includes(object.uuid)
+                                ? rotating
+                                : undefined
+                            }
+                            selected={settings.selectedObjectUUIDs.includes(
+                              object.uuid
+                            )}>
                             <QueueObject.Animator
                               queueIndex={settings.queueIndex}
                               queuePosition={settings.queuePosition}
                               queueStart={settings.queueStart}>
                               <QueueObject.Drag
-                                onMousedown={(event): void => onObjectMouseodown(event, object)}
-                                onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
-                                onDraggingStart={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                                onDraggingMove={(initEvent, currentEvent): void => onObjectDragMove(initEvent, currentEvent, object)}
-                                onDraggingEnd={onObjectDragEnd}
-                              >
+                                onMousedown={(event): void =>
+                                  onObjectMouseodown(event, object)
+                                }
+                                onDoubleClick={(event): void =>
+                                  onObjectDoubleClick(event, object)
+                                }
+                                onDraggingStart={(
+                                  initEvent,
+                                  currentEvent
+                                ): void =>
+                                  onObjectDragMove(
+                                    initEvent,
+                                    currentEvent,
+                                    object
+                                  )
+                                }
+                                onDraggingMove={(
+                                  initEvent,
+                                  currentEvent
+                                ): void =>
+                                  onObjectDragMove(
+                                    initEvent,
+                                    currentEvent,
+                                    object
+                                  )
+                                }
+                                onDraggingEnd={onObjectDragEnd}>
                                 <QueueObject.Rect></QueueObject.Rect>
-                                <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)}></QueueObject.Text>
+                                <QueueObject.Text
+                                  onEdit={(e): void =>
+                                    onTextEdit(object, e)
+                                  }></QueueObject.Text>
                                 <QueueObject.Resizer
-                                  onResizeStart={(event): void => onResizeStart(object)}
-                                  onResizeMove={(event): void => onResizeMove(object, event)}
-                                  onResizeEnd={(event): void => onResizeEnd(object, event)}
-                                  onRotateStart={(event): void => onRotateStart(object)}
-                                  onRotateMove={(event): void => onRotateMove(object, event)}
-                                  onRotateEnd={(event): void => onRotateEnd(object, event)}
-                                ></QueueObject.Resizer>
+                                  onResizeStart={(event): void =>
+                                    onResizeStart(object)
+                                  }
+                                  onResizeMove={(event): void =>
+                                    onResizeMove(object, event)
+                                  }
+                                  onResizeEnd={(event): void =>
+                                    onResizeEnd(object, event)
+                                  }
+                                  onRotateStart={(event): void =>
+                                    onRotateStart(object)
+                                  }
+                                  onRotateMove={(event): void =>
+                                    onRotateMove(object, event)
+                                  }
+                                  onRotateEnd={(event): void =>
+                                    onRotateEnd(object, event)
+                                  }></QueueObject.Resizer>
                               </QueueObject.Drag>
                             </QueueObject.Animator>
                           </QueueObject.Container>
@@ -379,41 +445,72 @@ export const QueueEditor: FunctionComponent = () => {
                             onInteractOutside={(e): void => console.log(e)}
                             onMouseDown={(e): void => e.stopPropagation()}>
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}>
-                              현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
+                              onClick={(): void =>
+                                setQueueDocument.removeObjectOnQueue(
+                                  settings.selectedObjectUUIDs
+                                )
+                              }>
+                              현재 큐에서 삭제{' '}
+                              <div className={styles.RightSlot}>Backspace</div>
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}>
-                              오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
+                              onClick={(): void =>
+                                setQueueDocument.removeObject(
+                                  settings.selectedObjectUUIDs
+                                )
+                              }>
+                              오브젝트 삭제{' '}
+                              <div className={styles.RightSlot}>
+                                ⌘+Backspace
+                              </div>
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Separator />
-                            <QueueContextMenu.Item >
-                              잘라내기 <div className={styles.RightSlot}>⌘+T</div>
+                            <QueueContextMenu.Item>
+                              잘라내기{' '}
+                              <div className={styles.RightSlot}>⌘+T</div>
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item>
                               복사 <div className={styles.RightSlot}>⌘+C</div>
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Separator />
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
+                              onClick={(): void =>
+                                setQueueDocument.changeObjectIndex(
+                                  settings.selectedObjectUUIDs,
+                                  'start'
+                                )
+                              }>
                               맨 앞으로 가져오기
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
+                              onClick={(): void =>
+                                setQueueDocument.changeObjectIndex(
+                                  settings.selectedObjectUUIDs,
+                                  'end'
+                                )
+                              }>
                               맨 뒤로 보내기
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
+                              onClick={(): void =>
+                                setQueueDocument.changeObjectIndex(
+                                  settings.selectedObjectUUIDs,
+                                  'forward'
+                                )
+                              }>
                               앞으로 가져오기
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item
-                              onClick={(): void => setQueueDocument.changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
+                              onClick={(): void =>
+                                setQueueDocument.changeObjectIndex(
+                                  settings.selectedObjectUUIDs,
+                                  'backward'
+                                )
+                              }>
                               뒤로 보내기
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Separator />
-                            <QueueContextMenu.Item >
-                              그룹
-                            </QueueContextMenu.Item>
+                            <QueueContextMenu.Item>그룹</QueueContextMenu.Item>
                             <QueueContextMenu.Item>
                               그룹 해제
                             </QueueContextMenu.Item>
@@ -428,15 +525,21 @@ export const QueueEditor: FunctionComponent = () => {
                               <QueueContextMenu.Portal>
                                 <QueueContextMenu.SubContent
                                   sideOffset={2}
-                                  alignOffset={-5}
-                                >
+                                  alignOffset={-5}>
                                   <QueueContextMenu.Item>
-                                    Save Page As… <div className={styles.RightSlot}>⌘+S</div>
+                                    Save Page As…{' '}
+                                    <div className={styles.RightSlot}>⌘+S</div>
                                   </QueueContextMenu.Item>
-                                  <QueueContextMenu.Item>Create Shortcut…</QueueContextMenu.Item>
-                                  <QueueContextMenu.Item>Name Window…</QueueContextMenu.Item>
+                                  <QueueContextMenu.Item>
+                                    Create Shortcut…
+                                  </QueueContextMenu.Item>
+                                  <QueueContextMenu.Item>
+                                    Name Window…
+                                  </QueueContextMenu.Item>
                                   <QueueContextMenu.Separator />
-                                  <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
+                                  <QueueContextMenu.Item>
+                                    Developer Tools
+                                  </QueueContextMenu.Item>
                                 </QueueContextMenu.SubContent>
                               </QueueContextMenu.Portal>
                             </QueueContextMenu.Sub>

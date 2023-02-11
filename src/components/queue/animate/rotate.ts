@@ -60,13 +60,14 @@ export const getRotateAnimation = (
 export const getAnimatableRotate = (
   progress: number,
   targetScale: QueueRotate,
-  fromScale?: QueueRotate,
+  fromScale?: QueueRotate
 ): QueueRotate => {
   if (progress < 0 || !fromScale) {
     return targetScale;
   }
   return {
-    degree: fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
+    degree:
+      fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
     position: 'forward',
   };
 };

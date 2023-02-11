@@ -32,8 +32,7 @@ export const Line: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
-      opacity={containerContext.object.fade.opacity}
-    >
+      opacity={containerContext.object.fade.opacity}>
       <line
         className={clsx(styles.rect)}
         onMouseDown={onRectMousedown}

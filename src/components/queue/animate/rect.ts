@@ -48,11 +48,11 @@ export const getRectAnimation = (
   const slicedEffect: MoveEffect =
     position === 'backward'
       ? {
-        ...moveEffect,
-        rect: {
-          ...getCurrentRect(object, index),
-        },
-      }
+          ...moveEffect,
+          rect: {
+            ...getCurrentRect(object, index),
+          },
+        }
       : moveEffect;
 
   return {
@@ -64,7 +64,7 @@ export const getRectAnimation = (
 export const getAnimatableRect = (
   progress: number,
   targetRect: QueueRect,
-  fromRect?: QueueRect,
+  fromRect?: QueueRect
 ): QueueRect => {
   if (progress < 0 || !fromRect) {
     return targetRect;

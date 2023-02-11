@@ -7,34 +7,33 @@ export interface TextProps {
   onEdit?(text: string): void;
 }
 
-export const Text: FunctionComponent<TextProps> = ({
-  onEdit,
-}) => {
+export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
   const ref = useRef<HTMLDivElement>(null);
   const animation = useContext(QueueAnimatableContext);
   const { object, detail } = useContext(QueueObjectContainerContext);
 
-  const verticalAlign = object.text.verticalAlign === 'middle'
-    ? 'center'
-    : object.text.verticalAlign === 'top'
+  const verticalAlign =
+    object.text.verticalAlign === 'middle'
+      ? 'center'
+      : object.text.verticalAlign === 'top'
       ? 'flex-start'
       : 'flex-end';
 
-  const horizontalAlign = object.text.horizontalAlign === 'center'
-    ? 'center'
-    : object.text.horizontalAlign === 'left'
+  const horizontalAlign =
+    object.text.horizontalAlign === 'center'
+      ? 'center'
+      : object.text.horizontalAlign === 'left'
       ? 'flex-start'
       : 'flex-end';
 
-  const textAlign = object.text.horizontalAlign === 'center'
-    ? 'center'
-    : object.text.horizontalAlign === 'left'
+  const textAlign =
+    object.text.horizontalAlign === 'center'
+      ? 'center'
+      : object.text.horizontalAlign === 'left'
       ? 'left'
       : 'right';
 
-  const onKeydown = (
-    event: React.KeyboardEvent<HTMLDivElement>
-  ): void => {
+  const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === 'Enter') {
       event.preventDefault();
       if (window.getSelection) {
@@ -107,8 +106,6 @@ export const Text: FunctionComponent<TextProps> = ({
       }}
       spellCheck="false"
       contentEditable={detail}
-      onMouseDown={(e): void => detail && e.stopPropagation()}
-    >
-    </div>
+      onMouseDown={(e): void => detail && e.stopPropagation()}></div>
   );
 };

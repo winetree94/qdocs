@@ -18,29 +18,18 @@ export const Scaler: FunctionComponent<ScalerProps> = ({
   children,
 }) => {
   return (
-    <div
-      className={clsx(
-        styles.Root,
-        className
-      )}
-    >
+    <div className={clsx(styles.Root, className)}>
       <div
-        className={clsx(
-          styles.ActualSizer,
-        )}
+        className={clsx(styles.ActualSizer)}
         style={{
           maxWidth: width * scale,
           maxHeight: height * scale,
-        }}
-      >
+        }}>
         <div
-          className={clsx(
-            styles.ScaledContent
-          )}
+          className={clsx(styles.ScaledContent)}
           style={{
             transform: `scale(${scale})`,
-          }}
-        >
+          }}>
           {children}
         </div>
       </div>

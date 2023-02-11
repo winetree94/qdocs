@@ -55,9 +55,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
             )}
             <div className={clsx(styles.Right)}>
               <QueueEditor />
-              {!settings.presentationMode && (
-                <BottomPanel />
-              )}
+              {!settings.presentationMode && <BottomPanel />}
             </div>
           </div>
         )}

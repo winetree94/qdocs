@@ -42,8 +42,7 @@ export const EffectControllerTimingFunction = ({
       <p className="text-sm">timing function</p>
       <QueueSelect.Root
         defaultValue={firstObjectCurrentEffect.timing}
-        onValueChange={handleTimingFunctionChange}
-      >
+        onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Trigger>
           <QueueSelect.Value />
           <QueueSelect.Icon>

@@ -60,14 +60,11 @@ export const getFadeAnimation = (
 export const getAnimatableFade = (
   progress: number,
   targetFade: QueueFade,
-  fromFade?: QueueFade,
+  fromFade?: QueueFade
 ): QueueFade => {
   if (progress < 0 || !fromFade) {
     return {
-      opacity: Math.max(
-        targetFade.opacity,
-        0.1
-      ),
+      opacity: Math.max(targetFade.opacity, 0.1),
     };
   }
   return {

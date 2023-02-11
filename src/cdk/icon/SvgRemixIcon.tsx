@@ -7,16 +7,9 @@ export interface SvgRemixIconProps extends React.SVGProps<SVGSVGElement> {
 
 export const SvgRemixIcon: React.ForwardRefExoticComponent<
   SvgRemixIconProps & React.RefAttributes<SVGSVGElement>
-> = forwardRef(({
-  icon,
-  ...props
-}, ref) => {
+> = forwardRef(({ icon, ...props }, ref) => {
   return (
-    <svg
-      ref={ref}
-      width="15"
-      height="15"
-      {...props}>
+    <svg ref={ref} width="15" height="15" {...props}>
       <use href={`/remixicon.symbol.svg#${icon}`}></use>
     </svg>
   );

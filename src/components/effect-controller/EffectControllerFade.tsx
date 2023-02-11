@@ -32,7 +32,9 @@ export const EffectControllerFade = ({
             name="fadeOpacity"
             value={fadeOpacity}
             step={0.1}
-            onChange={(e): void => setFadeOpacity(parseFloat(e.currentTarget.value))}
+            onChange={(e): void =>
+              setFadeOpacity(parseFloat(e.currentTarget.value))
+            }
           />
         </div>
       </div>

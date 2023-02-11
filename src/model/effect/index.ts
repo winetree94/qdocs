@@ -21,15 +21,15 @@ export * from './text';
 export * from './meta';
 
 export type QueueEffectType =
-  CreateEffect |
-  FadeEffect |
-  FillEffect |
-  MoveEffect |
-  RemoveEffect |
-  RotateEffect |
-  StrokeEffect |
-  ScaleEffect |
-  TextEffect;
+  | CreateEffect
+  | FadeEffect
+  | FillEffect
+  | MoveEffect
+  | RemoveEffect
+  | RotateEffect
+  | StrokeEffect
+  | ScaleEffect
+  | TextEffect;
 
 export interface WithEffects {
   effects: QueueEffectType[];

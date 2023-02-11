@@ -10,53 +10,54 @@ export interface QueueToggleGroupProps {
 
 export const QueueToogleGroupRoot: React.ForwardRefExoticComponent<
   QueueToggleGroupProps &
-  (ToggleGroup.ToggleGroupSingleProps | ToggleGroup.ToggleGroupMultipleProps) &
-  React.RefAttributes<HTMLDivElement>
-> = forwardRef(({
-  children,
-  className,
-  size,
-  ...props
-}, ref) => {
+    (
+      | ToggleGroup.ToggleGroupSingleProps
+      | ToggleGroup.ToggleGroupMultipleProps
+    ) &
+    React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, className, size, ...props }, ref) => {
   return (
     <ToggleGroup.Root
       ref={ref}
       {...props}
-      className={clsx(
-        styles.ToggleGroup,
-        className,
-        styles[size]
-      )}>
+      className={clsx(styles.ToggleGroup, className, styles[size])}>
       {children}
     </ToggleGroup.Root>
   );
 });
 
 export const QueueToggleGroupItem: React.ForwardRefExoticComponent<
-  QueueButtonProps & ToggleGroup.ToggleGroupItemProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({
-  children,
-  className,
-  round = false,
-  color = 'default',
-  size = 'medium',
-  ...props
-}, ref) => {
-  return (
-    <ToggleGroup.Item
-      ref={ref}
-      {...props}
-      className={clsx(
-        styles.ToggleGroupItem,
-        className,
-        styles[color],
-        styles[size],
-        round && styles.round
-      )}>
-      {children}
-    </ToggleGroup.Item>
-  );
-});
+  QueueButtonProps &
+    ToggleGroup.ToggleGroupItemProps &
+    React.RefAttributes<HTMLButtonElement>
+> = forwardRef(
+  (
+    {
+      children,
+      className,
+      round = false,
+      color = 'default',
+      size = 'medium',
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <ToggleGroup.Item
+        ref={ref}
+        {...props}
+        className={clsx(
+          styles.ToggleGroupItem,
+          className,
+          styles[color],
+          styles[size],
+          round && styles.round
+        )}>
+        {children}
+      </ToggleGroup.Item>
+    );
+  }
+);
 
 export const QueueToggleGroup = {
   Root: QueueToogleGroupRoot,

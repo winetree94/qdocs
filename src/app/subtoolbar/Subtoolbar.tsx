@@ -92,13 +92,17 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
         <QueueIconButton>
           <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
         </QueueIconButton>
-        <QueueIconButton >
-          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
+        <QueueIconButton>
+          <SvgRemixIcon
+            width={15}
+            height={15}
+            icon={'ri-arrow-go-forward-line'}
+          />
         </QueueIconButton>
-        <QueueIconButton >
+        <QueueIconButton>
           <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
         </QueueIconButton>
-        <QueueIconButton >
+        <QueueIconButton>
           <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} />
         </QueueIconButton>
         <QueueIconButton onClick={startPresentationModel}>
@@ -115,8 +119,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
             style={{
               color: queue.index === settings.queueIndex ? 'red' : 'black',
             }}
-            onClick={(): void => setCurrentQueueIndex(queue.index)}
-          >
+            onClick={(): void => setCurrentQueueIndex(queue.index)}>
             {queue.index + 1}
           </QueueIconButton>
         ))}

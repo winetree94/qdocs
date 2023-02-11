@@ -7,24 +7,14 @@ export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
   children,
   ...props
 }) => {
-  return (
-    <ContextMenu.Root
-      {...props}>
-      {children}
-    </ContextMenu.Root>
-  );
+  return <ContextMenu.Root {...props}>{children}</ContextMenu.Root>;
 };
 
 export const Trigger: React.ForwardRefExoticComponent<
   ContextMenu.ContextMenuTriggerProps & React.RefAttributes<HTMLSpanElement>
-> = forwardRef(({
-  children,
-  ...props
-}, ref) => {
+> = forwardRef(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.Trigger
-      ref={ref}
-      {...props}>
+    <ContextMenu.Trigger ref={ref} {...props}>
       {children}
     </ContextMenu.Trigger>
   );
@@ -34,20 +24,12 @@ export const Portal: FunctionComponent<ContextMenu.ContextMenuPortalProps> = ({
   children,
   ...props
 }) => {
-  return (
-    <ContextMenu.Portal
-      {...props}>
-      {children}
-    </ContextMenu.Portal>
-  );
+  return <ContextMenu.Portal {...props}>{children}</ContextMenu.Portal>;
 };
 
 export const Content: React.ForwardRefExoticComponent<
   ContextMenu.ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef(({
-  children,
-  ...props
-}, ref) => {
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Content
       ref={ref}
@@ -71,10 +53,9 @@ export const Item: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
   );
 };
 
-export const CheckboxItem: FunctionComponent<ContextMenu.ContextMenuCheckboxItemProps> = ({
-  children,
-  ...props
-}) => {
+export const CheckboxItem: FunctionComponent<
+  ContextMenu.ContextMenuCheckboxItemProps
+> = ({ children, ...props }) => {
   return (
     <ContextMenu.CheckboxItem
       {...props}
@@ -84,22 +65,15 @@ export const CheckboxItem: FunctionComponent<ContextMenu.ContextMenuCheckboxItem
   );
 };
 
-export const RadioGroup: FunctionComponent<ContextMenu.ContextMenuRadioGroupProps> = ({
-  children,
-  ...props
-}) => {
-  return (
-    <ContextMenu.RadioGroup
-      {...props}>
-      {children}
-    </ContextMenu.RadioGroup>
-  );
+export const RadioGroup: FunctionComponent<
+  ContextMenu.ContextMenuRadioGroupProps
+> = ({ children, ...props }) => {
+  return <ContextMenu.RadioGroup {...props}>{children}</ContextMenu.RadioGroup>;
 };
 
-export const RadioItem: FunctionComponent<ContextMenu.ContextMenuRadioItemProps> = ({
-  children,
-  ...props
-}) => {
+export const RadioItem: FunctionComponent<
+  ContextMenu.ContextMenuRadioItemProps
+> = ({ children, ...props }) => {
   return (
     <ContextMenu.RadioItem
       {...props}
@@ -109,10 +83,9 @@ export const RadioItem: FunctionComponent<ContextMenu.ContextMenuRadioItemProps>
   );
 };
 
-export const Separator: FunctionComponent<ContextMenu.ContextMenuSeparatorProps> = ({
-  children,
-  ...props
-}) => {
+export const Separator: FunctionComponent<
+  ContextMenu.ContextMenuSeparatorProps
+> = ({ children, ...props }) => {
   return (
     <ContextMenu.Separator
       {...props}
@@ -126,18 +99,12 @@ export const MenuSub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
   children,
   ...props
 }) => {
-  return (
-    <ContextMenu.Sub
-      {...props}>
-      {children}
-    </ContextMenu.Sub>
-  );
+  return <ContextMenu.Sub {...props}>{children}</ContextMenu.Sub>;
 };
 
-export const SubTrigger: FunctionComponent<ContextMenu.ContextMenuSubTriggerProps> = ({
-  children,
-  ...props
-}) => {
+export const SubTrigger: FunctionComponent<
+  ContextMenu.ContextMenuSubTriggerProps
+> = ({ children, ...props }) => {
   return (
     <ContextMenu.SubTrigger
       {...props}
@@ -147,10 +114,9 @@ export const SubTrigger: FunctionComponent<ContextMenu.ContextMenuSubTriggerProp
   );
 };
 
-export const SubContent: FunctionComponent<ContextMenu.ContextMenuSubContentProps> = ({
-  children,
-  ...props
-}) => {
+export const SubContent: FunctionComponent<
+  ContextMenu.ContextMenuSubContentProps
+> = ({ children, ...props }) => {
   return (
     <ContextMenu.SubContent
       {...props}

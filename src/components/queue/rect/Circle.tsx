@@ -29,8 +29,7 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
-      opacity={containerContext.object.fade.opacity}
-    >
+      opacity={containerContext.object.fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <ellipse

@@ -5,12 +5,12 @@ export interface UseSettingsHook {
   settings: QueueDocumentSettings;
 
   /**
- * @description
- * 현재 큐 변경
- *
- * @param index - 변경할 큐 인덱스
- * @param play - 변경할 큐 인덱스로 이동했을 때 애니메이션 재생 여부
- */
+   * @description
+   * 현재 큐 변경
+   *
+   * @param index - 변경할 큐 인덱스
+   * @param play - 변경할 큐 인덱스로 이동했을 때 애니메이션 재생 여부
+   */
   setQueueIndex: (index: number, play: boolean) => void;
 
   /**
@@ -28,7 +28,6 @@ export interface UseSettingsHook {
    * @param uuids - 변경할 오브젝트 UUID 목록
    */
   setSelectedObjectUUIDs: (uuids: string[]) => void;
-
 
   /**
    * @description
@@ -56,10 +55,7 @@ export interface UseSettingsHook {
 export const useSettings = (): UseSettingsHook => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
-  const setQueueIndex = (
-    index: number,
-    play?: boolean,
-  ): void => {
+  const setQueueIndex = (index: number, play?: boolean): void => {
     setSettings({
       ...settings,
       queueIndex: index,
@@ -70,9 +66,7 @@ export const useSettings = (): UseSettingsHook => {
     });
   };
 
-  const setQueuePageIndex = (
-    index: number,
-  ): void => {
+  const setQueuePageIndex = (index: number): void => {
     setSettings({
       ...settings,
       queuePage: index,
@@ -83,9 +77,7 @@ export const useSettings = (): UseSettingsHook => {
     });
   };
 
-  const setSelectedObjectUUIDs = (
-    uuids: string[],
-  ): void => {
+  const setSelectedObjectUUIDs = (uuids: string[]): void => {
     setSettings({
       ...settings,
       selectionMode: 'normal',
@@ -93,13 +85,11 @@ export const useSettings = (): UseSettingsHook => {
     });
   };
 
-  const setDetailSettingMode = (
-    uuid: string,
-  ): void => {
+  const setDetailSettingMode = (uuid: string): void => {
     setSettings({
       ...settings,
       selectionMode: 'detail',
-      selectedObjectUUIDs: [uuid]
+      selectedObjectUUIDs: [uuid],
     });
   };
 
@@ -110,9 +100,7 @@ export const useSettings = (): UseSettingsHook => {
     });
   };
 
-  const setScale = (
-    scale: number,
-  ): void => {
+  const setScale = (scale: number): void => {
     setSettings({
       ...settings,
       scale,
@@ -126,6 +114,6 @@ export const useSettings = (): UseSettingsHook => {
     setSelectedObjectUUIDs,
     setDetailSettingMode,
     stopAnimation,
-    setScale
+    setScale,
   };
 };

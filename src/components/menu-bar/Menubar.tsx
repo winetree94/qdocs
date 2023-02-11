@@ -11,54 +11,53 @@ export const Root: React.ForwardRefExoticComponent<
     <Menubar.Root
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarRoot, className)}
-    >
+      className={clsx(styles.MenubarRoot, className)}>
       {children}
     </Menubar.Root>
   );
 });
 
-export const Menu: React.FC<Menubar.ScopedProps<Menubar.MenubarMenuProps>> = ({ children, ...props }) => {
-  return (
-    <Menubar.Menu
-      {...props}
-    >
-      {children}
-    </Menubar.Menu>
-  );
+export const Menu: React.FC<Menubar.ScopedProps<Menubar.MenubarMenuProps>> = ({
+  children,
+  ...props
+}) => {
+  return <Menubar.Menu {...props}>{children}</Menubar.Menu>;
 };
 
 export const Trigger: React.ForwardRefExoticComponent<
-  QueueButtonProps & Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({
+  QueueButtonProps &
+    Menubar.MenubarTriggerProps &
+    React.RefAttributes<HTMLButtonElement>
+> = React.forwardRef(
+  (
+    { children, size = 'small', color = 'default', className, ...props },
+    ref
+  ) => {
+    return (
+      <Menubar.Trigger
+        ref={ref}
+        {...props}
+        className={clsx(
+          styles.MenubarTrigger,
+          styles[size],
+          styles[color],
+          className
+        )}>
+        {children}
+      </Menubar.Trigger>
+    );
+  }
+);
+
+export const Portal: React.FC<Menubar.MenubarPortalProps> = ({
   children,
-  size = 'small',
-  color = 'default',
   className,
   ...props
-}, ref) => {
-  return (
-    <Menubar.Trigger
-      ref={ref}
-      {...props}
-      className={clsx(
-        styles.MenubarTrigger,
-        styles[size],
-        styles[color],
-        className
-      )}
-    >
-      {children}
-    </Menubar.Trigger>
-  );
-});
-
-export const Portal: React.FC<Menubar.MenubarPortalProps> = ({ children, className, ...props }) => {
+}) => {
   return (
     <Menubar.Portal
       {...props}
-      className={clsx(styles.MenubarPortal, className)}
-    >
+      className={clsx(styles.MenubarPortal, className)}>
       {children}
     </Menubar.Portal>
   );
@@ -71,8 +70,7 @@ export const Content: React.ForwardRefExoticComponent<
     <Menubar.Content
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarContent, className)}
-    >
+      className={clsx(styles.MenubarContent, className)}>
       {children}
     </Menubar.Content>
   );
@@ -85,8 +83,7 @@ export const Label: React.ForwardRefExoticComponent<
     <Menubar.Label
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarLabel, className)}
-    >
+      className={clsx(styles.MenubarLabel, className)}>
       {children}
     </Menubar.Label>
   );
@@ -99,8 +96,7 @@ export const Item: React.ForwardRefExoticComponent<
     <Menubar.Item
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarItem, className)}
-    >
+      className={clsx(styles.MenubarItem, className)}>
       {children}
     </Menubar.Item>
   );
@@ -113,8 +109,7 @@ export const Group: React.ForwardRefExoticComponent<
     <Menubar.Group
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarGroup, className)}
-    >
+      className={clsx(styles.MenubarGroup, className)}>
       {children}
     </Menubar.Group>
   );
@@ -127,8 +122,7 @@ export const CheckboxItem: React.ForwardRefExoticComponent<
     <Menubar.CheckboxItem
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarCheckboxItem, className)}
-    >
+      className={clsx(styles.MenubarCheckboxItem, className)}>
       {children}
     </Menubar.CheckboxItem>
   );
@@ -141,8 +135,7 @@ export const ItemIndicator: React.ForwardRefExoticComponent<
     <Menubar.ItemIndicator
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarItemIndicator, className)}
-    >
+      className={clsx(styles.MenubarItemIndicator, className)}>
       {children}
     </Menubar.ItemIndicator>
   );
@@ -155,8 +148,7 @@ export const RadioGroup: React.ForwardRefExoticComponent<
     <Menubar.RadioGroup
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarRadioGroup, className)}
-    >
+      className={clsx(styles.MenubarRadioGroup, className)}>
       {children}
     </Menubar.RadioGroup>
   );
@@ -169,19 +161,17 @@ export const RadioItem: React.ForwardRefExoticComponent<
     <Menubar.RadioItem
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarRadioItem, className)}
-    >
+      className={clsx(styles.MenubarRadioItem, className)}>
       {children}
     </Menubar.RadioItem>
   );
 });
 
-export const Sub: React.FC<Menubar.MenubarSubProps> = ({ children, ...props }) => {
-  return (
-    <Menubar.Sub {...props}>
-      {children}
-    </Menubar.Sub>
-  );
+export const Sub: React.FC<Menubar.MenubarSubProps> = ({
+  children,
+  ...props
+}) => {
+  return <Menubar.Sub {...props}>{children}</Menubar.Sub>;
 };
 
 export const SubTrigger: React.ForwardRefExoticComponent<
@@ -191,8 +181,7 @@ export const SubTrigger: React.ForwardRefExoticComponent<
     <Menubar.SubTrigger
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarSubTrigger, className)}
-    >
+      className={clsx(styles.MenubarSubTrigger, className)}>
       {children}
     </Menubar.SubTrigger>
   );
@@ -205,13 +194,11 @@ export const SubContent: React.ForwardRefExoticComponent<
     <Menubar.SubContent
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarSubContent, className)}
-    >
+      className={clsx(styles.MenubarSubContent, className)}>
       {children}
     </Menubar.SubContent>
   );
 });
-
 
 export const Separator: React.ForwardRefExoticComponent<
   Menubar.MenubarSeparatorProps & React.RefAttributes<HTMLDivElement>
@@ -220,8 +207,7 @@ export const Separator: React.ForwardRefExoticComponent<
     <Menubar.Separator
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarSeparator, className)}
-    >
+      className={clsx(styles.MenubarSeparator, className)}>
       {children}
     </Menubar.Separator>
   );
@@ -234,8 +220,7 @@ export const Arrow: React.ForwardRefExoticComponent<
     <Menubar.Arrow
       ref={ref}
       {...props}
-      className={clsx(styles.MenubarArrow, className)}
-    >
+      className={clsx(styles.MenubarArrow, className)}>
       {children}
     </Menubar.Arrow>
   );

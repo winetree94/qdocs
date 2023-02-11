@@ -19,35 +19,29 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({
   const [currentPageName, setCurrentPageName] = useState(pageName);
 
   return (
-    <QueueDialog.Root
-      open={open}
-      onOpenChange={onOpenChange}>
+    <QueueDialog.Root open={open} onOpenChange={onOpenChange}>
       <QueueDialog.Portal>
         <QueueDialog.Overlay />
         <QueueDialog.Content>
-          <QueueDialog.Title>
-            페이지 이름 수정
-          </QueueDialog.Title>
+          <QueueDialog.Title>페이지 이름 수정</QueueDialog.Title>
           <form onSubmit={(): void => onSubmit(currentPageName)}>
             <QueueDialog.Description>
               <QueueInput
                 required
                 id="pagename"
                 value={currentPageName}
-                onChange={(e): void => setCurrentPageName(e.target.value)} />
+                onChange={(e): void => setCurrentPageName(e.target.value)}
+              />
             </QueueDialog.Description>
             <QueueDialog.Footer>
               <QueueButton
                 type="button"
-                size='small'
-                color='red'
+                size="small"
+                color="red"
                 onClick={(): void => onOpenChange(false)}>
                 취소
               </QueueButton>
-              <QueueButton
-                type="submit"
-                size='small'
-                color='blue'>
+              <QueueButton type="submit" size="small" color="blue">
                 확인
               </QueueButton>
             </QueueDialog.Footer>

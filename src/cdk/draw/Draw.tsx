@@ -169,8 +169,7 @@ export const Drawable: FunctionComponent<DrawProps> = ({
     <div
       className={clsx(styles.drawer, className)}
       ref={container}
-      onMouseDown={onMouseDown}
-    >
+      onMouseDown={onMouseDown}>
       {children}
       {isDrawing && (
         <div
@@ -180,8 +179,7 @@ export const Drawable: FunctionComponent<DrawProps> = ({
             left: position.x,
             width: position.width,
             height: position.height,
-          }}
-        >
+          }}>
           {drawer}
         </div>
       )}

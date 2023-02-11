@@ -24,8 +24,7 @@ const DropdownContent = forwardRef<
       <DropdownMenuPrimitive.Content
         className={clsx(classes['dropdown-content'], className)}
         ref={forwardedRef}
-        {...dropdownContentProps}
-      >
+        {...dropdownContentProps}>
         {children}
         <DropdownMenuPrimitive.Arrow
           className={classes['dropdown-arrow']}
@@ -45,8 +44,7 @@ const DropdownItem = ({
   return (
     <DropdownMenuPrimitive.Item
       className={clsx(classes['dropdown-item'], className)}
-      {...dropdownItemProps}
-    >
+      {...dropdownItemProps}>
       {children}
     </DropdownMenuPrimitive.Item>
   );
@@ -60,11 +58,9 @@ const DropdownCheckboxItem = forwardRef<
     <DropdownMenuPrimitive.CheckboxItem
       className={clsx(classes['dropdown-item'])}
       ref={forwardedRef}
-      {...dropdownCheckboxProps}
-    >
+      {...dropdownCheckboxProps}>
       <DropdownMenuPrimitive.ItemIndicator
-        className={classes['dropdown-indicator']}
-      >
+        className={classes['dropdown-indicator']}>
         <CheckIcon />
       </DropdownMenuPrimitive.ItemIndicator>
       {children}
@@ -80,11 +76,9 @@ const DropdownRadioItem = forwardRef<
     <DropdownMenuPrimitive.RadioItem
       className={clsx(classes['dropdown-item'])}
       ref={forwardedRef}
-      {...dropdownRadioItemProps}
-    >
+      {...dropdownRadioItemProps}>
       <DropdownMenuPrimitive.ItemIndicator
-        className={classes['dropdown-indicator']}
-      >
+        className={classes['dropdown-indicator']}>
         <DotFilledIcon />
       </DropdownMenuPrimitive.ItemIndicator>
       {children}
@@ -100,8 +94,7 @@ const DropdownLabel = ({
   return (
     <DropdownMenuPrimitive.Label
       className={clsx(classes['dropdown-label'], className)}
-      {...dropdownLabelProps}
-    >
+      {...dropdownLabelProps}>
       {children}
     </DropdownMenuPrimitive.Label>
   );
@@ -127,8 +120,7 @@ const DropdownTrigger = ({
   return (
     <DropdownMenuPrimitive.Trigger
       className={clsx(classes['dropdown-trigger'], className)}
-      {...dropdownTriggerProps}
-    >
+      {...dropdownTriggerProps}>
       {children}
     </DropdownMenuPrimitive.Trigger>
   );

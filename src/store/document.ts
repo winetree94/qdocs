@@ -49,8 +49,8 @@ export const queueObjectsByQueueIndexSelector = selectorFamily<
       const document = get(documentState);
       const settings = get(documentSettingsState);
       r.forEach((queue) => {
-        queue.objects = document!.pages[settings.queuePage].objects.filter((object) =>
-          isExistObjectOnQueue(object, queue.index)
+        queue.objects = document!.pages[settings.queuePage].objects.filter(
+          (object) => isExistObjectOnQueue(object, queue.index)
         );
       });
       return r;
@@ -63,20 +63,26 @@ export const currentQueueObjectsSelector = selector<QueueObjectType[]>({
   get: ({ get }) => {
     const document = get(documentState);
     const settings = get(documentSettingsState);
-    const result = document!.pages[settings.queuePage].objects.filter((object) =>
-      isExistObjectOnQueue(object, settings.queueIndex)
+    const result = document!.pages[settings.queuePage].objects.filter(
+      (object) => isExistObjectOnQueue(object, settings.queueIndex)
     );
     return result;
   },
 });
 
-export const getObjectByUUIDSelector = selectorFamily<QueueObjectType | null, string>({
+export const getObjectByUUIDSelector = selectorFamily<
+  QueueObjectType | null,
+  string
+>({
   key: 'getObjectByUUID',
-  get: (uuid) => ({ get }): QueueObjectType => {
-    const document = get(documentState);
-    const settings = get(documentSettingsState);
-    const result = document!.pages[settings.queuePage].objects.find((object) => object.uuid === uuid);
-    return result || null;
-  }
+  get:
+    (uuid) =>
+    ({ get }): QueueObjectType => {
+      const document = get(documentState);
+      const settings = get(documentSettingsState);
+      const result = document!.pages[settings.queuePage].objects.find(
+        (object) => object.uuid === uuid
+      );
+      return result || null;
+    },
 });
-

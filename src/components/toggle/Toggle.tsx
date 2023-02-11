@@ -5,19 +5,12 @@ import clsx from 'clsx';
 
 export const QueueToggleRoot: React.ForwardRefExoticComponent<
   Toggle.ToggleProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({
-  children,
-  className,
-  ...props
-}, ref) => {
+> = forwardRef(({ children, className, ...props }, ref) => {
   return (
     <Toggle.Root
       ref={ref}
       {...props}
-      className={clsx(
-        styles.Toggle,
-        className,
-      )}>
+      className={clsx(styles.Toggle, className)}>
       {children}
     </Toggle.Root>
   );
@@ -26,4 +19,3 @@ export const QueueToggleRoot: React.ForwardRefExoticComponent<
 export const QueueToggle = {
   Root: QueueToggleRoot,
 };
-

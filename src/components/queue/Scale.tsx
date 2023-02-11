@@ -8,9 +8,5 @@ export const Scale: React.FunctionComponent<ScaleProps> = ({
   scale,
   ...props
 }) => {
-  return (
-    <div
-      {...props}>
-    </div>
-  );
+  return <div {...props}></div>;
 };
