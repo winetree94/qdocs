@@ -59,23 +59,6 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     }
   };
 
-  const createDocument = (): void => {
-    setQueueDocument({
-      documentName: 'Untitled',
-      documentRect: {
-        width: 1920,
-        height: 1080,
-        fill: '#ffffff',
-      },
-      pages: [
-        {
-          pageName: 'Page-1',
-          objects: [],
-        },
-      ],
-    });
-  };
-
   const onNewDocumentClick = (): void => {
     if (queueDocument) {
       setAlertDialog({
@@ -84,13 +67,13 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
         onAction: () =>
           setNewDocumentDialogProps({
-            onSubmit: createDocument,
+            onSubmit: (document) => setQueueDocument(document),
           }),
       });
       return;
     }
     setNewDocumentDialogProps({
-      onSubmit: createDocument,
+      onSubmit: (document) => setQueueDocument(document),
     });
   };
 

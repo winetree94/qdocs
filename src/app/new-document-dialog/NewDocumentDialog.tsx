@@ -1,16 +1,19 @@
 import { QueueDialog } from 'components/dialog/Dialog';
 import * as Dialog from '@radix-ui/react-dialog';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { QueueButton } from 'components/button/Button';
 import { QueueSelect } from 'components/select/Select';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
+import { TEMPLATES } from './templates.meta';
+import { QueueDocument } from 'model/document';
+
 
 export interface NewDocumentDialogProps
   extends Omit<Dialog.DialogProps, 'children'> {
-  onSubmit?: () => void;
+  onSubmit?: (document: QueueDocument) => void;
 }
 
 export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
@@ -19,7 +22,46 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
 }) => {
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
   const [documentTemplate, setDocumentTemplate] =
-    React.useState<string>('empty');
+    React.useState<string>('Empty');
+
+  const [fetching, setFetching] = React.useState<boolean>(false);
+
+  const templates = useMemo(() => TEMPLATES, []);
+
+  const onSubmitClick = async (): Promise<void> => {
+    if (fetching) {
+      return;
+    }
+    try {
+      const template = templates.find((template) => template.name === documentTemplate);
+      if (!template) {
+        console.warn('Template not found: ', documentTemplate);
+        return;
+      }
+      setFetching(true);
+      const document = await template.getTemplate();
+      onSubmit?.(document);
+      props.onOpenChange?.(false);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const onDoubleClickItem = async (
+    fetcher: () => Promise<QueueDocument>,
+  ): Promise<void> => {
+    if (fetching) {
+      return;
+    }
+    try {
+      setFetching(true);
+      const document = await fetcher();
+      onSubmit?.(document);
+      props.onOpenChange?.(false);
+    } finally {
+      setFetching(false);
+    }
+  };
 
   return (
     <QueueDialog.Root {...props}>
@@ -64,30 +106,21 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
               <QueueToggleGroup.Root
                 type="single"
                 value={documentTemplate}
-                onValueChange={(value): void => setDocumentTemplate(value)}
+                onValueChange={(value): void => value && setDocumentTemplate(value)}
                 className={clsx(styles.TemplateGroup)}>
-                <QueueToggleGroup.Item
-                  className={styles.TemplateItem}
-                  value="empty">
-                  template
-                </QueueToggleGroup.Item>
-                <QueueToggleGroup.Item
-                  value="2323"
-                  className={styles.TemplateItem}>
-                  template
-                </QueueToggleGroup.Item>
-                <QueueToggleGroup.Item
-                  value="123213"
-                  className={styles.TemplateItem}>
-                  template
-                </QueueToggleGroup.Item>
+                {templates.map(({ name, getTemplate }) => (
+                  <QueueToggleGroup.Item
+                    key={name}
+                    className={styles.TemplateItem}
+                    value={name}
+                    onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}
+                  >
+                    {name}
+                  </QueueToggleGroup.Item>
+                ))}
               </QueueToggleGroup.Root>
             </div>
           </div>
-          {/* <QueueDialog.Description>
-            <QueueInput
-              required />
-          </QueueDialog.Description> */}
           <QueueDialog.Footer>
             <QueueButton
               type="button"
@@ -97,13 +130,10 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
               취소
             </QueueButton>
             <QueueButton
-              type="submit"
+              type="button"
               size="small"
               color="blue"
-              onClick={(): void => {
-                onSubmit?.();
-                props.onOpenChange?.(false);
-              }}>
+              onClick={onSubmitClick}>
               확인
             </QueueButton>
           </QueueDialog.Footer>
