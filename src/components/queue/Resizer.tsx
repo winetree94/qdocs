@@ -288,6 +288,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         scale: 1,
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [matrix, rotate, startPositionToResize]
   );
 
@@ -402,7 +403,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       );
       const degree = Math.ceil(
         angle(centerX, centerY, event.clientX, event.clientY) -
-          initRotateEvent.degree
+        initRotateEvent.degree
       );
       const adjacent = Math.round(degree / 5) * 5;
       setRotatingDegree(event.shiftKey ? degree : adjacent);
@@ -425,7 +426,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       );
       const degree = Math.ceil(
         angle(centerX, centerY, event.clientX, event.clientY) -
-          initRotateEvent.degree
+        initRotateEvent.degree
       );
       const adjacent = Math.round(degree / 5) * 5;
       setRotatingDegree(null);
@@ -465,9 +466,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
           left: (resizingRect?.x || rect.x) - margin,
           top: (resizingRect?.y || rect.y) - margin,
           transformOrigin: 'center center',
-          transform: `rotate(${
-            resizingRect?.degree || rotate
-          }deg) scale(${scale})`,
+          transform: `rotate(${resizingRect?.degree || rotate
+            }deg) scale(${scale})`,
         }}
         width={actualWidth}
         height={actualHeight}>

@@ -274,7 +274,7 @@ export const LeftPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [createIcon, createSquare, createCircle]
+    [createSquare, createCircle, createLine, createIcon]
   );
 
   const filteredGroups = useMemo(() => {

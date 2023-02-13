@@ -44,6 +44,7 @@ export const QueueEditor: FunctionComponent = () => {
       root.clientHeight / (queueDocument!.documentRect.height + 40)
     );
     setSettings.setScale(scale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onObjectMouseodown = (
@@ -286,6 +287,7 @@ export const QueueEditor: FunctionComponent = () => {
     observer.observe(document.body);
     resize();
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.presentationMode]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {

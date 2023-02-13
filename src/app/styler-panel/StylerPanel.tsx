@@ -438,6 +438,7 @@ export const StylerPanel = ({
   );
   const hasSelectedObjects = selectedObjects.length > 0;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDocumentHistory = useCallback(
     debounce(() => {
       console.log('history save');
