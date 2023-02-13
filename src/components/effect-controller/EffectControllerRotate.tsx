@@ -15,26 +15,17 @@ export const EffectControllerRotate = ({
   }, [rotateEffect.rotate.degree]);
 
   return (
-    <>
-      <div>
+    <div>
+      <p className="text-sm">rotation</p>
+      <div className="flex items-center gap-2">
         <input
-          type="text"
-          name="type"
-          value={rotateEffect.type}
-          hidden
-          readOnly
+          className="w-full"
+          type="number"
+          name="rotate"
+          value={rotate}
+          onChange={(e): void => setRotate(parseInt(e.currentTarget.value))}
         />
-        <p className="text-sm">rotation</p>
-        <div className="flex items-center gap-2">
-          <input
-            className="w-full"
-            type="number"
-            name="rotate"
-            value={rotate}
-            onChange={(e): void => setRotate(parseInt(e.currentTarget.value))}
-          />
-        </div>
       </div>
-    </>
+    </div>
   );
 };
