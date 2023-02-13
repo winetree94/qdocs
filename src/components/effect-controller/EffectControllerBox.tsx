@@ -51,7 +51,7 @@ export const EffectController = ({
           onChange={handleEffectChange}>
           <EffectControllerDuration effect={effect} uuid={uuid} />
           <EffectControllerTimingFunction effect={effect} uuid={uuid} />
-          <EffectControllerIndex effect={effect} />
+          <EffectControllerIndex effect={effect} uuid={uuid} />
         </form>
       )}
     </div>
