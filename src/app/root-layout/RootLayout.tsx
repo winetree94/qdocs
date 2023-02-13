@@ -9,6 +9,7 @@ import styles from './RootLayout.module.scss';
 import { documentState } from 'store/document';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
+import { Welcome } from 'app/welcome-panel/Welcome';
 
 export const RootContext = createContext({});
 
@@ -57,6 +58,12 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
               <QueueEditor />
               {!settings.presentationMode && <BottomPanel />}
             </div>
+          </div>
+        )}
+
+        {!queueDocument && (
+          <div className={clsx(styles.Content)}>
+            <Welcome></Welcome>
           </div>
         )}
       </div>

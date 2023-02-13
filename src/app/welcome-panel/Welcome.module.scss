@@ -1,0 +1,22 @@
+.Container {
+  @apply flex-auto 
+    flex
+    flex-col
+    justify-center
+    items-center;
+}
+
+.Header {
+  @apply tracking-widest;
+  color: var(--blue10);
+}
+
+.ButtonGroup {
+  @apply flex
+    flex-col
+    mt-5;
+}
+
+.ActionButton {
+  width: 200px;
+}

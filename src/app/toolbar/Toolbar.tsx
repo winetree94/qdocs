@@ -171,11 +171,11 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
                 <QueueMenubar.Item onClick={onOpenDcoumentClick}>
                   문서 열기
                 </QueueMenubar.Item>
-                <QueueMenubar.Item onClick={onSaveDocumentClick}>
+                <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!queueDocument}>
                   문서 저장
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onCloseDocumentClick}>
+                <QueueMenubar.Item onClick={onCloseDocumentClick} disabled={!queueDocument}>
                   문서 닫기
                 </QueueMenubar.Item>
               </QueueMenubar.Content>
@@ -186,13 +186,13 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             <QueueMenubar.Trigger>수정</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>실행 취소</QueueMenubar.Item>
-                <QueueMenubar.Item>다시 실행</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>실행 취소</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>다시 실행</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>붙여넣기</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>붙여넣기</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>제목 수정</QueueMenubar.Item>
-                <QueueMenubar.Item>페이지 설정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>제목 수정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>페이지 설정</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -201,7 +201,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             <QueueMenubar.Trigger>보기</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>프레젠테이션 모드 시작</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!queueDocument}>프레젠테이션 모드 시작</QueueMenubar.Item>
                 <QueueMenubar.Separator />
                 <QueueMenubar.Item>전체 화면</QueueMenubar.Item>
               </QueueMenubar.Content>
