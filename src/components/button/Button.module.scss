@@ -9,7 +9,8 @@
     items-center
     justify-center
     border-0
-    transition-colors;
+    transition-colors
+    outline-none;
 
   &.round {
     @apply rounded;

@@ -79,13 +79,13 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
                   className={styles.RatioSelector}
                   aria-label="Food">
                   <QueueSelect.Value />
-                  <QueueSelect.Icon className="SelectIcon">
+                  <QueueSelect.Icon>
                     <ChevronDownIcon />
                   </QueueSelect.Icon>
                 </QueueSelect.Trigger>
                 <QueueSelect.Portal>
-                  <QueueSelect.Content className="SelectContent">
-                    <QueueSelect.Viewport className="SelectViewport">
+                  <QueueSelect.Content>
+                    <QueueSelect.Viewport>
                       <QueueSelect.Group>
                         <QueueSelect.Item value="16:9">
                           와이드 (16:9)

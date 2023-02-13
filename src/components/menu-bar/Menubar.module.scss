@@ -17,6 +17,7 @@
 .MenubarContent,
 .MenubarSubContent {
   @include popover;
+  min-width: 220px;
 }
 
 .MenubarItem,
