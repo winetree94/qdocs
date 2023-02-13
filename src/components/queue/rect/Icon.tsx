@@ -7,6 +7,7 @@ import {
 } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
+import symbolPath from 'assets/remixicon.symbol.svg';
 
 export const Icon: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const containerContext = useContext<
@@ -27,7 +28,7 @@ export const Icon: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
       opacity={containerContext.object.fade.opacity}>
       <use
         onMouseDown={onRectMousedown}
-        href={`/remixicon.symbol.svg#${containerContext.object.iconType}`}
+        href={`${symbolPath}#${containerContext.object.iconType}`}
         fill={containerContext.object.fill.color}></use>
     </svg>
   );
