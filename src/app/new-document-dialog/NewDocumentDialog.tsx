@@ -68,9 +68,9 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
       <QueueDialog.Portal>
         <QueueDialog.Overlay />
         <QueueDialog.Content>
-          <QueueDialog.Title>새 문서 설정</QueueDialog.Title>
+          <QueueDialog.Title>새 문서 양식 설정</QueueDialog.Title>
           <div className={styles.Container}>
-            <div className={styles.RatioContainer}>
+            <div className={styles.RatioContainer} style={{ display: 'none' }}>
               <h6>문서 크기 비율</h6>
               <QueueSelect.Root
                 value={documentRatio}
