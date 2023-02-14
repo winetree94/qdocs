@@ -3,9 +3,13 @@
 }
 
 .ItemRoot {
-  @apply flex justify-between items-center;
+  @apply flex justify-between items-center h-8;
 }
 
 .ItemGroup {
-  @apply flex h-full;
+  @apply flex h-full items-center;
+}
+
+.Separator {
+  margin: 0 1rem;
 }

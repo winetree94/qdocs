@@ -20,6 +20,7 @@
     "@radix-ui/react-radio-group": "^1.1.1",
     "@radix-ui/react-scroll-area": "^1.0.2",
     "@radix-ui/react-select": "^1.2.0",
+    "@radix-ui/react-separator": "^1.0.1",
     "@radix-ui/react-slider": "1.1.0",
     "@radix-ui/react-switch": "^1.0.1",
     "@radix-ui/react-tabs": "^1.0.2",
@@ -67,11 +68,11 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
     "@types/react-virtualized-auto-sizer": "^1.0.1",
     "@types/react-window": "^1.8.5",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
-    "@types/lodash": "^4.14.191",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
