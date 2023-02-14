@@ -1,6 +1,7 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
+import { QueueToggle } from 'components/toggle/Toggle';
 import { FunctionComponent } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { QueueIconButton } from '../../components/button/Button';
@@ -96,6 +97,7 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
             <QueueIconButton>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
             </QueueIconButton>
+
             <QueueIconButton>
               <SvgRemixIcon
                 width={15}
@@ -103,15 +105,23 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
                 icon={'ri-arrow-go-forward-line'}
               />
             </QueueIconButton>
+
             <QueueIconButton>
               <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
             </QueueIconButton>
+
             <QueueIconButton>
               <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} />
             </QueueIconButton>
+
             <QueueIconButton onClick={startPresentationModel}>
               <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
             </QueueIconButton>
+
+
+            <QueueToggle.Root size='small'>
+              <SvgRemixIcon width={15} height={15} icon={'ri-movie-line'} />
+            </QueueToggle.Root>
 
             <QueueSeparator.Root
               orientation="vertical"
