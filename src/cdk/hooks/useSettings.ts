@@ -63,11 +63,16 @@ export interface UseSettingsHook {
 export const useSettings = (): UseSettingsHook => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 
-  const setQueueIndex = (index: number, play?: boolean): void => {
+  const setQueueIndex = (
+    index: number,
+    play?: boolean,
+  ): void => {
+    const target = Math.max(0, index);
+    const sameIndex = settings.queueIndex === target;
     setSettings({
       ...settings,
-      queueIndex: index,
-      queuePosition: settings.queueIndex < index ? 'forward' : 'backward',
+      queueIndex: target,
+      queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
       queueStart: play ? performance.now() : -1,
       selectedObjectUUIDs: [],
       selectionMode: 'normal',
