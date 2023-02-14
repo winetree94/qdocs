@@ -50,6 +50,14 @@ export interface UseSettingsHook {
    * @param scale - 변경할 스케일
    */
   setScale: (scale: number) => void;
+
+  /**
+   * @description
+   * 프레젠테이션 모드 변경
+   * @param presentationMode - 변경할 프레젠테이션 모드
+   * @default false
+   */
+  setPresentationMode: (presentationMode: boolean) => void;
 }
 
 export const useSettings = (): UseSettingsHook => {
@@ -59,7 +67,7 @@ export const useSettings = (): UseSettingsHook => {
     setSettings({
       ...settings,
       queueIndex: index,
-      queuePosition: settings.queueIndex > index ? 'forward' : 'backward',
+      queuePosition: settings.queueIndex < index ? 'forward' : 'backward',
       queueStart: play ? performance.now() : -1,
       selectedObjectUUIDs: [],
       selectionMode: 'normal',
@@ -103,7 +111,14 @@ export const useSettings = (): UseSettingsHook => {
   const setScale = (scale: number): void => {
     setSettings({
       ...settings,
-      scale,
+      scale: Math.max(scale, 0.1),
+    });
+  };
+
+  const setPresentationMode = (presentationMode: boolean): void => {
+    setSettings({
+      ...settings,
+      presentationMode,
     });
   };
 
@@ -115,5 +130,6 @@ export const useSettings = (): UseSettingsHook => {
     setDetailSettingMode,
     stopAnimation,
     setScale,
+    setPresentationMode,
   };
 };
