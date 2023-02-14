@@ -444,7 +444,6 @@ export const QueueEditor: FunctionComponent = () => {
                         </QueueContextMenu.Trigger>
                         <QueueContextMenu.Portal>
                           <QueueContextMenu.Content
-                            onInteractOutside={(e): void => console.log(e)}
                             onMouseDown={(e): void => e.stopPropagation()}>
                             <QueueContextMenu.Item
                               onClick={(): void =>
@@ -564,8 +563,7 @@ export const QueueEditor: FunctionComponent = () => {
         </QueueScrollArea.Root>
       </QueueContextMenu.Trigger>
       <QueueContextMenu.Portal>
-        <QueueContextMenu.Content
-          onInteractOutside={(e): void => console.log(e)}>
+        <QueueContextMenu.Content>
           <QueueContextMenu.Item>
             실행 취소 <div className={styles.RightSlot}>⌘+Z</div>
           </QueueContextMenu.Item>
