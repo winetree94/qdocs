@@ -1,4 +1,5 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { FunctionComponent } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { QueueIconButton } from '../../components/button/Button';
@@ -87,54 +88,62 @@ export const QueueSubtoolbar: FunctionComponent<QueueSubtoolbarProps> = ({
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.left}>
-        <QueueIconButton>
-          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
-        </QueueIconButton>
-        <QueueIconButton>
-          <SvgRemixIcon
-            width={15}
-            height={15}
-            icon={'ri-arrow-go-forward-line'}
-          />
-        </QueueIconButton>
-        <QueueIconButton>
-          <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
-        </QueueIconButton>
-        <QueueIconButton>
-          <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} />
-        </QueueIconButton>
-        <QueueIconButton onClick={startPresentationModel}>
-          <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
-        </QueueIconButton>
-      </div>
-      <div className={styles.center}>
-        <QueueIconButton onClick={goToPreviousQueue}>
-          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-line'} />
-        </QueueIconButton>
-        {queues.map((queue, index) => (
-          <QueueIconButton
-            key={index}
-            style={{
-              color: queue.index === settings.queueIndex ? 'red' : 'black',
-            }}
-            onClick={(): void => setCurrentQueueIndex(queue.index)}>
-            {queue.index + 1}
-          </QueueIconButton>
-        ))}
-        <QueueIconButton onClick={goToNextQueue}>
-          <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
-        </QueueIconButton>
-      </div>
-      <div className={styles.right}>
-        <QueueIconButton onClick={decreaseScale}>
-          <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
-        </QueueIconButton>
-        <QueueIconButton onClick={increaseScale}>
-          <SvgRemixIcon width={15} height={15} icon={'ri-add-line'} />
-        </QueueIconButton>
-      </div>
-    </div>
+    <QueueScrollArea.Root className={styles.Container}>
+      <QueueScrollArea.Viewport>
+        <div className={styles.ItemRoot}>
+          <div className={styles.ItemGroup}>
+            <QueueIconButton>
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
+            </QueueIconButton>
+            <QueueIconButton>
+              <SvgRemixIcon
+                width={15}
+                height={15}
+                icon={'ri-arrow-go-forward-line'}
+              />
+            </QueueIconButton>
+            <QueueIconButton>
+              <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
+            </QueueIconButton>
+            <QueueIconButton>
+              <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} />
+            </QueueIconButton>
+            <QueueIconButton onClick={startPresentationModel}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
+            </QueueIconButton>
+          </div>
+          <div className={styles.ItemGroup}>
+            <QueueIconButton onClick={goToPreviousQueue}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-line'} />
+            </QueueIconButton>
+            {queues.map((queue, index) => (
+              <QueueIconButton
+                key={index}
+                style={{
+                  color: queue.index === settings.queueIndex ? 'red' : 'black',
+                }}
+                onClick={(): void => setCurrentQueueIndex(queue.index)}>
+                {queue.index + 1}
+              </QueueIconButton>
+            ))}
+            <QueueIconButton onClick={goToNextQueue}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
+            </QueueIconButton>
+          </div>
+          <div className={styles.ItemGroup}>
+            <QueueIconButton onClick={decreaseScale}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
+            </QueueIconButton>
+            <QueueIconButton onClick={increaseScale}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-add-line'} />
+            </QueueIconButton>
+          </div>
+        </div>
+
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
   );
 };

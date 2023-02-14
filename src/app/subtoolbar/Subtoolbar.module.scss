@@ -1,21 +1,11 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+.Container {
+  border-bottom: 1px solid var(--gray5);
 }
 
-.left {
-  display: flex;
-  height: 100%;
+.ItemRoot {
+  @apply flex justify-between items-center;
 }
 
-.center {
-  display: flex;
-  height: 100%;
-}
-
-.right {
-  display: flex;
-  height: 100%;
+.ItemGroup {
+  @apply flex h-full;
 }
