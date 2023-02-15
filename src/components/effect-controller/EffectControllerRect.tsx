@@ -1,75 +1,47 @@
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
-import { MoveEffect, QueueEffectType } from 'model/effect';
 import { QueueRect } from 'model/property';
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { ReactElement } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { objectCurrentRects } from 'store/effects/rect';
+import { currentQueueObjects } from 'store/object';
 
-export const EffectControllerRect = ({
-  uuid,
-  effectType,
-}: {
-  uuid: string;
-  effectType: QueueEffectType['type'];
-}): ReactElement => {
+export const EffectControllerRect = (): ReactElement => {
   const { settings } = useSettings();
-  const { queueDocument, selectedObjects, ...setQueueDocument } =
-    useQueueDocument();
+
+  const selectedObjects = useRecoilValue(
+    currentQueueObjects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+
+  const [objectRects, setObjectRects] = useRecoilState(
+    objectCurrentRects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      uuid: settings.selectedObjectUUIDs,
+    })
+  );
+
   const [firstObject] = selectedObjects;
-  const firstObjectCurrentEffect = firstObject.effects.find(
-    (firstObjectEffect): firstObjectEffect is MoveEffect =>
-      firstObjectEffect.type === 'rect' &&
-      firstObjectEffect.index === settings.queueIndex
-  );
-  const [currentRect, setCurrentRect] = useState(firstObjectCurrentEffect.rect);
+  const firstObjectRectEffect = objectRects[firstObject.uuid];
 
-  const handleCurrentRectChange = useCallback(
-    (rect: Partial<QueueRect>): void => {
-      setCurrentRect({
-        ...currentRect,
+  const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
+    const updateModel = settings.selectedObjectUUIDs.reduce<{
+      [key: string]: QueueRect;
+    }>((result, uuid) => {
+      result[uuid] = {
+        ...objectRects[uuid],
         ...rect,
-      });
-    },
-    [currentRect]
-  );
+      };
+      return result;
+    }, {});
 
-  const update = useCallback(
-    (rect: QueueRect) => {
-      setQueueDocument.updateObjectProp(settings.queuePage, [
-        {
-          uuid,
-          queueIndex: settings.queueIndex,
-          props: {
-            rect: {
-              rect,
-            },
-          },
-        },
-      ]);
-    },
-    [setQueueDocument, settings.queuePage, settings.queueIndex, uuid]
-  );
-
-  useEffect(() => {
-    if (
-      currentRect.width !== firstObjectCurrentEffect.rect.width ||
-      currentRect.height !== firstObjectCurrentEffect.rect.height ||
-      currentRect.x !== firstObjectCurrentEffect.rect.x ||
-      currentRect.y !== firstObjectCurrentEffect.rect.y
-    ) {
-      // update(currentRect);
-      handleCurrentRectChange(firstObjectCurrentEffect.rect);
-    }
-  }, [
-    handleCurrentRectChange,
-    queueDocument,
-    firstObjectCurrentEffect.rect,
-    // firstObjectCurrentEffect.rect.width,
-    // firstObjectCurrentEffect.rect.height,
-    // firstObjectCurrentEffect.rect.x,
-    // firstObjectCurrentEffect.rect.y,
-    currentRect,
-    update,
-  ]);
+    setObjectRects((prev) => ({
+      ...prev,
+      ...updateModel,
+    }));
+  };
 
   return (
     <div>
@@ -78,7 +50,7 @@ export const EffectControllerRect = ({
         <input
           className="w-full"
           type="number"
-          value={currentRect.width}
+          value={firstObjectRectEffect.width}
           onChange={(e): void =>
             handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })
           }
@@ -89,7 +61,7 @@ export const EffectControllerRect = ({
         <input
           className="w-full"
           type="number"
-          value={currentRect.height}
+          value={firstObjectRectEffect.height}
           onChange={(e): void =>
             handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })
           }
@@ -100,7 +72,7 @@ export const EffectControllerRect = ({
         <input
           className="w-full"
           type="number"
-          value={currentRect.x}
+          value={firstObjectRectEffect.x}
           onChange={(e): void =>
             handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })
           }
@@ -111,7 +83,7 @@ export const EffectControllerRect = ({
         <input
           className="w-full"
           type="number"
-          value={currentRect.y}
+          value={firstObjectRectEffect.y}
           onChange={(e): void =>
             handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })
           }

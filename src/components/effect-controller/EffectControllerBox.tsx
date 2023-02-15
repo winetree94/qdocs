@@ -1,58 +1,44 @@
 import { PlusIcon } from '@radix-ui/react-icons';
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
-import { debounce } from 'cdk/functions/debounce';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import {
   BaseQueueEffect,
   OBJECT_EFFECT_META,
   QueueEffectType,
 } from 'model/effect';
-import { FormEvent, ReactElement, useCallback, useMemo, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
-import { documentSettingsState } from 'store/settings';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
+import { useSettings } from 'cdk/hooks/useSettings';
+import { currentQueueObjects } from 'store/object';
+import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 
-// TODO 중복되는 타입 분리
-type ChangedValue = { [k: string]: FormDataEntryValue };
 type EffectControllerProps = {
-  uuid: string;
-  effect: QueueEffectType;
-  onEffectChange?: (value: ChangedValue) => void;
+  effectType: QueueEffectType['type'];
 };
 
 export const EffectController = ({
-  uuid,
-  effect,
-  onEffectChange,
+  effectType,
 }: EffectControllerProps): ReactElement => {
   const [open, setOpen] = useState(false);
 
-  const handleEffectChange = (event: FormEvent<HTMLFormElement>): void => {
-    const formData = new FormData(event.currentTarget);
-
-    onEffectChange?.(Object.fromEntries(formData));
-  };
-
   return (
     <div className="flex flex-col">
-      <button
+      <QueueButton
         type="button"
-        className="flex-1 hover:bg-gray-100"
+        size="small"
         onClick={(): void => setOpen((prev) => !prev)}>
-        <span>{effect.type}</span>
-      </button>
+        <span>{effectType}</span>
+      </QueueButton>
       {open && (
-        <form
-          className="flex flex-col gap-2 p-1 bg-gray-100"
-          onChange={handleEffectChange}>
-          <EffectControllerDuration effect={effect} uuid={uuid} />
-          <EffectControllerTimingFunction effect={effect} uuid={uuid} />
-          <EffectControllerIndex effect={effect} uuid={uuid} />
-        </form>
+        <div className="flex flex-col gap-2 p-1 bg-gray-100">
+          <EffectControllerDuration />
+          <EffectControllerTimingFunction />
+          <EffectControllerIndex effectType={effectType} />
+        </div>
       )}
     </div>
   );
@@ -128,7 +114,6 @@ const createEffect = (
         type: 'rotate',
         rotate: {
           degree: initialDegree,
-          // 없어질 값이라 'forward' 고정
         },
       };
     }
@@ -136,114 +121,30 @@ const createEffect = (
 };
 
 export const EffectControllerBox = (): ReactElement | null => {
-  const settings = useRecoilValue(documentSettingsState);
+  const { settings } = useSettings();
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const selectedObjects = queueDocument!.pages[
-    settings.queuePage
-  ].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid)
-  );
+
+  const selectedObjects = useRecoilValue(
+    currentQueueObjects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   const hasSelectedObjects = selectedObjects.length > 0;
 
   const [firstObject] = selectedObjects;
-  const currentQueueObjectEffects = firstObject.effects.filter(
+  const objectCurrentEffects = firstObject.effects.filter(
     (effect) => effect.index === settings.queueIndex
   );
   const addableEffectTypes = Object.values(
     OBJECT_ADDABLE_EFFECTS[firstObject.type]
   );
-  const currentQueueObjectEffectTypes = currentQueueObjectEffects.map(
+  const currentQueueObjectEffectTypes = objectCurrentEffects.map(
     (currentQueueObjectEffect) => currentQueueObjectEffect.type
   );
   const createEffectIndex = firstObject.effects.find(
     (effect) => effect.type === OBJECT_EFFECT_META.CREATE
   ).index;
-
-  const debounceEffectChange = useMemo(
-    () =>
-      debounce((value) => {
-        const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
-          (object) => {
-            if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-              return object;
-            }
-
-            const newEffects = object.effects.map((effect) => {
-              if (effect.index !== settings.queueIndex) {
-                return effect;
-              }
-
-              const updatedBaseEffect: BaseQueueEffect = {
-                index: effect.index,
-                duration: parseInt(value.duration as string) || effect.duration,
-                timing:
-                  (value.timingFunction as AnimatorTimingFunctionType) ||
-                  effect.timing,
-              };
-
-              const updatedEffect = ((): QueueEffectType => {
-                switch (effect.type) {
-                  case 'fade':
-                    return {
-                      ...effect,
-                      fade: {
-                        opacity: parseFloat(value.fadeOpacity as string),
-                      },
-                    };
-                  case 'rect':
-                    return {
-                      ...effect,
-                    };
-                  case 'rotate':
-                    return {
-                      ...effect,
-                      rotate: {
-                        ...effect.rotate,
-                        degree:
-                          parseInt(value.rotate as string) ||
-                          effect.rotate.degree,
-                      },
-                    };
-
-                  default:
-                    return effect;
-                }
-              })();
-
-              return {
-                ...updatedBaseEffect,
-                ...updatedEffect,
-              };
-            });
-
-            return {
-              ...object,
-              effects: newEffects,
-            };
-          }
-        );
-
-        const newPages = queueDocument!.pages.slice(0);
-        newPages[settings.queuePage] = {
-          ...queueDocument!.pages[settings.queuePage],
-          objects: newObjects,
-        };
-
-        setQueueDocument({ ...queueDocument!, pages: newPages });
-      }, 50),
-    [
-      queueDocument,
-      setQueueDocument,
-      settings.queueIndex,
-      settings.queuePage,
-      settings.selectedObjectUUIDs,
-    ]
-  );
-
-  const handleEffectChange = useCallback(
-    (value: ChangedValue) => debounceEffectChange(value),
-    [debounceEffectChange]
-  );
 
   const handleAddEffectItemClick = (
     effectType: QueueEffectType['type']
@@ -324,13 +225,8 @@ export const EffectControllerBox = (): ReactElement | null => {
           </Dropdown>
         </div>
         <div className="flex flex-col gap-1">
-          {currentQueueObjectEffects.map((currentQueueObjectEffect) => (
-            <EffectController
-              uuid={firstObject.uuid}
-              key={currentQueueObjectEffect.type}
-              effect={currentQueueObjectEffect}
-              onEffectChange={handleEffectChange}
-            />
+          {objectCurrentEffects.map((currentQueueObjectEffect) => (
+            <EffectController effectType={currentQueueObjectEffect.type} />
           ))}
         </div>
       </div>

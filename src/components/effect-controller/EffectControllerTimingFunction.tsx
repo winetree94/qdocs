@@ -1,48 +1,47 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueSelect } from 'components/select/Select';
-import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
+import { useRecoilValue } from 'recoil';
+import { objectCurrentEffects } from 'store/effects';
+import { currentQueueObjects } from 'store/object';
 
-export const EffectControllerTimingFunction = ({
-  uuid,
-  effect,
-}: {
-  uuid: string;
-  effect: QueueEffectType;
-}): ReactElement => {
+export const EffectControllerTimingFunction = (): ReactElement => {
   const { settings } = useSettings();
-  const { queueDocument, selectedObjects, ...setQueueDocument } =
-    useQueueDocument();
-  const [firstObject] = selectedObjects;
-  const firstObjectCurrentEffect = firstObject.effects.find(
-    (firstObjectEffect) =>
-      firstObjectEffect.type === effect.type &&
-      firstObjectEffect.index === settings.queueIndex
+
+  const selectedObjects = useRecoilValue(
+    currentQueueObjects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+
+  const objectBaseEffects = useRecoilValue(
+    objectCurrentEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      uuid: settings.selectedObjectUUIDs,
+    })
   );
 
-  const handleTimingFunctionChange = (value: string): void => {
-    console.log(value);
-    setQueueDocument.updateObjectProp(settings.queuePage, [
-      {
-        uuid,
-        queueIndex: settings.queueIndex,
-        props: {
-          [effect.type]: {
-            timing: value,
-          },
-        },
-      },
-    ]);
-  };
+  const [firstObject] = selectedObjects;
+  const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
+
+  // const handleTimingFunctionChange = (
+  //   timingFunction: string
+  // ): void => {
+  //   console.log(timingFunction);
+  // };
+
+  console.log(firstObjectRectEffect);
 
   return (
-    <div key={uuid}>
+    <div>
       <p className="text-sm">timing function</p>
       <QueueSelect.Root
-        defaultValue={firstObjectCurrentEffect.timing}
-        onValueChange={handleTimingFunctionChange}>
+      // defaultValue={firstObjectRectEffect.timing}
+      // onValueChange={handleTimingFunctionChange}
+      >
         <QueueSelect.Trigger>
           <QueueSelect.Value />
           <QueueSelect.Icon>

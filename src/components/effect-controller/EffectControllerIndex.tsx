@@ -1,25 +1,23 @@
-import { EffectControllerFade } from 'components/effect-controller/EffectControllerFade';
 import { EffectControllerRect } from 'components/effect-controller/EffectControllerRect';
-import { EffectControllerRotate } from 'components/effect-controller/EffectControllerRotate';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 
 export type EffectControllerIndexProps = {
-  uuid: string;
-  effect: QueueEffectType;
+  effectType: QueueEffectType['type'];
 };
 
 export const EffectControllerIndex = ({
-  uuid,
-  effect,
+  effectType,
 }: EffectControllerIndexProps): ReactElement | null => {
-  switch (effect.type) {
+  switch (effectType) {
     case 'rotate':
-      return <EffectControllerRotate rotateEffect={effect} />;
+      // return <EffectControllerRotate rotateEffect={effect} />;
+      break;
     case 'fade':
-      return <EffectControllerFade effectType={effect.type} uuid={uuid} />;
+      // return <EffectControllerFade effectType={effect.type} uuid={uuid} />;
+      break;
     case 'rect':
-      return <EffectControllerRect effectType={effect.type} uuid={uuid} />;
+      return <EffectControllerRect />;
     default:
       return null;
   }

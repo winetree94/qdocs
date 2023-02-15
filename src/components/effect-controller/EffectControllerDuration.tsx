@@ -1,84 +1,53 @@
-import { debounce } from 'cdk/functions/debounce';
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
-import { QueueEffectType } from 'model/effect';
-import { ReactElement, useCallback, useMemo, useState } from 'react';
+import { ReactElement } from 'react';
+import { useRecoilValue } from 'recoil';
+import { objectCurrentEffects } from 'store/effects';
+import { currentQueueObjects } from 'store/object';
 
 // uuid, effectType만 필요할듯
-export const EffectControllerDuration = ({
-  uuid,
-  effect,
-}: {
-  uuid: string;
-  effect: QueueEffectType;
-}): ReactElement => {
+export const EffectControllerDuration = (): ReactElement => {
   const { settings } = useSettings();
-  const { queueDocument, selectedObjects, ...setQueueDocument } =
-    useQueueDocument();
+
+  const selectedObjects = useRecoilValue(
+    currentQueueObjects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+
+  const objectBaseEffects = useRecoilValue(
+    objectCurrentEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      uuid: settings.selectedObjectUUIDs,
+    })
+  );
+
   const [firstObject] = selectedObjects;
-  const firstObjectCurrentEffect = firstObject.effects.find(
-    (firstObjectEffect) =>
-      firstObjectEffect.type === effect.type &&
-      firstObjectEffect.index === settings.queueIndex
-  );
+  const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
 
-  const [duration, setDuration] = useState([
-    firstObjectCurrentEffect.duration / 1000,
-  ]);
+  // const handleCurrentEffectDurationChange = (
+  //   duration: number | number[] | string
+  // ): void => {
+  //   console.log(duration);
+  // };
 
-  // debounce가 의도한대로 동작하지 않는 문제
-  const debouncedUpdateEffect = useMemo(
-    () =>
-      debounce((duration: number) => {
-        setQueueDocument.updateObjectProp(settings.queuePage, [
-          {
-            uuid,
-            queueIndex: settings.queueIndex,
-            props: {
-              [effect.type]: {
-                duration,
-              },
-            },
-          },
-        ]);
-      }, 500),
-    [
-      setQueueDocument,
-      settings.queuePage,
-      settings.queueIndex,
-      effect.type,
-      uuid,
-    ]
-  );
-
-  const handleDurationChange = useCallback(
-    (duration: number) => debouncedUpdateEffect(duration),
-    [debouncedUpdateEffect]
-  );
+  console.log(firstObjectRectEffect);
 
   return (
     <div>
       <p className="text-sm">duration</p>
       <div className="flex items-center gap-2">
-        <input
-          type="text"
-          name="duration"
-          value={duration[0] * 1000}
-          readOnly
-          hidden
-        />
         <div className="w-5/12">
           <input
             className="w-full"
             type="number"
             step={0.1}
-            value={duration[0]}
-            onChange={(e): void => {
-              const duration = parseFloat(e.currentTarget.value);
-              setDuration([duration]);
-              handleDurationChange(duration * 1000);
-            }}
+            // value={firstObjectRectEffect.duration}
+            // onChange={(e): void =>
+            //   handleCurrentEffectDurationChange(e.currentTarget.value)
+            // }
           />
         </div>
         <div className="flex items-center w-full">
@@ -86,11 +55,10 @@ export const EffectControllerDuration = ({
             min={0}
             max={10}
             step={0.1}
-            value={duration}
-            onValueChange={(value): void => {
-              setDuration(value);
-              handleDurationChange(value[0] * 1000);
-            }}
+            // value={[firstObjectRectEffect.duration * 1000]}
+            // onValueChange={(duration): void =>
+            //   handleCurrentEffectDurationChange(duration)
+            // }
           />
         </div>
       </div>
