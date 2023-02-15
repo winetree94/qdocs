@@ -13,13 +13,13 @@ import {
 
 export interface QueueCircle
   extends WithEffects,
-    WithRect,
-    WithFade,
-    WithFill,
-    WithRotation,
-    WithScale,
-    WithStroke,
-    WithText {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText {
   type: 'circle';
   uuid: string;
 }
@@ -49,7 +49,6 @@ export const createDefaultCircle = (
       opacity: 1,
     },
     rotate: {
-      position: 'forward',
       degree: 0,
     },
     scale: {

@@ -13,13 +13,13 @@ import {
 
 export interface QueueLine
   extends WithEffects,
-    WithRect,
-    WithFade,
-    WithFill,
-    WithRotation,
-    WithScale,
-    WithStroke,
-    WithText {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText {
   type: 'line';
   uuid: string;
 }
@@ -49,7 +49,6 @@ export const createDefaultLine = (
       opacity: 1,
     },
     rotate: {
-      position: 'forward',
       degree: 0,
     },
     scale: {

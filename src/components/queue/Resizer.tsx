@@ -53,8 +53,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   onRotateEnd,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+
   // shorthands
-  const { selected, documentScale } = useContext(QueueObjectContainerContext);
+  const { selected, documentScale, object } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
   const rect = animation.rect;
@@ -65,12 +66,9 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const strokeWidth = 20;
   const distance = strokeWidth / 2;
   const margin = 100;
-  const [resizingRect, setResizingRect] = React.useState<ResizerEvent | null>(
-    null
-  );
 
-  const actualWidth = (resizingRect?.width || rect.width) + margin * 2;
-  const actualHeight = (resizingRect?.height || rect.height) + margin * 2;
+  const actualWidth = rect.width + margin * 2;
+  const actualHeight = rect.height + margin * 2;
 
   const [rotatingDegree, setRotatingDegree] = React.useState<number | null>(
     null
@@ -300,7 +298,6 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         documentScale
       );
       onResizeMove?.({ ...rect, degree: 0, scale: 0 }, cancelResize);
-      setResizingRect(rect);
     },
     [
       initResizeEvent,
@@ -319,7 +316,6 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         documentScale
       );
       onResizeEnd?.({ ...rect, degree: 0, scale: 0 });
-      setResizingRect(null);
       setInitResizeEvent(null);
     },
     [initResizeEvent, onResizeEnd, documentScale, getAbsoluteResizerPosition]
@@ -351,10 +347,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
       });
       onResizeStart?.(
         {
-          x: 0,
-          y: 0,
-          width: 0,
-          height: 0,
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
           degree: 0,
           scale: 0,
         },
@@ -382,7 +378,11 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         initEvent.clientX,
         initEvent.clientY
       );
-      onRotateStart?.({ ...rect, degree: degree, scale: 0 }, cancelRotate);
+      onRotateStart?.({
+        ...rect,
+        degree: degree,
+        scale: 0
+      }, cancelRotate);
       setInitRotateEvent({
         event: initEvent.nativeEvent,
         absRect: rect,
@@ -463,11 +463,10 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         ref={svgRef}
         className={styles.canvas}
         style={{
-          left: (resizingRect?.x || rect.x) - margin,
-          top: (resizingRect?.y || rect.y) - margin,
+          left: rect.x - margin,
+          top: rect.y - margin,
           transformOrigin: 'center center',
-          transform: `rotate(${resizingRect?.degree || rotate
-            }deg) scale(${scale})`,
+          transform: `rotate(${rotate}deg) scale(${scale})`,
         }}
         width={actualWidth}
         height={actualHeight}>
@@ -554,8 +553,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         <div
           className={clsx(styles.RotationDegree)}
           style={{
-            left: (resizingRect?.x || rect.x) - margin,
-            top: (resizingRect?.y || rect.y) - margin + animation.rect.height,
+            left: rect.x - margin,
+            top: rect.y - margin + animation.rect.height,
             width: actualWidth,
             height: actualHeight,
           }}>

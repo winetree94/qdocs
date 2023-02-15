@@ -1,4 +1,5 @@
-import { atom, selector } from 'recoil';
+import { QueueObjectType } from 'model/object';
+import { atom, selector, selectorFamily } from 'recoil';
 import { documentState } from './document';
 
 export interface QueueDocumentSettings {
@@ -31,6 +32,23 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
       });
     },
   ],
+});
+
+export const QueueObject = selectorFamily({
+  key: 'QueueObject',
+  get: (uuid: string) => ({ get }): QueueObjectType => {
+    const queueDocument = get(documentState);
+    const settings = get(documentSettingsState);
+    return queueDocument!.pages[settings.queuePage].objects.find((object) => object.uuid === uuid);
+  },
+  set: (uuid: string) => ({ set }, newValue): void => {
+    set(documentSettingsState, (oldValue) => {
+      return {
+        ...oldValue,
+        selectedObjectUUIDs: [uuid],
+      };
+    });
+  }
 });
 
 export const getSelectedObjects = selector({

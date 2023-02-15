@@ -1,3 +1,10 @@
+export const OBJECT_META = {
+  RECT: 'rect',
+  CIRCLE: 'circle',
+  ICON: 'icon',
+  LINE: 'line',
+} as const;
+
 export const OBJECT_PROPERTY_META = {
   FADE: 'fade',
   FILL: 'fill',

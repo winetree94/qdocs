@@ -4,8 +4,8 @@ import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { useRecoilValue } from 'recoil';
+import { queueObjectsByQueueIndexSelector } from 'store/object';
 import { QueueIconButton } from '../../components/button/Button';
-import { queueObjectsByQueueIndexSelector } from '../../store/document';
 import styles from './Subtoolbar.module.scss';
 
 export const QueueSubtoolbar: React.FC = () => {

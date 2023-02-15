@@ -4,11 +4,14 @@ import { RootLayout } from './app/root-layout/RootLayout';
 
 import 'tailwindcss/tailwind.css';
 import './App.scss';
+import { RecoilUndoRoot } from 'cdk/hooks/useUndo';
 
 const App: FunctionComponent = () => {
   return (
     <RecoilRoot>
-      <RootLayout></RootLayout>
+      <RecoilUndoRoot>
+        <RootLayout></RootLayout>
+      </RecoilUndoRoot>
     </RecoilRoot>
   );
 };

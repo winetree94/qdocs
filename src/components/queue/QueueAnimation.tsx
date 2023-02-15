@@ -47,7 +47,6 @@ export const QueueAnimatableContext = createContext<QueueAnimatableContextType>(
       opacity: 0,
     },
     rotate: {
-      position: 'forward',
       degree: 0,
     },
     scale: {
@@ -69,7 +68,7 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   queuePosition,
   queueStart,
 }) => {
-  const { object, transform, move, transformRotate } = useContext(
+  const { object } = useContext(
     QueueObjectContainerContext
   );
   const currentFade = getCurrentFade(object, queueIndex);
@@ -117,25 +116,16 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
                         start={queueStart}
                         timing={animatableRotate?.rotateEffect.timing}>
                         {(rotateProgress): ReactElement => {
-                          const rect = {
-                            ...(transform ||
-                              getAnimatableRect(
-                                rectProgress,
-                                currentRect,
-                                animatableRect?.fromRect
-                              )),
-                          };
-                          const rotate =
-                            transformRotate ||
-                            getAnimatableRotate(
-                              rotateProgress,
-                              currentRotate,
-                              animatableRotate?.fromRotate
-                            );
-                          if (move) {
-                            rect.x += move.x;
-                            rect.y += move.y;
-                          }
+                          const rect = getAnimatableRect(
+                            rectProgress,
+                            currentRect,
+                            animatableRect?.fromRect
+                          );
+                          const rotate = getAnimatableRotate(
+                            rotateProgress,
+                            currentRotate,
+                            animatableRotate?.fromRotate
+                          );
                           return (
                             <QueueAnimatableContext.Provider
                               value={{

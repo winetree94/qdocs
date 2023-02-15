@@ -14,13 +14,13 @@ import { QueueObjectType } from '.';
 
 export interface QueueSquare
   extends WithEffects,
-    WithRect,
-    WithFade,
-    WithFill,
-    WithRotation,
-    WithScale,
-    WithStroke,
-    WithText {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText {
   type: 'rect';
   uuid: string;
 }
@@ -69,7 +69,6 @@ export const createDefaultSquare = (
       opacity: 1,
     },
     rotate: {
-      position: 'forward',
       degree: 0,
     },
     scale: {

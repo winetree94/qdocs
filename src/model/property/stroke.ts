@@ -1,6 +1,6 @@
-import { OBJECT_PROPERTY_META } from './meta';
+import { OBJECT_PROPERTY_META } from '../meta';
 
-export interface QueueStroke {
+export type QueueStroke = {
   dasharray: string;
   width: number;
   color: string;

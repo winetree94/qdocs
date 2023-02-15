@@ -1,6 +1,6 @@
-import { OBJECT_PROPERTY_META } from './meta';
+import { OBJECT_PROPERTY_META } from '../meta';
 
-export interface QueueRect {
+export type QueueRect = {
   x: number;
   y: number;
   width: number;

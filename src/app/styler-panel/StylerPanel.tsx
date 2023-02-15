@@ -23,7 +23,8 @@ import {
   useState,
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { documentState, getObjectByUUIDSelector } from 'store/document';
+import { documentState } from 'store/document';
+import { objectByUUID } from 'store/object';
 import { documentSettingsState } from 'store/settings';
 import classes from './StylerPanel.module.scss';
 
@@ -274,7 +275,10 @@ const ObjectStyleText = (): ReactElement => {
   const { queueDocument, ...setQueueDocument } = useQueueDocument();
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
-  const object = useRecoilValue(getObjectByUUIDSelector(firstObject.uuid));
+  const object = useRecoilValue(objectByUUID({
+    pageIndex: settings.queuePage,
+    uuid: firstObject.uuid,
+  }));
 
   const [currentText, setCurrentText] = useState(object.text);
 

@@ -7,17 +7,19 @@ import {
   WithRect,
   WithRotation,
   WithScale,
+  WithStroke,
   WithText,
 } from 'model/property';
 
 export interface QueueIcon
   extends WithEffects,
-    WithRect,
-    WithFade,
-    WithFill,
-    WithScale,
-    WithRotation,
-    WithText {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithScale,
+  WithRotation,
+  WithStroke,
+  WithText {
   type: 'icon';
   iconType: string;
   uuid: string;
@@ -45,7 +47,6 @@ export const createDefaultIcon = (
       opacity: 1,
     },
     rotate: {
-      position: 'forward',
       degree: 0,
     },
     scale: {
@@ -61,6 +62,11 @@ export const createDefaultIcon = (
       fontFamily: 'Arial',
       horizontalAlign: 'center',
       verticalAlign: 'middle',
+    },
+    stroke: {
+      color: '#000000',
+      dasharray: '',
+      width: 0,
     },
     effects: [
       {

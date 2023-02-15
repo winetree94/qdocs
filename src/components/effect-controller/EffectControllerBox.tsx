@@ -129,7 +129,6 @@ const createEffect = (
         rotate: {
           degree: initialDegree,
           // 없어질 값이라 'forward' 고정
-          position: 'forward',
         },
       };
     }

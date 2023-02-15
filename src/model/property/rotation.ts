@@ -1,10 +1,9 @@
-import { OBJECT_PROPERTY_META } from './meta';
+import { OBJECT_PROPERTY_META } from '../meta';
 
-export interface QueueRotate {
-  position: 'forward' | 'reverse';
+export type QueueRotate = {
   degree: number;
 }
 
-export interface WithRotation {
+export type WithRotation = {
   [OBJECT_PROPERTY_META.ROTATE]: QueueRotate;
 }

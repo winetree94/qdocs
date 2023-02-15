@@ -44,11 +44,11 @@ export const getRotateAnimation = (
   const slicedEffect: RotateEffect =
     position === 'backward'
       ? {
-          ...rotateEffect,
-          rotate: {
-            ...getCurrentRotate(object, index),
-          },
-        }
+        ...rotateEffect,
+        rotate: {
+          ...getCurrentRotate(object, index),
+        },
+      }
       : rotateEffect;
 
   return {
@@ -68,6 +68,5 @@ export const getAnimatableRotate = (
   return {
     degree:
       fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
-    position: 'forward',
   };
 };
