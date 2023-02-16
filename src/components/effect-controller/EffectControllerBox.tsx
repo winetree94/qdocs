@@ -226,7 +226,10 @@ export const EffectControllerBox = (): ReactElement | null => {
         </div>
         <div className="flex flex-col gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
-            <EffectController key={currentQueueObjectEffect.type} effectType={currentQueueObjectEffect.type} />
+            <EffectController
+              key={`ec-${currentQueueObjectEffect.type}`}
+              effectType={currentQueueObjectEffect.type}
+            />
           ))}
         </div>
       </div>
