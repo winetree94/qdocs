@@ -1,4 +1,5 @@
 import { useSettings } from 'cdk/hooks/useSettings';
+import { useRedo, useUndo } from 'cdk/hooks/useUndo';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
@@ -10,6 +11,10 @@ import styles from './Subtoolbar.module.scss';
 
 export const QueueSubtoolbar: React.FC = () => {
   const { settings, ...setSettings } = useSettings();
+
+  const undo = useUndo();
+  const redo = useRedo();
+
   const start = Math.max(settings.queueIndex - 2, 0);
   const queues = useRecoilValue(
     queueObjectsByQueueIndexSelector({
@@ -48,11 +53,15 @@ export const QueueSubtoolbar: React.FC = () => {
       <QueueScrollArea.Viewport>
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
-            <QueueIconButton>
-              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
+            <QueueIconButton onClick={undo}>
+              <SvgRemixIcon
+                width={15}
+                height={15}
+                icon={'ri-arrow-go-back-line'}
+              />
             </QueueIconButton>
 
-            <QueueIconButton>
+            <QueueIconButton onClick={redo}>
               <SvgRemixIcon
                 width={15}
                 height={15}
