@@ -17,23 +17,22 @@ export const EffectControllerRect = (): ReactElement => {
   const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
-    const newUpdateModel = settings.selectedObjectUUIDs.reduce<{
+    const newEffects = settings.selectedObjectUUIDs.reduce<{
       [key: string]: ObjectQueueEffects;
     }>((result, uuid) => {
       result[uuid] = {
-        ...effects[uuid],
         rect: {
           ...effects[uuid].rect,
-          ...rect,
+          rect: {
+            ...effects[uuid].rect.rect,
+            ...rect,
+          },
         },
       };
       return result;
     }, {});
 
-    setEffects({
-      ...effects,
-      ...newUpdateModel,
-    });
+    setEffects(newEffects);
   };
 
   return (
