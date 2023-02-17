@@ -27,7 +27,7 @@ export const EffectControllerTimingFunction = (): ReactElement => {
   );
 
   const [firstObject] = selectedObjects;
-  const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
+  const firstObjectBaseEffect = objectBaseEffects[firstObject.uuid];
 
   const handleTimingFunctionChange = (timingFunction: string): void => {
     const updateModel = settings.selectedObjectUUIDs.reduce<{
@@ -50,7 +50,7 @@ export const EffectControllerTimingFunction = (): ReactElement => {
     <div>
       <p className="text-sm">timing function</p>
       <QueueSelect.Root
-        defaultValue={firstObjectRectEffect.timing}
+        defaultValue={firstObjectBaseEffect.timing}
         onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Trigger>
           <QueueSelect.Value />

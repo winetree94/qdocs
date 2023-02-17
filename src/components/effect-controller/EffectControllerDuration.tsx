@@ -1,20 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
+import { BaseQueueEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectQueueEffects } from 'store/effects';
-// import { objectCurrentEffects } from 'store/effects';
+import { objectCurrentBasesEffect } from 'store/effects/base';
 import { currentQueueObjects } from 'store/object';
 
-// uuid, effectType만 필요할듯
 export const EffectControllerDuration = (): ReactElement => {
   const { settings } = useSettings();
-
-  const [effects, setEffects] = useRecoilState(objectQueueEffects({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-  }));
 
   const selectedObjects = useRecoilValue(
     currentQueueObjects({
@@ -23,24 +16,50 @@ export const EffectControllerDuration = (): ReactElement => {
     })
   ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
 
-  // const objectBaseEffects = useRecoilValue(
-  //   objectCurrentEffects({
-  //     pageIndex: settings.queuePage,
-  //     queueIndex: settings.queueIndex,
-  //     uuid: settings.selectedObjectUUIDs,
-  //   })
-  // );
+  const [objectBaseEffects, setObjectBaseEffects] = useRecoilState(
+    objectCurrentBasesEffect({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      uuid: settings.selectedObjectUUIDs,
+    })
+  );
 
   const [firstObject] = selectedObjects;
-  // const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
+  const firstObjectBaseEffect = objectBaseEffects[firstObject.uuid];
+  const convertedDuration = firstObjectBaseEffect.duration / 1000;
 
-  // const handleCurrentEffectDurationChange = (
-  //   duration: number | number[] | string
-  // ): void => {
-  //   console.log(duration);
-  // };
+  const handleTimingFunctionChange = (
+    durationValue: number | number[] | string
+  ): void => {
+    let duration = 1000;
 
-  // console.log(firstObjectRectEffect);
+    if (typeof durationValue === 'number') {
+      duration = durationValue;
+    }
+
+    if (Array.isArray(durationValue)) {
+      duration = durationValue[0];
+    }
+
+    if (typeof durationValue === 'string') {
+      duration = parseFloat(durationValue);
+    }
+
+    const updateModel = settings.selectedObjectUUIDs.reduce<{
+      [key: string]: BaseQueueEffect;
+    }>((result, uuid) => {
+      result[uuid] = {
+        ...objectBaseEffects[uuid],
+        duration: Math.round(duration * 1000),
+      };
+      return result;
+    }, {});
+
+    setObjectBaseEffects((prev) => ({
+      ...prev,
+      ...updateModel,
+    }));
+  };
 
   return (
     <div>
@@ -51,10 +70,10 @@ export const EffectControllerDuration = (): ReactElement => {
             className="w-full"
             type="number"
             step={0.1}
-          // value={firstObjectRectEffect.duration}
-          // onChange={(e): void =>
-          //   handleCurrentEffectDurationChange(e.currentTarget.value)
-          // }
+            value={convertedDuration}
+            onChange={(e): void =>
+              handleTimingFunctionChange(e.currentTarget.value)
+            }
           />
         </div>
         <div className="flex items-center w-full">
@@ -62,10 +81,10 @@ export const EffectControllerDuration = (): ReactElement => {
             min={0}
             max={10}
             step={0.1}
-          // value={[firstObjectRectEffect.duration * 1000]}
-          // onValueChange={(duration): void =>
-          //   handleCurrentEffectDurationChange(duration)
-          // }
+            value={[convertedDuration]}
+            onValueChange={(duration): void =>
+              handleTimingFunctionChange(duration)
+            }
           />
         </div>
       </div>
