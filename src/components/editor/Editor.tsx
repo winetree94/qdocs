@@ -68,7 +68,7 @@ export const QueueEditor: FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onObjectMouseodown = (
+  const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     object: QueueObjectType
   ): void => {
@@ -82,7 +82,6 @@ export const QueueEditor: FunctionComponent = () => {
         object.uuid,
       ]);
     }
-    setSettings.stopAnimation();
   };
 
   const onObjectDoubleClick = (
@@ -306,34 +305,35 @@ export const QueueEditor: FunctionComponent = () => {
     });
   };
 
+  const onRootContextMenuOpenChange = (open: boolean): void => {
+    if (open) {
+      setSettings.setSelectedObjectUUIDs([]);
+    }
+  };
+
+  const onObjectContextMenuOpenChange = (uuid: string, open: boolean): void => {
+    if (open && !settings.selectedObjectUUIDs.includes(uuid)) {
+      setSettings.setSelectedObjectUUIDs([uuid]);
+    }
+  };
+
   return (
     <QueueContextMenu.Root
-      onOpenChange={(open): void => {
-        if (open) {
-          setSettings.setSelectedObjectUUIDs([]);
-        }
-      }}>
+      onOpenChange={onRootContextMenuOpenChange}>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
         <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
               scale={settings.scale}
-              drawer={
-                <div className={clsx(styles.drawer, 'w-full', 'h-full')}></div>
-              }
+              drawer={<div className={clsx(styles.drawer, 'w-full', 'h-full')}></div>}
               onDrawStart={onDrawStart}
               onDrawEnd={onDrawEnd}
-              className={clsx(
-                styles.Drawable,
-                settings.presentationMode ? styles.fullscreen : ''
-              )}>
+              className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>
               <Scaler
                 width={queueDocument!.documentRect.width}
                 height={queueDocument!.documentRect.height}
                 scale={settings.scale}
-                className={clsx(
-                  settings.presentationMode ? styles.scaleFull : ''
-                )}>
+                className={clsx(settings.presentationMode ? styles.scaleFull : '')}>
                 <div
                   ref={canvasDiv}
                   className={clsx(styles.canvas, 'relative', 'box-border')}
@@ -342,73 +342,37 @@ export const QueueEditor: FunctionComponent = () => {
                     height: queueDocument!.documentRect.height,
                     background: queueDocument!.documentRect.fill,
                   }}>
-                  {objects.map((object, index) => {
+                  {objects.map((object) => {
                     return (
                       <QueueContextMenu.Root
                         key={object.uuid}
-                        onOpenChange={(open): void => {
-                          if (
-                            open &&
-                            !settings.selectedObjectUUIDs.includes(object.uuid)
-                          ) {
-                            setSettings.setSelectedObjectUUIDs([object.uuid]);
-                          }
-                        }}>
+                        onOpenChange={(open): void => onObjectContextMenuOpenChange(object.uuid, open)}>
                         <QueueContextMenu.Trigger>
                           <QueueObject.Container
                             className="queue-object-root"
                             object={object}
-                            detail={
-                              settings.selectionMode === 'detail' &&
-                              settings.selectedObjectUUIDs.includes(object.uuid)
-                            }
+                            detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
                             documentScale={settings.scale}
-                            selected={settings.selectedObjectUUIDs.includes(
-                              object.uuid
-                            )}>
+                            selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
                             <QueueObject.Animator
                               queueIndex={settings.queueIndex}
                               queuePosition={settings.queuePosition}
                               queueStart={settings.queueStart}>
                               <QueueObject.Drag
-                                onMousedown={(event): void =>
-                                  onObjectMouseodown(event, object)
-                                }
-                                onDoubleClick={(event): void =>
-                                  onObjectDoubleClick(event, object)
-                                }
-                                onDraggingStart={(): void => {
-                                  onObjectDragStart();
-                                }
-                                }
-                                onDraggingMove={(
-                                  initEvent,
-                                  currentEvent
-                                ): void =>
-                                  onObjectDragMove(
-                                    initEvent,
-                                    currentEvent,
-                                  )
-                                }
+                                onMousedown={(event): void => onObjectMousedown(event, object)}
+                                onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
+                                onDraggingStart={onObjectDragStart}
+                                onDraggingMove={onObjectDragMove}
                                 onDraggingEnd={onObjectDragEnd}>
                                 <QueueObject.Rect></QueueObject.Rect>
-                                <QueueObject.Text
-                                  onEdit={(e): void =>
-                                    onTextEdit(object, e)
-                                  }></QueueObject.Text>
+                                <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)} />
                                 <QueueObject.Resizer
-                                  onResizeStart={(event): void =>
-                                    onResizeStart(object, event)
-                                  }
-                                  onResizeMove={(event): void =>
-                                    onResizeMove(object, event)
-                                  }
-                                  onResizeEnd={(event): void =>
-                                    onResizeEnd(object, event)
-                                  }
+                                  onResizeStart={(event): void => onResizeStart(object, event)}
+                                  onResizeMove={(event): void => onResizeMove(object, event)}
+                                  onResizeEnd={(event): void => onResizeEnd(object, event)}
                                   onRotateStart={(): void => onRotateStart()}
                                   onRotateMove={(event): void => onRotateMove(object.uuid, event.degree)}
-                                  onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)}></QueueObject.Resizer>
+                                  onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)} />
                               </QueueObject.Drag>
                             </QueueObject.Animator>
                           </QueueObject.Container>
@@ -417,20 +381,14 @@ export const QueueEditor: FunctionComponent = () => {
                           <QueueContextMenu.Content
                             onMouseDown={(e): void => e.stopPropagation()}>
                             <QueueContextMenu.Item
-                              onClick={(): void =>
-                                setQueueDocument.removeObjectOnQueue(
-                                  settings.selectedObjectUUIDs
-                                )
-                              }>
+                              onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}
+                            >
                               현재 큐에서 삭제{' '}
                               <div className={styles.RightSlot}>Backspace</div>
                             </QueueContextMenu.Item>
                             <QueueContextMenu.Item
-                              onClick={(): void =>
-                                setQueueDocument.removeObject(
-                                  settings.selectedObjectUUIDs
-                                )
-                              }>
+                              onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}
+                            >
                               오브젝트 삭제{' '}
                               <div className={styles.RightSlot}>
                                 ⌘+Backspace

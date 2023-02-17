@@ -55,7 +55,7 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
 
   // shorthands
-  const { selected, documentScale, object } = useContext(QueueObjectContainerContext);
+  const { selected, documentScale } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 
   const rect = animation.rect;
