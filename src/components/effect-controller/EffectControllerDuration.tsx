@@ -1,13 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
 import { ReactElement } from 'react';
-import { useRecoilValue } from 'recoil';
-import { objectCurrentEffects } from 'store/effects';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { objectQueueEffects } from 'store/effects';
+// import { objectCurrentEffects } from 'store/effects';
 import { currentQueueObjects } from 'store/object';
 
 // uuid, effectType만 필요할듯
 export const EffectControllerDuration = (): ReactElement => {
   const { settings } = useSettings();
+
+  const [effects, setEffects] = useRecoilState(objectQueueEffects({
+    pageIndex: settings.queuePage,
+    queueIndex: settings.queueIndex,
+  }));
 
   const selectedObjects = useRecoilValue(
     currentQueueObjects({
@@ -16,16 +23,16 @@ export const EffectControllerDuration = (): ReactElement => {
     })
   ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
 
-  const objectBaseEffects = useRecoilValue(
-    objectCurrentEffects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      uuid: settings.selectedObjectUUIDs,
-    })
-  );
+  // const objectBaseEffects = useRecoilValue(
+  //   objectCurrentEffects({
+  //     pageIndex: settings.queuePage,
+  //     queueIndex: settings.queueIndex,
+  //     uuid: settings.selectedObjectUUIDs,
+  //   })
+  // );
 
   const [firstObject] = selectedObjects;
-  const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
+  // const firstObjectRectEffect = objectBaseEffects[firstObject.uuid];
 
   // const handleCurrentEffectDurationChange = (
   //   duration: number | number[] | string
@@ -33,7 +40,7 @@ export const EffectControllerDuration = (): ReactElement => {
   //   console.log(duration);
   // };
 
-  console.log(firstObjectRectEffect);
+  // console.log(firstObjectRectEffect);
 
   return (
     <div>
@@ -44,10 +51,10 @@ export const EffectControllerDuration = (): ReactElement => {
             className="w-full"
             type="number"
             step={0.1}
-            // value={firstObjectRectEffect.duration}
-            // onChange={(e): void =>
-            //   handleCurrentEffectDurationChange(e.currentTarget.value)
-            // }
+          // value={firstObjectRectEffect.duration}
+          // onChange={(e): void =>
+          //   handleCurrentEffectDurationChange(e.currentTarget.value)
+          // }
           />
         </div>
         <div className="flex items-center w-full">
@@ -55,10 +62,10 @@ export const EffectControllerDuration = (): ReactElement => {
             min={0}
             max={10}
             step={0.1}
-            // value={[firstObjectRectEffect.duration * 1000]}
-            // onValueChange={(duration): void =>
-            //   handleCurrentEffectDurationChange(duration)
-            // }
+          // value={[firstObjectRectEffect.duration * 1000]}
+          // onValueChange={(duration): void =>
+          //   handleCurrentEffectDurationChange(duration)
+          // }
           />
         </div>
       </div>

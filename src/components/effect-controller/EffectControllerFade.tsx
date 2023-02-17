@@ -1,8 +1,10 @@
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
 import { QueueEffectType } from 'model/effect';
-import { ReactElement, useState } from 'react';
+import { QueueFade } from 'model/property';
+import { ReactElement } from 'react';
+import { useRecoilState } from 'recoil';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -14,44 +16,33 @@ export const EffectControllerFade = ({
   effectType,
 }: EffectControllerFadeProps): ReactElement => {
   const { settings } = useSettings();
-  const { queueDocument, selectedObjects, ...setQueueDocument } =
-    useQueueDocument();
-  const [firstObject] = selectedObjects;
-  const firstObjectCurrentEffect = firstObject.effects.find(
-    (firstObjectEffect) =>
-      firstObjectEffect.type === effectType &&
-      firstObjectEffect.index === settings.queueIndex
-  );
-  const [fadeEffectOpacity, setFadeEffectOpacity] = useState(
-    firstObjectCurrentEffect.type === 'fade'
-      ? firstObjectCurrentEffect.fade.opacity
-      : firstObject.fade.opacity
-  );
 
-  const updateCurrentOpacity = (opacity: number): void => {
-    setFadeEffectOpacity(opacity);
+  const [effects, setEffects] = useRecoilState(objectQueueEffects({
+    pageIndex: settings.queuePage,
+    queueIndex: settings.queueIndex,
+  }));
 
-    if (firstObjectCurrentEffect.type !== 'fade') {
-      return;
-    }
+  const firstObjectFadeEffect = effects[settings.selectedObjectUUIDs[0]].fade;
+  const fade = firstObjectFadeEffect.fade;
 
-    if (firstObjectCurrentEffect.fade.opacity === opacity) {
-      return;
-    }
-
-    setQueueDocument.updateObjectProp(settings.queuePage, [
-      {
-        uuid,
-        queueIndex: settings.queueIndex,
-        props: {
-          fade: {
-            fade: {
-              opacity,
-            },
-          },
+  const handleCurrentFadeChange = (fade: Partial<QueueFade>): void => {
+    const newUpdateModel = settings.selectedObjectUUIDs.reduce<{
+      [key: string]: ObjectQueueEffects;
+    }>((result, uuid) => {
+      result[uuid] = {
+        ...effects[uuid],
+        fade: {
+          ...effects[uuid].fade,
+          ...fade,
         },
-      },
-    ]);
+      };
+      return result;
+    }, {});
+
+    setEffects({
+      ...effects,
+      ...newUpdateModel,
+    });
   };
 
   return (
@@ -60,7 +51,7 @@ export const EffectControllerFade = ({
         <input
           type="number"
           name="fadeEffectOpacity"
-          value={fadeEffectOpacity}
+          value={fade.opacity}
           hidden
           readOnly
         />
@@ -71,10 +62,10 @@ export const EffectControllerFade = ({
               className="w-full"
               type="number"
               name="fadeEffectOpacity"
-              value={fadeEffectOpacity}
+              value={fade.opacity}
               step={0.1}
               onChange={(e): void => {
-                updateCurrentOpacity(parseFloat(e.currentTarget.value));
+                handleCurrentFadeChange({ opacity: parseFloat(e.currentTarget.value) });
               }}
             />
           </div>
@@ -83,9 +74,9 @@ export const EffectControllerFade = ({
               min={0}
               max={1}
               step={0.1}
-              value={[fadeEffectOpacity]}
+              value={[fade.opacity]}
               onValueChange={([value]): void => {
-                updateCurrentOpacity(value);
+                handleCurrentFadeChange({ opacity: value });
               }}
             />
           </div>

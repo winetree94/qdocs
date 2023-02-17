@@ -14,17 +14,17 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import { ChevronRightIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
-import { QueueRect } from 'model/property';
 import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { currentQueueObjects, currentQueueObjectUUIDs } from 'store/object';
+import { currentQueueObjects } from 'store/object';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useBatching } from 'cdk/hooks/useUndo';
-import { objectCurrentRects } from 'store/effects/rect';
-import { objectCurrentRotates } from 'store/effects/rotate';
 import { ResizerEvent } from 'components/queue/Resizer';
+import { objectDefaultProps, ObjectQueueEffects, objectQueueEffects, objectQueueProps, ObjectQueueProps } from 'store/effects';
+import { MoveEffect, RotateEffect } from 'model/effect';
+import { adjacent } from 'cdk/math/adjacent';
 
 export const QueueEditor: FunctionComponent = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -39,25 +39,22 @@ export const QueueEditor: FunctionComponent = () => {
     queueIndex: settings.queueIndex,
   }));
 
-  const objectUUIDs = useRecoilValue(currentQueueObjectUUIDs({
+  const [defaultProps, setDefaultProps] = useRecoilState(objectDefaultProps({
+    pageIndex: settings.queuePage,
+  }));
+
+  const queueProps = useRecoilValue(objectQueueProps({
     pageIndex: settings.queuePage,
     queueIndex: settings.queueIndex,
   }));
 
-  const [objectRects, setObjectRects] = useRecoilState(objectCurrentRects({
+  const [queueEffects, setQueueEffects] = useRecoilState(objectQueueEffects({
     pageIndex: settings.queuePage,
     queueIndex: settings.queueIndex,
-    uuid: objectUUIDs,
   }));
 
-  const [objectRotates, setObjectRotates] = useRecoilState(objectCurrentRotates({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-    uuid: objectUUIDs,
-  }));
-
-  const [capturedObjectRects, setCapturedObjectRects] = useState<{
-    [key: string]: QueueRect;
+  const [capturedObjectProps, setCapturedObjectProps] = useState<{
+    [key: string]: ObjectQueueProps;
   }>({});
 
   // 최초 렌더링 시 스케일 계산
@@ -85,6 +82,7 @@ export const QueueEditor: FunctionComponent = () => {
         object.uuid,
       ]);
     }
+    setSettings.stopAnimation();
   };
 
   const onObjectDoubleClick = (
@@ -97,7 +95,7 @@ export const QueueEditor: FunctionComponent = () => {
 
   const onObjectDragStart = (): void => {
     startBatch();
-    setCapturedObjectRects(objectRects);
+    setCapturedObjectProps(queueProps);
   };
 
   const onUpdateDrag = (
@@ -110,27 +108,32 @@ export const QueueEditor: FunctionComponent = () => {
 
     const targetX = diffX * currentScale;
     const targetY = diffY * currentScale;
+    const adjacentTargetX = event.shiftKey ? targetX : adjacent(targetX, 30);
+    const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
-    const adjacentTargetX = event.shiftKey
-      ? targetX
-      : Math.round(targetX / 30) * 30;
-
-    const adjacentTargetY = event.shiftKey
-      ? targetY
-      : Math.round(targetY / 30) * 30;
-
-    const updateModel = settings.selectedObjectUUIDs.reduce<{ [key: string]: QueueRect }>((result, uuid) => {
+    const updateModels = settings.selectedObjectUUIDs.reduce<{ [key: string]: ObjectQueueEffects }>((result, uuid) => {
+      const nextEffect: MoveEffect = {
+        type: 'rect',
+        duration: 1000,
+        index: settings.queueIndex,
+        timing: 'linear',
+        ...queueEffects[uuid].rect,
+        rect: {
+          ...queueProps[uuid].rect,
+          x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
+          y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
+        }
+      };
       result[uuid] = {
-        ...objectRects[uuid],
-        x: capturedObjectRects[uuid].x + adjacentTargetX,
-        y: capturedObjectRects[uuid].y + adjacentTargetY,
+        ...queueEffects[uuid],
+        rect: nextEffect,
       };
       return result;
     }, {});
 
-    setObjectRects({
-      ...objectRects,
-      ...updateModel,
+    setQueueEffects({
+      ...queueEffects,
+      ...updateModels,
     });
   };
 
@@ -204,45 +207,71 @@ export const QueueEditor: FunctionComponent = () => {
     );
   };
 
+  const resizeObjectRect = (uuid: string, rect: ResizerEvent): void => {
+    const nextEffect: MoveEffect = {
+      type: 'rect',
+      duration: 1000,
+      index: settings.queueIndex,
+      timing: 'linear',
+      ...queueEffects[uuid].rect,
+      rect: {
+        ...queueProps[uuid].rect,
+        ...rect
+      }
+    };
+    setQueueEffects({
+      ...queueEffects,
+      [uuid]: {
+        ...queueEffects[uuid],
+        rect: nextEffect,
+      }
+    });
+  };
+
   const onResizeStart = (object: QueueObjectType, rect: ResizerEvent): void => {
     startBatch();
-    setObjectRects({
-      ...objectRects,
-      [object.uuid]: rect,
-    });
+    resizeObjectRect(object.uuid, rect);
   };
 
   const onResizeMove = (object: QueueObjectType, rect: ResizerEvent): void => {
-    setObjectRects({
-      ...objectRects,
-      [object.uuid]: rect,
-    });
+    resizeObjectRect(object.uuid, rect);
   };
 
   const onResizeEnd = (object: QueueObjectType, rect: ResizerEvent): void => {
-    setObjectRects({
-      ...objectRects,
-      [object.uuid]: rect,
-    });
+    resizeObjectRect(object.uuid, rect);
     endBatch();
   };
 
-  const onRotateStart = (object: QueueObjectType, rotate: ResizerEvent): void => {
+  const updateObjectRotate = (uuid: string, degree: number): void => {
+    const nextEffect: RotateEffect = {
+      type: 'rotate',
+      duration: 1000,
+      index: settings.queueIndex,
+      timing: 'linear',
+      ...queueEffects[uuid].rotate,
+      rotate: {
+        degree: degree,
+      }
+    };
+    setQueueEffects({
+      ...queueEffects,
+      [uuid]: {
+        ...queueEffects[uuid],
+        rotate: nextEffect,
+      }
+    });
+  };
+
+  const onRotateStart = (): void => {
     startBatch();
   };
 
-  const onRotateMove = (object: QueueObjectType, rotate: ResizerEvent): void => {
-    setObjectRotates({
-      ...objectRotates,
-      [object.uuid]: rotate,
-    });
+  const onRotateMove = (uuid: string, degree: number): void => {
+    updateObjectRotate(uuid, degree);
   };
 
-  const onRotateEnd = (object: QueueObjectType, rotate: ResizerEvent): void => {
-    setObjectRotates({
-      ...objectRotates,
-      [object.uuid]: rotate,
-    });
+  const onRotateEnd = (uuid: string, degree: number): void => {
+    updateObjectRotate(uuid, degree);
     endBatch();
   };
 
@@ -265,20 +294,16 @@ export const QueueEditor: FunctionComponent = () => {
   }, [settings.presentationMode]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
-    setQueueDocument.updateObjectProp(settings.queuePage, [
-      {
-        uuid: object.uuid,
-        queueIndex: settings.queueIndex,
-        props: {
-          text: {
-            text: {
-              ...object.text,
-              text,
-            },
-          },
-        },
-      },
-    ]);
+    setDefaultProps({
+      ...defaultProps,
+      [object.uuid]: {
+        ...defaultProps[object.uuid],
+        text: {
+          ...defaultProps[object.uuid].text,
+          text,
+        }
+      }
+    });
   };
 
   return (
@@ -381,15 +406,9 @@ export const QueueEditor: FunctionComponent = () => {
                                   onResizeEnd={(event): void =>
                                     onResizeEnd(object, event)
                                   }
-                                  onRotateStart={(event): void =>
-                                    onRotateStart(object, event)
-                                  }
-                                  onRotateMove={(event): void =>
-                                    onRotateMove(object, event)
-                                  }
-                                  onRotateEnd={(event): void =>
-                                    onRotateEnd(object, event)
-                                  }></QueueObject.Resizer>
+                                  onRotateStart={(): void => onRotateStart()}
+                                  onRotateMove={(event): void => onRotateMove(object.uuid, event.degree)}
+                                  onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)}></QueueObject.Resizer>
                               </QueueObject.Drag>
                             </QueueObject.Animator>
                           </QueueObject.Container>

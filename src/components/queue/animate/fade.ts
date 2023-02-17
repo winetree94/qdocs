@@ -44,11 +44,11 @@ export const getFadeAnimation = (
   const slicedEffect: FadeEffect =
     position === 'backward'
       ? {
-          ...fadeEffect,
-          fade: {
-            ...getCurrentFade(object, index),
-          },
-        }
+        ...fadeEffect,
+        fade: {
+          ...getCurrentFade(object, index),
+        },
+      }
       : fadeEffect;
 
   return {

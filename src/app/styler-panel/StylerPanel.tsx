@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { debounce } from 'cdk/functions/debounce';
 import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
@@ -24,6 +25,7 @@ import {
 } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
+import { objectDefaultProps } from 'store/effects';
 import { objectByUUID } from 'store/object';
 import { documentSettingsState } from 'store/settings';
 import classes from './StylerPanel.module.scss';
@@ -272,13 +274,19 @@ const ObjectStylerOpacity = (): ReactElement => {
 
 const ObjectStyleText = (): ReactElement => {
   const { settings } = useSettings();
-  const { queueDocument, ...setQueueDocument } = useQueueDocument();
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
+
+  const [props, setProps] = useRecoilState(objectDefaultProps({
+    pageIndex: settings.queuePage,
+  }));
+
   const object = useRecoilValue(objectByUUID({
     pageIndex: settings.queuePage,
     uuid: firstObject.uuid,
   }));
+
+  const text = props[firstObject.uuid].text;
 
   const [currentText, setCurrentText] = useState(object.text);
 
@@ -289,31 +297,22 @@ const ObjectStyleText = (): ReactElement => {
     });
   };
 
-  const update = useCallback(
-    (text: Partial<QueueText>): void => {
-      setQueueDocument.updateObjectProp(settings.queuePage, [
-        {
-          uuid: object.uuid,
-          queueIndex: settings.queueIndex,
-          props: {
-            text: {
-              text: {
-                ...object.text,
-                ...text,
-              },
-            },
-          },
-        },
-      ]);
-    },
-    [
-      object.uuid,
-      object.text,
-      setQueueDocument,
-      settings.queueIndex,
-      settings.queuePage,
-    ]
-  );
+  const updateText = useCallback((text: Partial<QueueText>): void => {
+    setProps({
+      ...props,
+      [firstObject.uuid]: {
+        ...props[firstObject.uuid],
+        text: {
+          ...props[firstObject.uuid].text,
+          ...text,
+        }
+      },
+    });
+  }, [
+    firstObject.uuid,
+    props,
+    setProps,
+  ]);
 
   useEffect(() => {
     if (
@@ -323,9 +322,9 @@ const ObjectStyleText = (): ReactElement => {
       currentText.horizontalAlign !== object.text.horizontalAlign ||
       currentText.verticalAlign !== object.text.verticalAlign
     ) {
-      update(currentText);
+      updateText(currentText);
     }
-  }, [currentText, object.text, update]);
+  }, [currentText, object.text, updateText]);
 
   return (
     <div>
@@ -411,7 +410,7 @@ const ObjectStyleText = (): ReactElement => {
       </div>
       <div>
         <QueueInput
-          value={currentText.fontSize}
+          value={text.fontSize}
           type="number"
           onChange={(e): void =>
             updateCurrentText({ fontSize: Number(e.target.value) })

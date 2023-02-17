@@ -1,46 +1,39 @@
 import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectCurrentRects } from 'store/effects/rect';
-import { currentQueueObjects } from 'store/object';
+import { useRecoilState } from 'recoil';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 
 export const EffectControllerRect = (): ReactElement => {
   const { settings } = useSettings();
 
-  const selectedObjects = useRecoilValue(
-    currentQueueObjects({
+  const [effects, setEffects] = useRecoilState(
+    objectQueueEffects({
       pageIndex: settings.queuePage,
       queueIndex: settings.queueIndex,
-    })
-  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
-
-  const [objectRects, setObjectRects] = useRecoilState(
-    objectCurrentRects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      uuid: settings.selectedObjectUUIDs,
     })
   );
 
-  const [firstObject] = selectedObjects;
-  const firstObjectRectEffect = objectRects[firstObject.uuid];
+  const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
-    const updateModel = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: QueueRect;
+    const newUpdateModel = settings.selectedObjectUUIDs.reduce<{
+      [key: string]: ObjectQueueEffects;
     }>((result, uuid) => {
       result[uuid] = {
-        ...objectRects[uuid],
-        ...rect,
+        ...effects[uuid],
+        rect: {
+          ...effects[uuid].rect,
+          ...rect,
+        },
       };
       return result;
     }, {});
 
-    setObjectRects((prev) => ({
-      ...prev,
-      ...updateModel,
-    }));
+    setEffects({
+      ...effects,
+      ...newUpdateModel,
+    });
   };
 
   return (
@@ -50,7 +43,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.width}
+          value={firstObjectRectEffect.rect.width}
           onChange={(e): void =>
             handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })
           }
@@ -61,7 +54,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.height}
+          value={firstObjectRectEffect.rect.height}
           onChange={(e): void =>
             handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })
           }
@@ -72,7 +65,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.x}
+          value={firstObjectRectEffect.rect.x}
           onChange={(e): void =>
             handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })
           }
@@ -83,7 +76,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.y}
+          value={firstObjectRectEffect.rect.y}
           onChange={(e): void =>
             handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })
           }
