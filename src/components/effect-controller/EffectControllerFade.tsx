@@ -1,47 +1,61 @@
 import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
-import { QueueEffectType } from 'model/effect';
-import { QueueFade } from 'model/property';
+import { FadeEffect, QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState } from 'recoil';
-import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
+import { objectQueueEffects } from 'store/effects';
 
 export type EffectControllerFadeProps = {
   uuid: string;
   effectType: QueueEffectType['type'];
 };
 
-export const EffectControllerFade = ({
-  uuid,
-  effectType,
-}: EffectControllerFadeProps): ReactElement => {
+export const EffectControllerFade = (): ReactElement => {
   const { settings } = useSettings();
 
-  const [effects, setEffects] = useRecoilState(objectQueueEffects({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-  }));
+  const [effects, setEffects] = useRecoilState(
+    objectQueueEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  );
 
-  const firstObjectFadeEffect = effects[settings.selectedObjectUUIDs[0]].fade;
-  const fade = firstObjectFadeEffect.fade;
+  const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;
 
-  const handleCurrentFadeChange = (fade: Partial<QueueFade>): void => {
-    const newUpdateModel = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: ObjectQueueEffects;
-    }>((result, uuid) => {
-      result[uuid] = {
-        ...effects[uuid],
+  const handleCurrentOpacityChange = (
+    opacityValue: number | number[] | string
+  ): void => {
+    let opacity = 1;
+
+    if (typeof opacityValue === 'number') {
+      opacity = opacityValue;
+    }
+
+    if (Array.isArray(opacityValue)) {
+      opacity = opacityValue[0];
+    }
+
+    if (typeof opacityValue === 'string') {
+      opacity = parseFloat(opacityValue);
+    }
+
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: FadeEffect = {
+        ...firstObjectRotateEffect,
+        index: settings.queueIndex,
         fade: {
-          ...effects[uuid].fade,
-          ...fade,
+          ...firstObjectRotateEffect.fade,
+          opacity,
         },
       };
-      return result;
-    }, {});
 
-    setEffects({
-      ...effects,
-      ...newUpdateModel,
+      setEffects((prevEffects) => ({
+        ...prevEffects,
+        [objectUUID]: {
+          ...prevEffects[objectUUID],
+          fade: nextEffect,
+        },
+      }));
     });
   };
 
@@ -50,8 +64,7 @@ export const EffectControllerFade = ({
       <div>
         <input
           type="number"
-          name="fadeEffectOpacity"
-          value={fade.opacity}
+          value={firstObjectRotateEffect.fade.opacity}
           hidden
           readOnly
         />
@@ -62,10 +75,10 @@ export const EffectControllerFade = ({
               className="w-full"
               type="number"
               name="fadeEffectOpacity"
-              value={fade.opacity}
+              value={firstObjectRotateEffect.fade.opacity}
               step={0.1}
               onChange={(e): void => {
-                handleCurrentFadeChange({ opacity: parseFloat(e.currentTarget.value) });
+                handleCurrentOpacityChange(e.target.value);
               }}
             />
           </div>
@@ -74,9 +87,9 @@ export const EffectControllerFade = ({
               min={0}
               max={1}
               step={0.1}
-              value={[fade.opacity]}
-              onValueChange={([value]): void => {
-                handleCurrentFadeChange({ opacity: value });
+              value={[firstObjectRotateEffect.fade.opacity]}
+              onValueChange={(value): void => {
+                handleCurrentOpacityChange(value);
               }}
             />
           </div>
