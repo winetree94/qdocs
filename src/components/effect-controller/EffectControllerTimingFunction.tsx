@@ -6,13 +6,13 @@ import { BaseQueueEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { objectCurrentBasesEffect } from 'store/effects/base';
-import { currentQueueObjects } from 'store/object';
+import { queueObjects } from 'store/object';
 
 export const EffectControllerTimingFunction = (): ReactElement => {
   const { settings } = useSettings();
 
   const selectedObjects = useRecoilValue(
-    currentQueueObjects({
+    queueObjects({
       pageIndex: settings.queuePage,
       queueIndex: settings.queueIndex,
     })

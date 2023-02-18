@@ -10,7 +10,7 @@ import { documentSettingsState } from './settings';
  *
  * @readonly
  */
-export const currentQueueObjects = selectorFamily<
+export const queueObjects = selectorFamily<
   QueueObjectType[],
   {
     pageIndex: number;
@@ -22,26 +22,6 @@ export const currentQueueObjects = selectorFamily<
     const objects = get(documentPageObjects(field.pageIndex));
     return objects.filter((object) => isExistObjectOnQueue(object, field.queueIndex));
   },
-});
-
-/**
- * @description
- * 특정 큐에 존재하는 오브젝트들의 UUID를 관리하는 셀렉터
- *
- * @readonly
- */
-export const currentQueueObjectUUIDs = selectorFamily<
-  string[],
-  {
-    pageIndex: number;
-    queueIndex: number;
-  }
->({
-  key: 'currentQueueObjectUUIDs',
-  get: (field) => ({ get }): string[] => {
-    const objects = get(currentQueueObjects(field));
-    return objects.map((object) => object.uuid);
-  }
 });
 
 /**

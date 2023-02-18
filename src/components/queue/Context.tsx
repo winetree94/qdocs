@@ -2,24 +2,69 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueContextMenu } from 'components/context-menu/Context';
+import { useRecoilState } from 'recoil';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
+import { documentPageObjects } from 'store/page';
 import styles from './Context.module.scss';
 
-export const ContextContent: React.FC = () => {
+export const QueueObjectContextContent: React.FC = () => {
   const { settings } = useSettings();
+  const [objects, setObjects] = useRecoilState(documentPageObjects(settings.queuePage));
+  const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
   const { queueDocument, ...setQueueDocument } = useQueueDocument();
+
+  /**
+   * @description
+   * 현재 큐에서 오브젝트를 제거, 생성된 큐에서 제거를 시도한 경우 영구히 제거한다.
+   */
+  const onRemoveObject = (): void => {
+    const pendingCompleteRemoveUUIDs: string[] = [];
+    const updateModels = settings.selectedObjectUUIDs.reduce<{ [key: string]: ObjectQueueEffects }>((result, uuid) => {
+      if (effects[uuid].create) {
+        pendingCompleteRemoveUUIDs.push(uuid);
+        return result;
+      }
+      result[uuid] = {
+        ...effects[uuid],
+        remove: {
+          type: 'remove',
+          duration: 0,
+          timing: 'linear',
+          ...effects[uuid]?.remove,
+        },
+      };
+      return result;
+    }, {});
+
+    if (Object.values(updateModels).length > 0) {
+      setEffects({
+        ...effects,
+        ...updateModels,
+      });
+    }
+    if (pendingCompleteRemoveUUIDs.length > 0) {
+      onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
+    }
+  };
+
+  /**
+   * @description
+   * 오브젝트를 영구히 제거
+   */
+  const onCompletelyRemoveClick = (uuids: string[]): void => {
+    setObjects([
+      ...objects.filter((object) => !uuids.includes(object.uuid)),
+    ]);
+  };
 
   return (
     <QueueContextMenu.Content
       onMouseDown={(e): void => e.stopPropagation()}>
-      <QueueContextMenu.Item
-        onClick={(): void => setQueueDocument.removeObjectOnQueue(settings.selectedObjectUUIDs)}
-      >
+      <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
         현재 큐에서 삭제{' '}
         <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item
-        onClick={(): void => setQueueDocument.removeObject(settings.selectedObjectUUIDs)}
-      >
+      <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectUUIDs)}>
         오브젝트 삭제{' '}
         <div className={styles.RightSlot}>
           ⌘+Backspace

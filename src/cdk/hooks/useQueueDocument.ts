@@ -9,38 +9,22 @@ import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
 import { useSettings } from './useSettings';
 
-export interface RectUpdateModel {
-  uuid: string;
-  queueIndex: number;
-  rect: QueueRect;
-}
-
-export interface RotateUpdateModel {
-  uuid: string;
-  queueIndex: number;
-  rotate: QueueRotate;
-}
-
-
-
 export interface UseQueueDocument {
   readonly queueDocument: QueueDocument;
-  readonly selectedObjects: QueueObjectType[];
   changeObjectIndex: (
     fromUUIDs: string[],
     to: 'start' | 'end' | 'forward' | 'backward'
   ) => void;
-  removeObjectOnQueue: (uuids: string[]) => void;
-  removeObject: (uuids: string[]) => void;
 }
 
 /**
  * todo
  * update temporary visible prop
+ * @deprecated
  */
 export const useQueueDocument = (): UseQueueDocument => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const { settings, ...setSettings } = useSettings();
+  const { settings } = useSettings();
 
   const changeObjectIndex = (
     fromUUIDs: string[],
@@ -102,70 +86,8 @@ export const useQueueDocument = (): UseQueueDocument => {
     });
   };
 
-  const removeObjectOnQueue = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.reduce<
-      QueueObjectType[]
-    >((result, object) => {
-      if (!uuids.includes(object.uuid)) {
-        result.push(object);
-        return result;
-      }
-      const newObject: QueueObjectType = {
-        ...object,
-        effects: object.effects.filter(
-          (effect) => effect.index < settings.queueIndex
-        ),
-      };
-      if (newObject.effects.length === 0) {
-        return result;
-      }
-      newObject.effects.push({
-        index: settings.queueIndex,
-        duration: 0,
-        timing: 'linear',
-        type: 'remove',
-      });
-      result.push(newObject);
-      return result;
-    }, []);
-    setSettings.setSelectedObjectUUIDs([]);
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects,
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
-  };
-
-  const removeObject = (uuids: string[]): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.filter(
-      (object) => !uuids.includes(object.uuid)
-    );
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects,
-    };
-    setQueueDocument({
-      ...queueDocument!,
-      pages: newPages,
-    });
-  };
-
-  const selectedObjects = queueDocument.pages[
-    settings.queuePage
-  ].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid)
-  );
-
   return {
     queueDocument,
-    selectedObjects,
     changeObjectIndex,
-    removeObjectOnQueue,
-    removeObject,
   };
 };

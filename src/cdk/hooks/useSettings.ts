@@ -60,6 +60,9 @@ export interface UseSettingsHook {
   setPresentationMode: (presentationMode: boolean) => void;
 }
 
+/**
+ * @deprecated
+ */
 export const useSettings = (): UseSettingsHook => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
 

@@ -15,7 +15,7 @@ import styles from './Editor.module.scss';
 import { QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { currentQueueObjects } from 'store/object';
+import { queueObjects } from 'store/object';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useBatching } from 'cdk/hooks/useUndo';
 import { ResizerEvent } from 'components/queue/Resizer';
@@ -33,7 +33,7 @@ export const QueueEditor: FunctionComponent = () => {
   const queueDocument = useRecoilValue(documentState);
   const { settings, ...setSettings } = useSettings();
 
-  const objects = useRecoilValue(currentQueueObjects({
+  const objects = useRecoilValue(queueObjects({
     pageIndex: settings.queuePage,
     queueIndex: settings.queueIndex,
   }));

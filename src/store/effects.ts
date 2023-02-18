@@ -1,10 +1,11 @@
 import { cloneDeep } from 'lodash';
-import { FadeEffect, FillEffect, MoveEffect, RotateEffect, ScaleEffect, StrokeEffect, TextEffect } from 'model/effect';
+import { CreateEffect, FadeEffect, FillEffect, MoveEffect, OBJECT_EFFECT_META, RemoveEffect, RotateEffect, ScaleEffect, StrokeEffect, TextEffect } from 'model/effect';
 import { OBJECT_PROPERTY_META, QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale, QueueStroke, QueueText } from 'model/property';
 import { DefaultValue, selectorFamily } from 'recoil';
 import { documentPageObjects } from 'store/page';
 
 export interface ObjectQueueEffects {
+  [OBJECT_EFFECT_META.CREATE]?: Omit<CreateEffect, 'index'>;
   [OBJECT_PROPERTY_META.FADE]?: Omit<FadeEffect, 'index'>;
   [OBJECT_PROPERTY_META.FILL]?: Omit<FillEffect, 'index'>;
   [OBJECT_PROPERTY_META.RECT]?: Omit<MoveEffect, 'index'>;
@@ -12,6 +13,7 @@ export interface ObjectQueueEffects {
   [OBJECT_PROPERTY_META.SCALE]?: Omit<ScaleEffect, 'index'>;
   [OBJECT_PROPERTY_META.STROKE]?: Omit<StrokeEffect, 'index'>;
   [OBJECT_PROPERTY_META.TEXT]?: Omit<TextEffect, 'index'>;
+  [OBJECT_EFFECT_META.REMOVE]?: Omit<RemoveEffect, 'index'>;
 }
 
 /**
@@ -40,6 +42,9 @@ export const objectQueueEffects = selectorFamily<
       object.effects
         .filter((effect) => effect.index === field.queueIndex)
         .forEach((effect) => {
+          if (effect.type === 'create') {
+            result[uuid][OBJECT_EFFECT_META.CREATE] = effect;
+          }
           if (effect.type === 'fade') {
             result[uuid][OBJECT_PROPERTY_META.FADE] = effect;
           }
@@ -61,6 +66,9 @@ export const objectQueueEffects = selectorFamily<
           if (effect.type === 'text') {
             result[uuid][OBJECT_PROPERTY_META.TEXT] = effect;
           }
+          if (effect.type === 'remove') {
+            result[uuid][OBJECT_EFFECT_META.REMOVE] = effect;
+          }
         });
       return result;
     }, {});
@@ -73,9 +81,7 @@ export const objectQueueEffects = selectorFamily<
     const objects = get(selector);
     const newObjects = objects.map((object) => {
       const newObject = cloneDeep(object);
-
-      const createEffect = newObject.effects
-        .find((effect) => effect.type === 'create');
+      const existCreateEffectIndex = newObject.effects.findIndex((effect) => effect.type === 'create');
 
       /**
        * @description
@@ -83,7 +89,7 @@ export const objectQueueEffects = selectorFamily<
        * 이펙트에 추가하지 않고 오브젝트의 속성을 업데이트 시킨다.
        * 편의성 때문에 여기서 넣었는데 이게 맞는지는 고민이 필요
        */
-      if (createEffect.index === field.queueIndex) {
+      if (newObject.effects[existCreateEffectIndex].index === field.queueIndex) {
         newObject.fade = newValue[object.uuid].fade?.fade || newObject.fade;
         newObject.fill = newValue[object.uuid].fill?.fill || newObject.fill;
         newObject.rect = newValue[object.uuid].rect?.rect || newObject.rect;
@@ -225,6 +231,28 @@ export const objectQueueEffects = selectorFamily<
         }
       } else if (existTextEffectIndex !== -1) {
         newObject.effects.splice(existTextEffectIndex, 1);
+      }
+
+      /**
+       * @description
+       * Remove 이펙트가 변경된 경우, Remove 이펙트 이후 모든 이펙트를 제거해야 함
+       */
+      const existRemoveEffectIndex = newObject.effects.findIndex((effect) => effect.type === 'remove');
+      if (newValue[object.uuid].remove) {
+        if (existRemoveEffectIndex === -1) {
+          newObject.effects.push({
+            ...newValue[object.uuid].remove,
+            index: field.queueIndex,
+          });
+        } else {
+          newObject.effects[existRemoveEffectIndex] = {
+            ...newValue[object.uuid].remove,
+            index: field.queueIndex,
+          };
+        }
+        newObject.effects = newObject.effects.filter((effect) => effect.index <= field.queueIndex);
+      } else if (existRemoveEffectIndex !== -1) {
+        newObject.effects.splice(existRemoveEffectIndex, 1);
       }
 
       newObject.effects.sort((a, b) => a.index - b.index);

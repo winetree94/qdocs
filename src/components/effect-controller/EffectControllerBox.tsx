@@ -11,7 +11,7 @@ import { documentState } from 'store/document';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { useSettings } from 'cdk/hooks/useSettings';
-import { currentQueueObjects } from 'store/object';
+import { queueObjects } from 'store/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
@@ -125,7 +125,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
 
   const selectedObjects = useRecoilValue(
-    currentQueueObjects({
+    queueObjects({
       pageIndex: settings.queuePage,
       queueIndex: settings.queueIndex,
     })
