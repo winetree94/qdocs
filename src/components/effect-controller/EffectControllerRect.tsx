@@ -1,8 +1,9 @@
 import { useSettings } from 'cdk/hooks/useSettings';
+import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
 import { useRecoilState } from 'recoil';
-import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
+import { objectQueueEffects } from 'store/effects';
 
 export const EffectControllerRect = (): ReactElement => {
   const { settings } = useSettings();
@@ -17,22 +18,24 @@ export const EffectControllerRect = (): ReactElement => {
   const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
-    const newEffects = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: ObjectQueueEffects;
-    }>((result, uuid) => {
-      result[uuid] = {
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: MoveEffect = {
+        ...firstObjectRectEffect,
+        index: settings.queueIndex,
         rect: {
-          ...effects[uuid].rect,
-          rect: {
-            ...effects[uuid].rect.rect,
-            ...rect,
-          },
+          ...firstObjectRectEffect.rect,
+          ...rect,
         },
       };
-      return result;
-    }, {});
 
-    setEffects(newEffects);
+      setEffects((prevEffects) => ({
+        ...prevEffects,
+        [objectUUID]: {
+          ...prevEffects[objectUUID],
+          rect: nextEffect,
+        },
+      }));
+    });
   };
 
   return (

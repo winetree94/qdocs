@@ -1,18 +1,43 @@
+import { useSettings } from 'cdk/hooks/useSettings';
 import { RotateEffect } from 'model/effect';
-import { ReactElement, useEffect, useState } from 'react';
+import { QueueRotate } from 'model/property';
+import { ReactElement } from 'react';
+import { useRecoilState } from 'recoil';
+import { objectQueueEffects } from 'store/effects';
 
-export type EffectControllerRotateProps = {
-  rotateEffect: RotateEffect;
-};
+export const EffectControllerRotate = (): ReactElement => {
+  const { settings } = useSettings();
 
-export const EffectControllerRotate = ({
-  rotateEffect,
-}: EffectControllerRotateProps): ReactElement => {
-  const [rotate, setRotate] = useState(Math.round(rotateEffect.rotate.degree));
+  const [effects, setEffects] = useRecoilState(
+    objectQueueEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  );
 
-  useEffect(() => {
-    setRotate(Math.round(rotateEffect.rotate.degree));
-  }, [rotateEffect.rotate.degree]);
+  const firstObjectRotateEffect =
+    effects[settings.selectedObjectUUIDs[0]].rotate;
+
+  const handleCurrentRotateChange = (rotate: Partial<QueueRotate>): void => {
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: RotateEffect = {
+        ...firstObjectRotateEffect,
+        index: settings.queueIndex,
+        rotate: {
+          ...firstObjectRotateEffect.rotate,
+          ...rotate,
+        },
+      };
+
+      setEffects((prevEffects) => ({
+        ...prevEffects,
+        [objectUUID]: {
+          ...prevEffects[objectUUID],
+          rotate: nextEffect,
+        },
+      }));
+    });
+  };
 
   return (
     <div>
@@ -21,9 +46,11 @@ export const EffectControllerRotate = ({
         <input
           className="w-full"
           type="number"
-          name="rotate"
-          value={rotate}
-          onChange={(e): void => setRotate(parseInt(e.currentTarget.value))}
+          step={5}
+          value={firstObjectRotateEffect.rotate.degree}
+          onChange={(e): void => {
+            handleCurrentRotateChange({ degree: parseInt(e.target.value) });
+          }}
         />
       </div>
     </div>
