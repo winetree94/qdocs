@@ -349,7 +349,6 @@ export const QueueEditor: FunctionComponent = () => {
                         onOpenChange={(open): void => onObjectContextMenuOpenChange(object.uuid, open)}>
                         <QueueContextMenu.Trigger>
                           <QueueObject.Container
-                            className="queue-object-root"
                             object={object}
                             detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
                             documentScale={settings.scale}
