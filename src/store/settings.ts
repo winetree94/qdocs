@@ -1,5 +1,5 @@
-import { atom, selector } from 'recoil';
-import { documentState } from './document';
+import { atom, DefaultValue, selector } from 'recoil';
+import { objectsByUUID } from './object';
 
 export interface QueueDocumentSettings {
   queuePage: number;
@@ -26,13 +26,63 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
   },
 });
 
-export const getSelectedObjects = selector({
+/**
+ * @description
+ * 확대 배율을 관리하는 selector
+ */
+export const scale = selector({
+  key: 'scale',
+  get: ({ get }) => get(documentSettingsState).scale,
+  set: ({ set, get }, newValue) => {
+    if (newValue instanceof DefaultValue) {
+      return;
+    }
+    const settings = get(documentSettingsState);
+    set(documentSettingsState, {
+      ...settings,
+      scale: Math.max(newValue, 0.25),
+    });
+  },
+});
+
+/**
+ * @description
+ * 현재 페이지를 관리하는 selector
+ */
+export const page = selector({
+  key: 'page',
+  get: ({ get }) => get(documentSettingsState).queuePage,
+  set: ({ set, get }, newValue) => {
+    if (newValue instanceof DefaultValue) {
+      return;
+    }
+    const settings = get(documentSettingsState);
+    set(documentSettingsState, {
+      ...settings,
+      queuePage: Math.min(Math.max(newValue, 0), 100),
+    });
+  }
+});
+
+/**
+ * @description
+ * 선택된 오브젝트를 관리하는 selector
+ */
+export const selectedObject = selector({
   key: 'getSelectedObjects',
   get: ({ get }) => {
-    const queueDocument = get(documentState);
     const settings = get(documentSettingsState);
-    return queueDocument!.pages[settings.queuePage].objects.filter((object) =>
-      settings.selectedObjectUUIDs.includes(object.uuid)
-    );
+    const objects = get(objectsByUUID(settings.queuePage));
+    return settings.selectedObjectUUIDs.map((uuid) => objects[uuid]);
+  },
+  set: ({ set, get }, newValues) => {
+    if (newValues instanceof DefaultValue) {
+      return;
+    }
+    const settings = get(documentSettingsState);
+    set(documentSettingsState, {
+      ...settings,
+      selectedObjectUUIDs: newValues.map((object) => object.uuid),
+    });
   },
 });

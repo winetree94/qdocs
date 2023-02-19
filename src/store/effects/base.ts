@@ -1,6 +1,6 @@
 import { DefaultValue, selectorFamily } from 'recoil';
 import { BaseQueueEffect } from 'model/effect';
-import { documentPageObjects } from 'store/page';
+import { queueDocumentPageObjects } from 'store/page';
 import { cloneDeep } from 'lodash';
 
 export const objectCurrentBasesEffect = selectorFamily<
@@ -17,7 +17,7 @@ export const objectCurrentBasesEffect = selectorFamily<
   get:
     (field) =>
       ({ get }): { [key: string]: BaseQueueEffect } => {
-        const objects = get(documentPageObjects(field.pageIndex));
+        const objects = get(queueDocumentPageObjects(field.pageIndex));
 
         return objects.reduce<{ [key: string]: BaseQueueEffect }>(
           (result, object) => {
@@ -41,7 +41,7 @@ export const objectCurrentBasesEffect = selectorFamily<
           return;
         }
 
-        const selector = documentPageObjects(field.pageIndex);
+        const selector = queueDocumentPageObjects(field.pageIndex);
         const objects = get(selector);
 
         const newObjects = objects.map((object) => {

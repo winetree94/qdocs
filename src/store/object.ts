@@ -1,7 +1,7 @@
 import { isExistObjectOnQueue, QueueObjectType } from 'model/object';
 import { DefaultValue, selectorFamily } from 'recoil';
 import { documentState } from './document';
-import { documentPageObjects } from './page';
+import { queueDocumentPageObjects } from './page';
 import { documentSettingsState } from './settings';
 
 /**
@@ -19,7 +19,7 @@ export const queueObjects = selectorFamily<
 >({
   key: 'currentQueueObject',
   get: (field) => ({ get }): QueueObjectType[] => {
-    const objects = get(documentPageObjects(field.pageIndex));
+    const objects = get(queueDocumentPageObjects(field.pageIndex));
     return objects.filter((object) => isExistObjectOnQueue(object, field.queueIndex));
   },
 });
@@ -34,7 +34,7 @@ export const objectsByUUID = selectorFamily<
 >({
   key: 'objectsByUUID',
   get: (pageIndex) => ({ get }): { [key: string]: QueueObjectType } => {
-    const objects = get(documentPageObjects(pageIndex));
+    const objects = get(queueDocumentPageObjects(pageIndex));
     const result: { [key: string]: QueueObjectType } = {};
     objects.forEach((object) => {
       result[object.uuid] = object;
@@ -45,7 +45,7 @@ export const objectsByUUID = selectorFamily<
     if (newValue instanceof DefaultValue) {
       return;
     }
-    set(documentPageObjects(pageIndex), Object.values(newValue));
+    set(queueDocumentPageObjects(pageIndex), Object.values(newValue));
   },
 });
 

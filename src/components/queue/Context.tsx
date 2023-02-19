@@ -4,12 +4,12 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import { useRecoilState } from 'recoil';
 import { documentState } from 'store/document';
 import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
-import { documentPageObjects } from 'store/page';
+import { queueDocumentPageObjects } from 'store/page';
 import styles from './Context.module.scss';
 
 export const QueueObjectContextContent: React.FC = () => {
   const { settings } = useSettings();
-  const [objects, setObjects] = useRecoilState(documentPageObjects(settings.queuePage));
+  const [objects, setObjects] = useRecoilState(queueDocumentPageObjects(settings.queuePage));
   const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
 

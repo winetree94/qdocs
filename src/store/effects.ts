@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import { CreateEffect, FadeEffect, FillEffect, MoveEffect, OBJECT_EFFECT_META, RemoveEffect, RotateEffect, ScaleEffect, StrokeEffect, TextEffect } from 'model/effect';
 import { OBJECT_PROPERTY_META, QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale, QueueStroke, QueueText } from 'model/property';
 import { DefaultValue, selectorFamily } from 'recoil';
-import { documentPageObjects } from 'store/page';
+import { queueDocumentPageObjects } from 'store/page';
 
 export interface ObjectQueueEffects {
   [OBJECT_EFFECT_META.CREATE]?: Omit<CreateEffect, 'index'>;
@@ -35,7 +35,7 @@ export const objectQueueEffects = selectorFamily<
 >({
   key: 'objectQueueEffects',
   get: (field) => ({ get }): { [key: string]: ObjectQueueEffects } => {
-    const objects = get(documentPageObjects(field.pageIndex));
+    const objects = get(queueDocumentPageObjects(field.pageIndex));
     return objects.reduce<{ [key: string]: ObjectQueueEffects }>((result, object) => {
       const { uuid } = object;
       result[uuid] = {};
@@ -77,7 +77,7 @@ export const objectQueueEffects = selectorFamily<
     if (newValue instanceof DefaultValue) {
       return;
     }
-    const selector = documentPageObjects(field.pageIndex);
+    const selector = queueDocumentPageObjects(field.pageIndex);
     const objects = get(selector);
     const newObjects = objects.map((object) => {
       const newObject = cloneDeep(object);
@@ -288,7 +288,7 @@ export const objectQueueProps = selectorFamily<
 >({
   key: 'objectQueueProps',
   get: (field) => ({ get }): { [key: string]: ObjectQueueProps } => {
-    const objects = get(documentPageObjects(field.pageIndex));
+    const objects = get(queueDocumentPageObjects(field.pageIndex));
     return objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
       const props = object.effects
         .filter((effect) => effect.index <= field.queueIndex)
@@ -345,7 +345,7 @@ export const objectDefaultProps = selectorFamily<
 >({
   key: 'objectDefaultProps',
   get: (field) => ({ get }): { [key: string]: ObjectQueueProps } => {
-    const objects = get(documentPageObjects(field.pageIndex));
+    const objects = get(queueDocumentPageObjects(field.pageIndex));
     return objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
       const props = {
         [OBJECT_PROPERTY_META.FADE]: object.fade,
@@ -364,7 +364,7 @@ export const objectDefaultProps = selectorFamily<
     if (newValue instanceof DefaultValue) {
       return;
     }
-    const selector = documentPageObjects(field.pageIndex);
+    const selector = queueDocumentPageObjects(field.pageIndex);
     const objects = get(selector);
     const newObjects = objects.map((object) => {
       const newObject = {
