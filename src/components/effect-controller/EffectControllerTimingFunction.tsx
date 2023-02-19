@@ -1,15 +1,15 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
-import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueSelect } from 'components/select/Select';
 import { BaseQueueEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { objectCurrentBasesEffect } from 'store/effects/base';
 import { queueObjects } from 'store/object';
+import { documentSettingsState } from 'store/settings';
 
 export const EffectControllerTimingFunction = (): ReactElement => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
 
   const selectedObjects = useRecoilValue(
     queueObjects({

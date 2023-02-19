@@ -1,9 +1,9 @@
-import { useSettings } from 'cdk/hooks/useSettings';
-import { Slider } from 'components/slider';
-import { FadeEffect, QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { FadeEffect, QueueEffectType } from 'model/effect';
 import { objectQueueEffects } from 'store/effects';
+import { documentSettingsState } from 'store/settings';
+import { Slider } from 'components/slider';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -11,7 +11,7 @@ export type EffectControllerFadeProps = {
 };
 
 export const EffectControllerFade = (): ReactElement => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
 
   const [effects, setEffects] = useRecoilState(
     objectQueueEffects({

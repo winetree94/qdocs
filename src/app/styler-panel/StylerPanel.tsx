@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { debounce } from 'cdk/functions/debounce';
-import { useSettings } from 'cdk/hooks/useSettings';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { EffectControllerBox, Slider } from 'components';
@@ -272,18 +271,22 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const [props, setProps] = useRecoilState(objectDefaultProps({
-    pageIndex: settings.queuePage,
-  }));
+  const [props, setProps] = useRecoilState(
+    objectDefaultProps({
+      pageIndex: settings.queuePage,
+    })
+  );
 
-  const object = useRecoilValue(objectByUUID({
-    pageIndex: settings.queuePage,
-    uuid: firstObject.uuid,
-  }));
+  const object = useRecoilValue(
+    objectByUUID({
+      pageIndex: settings.queuePage,
+      uuid: firstObject.uuid,
+    })
+  );
 
   const text = props[firstObject.uuid].text;
 
@@ -296,22 +299,21 @@ const ObjectStyleText = (): ReactElement => {
     });
   };
 
-  const updateText = useCallback((text: Partial<QueueText>): void => {
-    setProps({
-      ...props,
-      [firstObject.uuid]: {
-        ...props[firstObject.uuid],
-        text: {
-          ...props[firstObject.uuid].text,
-          ...text,
-        }
-      },
-    });
-  }, [
-    firstObject.uuid,
-    props,
-    setProps,
-  ]);
+  const updateText = useCallback(
+    (text: Partial<QueueText>): void => {
+      setProps({
+        ...props,
+        [firstObject.uuid]: {
+          ...props[firstObject.uuid],
+          text: {
+            ...props[firstObject.uuid].text,
+            ...text,
+          },
+        },
+      });
+    },
+    [firstObject.uuid, props, setProps]
+  );
 
   useEffect(() => {
     if (

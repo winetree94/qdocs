@@ -1,12 +1,12 @@
-import { useSettings } from 'cdk/hooks/useSettings';
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { objectQueueEffects } from 'store/effects';
+import { documentSettingsState } from 'store/settings';
 
 export const EffectControllerRect = (): ReactElement => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
 
   const [effects, setEffects] = useRecoilState(
     objectQueueEffects({

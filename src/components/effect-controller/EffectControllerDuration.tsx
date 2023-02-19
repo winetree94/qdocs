@@ -1,13 +1,13 @@
-import { useSettings } from 'cdk/hooks/useSettings';
 import { Slider } from 'components/slider';
 import { BaseQueueEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { objectCurrentBasesEffect } from 'store/effects/base';
 import { queueObjects } from 'store/object';
+import { documentSettingsState } from 'store/settings';
 
 export const EffectControllerDuration = (): ReactElement => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
 
   const selectedObjects = useRecoilValue(
     queueObjects({

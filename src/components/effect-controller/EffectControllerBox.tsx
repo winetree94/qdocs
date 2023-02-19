@@ -10,11 +10,11 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
-import { useSettings } from 'cdk/hooks/useSettings';
 import { queueObjects } from 'store/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
+import { documentSettingsState } from 'store/settings';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -121,7 +121,7 @@ const createEffect = (
 };
 
 export const EffectControllerBox = (): ReactElement | null => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);
 
   const selectedObjects = useRecoilValue(
