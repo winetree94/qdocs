@@ -102,7 +102,7 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
         textAlign: textAlign,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg)`,
-        opacity: `${animation.fade.opacity}`,
+        opacity: `${object.fade.opacity * animation.fade.opacity}`,
       }}
       spellCheck="false"
       contentEditable={detail}

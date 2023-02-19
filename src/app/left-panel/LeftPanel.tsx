@@ -28,7 +28,7 @@ export const LeftPanel: FunctionComponent = () => {
   return (
     <div className={clsx(styles.container, 'flex', 'flex-col')}>
       {hasSelectedObjects ? (
-        <QueueTabs.Root defaultValue={PanelTabType.Styler}>
+        <QueueTabs.Root className="h-full" defaultValue={PanelTabType.Styler}>
           <QueueTabs.List>
             <QueueTabs.Trigger value={PanelTabType.Styler}>
               Effects

@@ -25,7 +25,7 @@ export const Icon: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
-      opacity={containerContext.object.fade.opacity}>
+      opacity={containerContext.object.fade.opacity * animation.fade.opacity}>
       <use
         onMouseDown={onRectMousedown}
         href={`${symbolPath}#${containerContext.object.iconType}`}

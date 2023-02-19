@@ -12,7 +12,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
   const fill = convertHex(
     containerContext.object.fill.color,
-    containerContext.object.fill.opacity
+    containerContext.object.fill.opacity * animation.fade.opacity
   );
 
   return (
@@ -27,7 +27,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
-      opacity={containerContext.object.fade.opacity}>
+      opacity={containerContext.object.fade.opacity * animation.fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <rect
