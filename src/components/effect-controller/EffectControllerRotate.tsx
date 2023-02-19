@@ -21,10 +21,10 @@ export const EffectControllerRotate = (): ReactElement => {
   const handleCurrentRotateChange = (rotate: Partial<QueueRotate>): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
       const nextEffect: RotateEffect = {
-        ...firstObjectRotateEffect,
+        ...effects[objectUUID].rotate,
         index: settings.queueIndex,
         rotate: {
-          ...firstObjectRotateEffect.rotate,
+          ...effects[objectUUID].rotate.rotate,
           ...rotate,
         },
       };

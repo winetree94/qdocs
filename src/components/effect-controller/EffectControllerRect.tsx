@@ -20,10 +20,10 @@ export const EffectControllerRect = (): ReactElement => {
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
       const nextEffect: MoveEffect = {
-        ...firstObjectRectEffect,
+        ...effects[objectUUID].rect,
         index: settings.queueIndex,
         rect: {
-          ...firstObjectRectEffect.rect,
+          ...effects[objectUUID].rect.rect,
           ...rect,
         },
       };

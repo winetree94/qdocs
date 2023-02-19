@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { FadeEffect, QueueEffectType } from 'model/effect';
-import { objectQueueEffects } from 'store/effects';
+import { QueueEffectType } from 'model/effect';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 import { documentSettingsState } from 'store/settings';
 import { Slider } from 'components/slider';
 
@@ -40,9 +40,8 @@ export const EffectControllerFade = (): ReactElement => {
     }
 
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
-      const nextEffect: FadeEffect = {
+      const nextEffect: ObjectQueueEffects['fade'] = {
         ...firstObjectRotateEffect,
-        index: settings.queueIndex,
         fade: {
           ...firstObjectRotateEffect.fade,
           opacity,
