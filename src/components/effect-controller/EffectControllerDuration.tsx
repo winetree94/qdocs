@@ -1,13 +1,26 @@
 import { Slider } from 'components/slider';
-import { BaseQueueEffect } from 'model/effect';
+import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectCurrentBasesEffect } from 'store/effects/base';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 import { queueObjects } from 'store/object';
 import { documentSettingsState } from 'store/settings';
 
-export const EffectControllerDuration = (): ReactElement => {
+export type EffectControllerDurationProps = {
+  effectType: QueueEffectType['type'];
+};
+
+export const EffectControllerDuration = ({
+  effectType,
+}: EffectControllerDurationProps): ReactElement => {
   const settings = useRecoilValue(documentSettingsState);
+
+  const [effects, setEffects] = useRecoilState(
+    objectQueueEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  );
 
   const selectedObjects = useRecoilValue(
     queueObjects({
@@ -15,20 +28,12 @@ export const EffectControllerDuration = (): ReactElement => {
       queueIndex: settings.queueIndex,
     })
   ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const [firstSelectedObject] = selectedObjects;
 
-  const [objectBaseEffects, setObjectBaseEffects] = useRecoilState(
-    objectCurrentBasesEffect({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      uuid: settings.selectedObjectUUIDs,
-    })
-  );
+  const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
+  const convertedDuration = firstObjectEffect.duration / 1000;
 
-  const [firstObject] = selectedObjects;
-  const firstObjectBaseEffect = objectBaseEffects[firstObject.uuid];
-  const convertedDuration = firstObjectBaseEffect.duration / 1000;
-
-  const handleTimingFunctionChange = (
+  const handleDurationChange = (
     durationValue: number | number[] | string
   ): void => {
     let duration = 1000;
@@ -45,20 +50,20 @@ export const EffectControllerDuration = (): ReactElement => {
       duration = parseFloat(durationValue);
     }
 
-    const updateModel = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: BaseQueueEffect;
-    }>((result, uuid) => {
-      result[uuid] = {
-        ...objectBaseEffects[uuid],
-        duration: Math.round(duration * 1000),
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: ObjectQueueEffects[QueueEffectType['type']] = {
+        ...effects[objectUUID][effectType],
+        duration: duration * 1000,
       };
-      return result;
-    }, {});
 
-    setObjectBaseEffects((prev) => ({
-      ...prev,
-      ...updateModel,
-    }));
+      setEffects((prevEffects) => ({
+        ...prevEffects,
+        [objectUUID]: {
+          ...prevEffects[objectUUID],
+          [effectType]: nextEffect,
+        },
+      }));
+    });
   };
 
   return (
@@ -71,9 +76,7 @@ export const EffectControllerDuration = (): ReactElement => {
             type="number"
             step={0.1}
             value={convertedDuration}
-            onChange={(e): void =>
-              handleTimingFunctionChange(e.currentTarget.value)
-            }
+            onChange={(e): void => handleDurationChange(e.currentTarget.value)}
           />
         </div>
         <div className="flex items-center w-full">
@@ -82,9 +85,7 @@ export const EffectControllerDuration = (): ReactElement => {
             max={10}
             step={0.1}
             value={[convertedDuration]}
-            onValueChange={(duration): void =>
-              handleTimingFunctionChange(duration)
-            }
+            onValueChange={(duration): void => handleDurationChange(duration)}
           />
         </div>
       </div>

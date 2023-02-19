@@ -35,8 +35,8 @@ export const EffectController = ({
       </QueueButton>
       {open && (
         <div className="flex flex-col gap-2 p-1 bg-gray-100">
-          <EffectControllerDuration />
-          <EffectControllerTimingFunction />
+          <EffectControllerDuration effectType={effectType} />
+          <EffectControllerTimingFunction effectType={effectType} />
           <EffectControllerIndex effectType={effectType} />
         </div>
       )}

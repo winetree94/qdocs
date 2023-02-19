@@ -1,15 +1,28 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
-import { BaseQueueEffect } from 'model/effect';
+import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectCurrentBasesEffect } from 'store/effects/base';
+import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 import { queueObjects } from 'store/object';
 import { documentSettingsState } from 'store/settings';
 
-export const EffectControllerTimingFunction = (): ReactElement => {
+export type EffectControllerTimingFunctionProps = {
+  effectType: QueueEffectType['type'];
+};
+
+export const EffectControllerTimingFunction = ({
+  effectType,
+}: EffectControllerTimingFunctionProps): ReactElement => {
   const settings = useRecoilValue(documentSettingsState);
+
+  const [effects, setEffects] = useRecoilState(
+    objectQueueEffects({
+      pageIndex: settings.queuePage,
+      queueIndex: settings.queueIndex,
+    })
+  );
 
   const selectedObjects = useRecoilValue(
     queueObjects({
@@ -17,40 +30,32 @@ export const EffectControllerTimingFunction = (): ReactElement => {
       queueIndex: settings.queueIndex,
     })
   ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const [firstSelectedObject] = selectedObjects;
 
-  const [objectBaseEffects, setObjectBaseEffects] = useRecoilState(
-    objectCurrentBasesEffect({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      uuid: settings.selectedObjectUUIDs,
-    })
-  );
-
-  const [firstObject] = selectedObjects;
-  const firstObjectBaseEffect = objectBaseEffects[firstObject.uuid];
+  const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
 
   const handleTimingFunctionChange = (timingFunction: string): void => {
-    const updateModel = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: BaseQueueEffect;
-    }>((result, uuid) => {
-      result[uuid] = {
-        ...objectBaseEffects[uuid],
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: ObjectQueueEffects[QueueEffectType['type']] = {
+        ...effects[objectUUID][effectType],
         timing: timingFunction as AnimatorTimingFunctionType,
       };
-      return result;
-    }, {});
 
-    setObjectBaseEffects((prev) => ({
-      ...prev,
-      ...updateModel,
-    }));
+      setEffects((prevEffects) => ({
+        ...prevEffects,
+        [objectUUID]: {
+          ...prevEffects[objectUUID],
+          [effectType]: nextEffect,
+        },
+      }));
+    });
   };
 
   return (
     <div>
       <p className="text-sm">timing function</p>
       <QueueSelect.Root
-        defaultValue={firstObjectBaseEffect.timing}
+        defaultValue={firstObjectEffect.timing}
         onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Trigger>
           <QueueSelect.Value />
