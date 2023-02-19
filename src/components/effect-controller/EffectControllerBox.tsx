@@ -30,7 +30,8 @@ export const EffectController = ({
       <QueueButton
         type="button"
         size="small"
-        onClick={(): void => setOpen((prev) => !prev)}>
+        onClick={(): void => setOpen((prev) => !prev)}
+        disabled={effectType === OBJECT_EFFECT_META.CREATE}>
         <span>{effectType}</span>
       </QueueButton>
       {open && (
