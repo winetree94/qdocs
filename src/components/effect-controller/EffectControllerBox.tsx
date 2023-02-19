@@ -187,7 +187,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 p-2">
       <div>
         <p className="font-medium">Object effects</p>
         <ul>

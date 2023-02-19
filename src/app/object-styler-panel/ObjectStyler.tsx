@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { debounce } from 'cdk/functions/debounce';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import clsx from 'clsx';
-import { EffectControllerBox, Slider } from 'components';
+import { Slider } from 'components';
 import { QueueInput } from 'components/input/Input';
 import { QueueSelect } from 'components/select/Select';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
@@ -26,7 +24,7 @@ import { documentState } from 'store/document';
 import { objectDefaultProps } from 'store/effects';
 import { objectByUUID } from 'store/object';
 import { documentSettingsState } from 'store/settings';
-import classes from './StylerPanel.module.scss';
+import classes from './ObjectStyler.module.scss';
 
 // context start
 interface ObjectStylerContextValue {
@@ -428,7 +426,7 @@ ObjectStyler.Opacity = ObjectStylerOpacity;
 ObjectStyler.Text = ObjectStyleText;
 // ------------- styler end -------------
 
-export const StylerPanel = ({
+export const ObjectStylerPanel = ({
   children,
   className,
   ...props
@@ -440,7 +438,6 @@ export const StylerPanel = ({
   ].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid)
   );
-  const hasSelectedObjects = selectedObjects.length > 0;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setDocumentHistory = useCallback(
@@ -510,34 +507,21 @@ export const StylerPanel = ({
   };
 
   return (
-    <div
-      id="right-panel-root"
-      className={clsx(classes.root, className)}
-      {...props}>
-      {hasSelectedObjects && (
-        <div className="p-2">
-          <EffectControllerBox />
-          <div>
-            <ObjectStyler
-              objects={selectedObjects}
-              onStyleChange={handleStyleChange}>
-              <div className="flex flex-col gap-3">
-                <hr className="my-2" />
-                <ObjectStyler.Background />
-                <hr className="my-2" />
-                {selectedObjects[0].type !== 'icon' && (
-                  <>
-                    <ObjectStyler.Stroke />
-                    <hr className="my-2" />
-                  </>
-                )}
-                <ObjectStyler.Opacity />
-                <ObjectStyler.Text />
-              </div>
-            </ObjectStyler>
-          </div>
+    <div className="p-2">
+      <ObjectStyler objects={selectedObjects} onStyleChange={handleStyleChange}>
+        <div className="flex flex-col gap-3">
+          <ObjectStyler.Background />
+          <hr className="my-2" />
+          {selectedObjects[0].type !== 'icon' && (
+            <>
+              <ObjectStyler.Stroke />
+              <hr className="my-2" />
+            </>
+          )}
+          <ObjectStyler.Opacity />
+          <ObjectStyler.Text />
         </div>
-      )}
+      </ObjectStyler>
     </div>
   );
 };

@@ -1,15 +1,13 @@
-import {
-  FunctionComponent,
-} from 'react';
+import { FunctionComponent } from 'react';
 import clsx from 'clsx';
 import { useRecoilState } from 'recoil';
 import { documentSettingsState } from '../../store/settings';
 import { documentState } from '../../store/document';
 import styles from './LeftPanel.module.scss';
-import { StylerPanel } from 'app/styler-panel/StylerPanel';
 import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
+import { EffectControllerBox } from 'components';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -40,7 +38,7 @@ export const LeftPanel: FunctionComponent = () => {
             </QueueTabs.Trigger>
           </QueueTabs.List>
           <QueueTabs.Content value={PanelTabType.Styler}>
-            <StylerPanel />
+            <EffectControllerBox />
           </QueueTabs.Content>
           <QueueTabs.Content value={PanelTabType.DefaultProp}>
             <DefaultPropPanel />
