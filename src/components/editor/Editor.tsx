@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  FunctionComponent,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -20,13 +18,20 @@ import { queueObjects } from 'store/object';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useBatching } from 'cdk/hooks/useUndo';
 import { ResizerEvent } from 'components/queue/Resizer';
-import { objectDefaultProps, ObjectQueueEffects, objectQueueEffects, objectQueueProps, ObjectQueueProps } from 'store/effects';
+import {
+  objectDefaultProps,
+  ObjectQueueEffects,
+  objectQueueEffects,
+  objectQueueProps,
+  ObjectQueueProps,
+} from 'store/effects';
 import { MoveEffect, RotateEffect } from 'model/effect';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { documentState } from 'store/document';
+import { PresentationRemote } from './PresentationRemote';
 
-export const QueueEditor: FunctionComponent = () => {
+export const QueueEditor: React.FC = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
   const { startBatch, endBatch } = useBatching();
@@ -381,6 +386,9 @@ export const QueueEditor: FunctionComponent = () => {
                   ))}
                 </div>
               </Scaler>
+              {settings.presentationMode && (
+                <PresentationRemote />
+              )}
             </Drawable>
           </QueueScrollArea.Viewport>
           <QueueScrollArea.Scrollbar orientation="vertical">

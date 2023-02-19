@@ -1,16 +1,22 @@
-import { useSettings } from 'cdk/hooks/useSettings';
 import { useRedo, useUndo } from 'cdk/hooks/useUndo';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { queueObjectsByQueueIndexSelector } from 'store/object';
+import { documentSettingsState } from 'store/settings';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
 
-export const QueueSubtoolbar: React.FC = () => {
-  const { settings, ...setSettings } = useSettings();
+export type QueueSubtoolbarProps = {
+  fitToScreen?: () => void;
+}
+
+export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
+  fitToScreen
+}) => {
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   const undo = useUndo();
   const redo = useRedo();
@@ -23,29 +29,34 @@ export const QueueSubtoolbar: React.FC = () => {
     })
   );
 
-  const increaseScale = (): void => {
-    setSettings.setScale(settings.scale + 0.05);
+  const setQueueIndex = (
+    index: number,
+    play?: boolean,
+  ): void => {
+    const target = Math.max(0, index);
+    const sameIndex = settings.queueIndex === target;
+    setSettings({
+      ...settings,
+      queueIndex: target,
+      queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
+      queueStart: play ? performance.now() : -1,
+      selectedObjectUUIDs: [],
+      selectionMode: 'normal',
+    });
   };
 
-  const decreaseScale = (): void => {
-    setSettings.setScale(settings.scale - 0.05);
-  };
-
+  const increaseScale = (): void => setSettings({ ...settings, scale: settings.scale + 0.05 });
+  const decreaseScale = (): void => setSettings({ ...settings, scale: Math.max(settings.scale - 0.05, 0.25) });
+  const setCurrentQueueIndex = (index: number): void => setQueueIndex(index, false);
+  const goToPreviousQueue = (): void => setQueueIndex(settings.queueIndex - 1, true);
+  const goToNextQueue = (): void => setQueueIndex(settings.queueIndex + 1, true);
+  const fitScale = (): void => fitToScreen?.();
   const startPresentationModel = (): void => {
-    setSettings.setPresentationMode(true);
+    setSettings({
+      ...settings,
+      presentationMode: true,
+    });
     document.documentElement.requestFullscreen();
-  };
-
-  const setCurrentQueueIndex = (index: number): void => {
-    setSettings.setQueueIndex(index, false);
-  };
-
-  const goToPreviousQueue = (): void => {
-    setSettings.setQueueIndex(settings.queueIndex - 1, true);
-  };
-
-  const goToNextQueue = (): void => {
-    setSettings.setQueueIndex(settings.queueIndex + 1, true);
   };
 
   return (
@@ -95,6 +106,9 @@ export const QueueSubtoolbar: React.FC = () => {
 
           <div className={styles.ItemGroup}>
             <QueueIconButton onClick={goToPreviousQueue}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-s-fill'} />
+            </QueueIconButton>
+            <QueueIconButton onClick={goToPreviousQueue}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-line'} />
             </QueueIconButton>
             {queues.map((queue, index) => (
@@ -110,6 +124,9 @@ export const QueueSubtoolbar: React.FC = () => {
             <QueueIconButton onClick={goToNextQueue}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
             </QueueIconButton>
+            <QueueIconButton onClick={goToNextQueue}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-s-fill'} />
+            </QueueIconButton>
           </div>
           <div className={styles.ItemGroup}>
             <QueueSeparator.Root
@@ -118,6 +135,9 @@ export const QueueSubtoolbar: React.FC = () => {
               className={styles.Separator}
             />
 
+            <QueueIconButton onClick={fitScale}>
+              <SvgRemixIcon width={15} height={15} icon={'ri-fullscreen-fill'} />
+            </QueueIconButton>
             <QueueIconButton onClick={decreaseScale}>
               <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
             </QueueIconButton>
