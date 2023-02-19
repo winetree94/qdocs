@@ -1,9 +1,9 @@
 .Root {
-  @apply p-2.5 m-auto flex justify-center;
+  @apply p-2.5;
 }
 
-.ActualSizer {
-  // @apply overflow-hidden;
+.ActualSizedContent {
+  @apply m-auto;
 }
 
 .ScaledContent {

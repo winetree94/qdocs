@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   FunctionComponent,
   useEffect,
@@ -334,7 +335,7 @@ export const QueueEditor: FunctionComponent = () => {
                 className={clsx(settings.presentationMode ? styles.scaleFull : '')}>
                 <div
                   ref={canvasDiv}
-                  className={clsx(styles.canvas, 'relative', 'box-border')}
+                  className={clsx(styles.canvas)}
                   style={{
                     width: queueDocument!.documentRect.width,
                     height: queueDocument!.documentRect.height,
