@@ -1,8 +1,8 @@
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { useRecoilState } from 'recoil';
+import { documentState } from 'store/document';
 import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 import { documentPageObjects } from 'store/page';
 import styles from './Context.module.scss';
@@ -11,7 +11,67 @@ export const QueueObjectContextContent: React.FC = () => {
   const { settings } = useSettings();
   const [objects, setObjects] = useRecoilState(documentPageObjects(settings.queuePage));
   const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
-  const { queueDocument, ...setQueueDocument } = useQueueDocument();
+  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+
+  const changeObjectIndex = (
+    fromUUIDs: string[],
+    to: 'start' | 'end' | 'forward' | 'backward'
+  ): void => {
+    const objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
+    switch (to) {
+      case 'start':
+        objects.sort((a, b) => {
+          if (fromUUIDs.includes(a.uuid)) {
+            return 1;
+          }
+          if (fromUUIDs.includes(b.uuid)) {
+            return -1;
+          }
+          return 0;
+        });
+        break;
+      case 'end':
+        objects.sort((a, b) => {
+          if (fromUUIDs.includes(a.uuid)) {
+            return -1;
+          }
+          if (fromUUIDs.includes(b.uuid)) {
+            return 1;
+          }
+          return 0;
+        });
+        break;
+      case 'forward':
+        fromUUIDs.forEach((uuid) => {
+          const objectIndex = objects.findIndex(
+            (object) => object.uuid === uuid
+          );
+          const object = objects[objectIndex];
+          objects.splice(objectIndex, 1);
+          objects.splice(Math.min(objectIndex + 1, objects.length), 0, object);
+        });
+        break;
+      case 'backward':
+        fromUUIDs.forEach((uuid) => {
+          const objectIndex = objects.findIndex(
+            (object) => object.uuid === uuid
+          );
+          const object = objects[objectIndex];
+          objects.splice(objectIndex, 1);
+          objects.splice(Math.min(objectIndex - 1, objects.length), 0, object);
+        });
+        break;
+    }
+    const newPages = queueDocument!.pages.slice(0);
+    newPages[settings.queuePage] = {
+      ...queueDocument!.pages[settings.queuePage],
+      objects: objects,
+    };
+    setQueueDocument({
+      ...queueDocument!,
+      pages: newPages,
+    });
+  };
 
   /**
    * @description
@@ -81,7 +141,7 @@ export const QueueObjectContextContent: React.FC = () => {
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item
         onClick={(): void =>
-          setQueueDocument.changeObjectIndex(
+          changeObjectIndex(
             settings.selectedObjectUUIDs,
             'start'
           )
@@ -90,7 +150,7 @@ export const QueueObjectContextContent: React.FC = () => {
       </QueueContextMenu.Item>
       <QueueContextMenu.Item
         onClick={(): void =>
-          setQueueDocument.changeObjectIndex(
+          changeObjectIndex(
             settings.selectedObjectUUIDs,
             'end'
           )
@@ -99,7 +159,7 @@ export const QueueObjectContextContent: React.FC = () => {
       </QueueContextMenu.Item>
       <QueueContextMenu.Item
         onClick={(): void =>
-          setQueueDocument.changeObjectIndex(
+          changeObjectIndex(
             settings.selectedObjectUUIDs,
             'forward'
           )
@@ -108,7 +168,7 @@ export const QueueObjectContextContent: React.FC = () => {
       </QueueContextMenu.Item>
       <QueueContextMenu.Item
         onClick={(): void =>
-          setQueueDocument.changeObjectIndex(
+          changeObjectIndex(
             settings.selectedObjectUUIDs,
             'backward'
           )

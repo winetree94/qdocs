@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { debounce } from 'cdk/functions/debounce';
-import { useQueueDocument } from 'cdk/hooks/useQueueDocument';
 import { useSettings } from 'cdk/hooks/useSettings';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
