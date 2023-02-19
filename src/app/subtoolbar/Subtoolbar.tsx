@@ -4,7 +4,9 @@ import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { objectEffectsByQueues } from 'store/effects';
 import { queueObjectsByQueueIndexSelector } from 'store/object';
+import { queueDocumentPages } from 'store/page';
 import { documentSettingsState } from 'store/settings';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
@@ -17,6 +19,8 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   fitToScreen
 }) => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const pages = useRecoilValue(queueDocumentPages);
+  const effectsByQueues = useRecoilValue(objectEffectsByQueues({ pageIndex: settings.queuePage }));
 
   const undo = useUndo();
   const redo = useRedo();
@@ -26,7 +30,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
     queueObjectsByQueueIndexSelector({
       start: start,
       end: start + 4,
-    })
+    }),
   );
 
   const setQueueIndex = (
@@ -50,6 +54,50 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const setCurrentQueueIndex = (index: number): void => setQueueIndex(index, false);
   const goToPreviousQueue = (): void => setQueueIndex(settings.queueIndex - 1, true);
   const goToNextQueue = (): void => setQueueIndex(settings.queueIndex + 1, true);
+
+  const rewind = (): void => {
+    // const targetPageQueueIndex = settings.queueIndex - 1;
+    // if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
+    //   setSettings({
+    //     ...settings,
+    //     queuePage: settings.queuePage - 1,
+    //     queueIndex: effectsByQueues.length - 1,
+    //     queuePosition: 'pause',
+    //     queueStart: -1,
+    //     selectedObjectUUIDs: [],
+    //     selectionMode: 'normal',
+    //   });
+    //   return;
+    // }
+    // if (targetPageQueueIndex < 0) {
+    //   return;
+    // }
+    // setQueueIndex(settings.queueIndex - 1, true);
+  };
+
+  const play = (): void => {
+    const targetPageQueueIndex = settings.queueIndex + 1;
+    if (
+      targetPageQueueIndex >= effectsByQueues.length &&
+      settings.queuePage < pages.length - 1
+    ) {
+      setSettings({
+        ...settings,
+        queuePage: settings.queuePage + 1,
+        queueIndex: 0,
+        queuePosition: 'pause',
+        queueStart: -1,
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      });
+      return;
+    }
+    if (targetPageQueueIndex > effectsByQueues.length - 1) {
+      return;
+    }
+    setQueueIndex(settings.queueIndex + 1, true);
+  };
+
   const fitScale = (): void => fitToScreen?.();
   const startPresentationModel = (): void => {
     setSettings({
@@ -105,7 +153,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
           </div>
 
           <div className={styles.ItemGroup}>
-            <QueueIconButton onClick={goToPreviousQueue}>
+            <QueueIconButton onClick={rewind}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-s-fill'} />
             </QueueIconButton>
             <QueueIconButton onClick={goToPreviousQueue}>
@@ -124,7 +172,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
             <QueueIconButton onClick={goToNextQueue}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
             </QueueIconButton>
-            <QueueIconButton onClick={goToNextQueue}>
+            <QueueIconButton onClick={play}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-s-fill'} />
             </QueueIconButton>
           </div>

@@ -17,6 +17,68 @@ export interface ObjectQueueEffects {
 }
 
 /**
+ * queue effect index 기반으로 오브젝트 이펙트들을 관리하는 readonly selector
+ */
+export const objectEffectsByQueues = selectorFamily<
+  { [key: string]: ObjectQueueEffects; }[],
+  { pageIndex: number; }
+>({
+  key: 'objectEffectsByQueues',
+  get: (field) => ({ get }): { [key: string]: ObjectQueueEffects; }[] => {
+    const objects = get(queueDocumentPageObjects(field.pageIndex));
+    const models = objects.reduce<{ [key: string]: ObjectQueueEffects }[]>((result, object) => {
+      const { uuid } = object;
+      object.effects
+        .forEach((effect) => {
+          if (!result[effect.index]) {
+            result[effect.index] = {};
+          }
+          if (!result[effect.index][uuid]) {
+            result[effect.index][uuid] = {};
+          }
+          if (effect.type === 'create') {
+            result[effect.index][uuid][OBJECT_EFFECT_META.CREATE] = effect;
+          }
+          if (effect.type === 'fade') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.FADE] = effect;
+          }
+          if (effect.type === 'fill') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.FILL] = effect;
+          }
+          if (effect.type === 'rect') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.RECT] = effect;
+          }
+          if (effect.type === 'rotate') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.ROTATE] = effect;
+          }
+          if (effect.type === 'scale') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.SCALE] = effect;
+          }
+          if (effect.type === 'stroke') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.STROKE] = effect;
+          }
+          if (effect.type === 'text') {
+            result[effect.index][uuid][OBJECT_PROPERTY_META.TEXT] = effect;
+          }
+          if (effect.type === 'remove') {
+            result[effect.index][uuid][OBJECT_EFFECT_META.REMOVE] = effect;
+          }
+        });
+      return result;
+    }, []);
+
+    // 빈 큐에 채워넣음
+    for (let i = 0; i < models.length; i++) {
+      if (!models[i]) {
+        models[i] = {};
+      }
+    }
+
+    return models;
+  },
+});
+
+/**
  * @description
  * 오브젝트 별로 pageIndex, queueIndex 에 해당하는 이펙트들을 관리하는 셀렉터
  * 이 셀렉터를 활용하면 특정 큐에서 이펙트를 읽기 / 생성 / 수정 / 삭제하는 과정을 간소화 할 수 있다.
