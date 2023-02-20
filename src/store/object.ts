@@ -1,8 +1,6 @@
 import { isExistObjectOnQueue, QueueObjectType } from 'model/object';
 import { DefaultValue, selectorFamily } from 'recoil';
-import { documentState } from './document';
 import { queueDocumentPageObjects } from './page';
-import { documentSettingsState } from './settings';
 
 /**
  * @description
@@ -75,39 +73,4 @@ export const objectByUUID = selectorFamily<
       [field.uuid]: newValue,
     });
   }
-});
-
-export interface Queue {
-  index: number;
-  objects: QueueObjectType[];
-}
-
-/**
- * @description
- * @deprecated
- */
-export const queueObjectsByQueueIndexSelector = selectorFamily<
-  Queue[],
-  { start: number; end: number }
->({
-  key: 'documentObjectByQueueIndex',
-  get: (field) => {
-    return ({ get }): Queue[] => {
-      const r: Queue[] = [];
-      for (let i = Math.max(field.start, 0); i <= field.end; i++) {
-        r.push({
-          index: i,
-          objects: [],
-        });
-      }
-      const document = get(documentState);
-      const settings = get(documentSettingsState);
-      r.forEach((queue) => {
-        queue.objects = document!.pages[settings.queuePage].objects.filter(
-          (object) => isExistObjectOnQueue(object, queue.index)
-        );
-      });
-      return r;
-    };
-  },
 });

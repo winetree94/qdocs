@@ -1,4 +1,4 @@
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 
 export interface QueueDocumentSettings {
   queuePage: number;
@@ -23,4 +23,18 @@ export const documentSettingsState = atom<QueueDocumentSettings>({
     scale: 0.25,
     presentationMode: false,
   },
+});
+
+export const currentQueueRanges = selector<number[]>({
+  key: 'currentQueueRanges',
+  get: ({ get }) => {
+    const { queueIndex } = get(documentSettingsState);
+    const ranges: number[] = [];
+    const rangeStart = Math.max(queueIndex - 2, 0);
+    const rangeEnd = rangeStart + 5;
+    for (let i = rangeStart; i < rangeEnd; i++) {
+      ranges.push(i);
+    }
+    return ranges;
+  }
 });

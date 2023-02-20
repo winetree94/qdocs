@@ -6,9 +6,8 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { objectEffectsByQueues } from 'store/effects';
-import { queueObjectsByQueueIndexSelector } from 'store/object';
 import { queueDocumentPages } from 'store/page';
-import { documentSettingsState } from 'store/settings';
+import { currentQueueRanges, documentSettingsState } from 'store/settings';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
 
@@ -23,17 +22,10 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const pages = useRecoilValue(queueDocumentPages);
   const effectsByQueues = useRecoilValue(objectEffectsByQueues);
   const currentEffectsByQueues = effectsByQueues[settings.queuePage];
+  const ranges = useRecoilValue(currentQueueRanges);
 
   const undo = useUndo();
   const redo = useRedo();
-
-  const start = Math.max(settings.queueIndex - 2, 0);
-  const queues = useRecoilValue(
-    queueObjectsByQueueIndexSelector({
-      start: start,
-      end: start + 4,
-    }),
-  );
 
   const setQueueIndex = (
     index: number,
@@ -142,7 +134,6 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
               <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
             </QueueIconButton>
 
-
             <QueueToggle.Root size='small'>
               <SvgRemixIcon width={15} height={15} icon={'ri-movie-line'} />
             </QueueToggle.Root>
@@ -161,16 +152,16 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
             <QueueIconButton onClick={goToPreviousQueue}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-line'} />
             </QueueIconButton>
-            {queues.map((queue, index) => (
+            {ranges.map((queue) => (
               <QueueIconButton
                 className={clsx(
                   styles.QueueIndicator,
-                  currentEffectsByQueues[queue.index] ? styles.HasEffect : '',
-                  queue.index === settings.queueIndex ? styles.Current : ''
+                  currentEffectsByQueues[queue] ? styles.HasEffect : '',
+                  queue === settings.queueIndex ? styles.Current : ''
                 )}
-                key={index}
-                onClick={(): void => setCurrentQueueIndex(queue.index)}>
-                {queue.index + 1}
+                key={queue}
+                onClick={(): void => setCurrentQueueIndex(queue)}>
+                {queue + 1}
               </QueueIconButton>
             ))}
             <QueueIconButton onClick={goToNextQueue}>
