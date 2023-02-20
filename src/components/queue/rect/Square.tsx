@@ -27,7 +27,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
         transform: `rotate(${animation.rotate.degree}deg)`,
       }}
       viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
-      opacity={containerContext.object.fade.opacity * animation.fade.opacity}>
+      opacity={animation.fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <rect
