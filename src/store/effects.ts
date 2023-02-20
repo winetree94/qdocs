@@ -142,7 +142,7 @@ export const objectQueueEffects = selectorFamily<
       // fade
       const existFadeEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'fade' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].fade) {
+      if (newValue[object.uuid]?.fade) {
         if (existFadeEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].fade,
@@ -161,7 +161,7 @@ export const objectQueueEffects = selectorFamily<
       // fill
       const existFillEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'fill' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].fill) {
+      if (newValue[object.uuid]?.fill) {
         if (existFillEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].fill,
@@ -180,7 +180,7 @@ export const objectQueueEffects = selectorFamily<
       // rect
       const existRectEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'rect' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].rect) {
+      if (newValue[object.uuid]?.rect) {
         if (existRectEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].rect,
@@ -199,7 +199,7 @@ export const objectQueueEffects = selectorFamily<
       // rotate
       const existRotateEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'rotate' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].rotate) {
+      if (newValue[object.uuid]?.rotate) {
         if (existRotateEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].rotate,
@@ -218,7 +218,7 @@ export const objectQueueEffects = selectorFamily<
       // scale
       const existScaleEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'scale' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].scale) {
+      if (newValue[object.uuid]?.scale) {
         if (existScaleEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].scale,
@@ -237,7 +237,7 @@ export const objectQueueEffects = selectorFamily<
       // stroke
       const existStrokeEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'stroke' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].stroke) {
+      if (newValue[object.uuid]?.stroke) {
         if (existStrokeEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].stroke,
@@ -256,7 +256,7 @@ export const objectQueueEffects = selectorFamily<
       // text
       const existTextEffectIndex = newObject.effects
         .findIndex((effect) => effect.type === 'text' && effect.index === field.queueIndex);
-      if (newValue[object.uuid].text) {
+      if (newValue[object.uuid]?.text) {
         if (existTextEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].text,
@@ -277,7 +277,7 @@ export const objectQueueEffects = selectorFamily<
        * Remove 이펙트가 변경된 경우, Remove 이펙트 이후 모든 이펙트를 제거해야 함
        */
       const existRemoveEffectIndex = newObject.effects.findIndex((effect) => effect.type === 'remove');
-      if (newValue[object.uuid].remove) {
+      if (newValue[object.uuid]?.remove) {
         if (existRemoveEffectIndex === -1) {
           newObject.effects.push({
             ...newValue[object.uuid].remove,

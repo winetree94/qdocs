@@ -77,6 +77,17 @@
       background: var(--yellowA5);
     }
   }
+
+  &.transparent {
+    background: var(--whiteA1);
+    &:hover {
+      background: var(--whiteA3);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--whiteA5);
+    }
+  }
 }
 
 @mixin queue-button {

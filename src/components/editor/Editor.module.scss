@@ -15,6 +15,7 @@
 }
 
 .fullscreen {
+  @apply pointer-events-none;
   background: black;
 }
 

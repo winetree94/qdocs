@@ -1,3 +1,11 @@
 .Container {
-  @apply absolute top-0 left-0 w-full h-full pointer-events-none z-30;
+  @apply absolute top-0 left-0 w-full h-full z-30 flex items-end justify-end;
+}
+
+.ButtonGroup {
+  @apply flex flex-row items-center justify-center gap-2 mr-5 mb-5;
+}
+
+.Icon {
+  filter: drop-shadow(1px 1px 2px white);
 }

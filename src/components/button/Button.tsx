@@ -15,7 +15,8 @@ export const QueueButtonColor = {
   BLUE: 'blue',
   RED: 'red',
   YELLOW: 'yellow',
-};
+  TRANSPARENT: 'transparent'
+} as const;
 
 export interface BaseQueueButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -26,7 +27,7 @@ export interface BaseQueueButtonProps
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueueIconButtonProps extends BaseQueueButtonProps {}
+export interface QueueIconButtonProps extends BaseQueueButtonProps { }
 
 export const QueueIconButton: React.ForwardRefExoticComponent<
   QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
@@ -54,7 +55,7 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
 );
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QueueButtonProps extends BaseQueueButtonProps {}
+export interface QueueButtonProps extends BaseQueueButtonProps { }
 
 export const QueueButton: React.ForwardRefExoticComponent<
   QueueButtonProps & React.RefAttributes<HTMLButtonElement>

@@ -97,6 +97,8 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
     setSettings({
       ...settings,
       presentationMode: true,
+      selectedObjectUUIDs: [],
+      selectionMode: 'normal',
     });
     document.documentElement.requestFullscreen();
   };

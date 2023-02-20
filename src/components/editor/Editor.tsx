@@ -414,10 +414,10 @@ export const QueueEditor: React.FC = () => {
                   ))}
                 </div>
               </Scaler>
-              {settings.presentationMode && (
-                <PresentationRemote />
-              )}
             </Drawable>
+            {settings.presentationMode && (
+              <PresentationRemote />
+            )}
           </QueueScrollArea.Viewport>
           <QueueScrollArea.Scrollbar orientation="vertical">
             <QueueScrollArea.Thumb />
