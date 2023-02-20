@@ -1,5 +1,6 @@
 import { useRedo, useUndo } from 'cdk/hooks/useUndo';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
@@ -21,8 +22,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const pages = useRecoilValue(queueDocumentPages);
   const effectsByQueues = useRecoilValue(objectEffectsByQueues);
-
-  console.log(effectsByQueues);
+  const currentEffectsByQueues = effectsByQueues[settings.queuePage];
 
   const undo = useUndo();
   const redo = useRedo();
@@ -163,10 +163,12 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
             </QueueIconButton>
             {queues.map((queue, index) => (
               <QueueIconButton
+                className={clsx(
+                  styles.QueueIndicator,
+                  currentEffectsByQueues[queue.index] ? styles.HasEffect : '',
+                  queue.index === settings.queueIndex ? styles.Current : ''
+                )}
                 key={index}
-                style={{
-                  color: queue.index === settings.queueIndex ? 'red' : 'black',
-                }}
                 onClick={(): void => setCurrentQueueIndex(queue.index)}>
                 {queue.index + 1}
               </QueueIconButton>
