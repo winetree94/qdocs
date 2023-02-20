@@ -136,7 +136,7 @@ export const QueueEditor: React.FC = () => {
         duration: 1000,
         index: settings.queueIndex,
         timing: 'linear',
-        ...queueEffects[uuid].rect,
+        ...queueEffects[uuid]?.rect,
         rect: {
           ...queueProps[uuid].rect,
           x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
@@ -234,7 +234,7 @@ export const QueueEditor: React.FC = () => {
       duration: 1000,
       index: settings.queueIndex,
       timing: 'linear',
-      ...queueEffects[uuid].rect,
+      ...queueEffects[uuid]?.rect,
       rect: {
         ...queueProps[uuid].rect,
         ...rect
@@ -269,7 +269,7 @@ export const QueueEditor: React.FC = () => {
       duration: 1000,
       index: settings.queueIndex,
       timing: 'linear',
-      ...queueEffects[uuid].rotate,
+      ...queueEffects[uuid]?.rotate,
       rotate: {
         degree: degree,
       }

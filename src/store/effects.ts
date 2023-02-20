@@ -92,6 +92,12 @@ export const objectEffectsByQueues = selector<
  *
  * 특정 큐에서 없는 이펙트는 null 로 반환되며, 이펙트가 존재하는 경우 해당 이펙트를 반환한다.
  * 단, 생성된 큐에서 이펙트를 업데이트하는 경우 오브젝트의 기본 속성이 업데이트된다.
+ *
+ * 해당 큐에 오브젝트가 존재해도 큐의 이펙트가 존재하지 않는 경우 해당 객체는 반환되지 않는다.
+ * nullish operator 를 반드시 함께 사용해야 한다.
+ * @example
+ * const effectsByQueue = useRecoilValue(objectEffectsByQueues);
+ * effects[uuid]?.[effectType]?.[property]
  */
 export const objectQueueEffects = selectorFamily<
   {
@@ -104,43 +110,7 @@ export const objectQueueEffects = selectorFamily<
 >({
   key: 'objectQueueEffects',
   get: (field) => ({ get }): { [key: string]: ObjectQueueEffects } => {
-    const objects = get(queueDocumentPageObjects(field.pageIndex));
-    return objects.reduce<{ [key: string]: ObjectQueueEffects }>((result, object) => {
-      const { uuid } = object;
-      result[uuid] = {};
-      object.effects
-        .filter((effect) => effect.index === field.queueIndex)
-        .forEach((effect) => {
-          if (effect.type === 'create') {
-            result[uuid][OBJECT_EFFECT_META.CREATE] = effect;
-          }
-          if (effect.type === 'fade') {
-            result[uuid][OBJECT_PROPERTY_META.FADE] = effect;
-          }
-          if (effect.type === 'fill') {
-            result[uuid][OBJECT_PROPERTY_META.FILL] = effect;
-          }
-          if (effect.type === 'rect') {
-            result[uuid][OBJECT_PROPERTY_META.RECT] = effect;
-          }
-          if (effect.type === 'rotate') {
-            result[uuid][OBJECT_PROPERTY_META.ROTATE] = effect;
-          }
-          if (effect.type === 'scale') {
-            result[uuid][OBJECT_PROPERTY_META.SCALE] = effect;
-          }
-          if (effect.type === 'stroke') {
-            result[uuid][OBJECT_PROPERTY_META.STROKE] = effect;
-          }
-          if (effect.type === 'text') {
-            result[uuid][OBJECT_PROPERTY_META.TEXT] = effect;
-          }
-          if (effect.type === 'remove') {
-            result[uuid][OBJECT_EFFECT_META.REMOVE] = effect;
-          }
-        });
-      return result;
-    }, {});
+    return get(objectEffectsByQueues)[field.pageIndex]?.[field.queueIndex] || {};
   },
   set: (field) => ({ get, set }, newValue): void => {
     if (newValue instanceof DefaultValue) {
