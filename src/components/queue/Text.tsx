@@ -16,22 +16,22 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
     object.text.verticalAlign === 'middle'
       ? 'center'
       : object.text.verticalAlign === 'top'
-      ? 'flex-start'
-      : 'flex-end';
+        ? 'flex-start'
+        : 'flex-end';
 
   const horizontalAlign =
     object.text.horizontalAlign === 'center'
       ? 'center'
       : object.text.horizontalAlign === 'left'
-      ? 'flex-start'
-      : 'flex-end';
+        ? 'flex-start'
+        : 'flex-end';
 
   const textAlign =
     object.text.horizontalAlign === 'center'
       ? 'center'
       : object.text.horizontalAlign === 'left'
-      ? 'left'
-      : 'right';
+        ? 'left'
+        : 'right';
 
   const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === 'Enter') {
@@ -102,7 +102,7 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
         textAlign: textAlign,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg)`,
-        opacity: `${object.fade.opacity * animation.fade.opacity}`,
+        opacity: `${animation.fade.opacity}`,
       }}
       spellCheck="false"
       contentEditable={detail}
