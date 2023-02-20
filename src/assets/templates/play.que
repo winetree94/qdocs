@@ -1,0 +1,305 @@
+{
+  "documentName": "Untitled",
+  "documentRect": {
+    "width": 1920,
+    "height": 1080,
+    "fill": "#ffffff"
+  },
+  "pages": [
+    {
+      "pageName": "Page-1",
+      "objects": [
+        {
+          "type": "rect",
+          "uuid": "ed1337fb-3413-49f0-81ae-fe312011ee15",
+          "rect": {
+            "x": 810,
+            "y": 390,
+            "width": 300,
+            "height": 300
+          },
+          "stroke": {
+            "width": 1,
+            "color": "#000000",
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "1번 큐에서 생성,<br>4번 큐에서 제거",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "effects": [
+            {
+              "type": "create",
+              "timing": "linear",
+              "duration": 0,
+              "index": 0
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "index": 1,
+              "timing": "linear",
+              "rect": {
+                "x": 330,
+                "y": 180,
+                "width": 300,
+                "height": 300
+              }
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "index": 2,
+              "timing": "linear",
+              "rect": {
+                "x": 1290,
+                "y": 390,
+                "width": 300,
+                "height": 300
+              }
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "index": 3,
+              "timing": "linear",
+              "rect": {
+                "x": 540,
+                "y": 570,
+                "width": 300,
+                "height": 300
+              }
+            }
+          ]
+        },
+        {
+          "type": "circle",
+          "uuid": "25e1fc22-401e-48c4-9c54-e977941f4d22",
+          "rect": {
+            "x": 300,
+            "y": 150,
+            "width": 300,
+            "height": 300
+          },
+          "stroke": {
+            "width": 1,
+            "color": "#000000",
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "1번 큐에서 생성",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "effects": [
+            {
+              "type": "create",
+              "timing": "linear",
+              "duration": 0,
+              "index": 0
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "index": 1,
+              "timing": "linear",
+              "rect": {
+                "x": 240,
+                "y": 600,
+                "width": 300,
+                "height": 300
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Page-2",
+      "objects": [
+        {
+          "type": "rect",
+          "uuid": "b1009b3a-e5ad-4367-8e93-38954dcb531d",
+          "rect": {
+            "x": 540,
+            "y": 360,
+            "width": 300,
+            "height": 300
+          },
+          "stroke": {
+            "width": 1,
+            "color": "#000000",
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "1번큐에서 생성<br>3번큐에서 제거<br>&nbsp;",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "effects": [
+            {
+              "type": "create",
+              "timing": "linear",
+              "duration": 0,
+              "index": 0
+            },
+            {
+              "type": "remove",
+              "duration": 0,
+              "timing": "linear",
+              "index": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Page-3",
+      "objects": [
+        {
+          "type": "rect",
+          "uuid": "0c6bddb2-48a3-4465-be2c-d47b2a57ebe3",
+          "rect": {
+            "x": 810,
+            "y": 390,
+            "width": 300,
+            "height": 300
+          },
+          "stroke": {
+            "width": 1,
+            "color": "#000000",
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "1번큐 생성",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "effects": [
+            {
+              "type": "create",
+              "timing": "linear",
+              "duration": 0,
+              "index": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pageName": "Page-4",
+      "objects": [
+        {
+          "type": "icon",
+          "iconType": "ri-4k-fill",
+          "uuid": "d54c4039-3cad-4871-b62f-39a3762c6cc1",
+          "rect": {
+            "x": 810,
+            "y": 390,
+            "width": 300,
+            "height": 300
+          },
+          "fill": {
+            "color": "#000000",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "stroke": {
+            "color": "#000000",
+            "dasharray": "",
+            "width": 0
+          },
+          "effects": [
+            {
+              "type": "create",
+              "timing": "linear",
+              "duration": 0,
+              "index": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

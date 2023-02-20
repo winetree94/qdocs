@@ -1,8 +1,8 @@
 import { cloneDeep } from 'lodash';
 import { CreateEffect, FadeEffect, FillEffect, MoveEffect, OBJECT_EFFECT_META, RemoveEffect, RotateEffect, ScaleEffect, StrokeEffect, TextEffect } from 'model/effect';
 import { OBJECT_PROPERTY_META, QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale, QueueStroke, QueueText } from 'model/property';
-import { DefaultValue, selectorFamily } from 'recoil';
-import { queueDocumentPageObjects } from 'store/page';
+import { DefaultValue, selector, selectorFamily } from 'recoil';
+import { queueDocumentPageObjects, queueDocumentPages } from 'store/page';
 
 export interface ObjectQueueEffects {
   [OBJECT_EFFECT_META.CREATE]?: Omit<CreateEffect, 'index'>;
@@ -18,63 +18,70 @@ export interface ObjectQueueEffects {
 
 /**
  * queue effect index 기반으로 오브젝트 이펙트들을 관리하는 readonly selector
+ *
+ * const effectsByQueue = useRecoilValue(objectEffectsByQueues);
+ * effectsByQueue[pageNumber][queueNumber][uuid][effectType]
  */
-export const objectEffectsByQueues = selectorFamily<
-  { [key: string]: ObjectQueueEffects; }[],
-  { pageIndex: number; }
+export const objectEffectsByQueues = selector<
+  { [key: string]: ObjectQueueEffects; }[][]
 >({
   key: 'objectEffectsByQueues',
-  get: (field) => ({ get }): { [key: string]: ObjectQueueEffects; }[] => {
-    const objects = get(queueDocumentPageObjects(field.pageIndex));
-    const models = objects.reduce<{ [key: string]: ObjectQueueEffects }[]>((result, object) => {
-      const { uuid } = object;
-      object.effects
-        .forEach((effect) => {
-          if (!result[effect.index]) {
-            result[effect.index] = {};
-          }
-          if (!result[effect.index][uuid]) {
-            result[effect.index][uuid] = {};
-          }
-          if (effect.type === 'create') {
-            result[effect.index][uuid][OBJECT_EFFECT_META.CREATE] = effect;
-          }
-          if (effect.type === 'fade') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.FADE] = effect;
-          }
-          if (effect.type === 'fill') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.FILL] = effect;
-          }
-          if (effect.type === 'rect') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.RECT] = effect;
-          }
-          if (effect.type === 'rotate') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.ROTATE] = effect;
-          }
-          if (effect.type === 'scale') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.SCALE] = effect;
-          }
-          if (effect.type === 'stroke') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.STROKE] = effect;
-          }
-          if (effect.type === 'text') {
-            result[effect.index][uuid][OBJECT_PROPERTY_META.TEXT] = effect;
-          }
-          if (effect.type === 'remove') {
-            result[effect.index][uuid][OBJECT_EFFECT_META.REMOVE] = effect;
-          }
-        });
+  get: ({ get }): { [key: string]: ObjectQueueEffects; }[][] => {
+    const pages = get(queueDocumentPages);
+
+    return pages.reduce<{ [key: string]: ObjectQueueEffects; }[][]>((result, current) => {
+      const queues: { [key: string]: ObjectQueueEffects; }[] = [];
+
+      current.objects.forEach((object) => {
+        const { uuid } = object;
+        object.effects
+          .forEach((effect) => {
+            if (!queues[effect.index]) {
+              queues[effect.index] = {};
+            }
+            if (!queues[effect.index][uuid]) {
+              queues[effect.index][uuid] = {};
+            }
+            if (effect.type === 'create') {
+              queues[effect.index][uuid][OBJECT_EFFECT_META.CREATE] = effect;
+            }
+            if (effect.type === 'fade') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.FADE] = effect;
+            }
+            if (effect.type === 'fill') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.FILL] = effect;
+            }
+            if (effect.type === 'rect') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.RECT] = effect;
+            }
+            if (effect.type === 'rotate') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.ROTATE] = effect;
+            }
+            if (effect.type === 'scale') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.SCALE] = effect;
+            }
+            if (effect.type === 'stroke') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.STROKE] = effect;
+            }
+            if (effect.type === 'text') {
+              queues[effect.index][uuid][OBJECT_PROPERTY_META.TEXT] = effect;
+            }
+            if (effect.type === 'remove') {
+              queues[effect.index][uuid][OBJECT_EFFECT_META.REMOVE] = effect;
+            }
+          });
+      });
+
+      // 빈 큐에 채워넣음
+      for (let i = 0; i < queues.length; i++) {
+        if (!queues[i]) {
+          queues[i] = {};
+        }
+      }
+
+      result.push(queues);
       return result;
     }, []);
-
-    // 빈 큐에 채워넣음
-    for (let i = 0; i < models.length; i++) {
-      if (!models[i]) {
-        models[i] = {};
-      }
-    }
-
-    return models;
   },
 });
 

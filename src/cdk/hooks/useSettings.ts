@@ -86,6 +86,7 @@ export const useSettings = (): UseSettingsHook => {
     setSettings({
       ...settings,
       queuePage: index,
+      queueIndex: 0,
       queueStart: -1,
       queuePosition: 'pause',
       selectedObjectUUIDs: [],

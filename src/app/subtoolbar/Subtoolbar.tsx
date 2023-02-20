@@ -20,7 +20,9 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
 }) => {
   const [settings, setSettings] = useRecoilState(documentSettingsState);
   const pages = useRecoilValue(queueDocumentPages);
-  const effectsByQueues = useRecoilValue(objectEffectsByQueues({ pageIndex: settings.queuePage }));
+  const effectsByQueues = useRecoilValue(objectEffectsByQueues);
+
+  console.log(effectsByQueues);
 
   const undo = useUndo();
   const redo = useRedo();
@@ -56,29 +58,29 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const goToNextQueue = (): void => setQueueIndex(settings.queueIndex + 1, true);
 
   const rewind = (): void => {
-    // const targetPageQueueIndex = settings.queueIndex - 1;
-    // if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
-    //   setSettings({
-    //     ...settings,
-    //     queuePage: settings.queuePage - 1,
-    //     queueIndex: effectsByQueues.length - 1,
-    //     queuePosition: 'pause',
-    //     queueStart: -1,
-    //     selectedObjectUUIDs: [],
-    //     selectionMode: 'normal',
-    //   });
-    //   return;
-    // }
-    // if (targetPageQueueIndex < 0) {
-    //   return;
-    // }
-    // setQueueIndex(settings.queueIndex - 1, true);
+    const targetPageQueueIndex = settings.queueIndex - 1;
+    if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
+      setSettings({
+        ...settings,
+        queuePage: settings.queuePage - 1,
+        queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
+        queuePosition: 'pause',
+        queueStart: -1,
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      });
+      return;
+    }
+    if (targetPageQueueIndex < 0) {
+      return;
+    }
+    setQueueIndex(settings.queueIndex - 1, true);
   };
 
   const play = (): void => {
     const targetPageQueueIndex = settings.queueIndex + 1;
     if (
-      targetPageQueueIndex >= effectsByQueues.length &&
+      targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
       settings.queuePage < pages.length - 1
     ) {
       setSettings({
@@ -92,7 +94,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
       });
       return;
     }
-    if (targetPageQueueIndex > effectsByQueues.length - 1) {
+    if (targetPageQueueIndex > effectsByQueues[settings.queuePage].length - 1) {
       return;
     }
     setQueueIndex(settings.queueIndex + 1, true);
