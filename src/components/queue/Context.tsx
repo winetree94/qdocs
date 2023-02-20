@@ -1,14 +1,14 @@
 import { ChevronRightIcon } from '@radix-ui/react-icons';
-import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueContextMenu } from 'components/context-menu/Context';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
 import { queueDocumentPageObjects } from 'store/page';
+import { documentSettingsState } from 'store/settings';
 import styles from './Context.module.scss';
 
 export const QueueObjectContextContent: React.FC = () => {
-  const { settings } = useSettings();
+  const settings = useRecoilValue(documentSettingsState);
   const [objects, setObjects] = useRecoilState(queueDocumentPageObjects(settings.queuePage));
   const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
   const [queueDocument, setQueueDocument] = useRecoilState(documentState);

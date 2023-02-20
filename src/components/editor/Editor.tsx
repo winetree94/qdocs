@@ -12,7 +12,6 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
 import { QueueObjectType } from 'model/object';
-import { useSettings } from 'cdk/hooks/useSettings';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { queueObjects } from 'store/object';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -30,6 +29,7 @@ import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { documentState } from 'store/document';
 import { PresentationRemote } from './PresentationRemote';
+import { documentSettingsState } from 'store/settings';
 
 export const QueueEditor: React.FC = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -37,7 +37,7 @@ export const QueueEditor: React.FC = () => {
   const { startBatch, endBatch } = useBatching();
 
   const queueDocument = useRecoilValue(documentState);
-  const { settings, ...setSettings } = useSettings();
+  const [settings, setSettings] = useRecoilState(documentSettingsState);
 
   const objects = useRecoilValue(queueObjects({
     pageIndex: settings.queuePage,
@@ -69,7 +69,10 @@ export const QueueEditor: React.FC = () => {
       root.clientWidth / (queueDocument!.documentRect.width + 40),
       root.clientHeight / (queueDocument!.documentRect.height + 40)
     );
-    setSettings.setScale(scale);
+    setSettings({
+      ...settings,
+      scale: Math.max(scale, 0.1),
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -80,12 +83,20 @@ export const QueueEditor: React.FC = () => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey && !selected) {
-      setSettings.setSelectedObjectUUIDs([object.uuid]);
+      setSettings({
+        ...settings,
+        selectionMode: 'normal',
+        selectedObjectUUIDs: [object.uuid],
+      });
     } else {
-      setSettings.setSelectedObjectUUIDs([
-        ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
-        object.uuid,
-      ]);
+      setSettings({
+        ...settings,
+        selectionMode: 'normal',
+        selectedObjectUUIDs: [
+          ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
+          object.uuid,
+        ],
+      });
     }
   };
 
@@ -94,7 +105,11 @@ export const QueueEditor: React.FC = () => {
     object: QueueObjectType
   ): void => {
     event.stopPropagation();
-    setSettings.setDetailSettingMode(object.uuid);
+    setSettings({
+      ...settings,
+      selectionMode: 'detail',
+      selectedObjectUUIDs: [object.uuid],
+    });
   };
 
   const onObjectDragStart = (): void => {
@@ -206,9 +221,11 @@ export const QueueEditor: React.FC = () => {
         rect.y + rect.height <= y + height
       );
     });
-    setSettings.setSelectedObjectUUIDs(
-      selectedObjects.map((object) => object.uuid)
-    );
+    setSettings({
+      ...settings,
+      selectionMode: 'normal',
+      selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
+    });
   };
 
   const resizeObjectRect = (uuid: string, rect: ResizerEvent): void => {
@@ -288,7 +305,10 @@ export const QueueEditor: React.FC = () => {
         document.body.clientWidth / queueDocument!.documentRect.width,
         document.body.clientHeight / queueDocument!.documentRect.height
       );
-      setSettings.setScale(scale);
+      setSettings({
+        ...settings,
+        scale: Math.max(scale, 0.1),
+      });
     };
     const observer = new ResizeObserver(resize);
     observer.observe(document.body);
@@ -312,13 +332,21 @@ export const QueueEditor: React.FC = () => {
 
   const onRootContextMenuOpenChange = (open: boolean): void => {
     if (open) {
-      setSettings.setSelectedObjectUUIDs([]);
+      setSettings({
+        ...settings,
+        selectionMode: 'normal',
+        selectedObjectUUIDs: [],
+      });
     }
   };
 
   const onObjectContextMenuOpenChange = (uuid: string, open: boolean): void => {
     if (open && !settings.selectedObjectUUIDs.includes(uuid)) {
-      setSettings.setSelectedObjectUUIDs([uuid]);
+      setSettings({
+        ...settings,
+        selectionMode: 'normal',
+        selectedObjectUUIDs: [uuid],
+      });
     }
   };
 
