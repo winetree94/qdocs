@@ -14,7 +14,7 @@ export const Trigger: React.ForwardRefExoticComponent<
   ContextMenu.ContextMenuTriggerProps & React.RefAttributes<HTMLSpanElement>
 > = forwardRef(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.Trigger ref={ref} {...props}>
+    <ContextMenu.Trigger {...props} ref={ref}>
       {children}
     </ContextMenu.Trigger>
   );
@@ -32,68 +32,74 @@ export const Content: React.ForwardRefExoticComponent<
 > = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Content
-      ref={ref}
       {...props}
-      className={clsx(styles.ContextMenuContent, props.className)}>
+      className={clsx(styles.ContextMenuContent, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.Content>
   );
 });
 
-export const Item: FunctionComponent<ContextMenu.ContextMenuItemProps> = ({
+export const Item: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuItemProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({
   children,
   ...props
-}) => {
+}, ref) => {
   return (
     <ContextMenu.Item
       {...props}
-      className={clsx(styles.ContextMenuItem, props.className)}>
+      className={clsx(styles.ContextMenuItem, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.Item>
   );
-};
+});
 
-export const CheckboxItem: FunctionComponent<
-  ContextMenu.ContextMenuCheckboxItemProps
-> = ({ children, ...props }) => {
+export const CheckboxItem: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuCheckboxItemProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.CheckboxItem
       {...props}
-      className={clsx(styles.ContextMenuCheckboxItem, props.className)}>
+      className={clsx(styles.ContextMenuCheckboxItem, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.CheckboxItem>
   );
-};
+});
 
-export const RadioGroup: FunctionComponent<
-  ContextMenu.ContextMenuRadioGroupProps
-> = ({ children, ...props }) => {
-  return <ContextMenu.RadioGroup {...props}>{children}</ContextMenu.RadioGroup>;
-};
+export const RadioGroup: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuRadioGroupProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
+  return <ContextMenu.RadioGroup {...props} ref={ref}>{children}</ContextMenu.RadioGroup>;
+});
 
-export const RadioItem: FunctionComponent<
-  ContextMenu.ContextMenuRadioItemProps
-> = ({ children, ...props }) => {
+export const RadioItem: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuRadioItemProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.RadioItem
       {...props}
-      className={clsx(styles.ContextMenuRadioItem, props.className)}>
+      className={clsx(styles.ContextMenuRadioItem, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.RadioItem>
   );
-};
+});
 
-export const Separator: FunctionComponent<
-  ContextMenu.ContextMenuSeparatorProps
-> = ({ children, ...props }) => {
+export const Separator: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuSeparatorProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Separator
       {...props}
-      className={clsx(styles.ContextMenuSeparator, props.className)}>
+      className={clsx(styles.ContextMenuSeparator, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.Separator>
   );
-};
+});
 
 export const MenuSub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
   children,
@@ -102,29 +108,31 @@ export const MenuSub: FunctionComponent<ContextMenu.ContextMenuSubProps> = ({
   return <ContextMenu.Sub {...props}>{children}</ContextMenu.Sub>;
 };
 
-export const SubTrigger: FunctionComponent<
-  ContextMenu.ContextMenuSubTriggerProps
-> = ({ children, ...props }) => {
+export const SubTrigger: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuSubTriggerProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.SubTrigger
       {...props}
-      className={clsx(styles.ContextMenuSubTrigger, props.className)}>
+      className={clsx(styles.ContextMenuSubTrigger, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.SubTrigger>
   );
-};
+});
 
-export const SubContent: FunctionComponent<
-  ContextMenu.ContextMenuSubContentProps
-> = ({ children, ...props }) => {
+export const SubContent: React.ForwardRefExoticComponent<
+  ContextMenu.ContextMenuSubContentProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef(({ children, ...props }, ref) => {
   return (
     <ContextMenu.SubContent
       {...props}
-      className={clsx(styles.ContextMenuSubContent, props.className)}>
+      className={clsx(styles.ContextMenuSubContent, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.SubContent>
   );
-};
+});
 
 export const QueueContextMenu = {
   Root: Root,

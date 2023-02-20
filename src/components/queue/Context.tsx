@@ -1,5 +1,7 @@
 import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
+import { forwardRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { documentState } from 'store/document';
 import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
@@ -7,7 +9,9 @@ import { queueDocumentPageObjects } from 'store/page';
 import { documentSettingsState } from 'store/settings';
 import styles from './Context.module.scss';
 
-export const QueueObjectContextContent: React.FC = () => {
+export const QueueObjectContextContent: React.ForwardRefExoticComponent<
+  ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
+> = forwardRef((_, ref) => {
   const settings = useRecoilValue(documentSettingsState);
   const [objects, setObjects] = useRecoilState(queueDocumentPageObjects(settings.queuePage));
   const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
@@ -119,7 +123,8 @@ export const QueueObjectContextContent: React.FC = () => {
 
   return (
     <QueueContextMenu.Content
-      onMouseDown={(e): void => e.stopPropagation()}>
+      onMouseDown={(e): void => e.stopPropagation()}
+      ref={ref}>
       <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
         현재 큐에서 삭제{' '}
         <div className={styles.RightSlot}>Backspace</div>
@@ -211,4 +216,4 @@ export const QueueObjectContextContent: React.FC = () => {
       </QueueContextMenu.Sub>
     </QueueContextMenu.Content>
   );
-};
+});
