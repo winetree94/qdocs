@@ -27,6 +27,8 @@ import { selectSettings } from 'store/settings/selectors';
 import { setSettings } from 'store/settings/actions';
 import { setObjectDefaultProps, setObjectQueueEffects } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { useEventSelector } from 'cdk/hooks/event-dispatcher';
+import { fitScreenSizeEvent } from 'app/events/event';
 
 export const QueueEditor: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -45,21 +47,30 @@ export const QueueEditor: React.FC = () => {
     [key: string]: ObjectQueueProps;
   }>({});
 
-  // 최초 렌더링 시 스케일 계산
-  useLayoutEffect(() => {
+  const canvasSizeToFit = (): void => {
     const root = rootRef.current!;
     const scale = Math.min(
       root.clientWidth / (queueDocument!.documentRect.width + 40),
       root.clientHeight / (queueDocument!.documentRect.height + 40),
     );
+    if (settings.scale === scale) {
+      return;
+    }
     dispatch(
       setSettings({
         ...settings,
         scale: Math.max(scale, 0.1),
       }),
     );
+  };
+
+  // 최초 렌더링 시 스케일 계산
+  useLayoutEffect(() => {
+    canvasSizeToFit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEventSelector(fitScreenSizeEvent, () => canvasSizeToFit());
 
   const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -283,11 +294,14 @@ export const QueueEditor: React.FC = () => {
     if (!settings.presentationMode) {
       return;
     }
-    const resize = (): void => {
+    const maximize = (): void => {
       const scale = Math.min(
         document.body.clientWidth / queueDocument!.documentRect.width,
         document.body.clientHeight / queueDocument!.documentRect.height,
       );
+      if (settings.scale === scale) {
+        return;
+      }
       dispatch(
         setSettings({
           ...settings,
@@ -295,9 +309,9 @@ export const QueueEditor: React.FC = () => {
         }),
       );
     };
-    const observer = new ResizeObserver(resize);
+    const observer = new ResizeObserver(maximize);
     observer.observe(document.body);
-    resize();
+    maximize();
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.presentationMode]);

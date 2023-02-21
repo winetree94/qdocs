@@ -1,3 +1,5 @@
+import { fitScreenSizeEvent } from 'app/events/event';
+import { useEventDispatch } from 'cdk/hooks/event-dispatcher';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
@@ -16,6 +18,7 @@ export type QueueSubtoolbarProps = {
 
 export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({ fitToScreen }) => {
   const settings = useAppSelector(selectSettings);
+  const eventDispatch = useEventDispatch();
   const dispatch = useAppDispatch();
   const pages = useAppSelector(selectPages);
   const effectsByQueues = useAppSelector(selectObjectEffectsByQueue);
@@ -91,7 +94,10 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({ fitToScreen })
     setQueueIndex(settings.queueIndex + 1, true);
   };
 
-  const fitScale = (): void => fitToScreen?.();
+  const fitScale = (): void => {
+    eventDispatch(fitScreenSizeEvent());
+  };
+
   const startPresentationModel = (): void => {
     dispatch(
       setSettings({
