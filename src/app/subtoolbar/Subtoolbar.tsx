@@ -57,15 +57,17 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const rewind = (): void => {
     const targetPageQueueIndex = settings.queueIndex - 1;
     if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
-      setSettings({
-        ...settings,
-        queuePage: settings.queuePage - 1,
-        queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
-        queuePosition: 'pause',
-        queueStart: -1,
-        selectedObjectUUIDs: [],
-        selectionMode: 'normal',
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          queuePage: settings.queuePage - 1,
+          queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
+          queuePosition: 'pause',
+          queueStart: -1,
+          selectedObjectUUIDs: [],
+          selectionMode: 'normal',
+        })
+      );
       return;
     }
     if (targetPageQueueIndex < 0) {
@@ -80,15 +82,17 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
       targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
       settings.queuePage < pages.length - 1
     ) {
-      setSettings({
-        ...settings,
-        queuePage: settings.queuePage + 1,
-        queueIndex: 0,
-        queuePosition: 'pause',
-        queueStart: -1,
-        selectedObjectUUIDs: [],
-        selectionMode: 'normal',
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          queuePage: settings.queuePage + 1,
+          queueIndex: 0,
+          queuePosition: 'pause',
+          queueStart: -1,
+          selectedObjectUUIDs: [],
+          selectionMode: 'normal',
+        })
+      );
       return;
     }
     if (targetPageQueueIndex > effectsByQueues[settings.queuePage].length - 1) {
@@ -99,12 +103,14 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
 
   const fitScale = (): void => fitToScreen?.();
   const startPresentationModel = (): void => {
-    setSettings({
-      ...settings,
-      presentationMode: true,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-    });
+    dispatch(
+      setSettings({
+        ...settings,
+        presentationMode: true,
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      })
+    );
     document.documentElement.requestFullscreen();
   };
 

@@ -23,8 +23,6 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
   const pages = useSelector(selectPages);
   const settings = useSelector(selectSettings);
   const dispatch = useDispatch();
-  // const [pages, setPages] = useRecoilState(queueDocumentPages);
-  // const [settings, setSettings] = useRecoilState(documentSettingsState);
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const [editNamePageIndex, setEditNamePageIndex] = useState<number>(-1);
