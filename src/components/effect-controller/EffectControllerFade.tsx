@@ -18,9 +18,7 @@ export const EffectControllerFade = (): ReactElement => {
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;
 
-  const handleCurrentOpacityChange = (
-    opacityValue: number | number[] | string
-  ): void => {
+  const handleCurrentOpacityChange = (opacityValue: number | number[] | string): void => {
     let opacity = 1;
 
     if (typeof opacityValue === 'number') {
@@ -44,29 +42,26 @@ export const EffectControllerFade = (): ReactElement => {
         },
       };
 
-      dispatch(setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...effects,
-          [objectUUID]: {
-            ...effects[objectUUID],
-            fade: nextEffect,
+      dispatch(
+        setObjectQueueEffects({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          effects: {
+            ...effects,
+            [objectUUID]: {
+              ...effects[objectUUID],
+              fade: nextEffect,
+            },
           },
-        }
-      }));
+        }),
+      );
     });
   };
 
   return (
     <>
       <div>
-        <input
-          type="number"
-          value={firstObjectRotateEffect.fade.opacity}
-          hidden
-          readOnly
-        />
+        <input type="number" value={firstObjectRotateEffect.fade.opacity} hidden readOnly />
         <p className="text-sm">fade</p>
         <div className="flex items-center gap-2">
           <div className="w-5/12">

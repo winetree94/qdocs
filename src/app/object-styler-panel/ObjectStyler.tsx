@@ -30,9 +30,7 @@ interface ObjectStylerContextValue {
   objects: QueueObjectType[];
 }
 
-const ObjectStylerContext = createContext<ObjectStylerContextValue | null>(
-  null
-);
+const ObjectStylerContext = createContext<ObjectStylerContextValue | null>(null);
 
 const useObjectStylerContext = (): ObjectStylerContextValue => {
   const context = useContext(ObjectStylerContext);
@@ -52,11 +50,7 @@ interface ObjectStylerProps extends PropsWithChildren {
   onStyleChange?: (value: StyleChangeValue) => void;
 }
 
-const ObjectStyler = ({
-  children,
-  objects,
-  onStyleChange,
-}: ObjectStylerProps): ReactElement => {
+const ObjectStyler = ({ children, objects, onStyleChange }: ObjectStylerProps): ReactElement => {
   const handleStyleChange = (event: FormEvent<HTMLFormElement>): void => {
     const formData = new FormData(event.currentTarget);
 
@@ -92,9 +86,7 @@ const ObjectStylerBackground = (): ReactElement => {
         <div>
           <p className="text-sm">color</p>
           <div className="w-6 h-6">
-            <label
-              className={classes['input-color']}
-              style={{ backgroundColor: firstObject.fill.color }}>
+            <label className={classes['input-color']} style={{ backgroundColor: firstObject.fill.color }}>
               <input
                 type="color"
                 name="backgroundColor"
@@ -106,32 +98,14 @@ const ObjectStylerBackground = (): ReactElement => {
           </div>
         </div>
         <div>
-          <input
-            type="text"
-            name="backgroundOpacity"
-            value={opacity[0]}
-            readOnly
-            hidden
-          />
+          <input type="text" name="backgroundOpacity" value={opacity[0]} readOnly hidden />
           <p className="text-sm">opacity</p>
           <div className="flex items-center gap-2">
             <div className="w-1/3">
-              <input
-                className="w-full"
-                type="number"
-                step={0.1}
-                value={opacity[0]}
-                onChange={handleOpacityChange}
-              />
+              <input className="w-full" type="number" step={0.1} value={opacity[0]} onChange={handleOpacityChange} />
             </div>
             <div className="flex items-center w-full">
-              <Slider
-                min={0}
-                max={1}
-                step={0.1}
-                value={opacity}
-                onValueChange={setOpacity}
-              />
+              <Slider min={0} max={1} step={0.1} value={opacity} onValueChange={setOpacity} />
             </div>
           </div>
         </div>
@@ -166,39 +140,21 @@ const ObjectStylerStroke = (): ReactElement | null => {
       </div>
       <div className="flex flex-col gap-2">
         <div>
-          <input
-            type="text"
-            name="strokeWidth"
-            value={width[0]}
-            readOnly
-            hidden
-          />
+          <input type="text" name="strokeWidth" value={width[0]} readOnly hidden />
           <p className="text-sm">width</p>
           <div className="flex items-center gap-2">
             <div className="w-1/3">
-              <input
-                className="w-full"
-                type="number"
-                value={width[0]}
-                onChange={handleWidthChange}
-              />
+              <input className="w-full" type="number" value={width[0]} onChange={handleWidthChange} />
             </div>
             <div className="flex items-center w-full">
-              <Slider
-                min={0}
-                max={100}
-                value={width}
-                onValueChange={setWidth}
-              />
+              <Slider min={0} max={100} value={width} onValueChange={setWidth} />
             </div>
           </div>
         </div>
         <div>
           <p className="text-sm">color</p>
           <div className="w-6 h-6">
-            <label
-              className={classes['input-color']}
-              style={{ backgroundColor: firstObject.stroke.color }}>
+            <label className={classes['input-color']} style={{ backgroundColor: firstObject.stroke.color }}>
               <input
                 type="color"
                 name="strokeColor"
@@ -244,22 +200,10 @@ const ObjectStylerOpacity = (): ReactElement => {
         <p className="text-sm">opacity</p>
         <div className="flex items-center gap-2">
           <div className="w-1/3">
-            <input
-              className="w-full"
-              type="number"
-              step={0.1}
-              value={opacity[0]}
-              onChange={handleOpacityChange}
-            />
+            <input className="w-full" type="number" step={0.1} value={opacity[0]} onChange={handleOpacityChange} />
           </div>
           <div className="flex items-center w-full">
-            <Slider
-              min={0}
-              max={1}
-              step={0.1}
-              value={opacity}
-              onValueChange={setOpacity}
-            />
+            <Slider min={0} max={1} step={0.1} value={opacity} onValueChange={setOpacity} />
           </div>
         </div>
       </div>
@@ -295,22 +239,24 @@ const ObjectStyleText = (): ReactElement => {
 
   const updateText = useCallback(
     (text: Partial<QueueText>): void => {
-      dispatch(setObjectDefaultProps({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        props: {
-          ...props,
-          [firstObject.uuid]: {
-            ...props[firstObject.uuid],
-            text: {
-              ...props[firstObject.uuid].text,
-              ...text,
+      dispatch(
+        setObjectDefaultProps({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          props: {
+            ...props,
+            [firstObject.uuid]: {
+              ...props[firstObject.uuid],
+              text: {
+                ...props[firstObject.uuid].text,
+                ...text,
+              },
             },
           },
-        }
-      }));
+        }),
+      );
     },
-    [dispatch, firstObject.uuid, props, settings.queueIndex, settings.queuePage]
+    [dispatch, firstObject.uuid, props, settings.queueIndex, settings.queuePage],
   );
 
   useEffect(() => {
@@ -333,9 +279,7 @@ const ObjectStyleText = (): ReactElement => {
       <div>
         <QueueSelect.Root
           value={currentText.fontFamily}
-          onValueChange={(value): void =>
-            updateCurrentText({ fontFamily: value })
-          }>
+          onValueChange={(value): void => updateCurrentText({ fontFamily: value })}>
           <QueueSelect.Trigger className="SelectTrigger" aria-label="Food">
             <QueueSelect.Value placeholder="Select a fruit…" />
             <QueueSelect.Icon className="SelectIcon">
@@ -402,18 +346,14 @@ const ObjectStyleText = (): ReactElement => {
         <input
           type="color"
           value={currentText.fontColor}
-          onChange={(e): void =>
-            updateCurrentText({ fontColor: e.target.value })
-          }
+          onChange={(e): void => updateCurrentText({ fontColor: e.target.value })}
         />
       </div>
       <div>
         <QueueInput
           value={text.fontSize}
           type="number"
-          onChange={(e): void =>
-            updateCurrentText({ fontSize: Number(e.target.value) })
-          }
+          onChange={(e): void => updateCurrentText({ fontSize: Number(e.target.value) })}
         />
       </div>
     </div>
@@ -434,10 +374,8 @@ export const ObjectStylerPanel = ({
   const settings = useAppSelector(selectSettings);
   const queueDocument = useAppSelector(selectDocument);
   const dispatch = useAppDispatch();
-  const selectedObjects = queueDocument!.pages[
-    settings.queuePage
-  ].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid)
+  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid),
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -445,57 +383,55 @@ export const ObjectStylerPanel = ({
     debounce(() => {
       console.log('history save');
     }, 500),
-    []
+    [],
   );
 
   const handleStyleChange = (value: StyleChangeValue): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
-      (object) => {
-        if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-          return object;
-        }
-
-        // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
-        const updatedModel = ((): QueueObjectType => {
-          switch (object.type) {
-            case 'rect':
-            case 'circle':
-            case 'line':
-              return {
-                ...object,
-                fill: {
-                  ...object.fill,
-                  color: value.backgroundColor as string,
-                  opacity: parseFloat(value.backgroundOpacity as string),
-                },
-                stroke: {
-                  ...object.stroke,
-                  color: value.strokeColor as string,
-                  width: parseInt(value.strokeWidth as string),
-                },
-                fade: {
-                  ...object.fade,
-                  opacity: parseFloat(value.opacity as string),
-                },
-              };
-            case 'icon':
-              return {
-                ...object,
-                fill: {
-                  ...object.fill,
-                  color: value.backgroundColor as string,
-                },
-                fade: {
-                  ...object.fade,
-                  opacity: parseFloat(value.opacity as string),
-                },
-              };
-          }
-        })();
-
-        return updatedModel;
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
+      if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
+        return object;
       }
-    );
+
+      // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
+      const updatedModel = ((): QueueObjectType => {
+        switch (object.type) {
+          case 'rect':
+          case 'circle':
+          case 'line':
+            return {
+              ...object,
+              fill: {
+                ...object.fill,
+                color: value.backgroundColor as string,
+                opacity: parseFloat(value.backgroundOpacity as string),
+              },
+              stroke: {
+                ...object.stroke,
+                color: value.strokeColor as string,
+                width: parseInt(value.strokeWidth as string),
+              },
+              fade: {
+                ...object.fade,
+                opacity: parseFloat(value.opacity as string),
+              },
+            };
+          case 'icon':
+            return {
+              ...object,
+              fill: {
+                ...object.fill,
+                color: value.backgroundColor as string,
+              },
+              fade: {
+                ...object.fade,
+                opacity: parseFloat(value.opacity as string),
+              },
+            };
+        }
+      })();
+
+      return updatedModel;
+    });
 
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
@@ -503,9 +439,12 @@ export const ObjectStylerPanel = ({
       objects: newObjects,
     };
 
-    dispatch(setDocument({
-      ...queueDocument!, pages: newPages
-    }));
+    dispatch(
+      setDocument({
+        ...queueDocument!,
+        pages: newPages,
+      }),
+    );
     setDocumentHistory();
   };
 

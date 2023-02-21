@@ -49,22 +49,12 @@ export const Welcome: React.FC = () => {
 
   return (
     <div className={clsx(styles.Container)}>
-      <QueueH2 className={clsx(styles.Header)}>
-        The Queue
-      </QueueH2>
+      <QueueH2 className={clsx(styles.Header)}>The Queue</QueueH2>
       <div className={styles.ButtonGroup}>
-        <QueueButton
-          className={clsx(styles.ActionButton)}
-          size='large'
-          onClick={onNewDocumentClick}
-        >
+        <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={onNewDocumentClick}>
           새 문서
         </QueueButton>
-        <QueueButton
-          className={clsx(styles.ActionButton)}
-          size='large'
-          onClick={startFileChooser}
-        >
+        <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={startFileChooser}>
           문서 열기
         </QueueButton>
       </div>
@@ -73,9 +63,7 @@ export const Welcome: React.FC = () => {
         <NewDocumentDialog
           {...newDocumentDialogProps}
           open={!!newDocumentDialogProps}
-          onOpenChange={(opened): void =>
-            !opened && setNewDocumentDialogProps(null)
-          }
+          onOpenChange={(opened): void => !opened && setNewDocumentDialogProps(null)}
         />
       )}
     </div>

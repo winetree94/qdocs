@@ -12,11 +12,9 @@ import styles from './Subtoolbar.module.scss';
 
 export type QueueSubtoolbarProps = {
   fitToScreen?: () => void;
-}
+};
 
-export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
-  fitToScreen
-}) => {
+export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({ fitToScreen }) => {
   const settings = useAppSelector(selectSettings);
   const dispatch = useAppDispatch();
   const pages = useAppSelector(selectPages);
@@ -24,31 +22,26 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   const currentEffectsByQueues = effectsByQueues[settings.queuePage];
   const ranges = useAppSelector(selectQueueRange);
 
-  const setQueueIndex = (
-    index: number,
-    play?: boolean,
-  ): void => {
+  const setQueueIndex = (index: number, play?: boolean): void => {
     const target = Math.max(0, index);
     const sameIndex = settings.queueIndex === target;
-    dispatch(setSettings({
-      ...settings,
-      queueIndex: target,
-      queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
-      queueStart: play ? performance.now() : -1,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-    }));
+    dispatch(
+      setSettings({
+        ...settings,
+        queueIndex: target,
+        queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
+        queueStart: play ? performance.now() : -1,
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      }),
+    );
   };
 
   const increaseScale = (): void => {
-    dispatch(
-      setSettings({ ...settings, scale: settings.scale + 0.05 })
-    );
+    dispatch(setSettings({ ...settings, scale: settings.scale + 0.05 }));
   };
   const decreaseScale = (): void => {
-    dispatch(
-      setSettings({ ...settings, scale: Math.max(settings.scale - 0.05, 0.25) })
-    );
+    dispatch(setSettings({ ...settings, scale: Math.max(settings.scale - 0.05, 0.25) }));
   };
   const setCurrentQueueIndex = (index: number): void => setQueueIndex(index, false);
   const goToPreviousQueue = (): void => setQueueIndex(settings.queueIndex - 1, true);
@@ -66,7 +59,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
           queueStart: -1,
           selectedObjectUUIDs: [],
           selectionMode: 'normal',
-        })
+        }),
       );
       return;
     }
@@ -78,10 +71,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
 
   const play = (): void => {
     const targetPageQueueIndex = settings.queueIndex + 1;
-    if (
-      targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
-      settings.queuePage < pages.length - 1
-    ) {
+    if (targetPageQueueIndex >= effectsByQueues[settings.queuePage].length && settings.queuePage < pages.length - 1) {
       dispatch(
         setSettings({
           ...settings,
@@ -91,7 +81,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
           queueStart: -1,
           selectedObjectUUIDs: [],
           selectionMode: 'normal',
-        })
+        }),
       );
       return;
     }
@@ -109,7 +99,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
         presentationMode: true,
         selectedObjectUUIDs: [],
         selectionMode: 'normal',
-      })
+      }),
     );
     document.documentElement.requestFullscreen();
   };
@@ -120,19 +110,11 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
             <QueueIconButton onClick={console.log}>
-              <SvgRemixIcon
-                width={15}
-                height={15}
-                icon={'ri-arrow-go-back-line'}
-              />
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
             </QueueIconButton>
 
             <QueueIconButton onClick={console.log}>
-              <SvgRemixIcon
-                width={15}
-                height={15}
-                icon={'ri-arrow-go-forward-line'}
-              />
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
             </QueueIconButton>
 
             <QueueIconButton>
@@ -147,15 +129,11 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
               <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
             </QueueIconButton>
 
-            <QueueToggle.Root size='small'>
+            <QueueToggle.Root size="small">
               <SvgRemixIcon width={15} height={15} icon={'ri-movie-line'} />
             </QueueToggle.Root>
 
-            <QueueSeparator.Root
-              orientation="vertical"
-              decorative
-              className={styles.Separator}
-            />
+            <QueueSeparator.Root orientation="vertical" decorative className={styles.Separator} />
           </div>
 
           <div className={styles.ItemGroup}>
@@ -170,7 +148,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
                 className={clsx(
                   styles.QueueIndicator,
                   currentEffectsByQueues[queue] ? styles.HasEffect : '',
-                  queue === settings.queueIndex ? styles.Current : ''
+                  queue === settings.queueIndex ? styles.Current : '',
                 )}
                 key={queue}
                 onClick={(): void => setCurrentQueueIndex(queue)}>
@@ -185,11 +163,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
             </QueueIconButton>
           </div>
           <div className={styles.ItemGroup}>
-            <QueueSeparator.Root
-              orientation="vertical"
-              decorative
-              className={styles.Separator}
-            />
+            <QueueSeparator.Root orientation="vertical" decorative className={styles.Separator} />
 
             <QueueIconButton onClick={fitScale}>
               <SvgRemixIcon width={15} height={15} icon={'ri-fullscreen-fill'} />
@@ -202,7 +176,6 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
             </QueueIconButton>
           </div>
         </div>
-
       </QueueScrollArea.Viewport>
       <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
         <QueueScrollArea.Thumb />

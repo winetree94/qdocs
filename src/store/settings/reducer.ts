@@ -12,17 +12,20 @@ export interface QueueDocumentSettings {
   presentationMode: boolean;
 }
 
-export const settingsReducer = createReducer<QueueDocumentSettings>({
-  queuePage: 0,
-  queueIndex: 0,
-  queueStart: 0,
-  queuePosition: 'forward',
-  selectionMode: 'normal',
-  selectedObjectUUIDs: [],
-  scale: 0.25,
-  presentationMode: false,
-}, (builder) => {
-  builder.addCase(setSettings, (state, action) => {
-    return { ...state, ...action.payload };
-  });
-});
+export const settingsReducer = createReducer<QueueDocumentSettings>(
+  {
+    queuePage: 0,
+    queueIndex: 0,
+    queueStart: 0,
+    queuePosition: 'forward',
+    selectionMode: 'normal',
+    selectedObjectUUIDs: [],
+    scale: 0.25,
+    presentationMode: false,
+  },
+  (builder) => {
+    builder.addCase(setSettings, (state, action) => {
+      return { ...state, ...action.payload };
+    });
+  },
+);

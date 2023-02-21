@@ -5,14 +5,8 @@ import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import {
-  QueueAlertDialog,
-  QueueSimpleAlertDialogProps,
-} from 'components/alert-dialog/AlertDialog';
-import {
-  NewDocumentDialog,
-  NewDocumentDialogProps,
-} from 'app/new-document-dialog/NewDocumentDialog';
+import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
+import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
 import { selectDocument } from 'store/document/selectors';
 import { setDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -28,25 +22,19 @@ export interface ToolbarProps {
   onItemClicked?: (item: ToolbarModel) => void;
 }
 
-export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
-  onItemClicked,
-}) => {
+export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked }) => {
   const queueDocument = useAppSelector(selectDocument);
   const dispatch = useAppDispatch();
   const [documentTitle, setDocumentTitle] = useState('');
 
-  const [alertDialog, setAlertDialog] =
-    useState<QueueSimpleAlertDialogProps>(null);
-  const [newDocumentDialogProps, setNewDocumentDialogProps] =
-    useState<NewDocumentDialogProps>(null);
+  const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
+  const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
   useEffect(() => {
     setDocumentTitle(queueDocument?.documentName || '');
   }, [queueDocument?.documentName]);
 
-  const onTitleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const onTitleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setDocumentTitle(event.target.value);
   };
 
@@ -58,7 +46,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         setDocument({
           ...queueDocument!,
           documentName: current,
-        })
+        }),
       );
     }
   };
@@ -67,8 +55,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     if (queueDocument) {
       setAlertDialog({
         title: '현재 열려있는 문서가 있습니다.',
-        description:
-          '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
+        description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
         onAction: () =>
           setNewDocumentDialogProps({
             onSubmit: (document) => dispatch(setDocument(document)),
@@ -168,13 +155,9 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
             <QueueMenubar.Trigger>파일</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item onClick={onNewDocumentClick}>
-                  새 문서
-                </QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onNewDocumentClick}>새 문서</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onOpenDcoumentClick}>
-                  문서 열기
-                </QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onOpenDcoumentClick}>문서 열기</QueueMenubar.Item>
                 <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!queueDocument}>
                   문서 저장
                 </QueueMenubar.Item>
@@ -241,9 +224,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         <NewDocumentDialog
           {...newDocumentDialogProps}
           open={!!newDocumentDialogProps}
-          onOpenChange={(opened): void =>
-            !opened && setNewDocumentDialogProps(null)
-          }
+          onOpenChange={(opened): void => !opened && setNewDocumentDialogProps(null)}
         />
       )}
     </div>

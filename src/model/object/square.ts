@@ -1,33 +1,22 @@
 import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import {
-  WithFade,
-  WithFill,
-  WithRect,
-  WithRotation,
-  WithScale,
-  WithStroke,
-  WithText,
-} from 'model/property';
+import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
 
 export interface QueueSquare
   extends WithEffects,
-  WithRect,
-  WithFade,
-  WithFill,
-  WithRotation,
-  WithScale,
-  WithStroke,
-  WithText {
+    WithRect,
+    WithFade,
+    WithFill,
+    WithRotation,
+    WithScale,
+    WithStroke,
+    WithText {
   type: 'rect';
   uuid: string;
 }
 
-export const createDefaultSquare = (
-  documentRect: QueueDocumentRect,
-  queueIndex: number
-): QueueSquare => {
+export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex: number): QueueSquare => {
   const width = 300;
   const height = 300;
   return {

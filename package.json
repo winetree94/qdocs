@@ -54,6 +54,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -78,6 +79,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "prettier-eslint": "^15.0.1",
     "sass": "^1.56.1",

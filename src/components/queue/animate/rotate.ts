@@ -8,10 +8,7 @@ export interface RotateAnimation {
   rotateEffect: RotateEffect;
 }
 
-export const getCurrentRotate = (
-  object: QueueObjectType,
-  index: number
-): QueueRotate => {
+export const getCurrentRotate = (object: QueueObjectType, index: number): QueueRotate => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is RotateEffect => effect.type === 'rotate')
@@ -21,16 +18,13 @@ export const getCurrentRotate = (
 export const getRotateAnimation = (
   object: QueueObjectType,
   index: number,
-  position: 'forward' | 'backward' | 'pause'
+  position: 'forward' | 'backward' | 'pause',
 ): RotateAnimation | null => {
   if (position === 'pause') {
     return null;
   }
 
-  const fromRotate = getCurrentRotate(
-    object,
-    position === 'forward' ? index - 1 : index + 1
-  );
+  const fromRotate = getCurrentRotate(object, position === 'forward' ? index - 1 : index + 1);
 
   const rotateEffect = object.effects.find((effect): effect is RotateEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -44,11 +38,11 @@ export const getRotateAnimation = (
   const slicedEffect: RotateEffect =
     position === 'backward'
       ? {
-        ...rotateEffect,
-        rotate: {
-          ...getCurrentRotate(object, index),
-        },
-      }
+          ...rotateEffect,
+          rotate: {
+            ...getCurrentRotate(object, index),
+          },
+        }
       : rotateEffect;
 
   return {
@@ -60,13 +54,12 @@ export const getRotateAnimation = (
 export const getAnimatableRotate = (
   progress: number,
   targetScale: QueueRotate,
-  fromScale?: QueueRotate
+  fromScale?: QueueRotate,
 ): QueueRotate => {
   if (progress < 0 || !fromScale) {
     return targetScale;
   }
   return {
-    degree:
-      fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
+    degree: fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
   };
 };

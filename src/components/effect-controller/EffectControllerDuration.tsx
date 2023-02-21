@@ -10,21 +10,19 @@ export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectControllerDuration = ({
-  effectType,
-}: EffectControllerDurationProps): ReactElement => {
+export const EffectControllerDuration = ({ effectType }: EffectControllerDurationProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid),
+  );
   const [firstSelectedObject] = selectedObjects;
 
   const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
   const convertedDuration = firstObjectEffect.duration / 1000;
 
-  const handleDurationChange = (
-    durationValue: number | number[] | string
-  ): void => {
+  const handleDurationChange = (durationValue: number | number[] | string): void => {
     let duration = 1000;
 
     if (typeof durationValue === 'number') {
@@ -45,17 +43,19 @@ export const EffectControllerDuration = ({
         duration: duration * 1000,
       };
 
-      dispatch(setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...effects,
-          [objectUUID]: {
-            ...effects[objectUUID],
-            [effectType]: nextEffect,
+      dispatch(
+        setObjectQueueEffects({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          effects: {
+            ...effects,
+            [objectUUID]: {
+              ...effects[objectUUID],
+              [effectType]: nextEffect,
+            },
           },
-        }
-      }));
+        }),
+      );
     });
   };
 

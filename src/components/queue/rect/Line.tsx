@@ -10,10 +10,7 @@ export const Line: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
-  const fill = convertHex(
-    containerContext.object.fill.color,
-    containerContext.object.fill.opacity
-  );
+  const fill = convertHex(containerContext.object.fill.color, containerContext.object.fill.opacity);
 
   const x1 = 0;
   const x2 = x1 + animation.rect.width;

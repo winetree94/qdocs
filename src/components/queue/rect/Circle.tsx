@@ -13,10 +13,7 @@ export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const rx = animation.rect.width / 2;
   const ry = animation.rect.height / 2;
   const strokeClipPathID = `stroke-alignment-inner-for-circle-${containerContext.object.uuid}`;
-  const fill = convertHex(
-    containerContext.object.fill.color,
-    containerContext.object.fill.opacity
-  );
+  const fill = convertHex(containerContext.object.fill.color, containerContext.object.fill.opacity);
 
   return (
     <svg

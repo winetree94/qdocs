@@ -51,9 +51,7 @@ export const Drawable: FunctionComponent<DrawProps> = ({
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
 
-  const onMouseDown = (
-    initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ): void => {
+  const onMouseDown = (initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>): void => {
     if (!container.current) {
       return;
     }
@@ -71,10 +69,7 @@ export const Drawable: FunctionComponent<DrawProps> = ({
     });
 
     const mover = (event: MouseEvent): void => {
-      if (
-        Math.abs(event.clientX - initClientX) < 5 &&
-        Math.abs(event.clientY - initClientY) < 5
-      ) {
+      if (Math.abs(event.clientX - initClientX) < 5 && Math.abs(event.clientY - initClientY) < 5) {
         return;
       }
 
@@ -107,7 +102,7 @@ export const Drawable: FunctionComponent<DrawProps> = ({
           width: width,
           height: height,
         },
-        cancel
+        cancel,
       );
     };
 
@@ -161,15 +156,12 @@ export const Drawable: FunctionComponent<DrawProps> = ({
         width: 0,
         height: 0,
       },
-      cancel
+      cancel,
     );
   };
 
   return (
-    <div
-      className={clsx(styles.drawer, className)}
-      ref={container}
-      onMouseDown={onMouseDown}>
+    <div className={clsx(styles.drawer, className)} ref={container} onMouseDown={onMouseDown}>
       {children}
       {isDrawing && (
         <div

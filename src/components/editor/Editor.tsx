@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
 import { getCurrentRect } from '../queue/animate/rect';
@@ -19,7 +14,15 @@ import { MoveEffect, RotateEffect } from 'model/effect';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { PresentationRemote } from './PresentationRemote';
-import { ObjectQueueEffects, ObjectQueueProps, selectDocument, selectObjectDefaultProps, selectObjectQueueEffects, selectObjectQueueProps, selectQueueObjects } from 'store/document/selectors';
+import {
+  ObjectQueueEffects,
+  ObjectQueueProps,
+  selectDocument,
+  selectObjectDefaultProps,
+  selectObjectQueueEffects,
+  selectObjectQueueProps,
+  selectQueueObjects,
+} from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { setSettings } from 'store/settings/actions';
 import { setObjectDefaultProps, setObjectQueueEffects } from 'store/document/actions';
@@ -34,11 +37,8 @@ export const QueueEditor: React.FC = () => {
   const settings = useAppSelector(selectSettings);
 
   const objects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex));
-
   const defaultProps = useAppSelector(selectObjectDefaultProps(settings.queuePage));
-
   const queueProps = useAppSelector(selectObjectQueueProps(settings.queuePage, settings.queueIndex));
-
   const queueEffects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
@@ -50,20 +50,20 @@ export const QueueEditor: React.FC = () => {
     const root = rootRef.current!;
     const scale = Math.min(
       root.clientWidth / (queueDocument!.documentRect.width + 40),
-      root.clientHeight / (queueDocument!.documentRect.height + 40)
+      root.clientHeight / (queueDocument!.documentRect.height + 40),
     );
     dispatch(
       setSettings({
         ...settings,
         scale: Math.max(scale, 0.1),
-      })
+      }),
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueObjectType
+    object: QueueObjectType,
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
@@ -73,25 +73,22 @@ export const QueueEditor: React.FC = () => {
           ...settings,
           selectionMode: 'normal',
           selectedObjectUUIDs: [object.uuid],
-        })
+        }),
       );
     } else {
       dispatch(
         setSettings({
           ...settings,
           selectionMode: 'normal',
-          selectedObjectUUIDs: [
-            ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
-            object.uuid,
-          ],
-        })
+          selectedObjectUUIDs: [...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid), object.uuid],
+        }),
       );
     }
   };
 
   const onObjectDoubleClick = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: QueueObjectType
+    object: QueueObjectType,
   ): void => {
     event.stopPropagation();
     dispatch(
@@ -99,7 +96,7 @@ export const QueueEditor: React.FC = () => {
         ...settings,
         selectionMode: 'detail',
         selectedObjectUUIDs: [object.uuid],
-      })
+      }),
     );
   };
 
@@ -107,10 +104,7 @@ export const QueueEditor: React.FC = () => {
     setCapturedObjectProps(queueProps);
   };
 
-  const onUpdateDrag = (
-    initEvent: MouseEvent,
-    event: MouseEvent,
-  ): void => {
+  const onUpdateDrag = (initEvent: MouseEvent, event: MouseEvent): void => {
     const diffX = event.clientX - initEvent.clientX;
     const diffY = event.clientY - initEvent.clientY;
     const currentScale = 1 / settings.scale;
@@ -120,7 +114,9 @@ export const QueueEditor: React.FC = () => {
     const adjacentTargetX = event.shiftKey ? targetX : adjacent(targetX, 30);
     const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
-    const updateModels = settings.selectedObjectUUIDs.reduce<{ [key: string]: ObjectQueueEffects }>((result, uuid) => {
+    const updateModels = settings.selectedObjectUUIDs.reduce<{
+      [key: string]: ObjectQueueEffects;
+    }>((result, uuid) => {
       const nextEffect: MoveEffect = {
         type: 'rect',
         duration: 1000,
@@ -131,7 +127,7 @@ export const QueueEditor: React.FC = () => {
           ...queueProps[uuid].rect,
           x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
           y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
-        }
+        },
       };
       result[uuid] = {
         ...queueEffects[uuid],
@@ -140,20 +136,19 @@ export const QueueEditor: React.FC = () => {
       return result;
     }, {});
 
-    dispatch(setObjectQueueEffects({
-      page: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      effects: {
-        ...queueEffects,
-        ...updateModels,
-      },
-    }));
+    dispatch(
+      setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...queueEffects,
+          ...updateModels,
+        },
+      }),
+    );
   };
 
-  const onObjectDragMove = (
-    initEvent: MouseEvent,
-    event: MouseEvent,
-  ): void => {
+  const onObjectDragMove = (initEvent: MouseEvent, event: MouseEvent): void => {
     onUpdateDrag(initEvent, event);
   };
 
@@ -173,16 +168,9 @@ export const QueueEditor: React.FC = () => {
     const absScale = 1 / settings.scale;
     const x = (event.drawClientX - rect.x) * absScale;
     const y = (event.drawClientY - rect.y) * absScale;
-    const hasSelectableObject = queueDocument!.pages[
-      settings.queuePage
-    ].objects.some((object) => {
+    const hasSelectableObject = queueDocument!.pages[settings.queuePage].objects.some((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
-      return (
-        rect.x <= x &&
-        rect.y <= y &&
-        rect.x + rect.width >= x &&
-        rect.y + rect.height >= y
-      );
+      return rect.x <= x && rect.y <= y && rect.x + rect.width >= x && rect.y + rect.height >= y;
     });
     if (hasSelectableObject) {
       cancel();
@@ -203,23 +191,16 @@ export const QueueEditor: React.FC = () => {
     const y = (event.drawClientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
-    const selectedObjects = queueDocument!.pages[
-      settings.queuePage
-    ].objects.filter((object) => {
+    const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => {
       const rect = getCurrentRect(object, settings.queueIndex);
-      return (
-        rect.x >= x &&
-        rect.y >= y &&
-        rect.x + rect.width <= x + width &&
-        rect.y + rect.height <= y + height
-      );
+      return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
     });
     dispatch(
       setSettings({
         ...settings,
         selectionMode: 'normal',
         selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
-      })
+      }),
     );
   };
 
@@ -232,8 +213,8 @@ export const QueueEditor: React.FC = () => {
       ...queueEffects[uuid]?.rect,
       rect: {
         ...queueProps[uuid].rect,
-        ...rect
-      }
+        ...rect,
+      },
     };
     dispatch(
       setObjectQueueEffects({
@@ -244,9 +225,9 @@ export const QueueEditor: React.FC = () => {
           [uuid]: {
             ...queueEffects[uuid],
             rect: nextEffect,
-          }
+          },
         },
-      })
+      }),
     );
   };
 
@@ -271,7 +252,7 @@ export const QueueEditor: React.FC = () => {
       ...queueEffects[uuid]?.rotate,
       rotate: {
         degree: degree,
-      }
+      },
     };
     dispatch(
       setObjectQueueEffects({
@@ -282,14 +263,13 @@ export const QueueEditor: React.FC = () => {
           [uuid]: {
             ...queueEffects[uuid],
             rotate: nextEffect,
-          }
-        }
-      })
+          },
+        },
+      }),
     );
   };
 
-  const onRotateStart = (): void => {
-  };
+  const onRotateStart = (): void => {};
 
   const onRotateMove = (uuid: string, degree: number): void => {
     updateObjectRotate(uuid, degree);
@@ -306,13 +286,13 @@ export const QueueEditor: React.FC = () => {
     const resize = (): void => {
       const scale = Math.min(
         document.body.clientWidth / queueDocument!.documentRect.width,
-        document.body.clientHeight / queueDocument!.documentRect.height
+        document.body.clientHeight / queueDocument!.documentRect.height,
       );
       dispatch(
         setSettings({
           ...settings,
           scale: Math.max(scale, 0.1),
-        })
+        }),
       );
     };
     const observer = new ResizeObserver(resize);
@@ -323,20 +303,22 @@ export const QueueEditor: React.FC = () => {
   }, [settings.presentationMode]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
-    dispatch(setObjectDefaultProps({
-      page: settings.queuePage,
-      queueIndex: settings.queueIndex,
-      props: {
-        ...defaultProps,
-        [object.uuid]: {
-          ...defaultProps[object.uuid],
-          text: {
-            ...defaultProps[object.uuid].text,
-            text,
-          }
-        }
-      }
-    }));
+    dispatch(
+      setObjectDefaultProps({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        props: {
+          ...defaultProps,
+          [object.uuid]: {
+            ...defaultProps[object.uuid],
+            text: {
+              ...defaultProps[object.uuid].text,
+              text,
+            },
+          },
+        },
+      }),
+    );
   };
 
   const onRootContextMenuOpenChange = (open: boolean): void => {
@@ -346,7 +328,7 @@ export const QueueEditor: React.FC = () => {
           ...settings,
           selectionMode: 'normal',
           selectedObjectUUIDs: [],
-        })
+        }),
       );
     }
   };
@@ -358,7 +340,7 @@ export const QueueEditor: React.FC = () => {
           ...settings,
           selectionMode: 'normal',
           selectedObjectUUIDs: [uuid],
-        })
+        }),
       );
     }
   };
@@ -394,7 +376,9 @@ export const QueueEditor: React.FC = () => {
                       <QueueContextMenu.Trigger>
                         <QueueObject.Container
                           object={object}
-                          detail={settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)}
+                          detail={
+                            settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)
+                          }
                           documentScale={settings.scale}
                           selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
                           <QueueObject.Animator
@@ -415,7 +399,8 @@ export const QueueEditor: React.FC = () => {
                                 onResizeEnd={(event): void => onResizeEnd(object, event)}
                                 onRotateStart={(): void => onRotateStart()}
                                 onRotateMove={(event): void => onRotateMove(object.uuid, event.degree)}
-                                onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)} />
+                                onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)}
+                              />
                             </QueueObject.Drag>
                           </QueueObject.Animator>
                         </QueueObject.Container>
@@ -428,9 +413,7 @@ export const QueueEditor: React.FC = () => {
                 </div>
               </Scaler>
             </Drawable>
-            {settings.presentationMode && (
-              <PresentationRemote />
-            )}
+            {settings.presentationMode && <PresentationRemote />}
           </QueueScrollArea.Viewport>
           <QueueScrollArea.Scrollbar orientation="vertical">
             <QueueScrollArea.Thumb />

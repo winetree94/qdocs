@@ -13,31 +13,23 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
   const { object, detail } = useContext(QueueObjectContainerContext);
 
   const verticalAlign =
-    object.text.verticalAlign === 'middle'
-      ? 'center'
-      : object.text.verticalAlign === 'top'
-        ? 'flex-start'
-        : 'flex-end';
+    object.text.verticalAlign === 'middle' ? 'center' : object.text.verticalAlign === 'top' ? 'flex-start' : 'flex-end';
 
   const horizontalAlign =
     object.text.horizontalAlign === 'center'
       ? 'center'
       : object.text.horizontalAlign === 'left'
-        ? 'flex-start'
-        : 'flex-end';
+      ? 'flex-start'
+      : 'flex-end';
 
   const textAlign =
-    object.text.horizontalAlign === 'center'
-      ? 'center'
-      : object.text.horizontalAlign === 'left'
-        ? 'left'
-        : 'right';
+    object.text.horizontalAlign === 'center' ? 'center' : object.text.horizontalAlign === 'left' ? 'left' : 'right';
 
   const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.key === 'Enter') {
       event.preventDefault();
       if (window.getSelection) {
-        const selection = window.getSelection()!;
+        const selection = window.getSelection();
         const range = selection.getRangeAt(0);
         const br = document.createElement('br');
         const textNode = document.createTextNode('\u00a0');
@@ -53,11 +45,11 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
   };
 
   const onBlur = (): void => {
-    onEdit?.(ref.current!.innerHTML);
+    onEdit?.(ref.current.innerHTML);
   };
 
   const onTextInput = (): void => {
-    onEdit?.(ref.current!.innerHTML);
+    onEdit?.(ref.current.innerHTML);
   };
 
   useEffect(() => {

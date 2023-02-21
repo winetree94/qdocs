@@ -18,10 +18,8 @@ export const LeftPanel: FunctionComponent = () => {
   const queueDocument = useAppSelector(selectDocument);
   const settings = useAppSelector(selectSettings);
 
-  const selectedObjects = queueDocument!.pages[
-    settings.queuePage
-  ].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid)
+  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid),
   );
   const hasSelectedObjects = selectedObjects.length > 0;
 
@@ -30,12 +28,8 @@ export const LeftPanel: FunctionComponent = () => {
       {hasSelectedObjects ? (
         <QueueTabs.Root className="h-full" defaultValue={PanelTabType.Styler}>
           <QueueTabs.List>
-            <QueueTabs.Trigger value={PanelTabType.Styler}>
-              Effects
-            </QueueTabs.Trigger>
-            <QueueTabs.Trigger value={PanelTabType.DefaultProp}>
-              Default
-            </QueueTabs.Trigger>
+            <QueueTabs.Trigger value={PanelTabType.Styler}>Effects</QueueTabs.Trigger>
+            <QueueTabs.Trigger value={PanelTabType.DefaultProp}>Default</QueueTabs.Trigger>
           </QueueTabs.List>
           <QueueTabs.Content value={PanelTabType.Styler}>
             <EffectControllerBox />

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  FunctionComponent,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { createContext, FunctionComponent, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatorTimingFunctionType, getTimingFunction } from './timing';
 
 const AnimatableContext = createContext<number>(-1);
@@ -41,7 +34,7 @@ export const Animator: FunctionComponent<AnimatorProps> = ({
         setProgress(-1);
       }
     },
-    [start, duration, timing]
+    [start, duration, timing],
   );
 
   useLayoutEffect(() => {
@@ -55,8 +48,7 @@ export const Animator: FunctionComponent<AnimatorProps> = ({
   }, [start, animate]);
 
   return (
-    <AnimatableContext.Provider
-      value={actived ? Math.max(progress, 0) : progress}>
+    <AnimatableContext.Provider value={actived ? Math.max(progress, 0) : progress}>
       <AnimatableContext.Consumer>{children}</AnimatableContext.Consumer>
     </AnimatableContext.Provider>
   );

@@ -1,10 +1,19 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
 import { QueueDocument } from 'model/document';
 import { OBJECT_PROPERTY_META } from 'model/meta';
-import { setDocument, setObjectCurrentBasesEffect, setObjectDefaultProps, setObjectQueueEffects, setPageObjects, setPageObjectsByUUID, setPages } from './actions';
+import { QueueObjectType } from 'model/object';
+import {
+  setDocument,
+  setObjectCurrentBasesEffect,
+  setObjectDefaultProps,
+  setObjectQueueEffects,
+  setPageObjects,
+  setPageObjectsByUUID,
+  setPages,
+} from './actions';
 
-export const documentReducer = createReducer<QueueDocument>(null, builder => {
+export const documentReducer = createReducer<QueueDocument>(null, (builder) => {
   builder.addCase(setDocument, (state, action) => {
     return action.payload;
   });
@@ -53,7 +62,7 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
 
   builder.addCase(setObjectQueueEffects, (state, action) => {
     if (!state) return null;
-    const objects = state.pages[action.payload.page].objects ?? [];
+    const objects: QueueObjectType[] = state.pages[action.payload.page].objects ?? [];
     const newObjects = objects.map((object) => {
       const newObject = cloneDeep(object);
       const existCreateEffectIndex = newObject.effects.findIndex((effect) => effect.type === 'create');
@@ -76,8 +85,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // fade
-      const existFadeEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'fade' && effect.index === action.payload.queueIndex);
+      const existFadeEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'fade' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.fade) {
         if (existFadeEffectIndex === -1) {
           newObject.effects.push({
@@ -95,8 +105,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // fill
-      const existFillEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'fill' && effect.index === action.payload.queueIndex);
+      const existFillEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'fill' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.fill) {
         if (existFillEffectIndex === -1) {
           newObject.effects.push({
@@ -114,8 +125,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // rect
-      const existRectEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'rect' && effect.index === action.payload.queueIndex);
+      const existRectEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'rect' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.rect) {
         if (existRectEffectIndex === -1) {
           newObject.effects.push({
@@ -133,8 +145,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // rotate
-      const existRotateEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'rotate' && effect.index === action.payload.queueIndex);
+      const existRotateEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'rotate' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.rotate) {
         if (existRotateEffectIndex === -1) {
           newObject.effects.push({
@@ -152,8 +165,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // scale
-      const existScaleEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'scale' && effect.index === action.payload.queueIndex);
+      const existScaleEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'scale' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.scale) {
         if (existScaleEffectIndex === -1) {
           newObject.effects.push({
@@ -171,8 +185,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // stroke
-      const existStrokeEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'stroke' && effect.index === action.payload.queueIndex);
+      const existStrokeEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'stroke' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.stroke) {
         if (existStrokeEffectIndex === -1) {
           newObject.effects.push({
@@ -190,8 +205,9 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       }
 
       // text
-      const existTextEffectIndex = newObject.effects
-        .findIndex((effect) => effect.type === 'text' && effect.index === action.payload.queueIndex);
+      const existTextEffectIndex = newObject.effects.findIndex(
+        (effect) => effect.type === 'text' && effect.index === action.payload.queueIndex,
+      );
       if (action.payload.effects[object.uuid]?.text) {
         if (existTextEffectIndex === -1) {
           newObject.effects.push({
@@ -243,7 +259,7 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
           objects: newObjects,
         },
         ...state.pages.slice(action.payload.page + 1),
-      ]
+      ],
     };
   });
 
@@ -271,7 +287,7 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
           objects: newObjects,
         },
         ...state.pages.slice(action.payload.page + 1),
-      ]
+      ],
     };
   });
 
@@ -286,7 +302,7 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       const existObject = object;
       const newObject = cloneDeep(existObject);
       const currentQueueEffectIndex = newObject.effects.findIndex(
-        (effect) => effect.index === action.payload.queueIndex
+        (effect) => effect.index === action.payload.queueIndex,
       );
 
       newObject.effects[currentQueueEffectIndex] = {
@@ -311,5 +327,16 @@ export const documentReducer = createReducer<QueueDocument>(null, builder => {
       ],
     };
   });
+});
 
+const initialState = 1;
+
+// Define the initial state using that type
+export const counterSlice = createSlice({
+  name: 'document',
+  initialState,
+  reducers: {
+    increment: (state, action: PayloadAction<{ n: number }>) => state + 1,
+  },
+  extraReducers: {},
 });

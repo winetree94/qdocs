@@ -11,8 +11,7 @@ export const EffectControllerRotate = (): ReactElement => {
   const settings = useAppSelector(selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
-  const firstObjectRotateEffect =
-    effects[settings.selectedObjectUUIDs[0]].rotate;
+  const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].rotate;
 
   const handleCurrentRotateChange = (rotate: Partial<QueueRotate>): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
@@ -25,17 +24,19 @@ export const EffectControllerRotate = (): ReactElement => {
         },
       };
 
-      dispatch(setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...effects,
-          [objectUUID]: {
-            ...effects[objectUUID],
-            rotate: nextEffect,
+      dispatch(
+        setObjectQueueEffects({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          effects: {
+            ...effects,
+            [objectUUID]: {
+              ...effects[objectUUID],
+              rotate: nextEffect,
+            },
           },
-        }
-      }));
+        }),
+      );
     });
   };
 

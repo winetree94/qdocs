@@ -11,20 +11,19 @@ export const PresentationRemote: React.FC = () => {
   const pages = useAppSelector(selectPages);
   const settings = useAppSelector(selectSettings);
 
-  const setQueueIndex = (
-    index: number,
-    play?: boolean,
-  ): void => {
+  const setQueueIndex = (index: number, play?: boolean): void => {
     const target = Math.max(0, index);
     const sameIndex = settings.queueIndex === target;
-    dispatch(setSettings({
-      ...settings,
-      queueIndex: target,
-      queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
-      queueStart: play ? performance.now() : -1,
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-    }));
+    dispatch(
+      setSettings({
+        ...settings,
+        queueIndex: target,
+        queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
+        queueStart: play ? performance.now() : -1,
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      }),
+    );
   };
 
   const rewind = (): void => {
@@ -39,7 +38,7 @@ export const PresentationRemote: React.FC = () => {
           queueStart: -1,
           selectedObjectUUIDs: [],
           selectionMode: 'normal',
-        })
+        }),
       );
       return;
     }
@@ -51,10 +50,7 @@ export const PresentationRemote: React.FC = () => {
 
   const play = (): void => {
     const targetPageQueueIndex = settings.queueIndex + 1;
-    if (
-      targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
-      settings.queuePage < pages.length - 1
-    ) {
+    if (targetPageQueueIndex >= effectsByQueues[settings.queuePage].length && settings.queuePage < pages.length - 1) {
       dispatch(
         setSettings({
           ...settings,
@@ -64,7 +60,7 @@ export const PresentationRemote: React.FC = () => {
           queueStart: -1,
           selectedObjectUUIDs: [],
           selectionMode: 'normal',
-        })
+        }),
       );
       return;
     }

@@ -24,17 +24,19 @@ export const EffectControllerRect = (): ReactElement => {
         },
       };
 
-      dispatch(setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...effects,
-          [objectUUID]: {
-            ...effects[objectUUID],
-            rect: nextEffect,
+      dispatch(
+        setObjectQueueEffects({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          effects: {
+            ...effects,
+            [objectUUID]: {
+              ...effects[objectUUID],
+              rect: nextEffect,
+            },
           },
-        }
-      }));
+        }),
+      );
     });
   };
 
@@ -46,9 +48,7 @@ export const EffectControllerRect = (): ReactElement => {
           className="w-full"
           type="number"
           value={firstObjectRectEffect.rect.width}
-          onChange={(e): void =>
-            handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })
-          }
+          onChange={(e): void => handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })}
         />
       </div>
       <p className="text-sm">height</p>
@@ -57,9 +57,7 @@ export const EffectControllerRect = (): ReactElement => {
           className="w-full"
           type="number"
           value={firstObjectRectEffect.rect.height}
-          onChange={(e): void =>
-            handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })
-          }
+          onChange={(e): void => handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })}
         />
       </div>
       <p className="text-sm">x</p>
@@ -68,9 +66,7 @@ export const EffectControllerRect = (): ReactElement => {
           className="w-full"
           type="number"
           value={firstObjectRectEffect.rect.x}
-          onChange={(e): void =>
-            handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })
-          }
+          onChange={(e): void => handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })}
         />
       </div>
       <p className="text-sm">y</p>
@@ -79,9 +75,7 @@ export const EffectControllerRect = (): ReactElement => {
           className="w-full"
           type="number"
           value={firstObjectRectEffect.rect.y}
-          onChange={(e): void =>
-            handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })
-          }
+          onChange={(e): void => handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })}
         />
       </div>
     </div>

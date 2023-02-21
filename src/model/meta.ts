@@ -15,5 +15,4 @@ export const OBJECT_PROPERTY_META = {
   TEXT: 'text',
 } as const;
 
-export type OBJECT_PROPERTIES =
-  typeof OBJECT_PROPERTY_META[keyof typeof OBJECT_PROPERTY_META];
+export type OBJECT_PROPERTIES = typeof OBJECT_PROPERTY_META[keyof typeof OBJECT_PROPERTY_META];

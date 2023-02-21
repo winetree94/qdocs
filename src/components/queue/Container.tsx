@@ -4,22 +4,18 @@ import { QueueObjectType } from 'model/object';
 import { QueueRotate } from 'model/property';
 import { createContext, FunctionComponent } from 'react';
 
-export interface QueueObjectContainerContextType<
-  T extends QueueObjectType = any
-> {
+export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
   object: T;
   documentScale: number;
   detail: boolean;
   selected: boolean;
 }
 
-export const QueueObjectContainerContext =
-  createContext<QueueObjectContainerContextType>(
-    {} as QueueObjectContainerContextType
-  );
+export const QueueObjectContainerContext = createContext<QueueObjectContainerContextType>(
+  {} as QueueObjectContainerContextType,
+);
 
-export interface QueueObjectContainerProps
-  extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTMLDivElement> {
   documentScale: number;
   object: QueueObjectType;
   rotate?: QueueRotate;
@@ -27,9 +23,7 @@ export interface QueueObjectContainerProps
   selected: boolean;
   children: React.ReactNode;
 }
-export const QueueObjectContainer: FunctionComponent<
-  QueueObjectContainerProps
-> = ({
+export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> = ({
   children,
   selected,
   rotate,
@@ -38,15 +32,15 @@ export const QueueObjectContainer: FunctionComponent<
   object,
   ...props
 }) => {
-    return (
-      <QueueObjectContainerContext.Provider
-        value={{
-          object,
-          selected,
-          detail,
-          documentScale,
-        }}>
-        <div {...props}>{children}</div>
-      </QueueObjectContainerContext.Provider>
-    );
-  };
+  return (
+    <QueueObjectContainerContext.Provider
+      value={{
+        object,
+        selected,
+        detail,
+        documentScale,
+      }}>
+      <div {...props}>{children}</div>
+    </QueueObjectContainerContext.Provider>
+  );
+};

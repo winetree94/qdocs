@@ -1,10 +1,6 @@
 import { PlusIcon } from '@radix-ui/react-icons';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
-import {
-  BaseQueueEffect,
-  OBJECT_EFFECT_META,
-  QueueEffectType,
-} from 'model/effect';
+import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
@@ -20,9 +16,7 @@ type EffectControllerProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectController = ({
-  effectType,
-}: EffectControllerProps): ReactElement => {
+export const EffectController = ({ effectType }: EffectControllerProps): ReactElement => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -48,7 +42,7 @@ export const EffectController = ({
 const createEffect = (
   effectType: QueueEffectType['type'],
   queueIndex: QueueEffectType['index'],
-  queueObject: QueueObjectType
+  queueObject: QueueObjectType,
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect = {
     duration: 1000,
@@ -59,14 +53,13 @@ const createEffect = (
   switch (effectType) {
     case 'fade': {
       const initialFade = queueObject.effects.find(
-        (effect) => effect.index === queueIndex - 1 && effect.type === 'fade'
+        (effect) => effect.index === queueIndex - 1 && effect.type === 'fade',
       );
 
       return {
         ...baseQueueEffect,
         type: 'fade',
-        fade:
-          initialFade?.type === 'fade' ? initialFade.fade : queueObject.fade,
+        fade: initialFade?.type === 'fade' ? initialFade.fade : queueObject.fade,
       };
     }
     case 'rect': {
@@ -89,7 +82,7 @@ const createEffect = (
         },
         {
           ...queueObject.rect,
-        }
+        },
       );
       return {
         ...baseQueueEffect,
@@ -125,48 +118,34 @@ export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
   const queueDocument = useAppSelector(selectDocument);
-  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid),
+  );
   const hasSelectedObjects = selectedObjects.length > 0;
 
   const [firstObject] = selectedObjects;
-  const objectCurrentEffects = firstObject.effects.filter(
-    (effect) => effect.index === settings.queueIndex
-  );
-  const addableEffectTypes = Object.values(
-    OBJECT_ADDABLE_EFFECTS[firstObject.type]
-  );
+  const objectCurrentEffects = firstObject.effects.filter((effect) => effect.index === settings.queueIndex);
+  const addableEffectTypes = Object.values(OBJECT_ADDABLE_EFFECTS[firstObject.type]);
   const currentQueueObjectEffectTypes = objectCurrentEffects.map(
-    (currentQueueObjectEffect) => currentQueueObjectEffect.type
+    (currentQueueObjectEffect) => currentQueueObjectEffect.type,
   );
-  const createEffectIndex = firstObject.effects.find(
-    (effect) => effect.type === OBJECT_EFFECT_META.CREATE
-  ).index;
+  const createEffectIndex = firstObject.effects.find((effect) => effect.type === OBJECT_EFFECT_META.CREATE).index;
 
-  const handleAddEffectItemClick = (
-    effectType: QueueEffectType['type']
-  ): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map(
-      (object) => {
-        if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-          return object;
-        }
-
-        const newEffects = [...object.effects];
-        const newIndex = newEffects.findIndex(
-          (effect) => effect.index === settings.queueIndex
-        );
-        newEffects.splice(
-          newIndex,
-          0,
-          createEffect(effectType, settings.queueIndex, object)
-        );
-
-        return {
-          ...object,
-          effects: newEffects,
-        };
+  const handleAddEffectItemClick = (effectType: QueueEffectType['type']): void => {
+    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
+      if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
+        return object;
       }
-    );
+
+      const newEffects = [...object.effects];
+      const newIndex = newEffects.findIndex((effect) => effect.index === settings.queueIndex);
+      newEffects.splice(newIndex, 0, createEffect(effectType, settings.queueIndex, object));
+
+      return {
+        ...object,
+        effects: newEffects,
+      };
+    });
 
     const newPages = queueDocument!.pages.slice(0);
     newPages[settings.queuePage] = {
@@ -174,10 +153,12 @@ export const EffectControllerBox = (): ReactElement | null => {
       objects: newObjects,
     };
 
-    dispatch(setDocument({
-      ...queueDocument!,
-      pages: newPages,
-    }));
+    dispatch(
+      setDocument({
+        ...queueDocument!,
+        pages: newPages,
+      }),
+    );
   };
 
   if (!hasSelectedObjects) {
@@ -213,9 +194,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                 }
 
                 return (
-                  <Dropdown.Item
-                    key={effectType}
-                    onClick={(): void => handleAddEffectItemClick(effectType)}>
+                  <Dropdown.Item key={effectType} onClick={(): void => handleAddEffectItemClick(effectType)}>
                     {effectType}
                   </Dropdown.Item>
                 );
@@ -225,10 +204,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         </div>
         <div className="flex flex-col gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
-            <EffectController
-              key={`ec-${currentQueueObjectEffect.type}`}
-              effectType={currentQueueObjectEffect.type}
-            />
+            <EffectController key={`ec-${currentQueueObjectEffect.type}`} effectType={currentQueueObjectEffect.type} />
           ))}
         </div>
       </div>

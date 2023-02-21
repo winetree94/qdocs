@@ -8,10 +8,7 @@ export interface FadeAnimation {
   fadeEffect: FadeEffect;
 }
 
-export const getCurrentFade = (
-  object: QueueObjectType,
-  index: number
-): QueueFade => {
+export const getCurrentFade = (object: QueueObjectType, index: number): QueueFade => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is FadeEffect => effect.type === 'fade')
@@ -21,16 +18,13 @@ export const getCurrentFade = (
 export const getFadeAnimation = (
   object: QueueObjectType,
   index: number,
-  position: 'forward' | 'backward' | 'pause'
+  position: 'forward' | 'backward' | 'pause',
 ): FadeAnimation | null => {
   if (position === 'pause') {
     return null;
   }
 
-  const fromFade = getCurrentFade(
-    object,
-    position === 'forward' ? index - 1 : index + 1
-  );
+  const fromFade = getCurrentFade(object, position === 'forward' ? index - 1 : index + 1);
 
   const fadeEffect = object.effects.find((effect): effect is FadeEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -44,11 +38,11 @@ export const getFadeAnimation = (
   const slicedEffect: FadeEffect =
     position === 'backward'
       ? {
-        ...fadeEffect,
-        fade: {
-          ...getCurrentFade(object, index),
-        },
-      }
+          ...fadeEffect,
+          fade: {
+            ...getCurrentFade(object, index),
+          },
+        }
       : fadeEffect;
 
   return {
@@ -57,20 +51,13 @@ export const getFadeAnimation = (
   };
 };
 
-export const getAnimatableFade = (
-  progress: number,
-  targetFade: QueueFade,
-  fromFade?: QueueFade
-): QueueFade => {
+export const getAnimatableFade = (progress: number, targetFade: QueueFade, fromFade?: QueueFade): QueueFade => {
   if (progress < 0 || !fromFade) {
     return {
       opacity: Math.max(targetFade.opacity, 0.1),
     };
   }
   return {
-    opacity: Math.max(
-      fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress,
-      0.1
-    ),
+    opacity: Math.max(fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress, 0.1),
   };
 };

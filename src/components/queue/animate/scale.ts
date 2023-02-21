@@ -8,10 +8,7 @@ export interface ScaleAnimation {
   scaleEffect: ScaleEffect;
 }
 
-export const getCurrentScale = (
-  object: QueueObjectType,
-  index: number
-): QueueScale => {
+export const getCurrentScale = (object: QueueObjectType, index: number): QueueScale => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is ScaleEffect => effect.type === 'scale')
@@ -21,16 +18,13 @@ export const getCurrentScale = (
 export const getScaleAnimation = (
   object: QueueObjectType,
   index: number,
-  position: 'forward' | 'backward' | 'pause'
+  position: 'forward' | 'backward' | 'pause',
 ): ScaleAnimation | null => {
   if (position === 'pause') {
     return null;
   }
 
-  const fromScale = getCurrentScale(
-    object,
-    position === 'forward' ? index - 1 : index + 1
-  );
+  const fromScale = getCurrentScale(object, position === 'forward' ? index - 1 : index + 1);
 
   const scaleEffect = object.effects.find((effect): effect is ScaleEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -57,11 +51,7 @@ export const getScaleAnimation = (
   };
 };
 
-export const getAnimatableScale = (
-  progress: number,
-  targetScale: QueueScale,
-  fromScale?: QueueScale
-): QueueScale => {
+export const getAnimatableScale = (progress: number, targetScale: QueueScale, fromScale?: QueueScale): QueueScale => {
   if (progress < 0 || !fromScale) {
     return targetScale;
   }

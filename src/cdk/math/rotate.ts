@@ -10,13 +10,7 @@
  * @param angle rotation angle
  * @returns rotated x, y
  */
-export const rotate = (
-  x: number,
-  y: number,
-  cx: number,
-  cy: number,
-  angle: number
-): [number, number] => [
+export const rotate = (x: number, y: number, cx: number, cy: number, angle: number): [number, number] => [
   (x - cx) * Math.cos(angle) - (y - cy) * Math.sin(angle) + cx,
   (x - cx) * Math.sin(angle) + (y - cy) * Math.cos(angle) + cy,
 ];

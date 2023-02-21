@@ -14,9 +14,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const RootContext = createContext({});
 
-export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
-  props
-) => {
+export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (props) => {
   const queueDocument = useAppSelector(selectDocument);
   const settings = useAppSelector(selectSettings);
   const dispatch = useAppDispatch();
@@ -24,10 +22,12 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && settings.presentationMode) {
-        dispatch(setSettings({
-          ...settings,
-          presentationMode: false
-        }));
+        dispatch(
+          setSettings({
+            ...settings,
+            presentationMode: false,
+          }),
+        );
       }
     };
     const onContextmenu = (event: MouseEvent): void => {

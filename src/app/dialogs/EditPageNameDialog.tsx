@@ -10,12 +10,7 @@ export interface EditPageNameProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const EditPageNameDialog: React.FC<EditPageNameProps> = ({
-  pageName,
-  onSubmit,
-  open,
-  onOpenChange,
-}) => {
+export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSubmit, open, onOpenChange }) => {
   const [currentPageName, setCurrentPageName] = useState(pageName);
 
   return (
@@ -34,11 +29,7 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({
               />
             </QueueDialog.Description>
             <QueueDialog.Footer>
-              <QueueButton
-                type="button"
-                size="small"
-                color="red"
-                onClick={(): void => onOpenChange(false)}>
+              <QueueButton type="button" size="small" color="red" onClick={(): void => onOpenChange(false)}>
                 취소
               </QueueButton>
               <QueueButton type="submit" size="small" color="blue">

@@ -1,11 +1,4 @@
-import {
-  FunctionComponent,
-  memo,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { FunctionComponent, memo, ReactNode, useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import styles from './ObjectPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
@@ -65,57 +58,48 @@ export interface FlattenRowProps {
   };
 }
 
-export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
-  ({ style, index, data }) => {
-    const flattenData = data.flattenData[index];
+export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({ style, index, data }) => {
+  const flattenData = data.flattenData[index];
 
-    if (flattenData.type === 'group') {
-      return (
-        <div
-          style={style}
-          onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
-          className={clsx(styles.objectGroupTitle)}>
-          <SvgRemixIcon
-            className={styles.objectGroupArrow}
-            width={15}
-            height={15}
-            icon={
-              data.closedObjectGroupKey[flattenData.key]
-                ? 'ri-arrow-right-s-line'
-                : 'ri-arrow-down-s-line'
-            }
-          />
-          {flattenData.title}
-        </div>
-      );
-    }
-
+  if (flattenData.type === 'group') {
     return (
-      <div className={clsx('flex')} style={style}>
-        {flattenData.objects.map((object) => (
-          <Tooltip.Provider key={object.key}>
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <div onClick={object.factory} className={clsx(styles.object)}>
-                  {object.preview}
-                </div>
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content
-                  className={styles.TooltipContent}
-                  sideOffset={5}>
-                  {object.key}
-                  <Tooltip.Arrow className={styles.TooltipArrow} />
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
-          </Tooltip.Provider>
-        ))}
+      <div
+        style={style}
+        onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
+        className={clsx(styles.objectGroupTitle)}>
+        <SvgRemixIcon
+          className={styles.objectGroupArrow}
+          width={15}
+          height={15}
+          icon={data.closedObjectGroupKey[flattenData.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'}
+        />
+        {flattenData.title}
       </div>
     );
-  },
-  areEqual
-);
+  }
+
+  return (
+    <div className={clsx('flex')} style={style}>
+      {flattenData.objects.map((object) => (
+        <Tooltip.Provider key={object.key}>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <div onClick={object.factory} className={clsx(styles.object)}>
+                {object.preview}
+              </div>
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
+                {object.key}
+                <Tooltip.Arrow className={styles.TooltipArrow} />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+      ))}
+    </div>
+  );
+}, areEqual);
 
 // This helper function memoizes incoming props,
 // To avoid causing unnecessary re-renders pure Row components.
@@ -126,12 +110,12 @@ const createItemData = memoize(
   (
     flattenData: FlattenData[],
     closedObjectGroupKey: { [key: string]: boolean },
-    toggleOpenedObjectGroup: (key: string) => void
+    toggleOpenedObjectGroup: (key: string) => void,
   ) => ({
     flattenData,
     closedObjectGroupKey,
     toggleOpenedObjectGroup,
-  })
+  }),
 );
 
 export const ObjectPanel: FunctionComponent = () => {
@@ -154,35 +138,31 @@ export const ObjectPanel: FunctionComponent = () => {
 
   const createFigure = useCallback(
     (
-      createDefaultShape: (
-        documentRect: QueueDocumentRect,
-        queueIndex: number,
-        iconType?: string
-      ) => QueueObjectType
+      createDefaultShape: (documentRect: QueueDocumentRect, queueIndex: number, iconType?: string) => QueueObjectType,
     ): ((iconClassName?: string) => void) => {
       return (iconClassName) => {
-        const figure = createDefaultShape(
-          queueDocument!.documentRect,
-          settings.queueIndex,
-          iconClassName
-        );
+        const figure = createDefaultShape(queueDocument!.documentRect, settings.queueIndex, iconClassName);
         const newPages = queueDocument!.pages.slice(0);
         newPages[settings.queuePage] = {
           ...queueDocument!.pages[settings.queuePage],
           objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
         };
         newPages[settings.queuePage].objects.push(figure);
-        dispatch(setDocument({
-          ...queueDocument!,
-          pages: newPages,
-        }));
-        dispatch(setSettings({
-          ...settings,
-          selectedObjectUUIDs: [figure.uuid],
-        }));
+        dispatch(
+          setDocument({
+            ...queueDocument!,
+            pages: newPages,
+          }),
+        );
+        dispatch(
+          setSettings({
+            ...settings,
+            selectedObjectUUIDs: [figure.uuid],
+          }),
+        );
       };
     },
-    [queueDocument, settings, dispatch]
+    [queueDocument, settings, dispatch],
   );
 
   const createSquare = createFigure(createDefaultSquare);
@@ -203,13 +183,7 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <rect
-                    width="30"
-                    height="30"
-                    stroke="black"
-                    strokeWidth="4"
-                    fill="transparent"
-                  />
+                  <rect width="30" height="30" stroke="black" strokeWidth="4" fill="transparent" />
                 </g>
               </svg>
             ),
@@ -221,14 +195,7 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r="13"
-                    stroke="black"
-                    strokeWidth="2"
-                    fill="transparent"
-                  />
+                  <circle cx="15" cy="15" r="13" stroke="black" strokeWidth="2" fill="transparent" />
                 </g>
               </svg>
             ),
@@ -240,15 +207,7 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="42"
-                    y2="42"
-                    stroke="black"
-                    strokeWidth="2"
-                    fill="transparent"
-                  />
+                  <line x1="0" y1="0" x2="42" y2="42" stroke="black" strokeWidth="2" fill="transparent" />
                 </g>
               </svg>
             ),
@@ -266,7 +225,7 @@ export const ObjectPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [createSquare, createCircle, createLine, createIcon]
+    [createSquare, createCircle, createLine, createIcon],
   );
 
   const filteredGroups = useMemo(() => {
@@ -275,9 +234,7 @@ export const ObjectPanel: FunctionComponent = () => {
     }
     return models.reduce<QueueObjectGroup[]>((result, group) => {
       const filtered = group.children.filter((child) =>
-        child.keyword.some((keyword) =>
-          keyword.toLowerCase().includes(searchKeyword.toLowerCase())
-        )
+        child.keyword.some((keyword) => keyword.toLowerCase().includes(searchKeyword.toLowerCase())),
       );
       if (filtered.length === 0) {
         return result;
@@ -301,10 +258,7 @@ export const ObjectPanel: FunctionComponent = () => {
         return result;
       }
       const rows = group.children.reduce<QueueObject[][]>((result, child) => {
-        if (
-          !result[result.length - 1] ||
-          result[result.length - 1].length >= 4
-        ) {
+        if (!result[result.length - 1] || result[result.length - 1].length >= 4) {
           result.push([]);
         }
         const row = result[result.length - 1];
@@ -316,17 +270,13 @@ export const ObjectPanel: FunctionComponent = () => {
           key: row.map((object) => object.key).join('-'),
           type: 'row',
           objects: row,
-        }))
+        })),
       );
       return result;
     }, []);
   }, [filteredGroups, closedObjectGroupKey]);
 
-  const memoizedItemData = createItemData(
-    flattenItems,
-    closedObjectGroupKey,
-    toggleOpenedObjectGroup
-  );
+  const memoizedItemData = createItemData(flattenItems, closedObjectGroupKey, toggleOpenedObjectGroup);
 
   const handleScroll = (props: ListOnScrollProps): void => {
     setListScrollTopState(props.scrollOffset);
@@ -339,13 +289,10 @@ export const ObjectPanel: FunctionComponent = () => {
           placeholder="Search Shape"
           className={clsx(styles.input)}
           value={searchKeyword}
-          onChange={(e): void =>
-            setSearchKeyword(e.target.value)
-          }></QueueInput>
+          onChange={(e): void => setSearchKeyword(e.target.value)}></QueueInput>
       </div>
       <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
-        <QueueScrollArea.Viewport
-          className={clsx(styles.ScrollAreaViewport)}>
+        <QueueScrollArea.Viewport className={clsx(styles.ScrollAreaViewport)}>
           <AutoSizer>
             {({ height, width }): ReactNode => (
               <FixedSizeList

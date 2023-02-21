@@ -12,7 +12,7 @@ export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
   const fill = convertHex(
     containerContext.object.fill.color,
-    containerContext.object.fill.opacity * animation.fade.opacity
+    containerContext.object.fill.opacity * animation.fade.opacity,
   );
 
   return (

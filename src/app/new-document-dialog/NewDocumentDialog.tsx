@@ -10,19 +10,13 @@ import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
 import { QueueDocument } from 'model/document';
 
-
-export interface NewDocumentDialogProps
-  extends Omit<Dialog.DialogProps, 'children'> {
+export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
   onSubmit?: (document: QueueDocument) => void;
 }
 
-export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
-  onSubmit,
-  ...props
-}) => {
+export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, ...props }) => {
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
-  const [documentTemplate, setDocumentTemplate] =
-    React.useState<string>('Empty');
+  const [documentTemplate, setDocumentTemplate] = React.useState<string>('Empty');
 
   const [fetching, setFetching] = React.useState<boolean>(false);
 
@@ -47,9 +41,7 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
     }
   };
 
-  const onDoubleClickItem = async (
-    fetcher: () => Promise<QueueDocument>,
-  ): Promise<void> => {
+  const onDoubleClickItem = async (fetcher: () => Promise<QueueDocument>): Promise<void> => {
     if (fetching) {
       return;
     }
@@ -72,12 +64,8 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
           <div className={styles.Container}>
             <div className={styles.RatioContainer} style={{ display: 'none' }}>
               <h6>문서 크기 비율</h6>
-              <QueueSelect.Root
-                value={documentRatio}
-                onValueChange={(value): void => setDocumentRatio(value)}>
-                <QueueSelect.Trigger
-                  className={styles.RatioSelector}
-                  aria-label="Food">
+              <QueueSelect.Root value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
+                <QueueSelect.Trigger className={styles.RatioSelector} aria-label="Food">
                   <QueueSelect.Value />
                   <QueueSelect.Icon>
                     <ChevronDownIcon />
@@ -87,15 +75,9 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
                   <QueueSelect.Content>
                     <QueueSelect.Viewport>
                       <QueueSelect.Group>
-                        <QueueSelect.Item value="16:9">
-                          와이드 (16:9)
-                        </QueueSelect.Item>
-                        <QueueSelect.Item value="16:10">
-                          와이드 (16:10)
-                        </QueueSelect.Item>
-                        <QueueSelect.Item value="4:3">
-                          35mm (4:3)
-                        </QueueSelect.Item>
+                        <QueueSelect.Item value="16:9">와이드 (16:9)</QueueSelect.Item>
+                        <QueueSelect.Item value="16:10">와이드 (16:10)</QueueSelect.Item>
+                        <QueueSelect.Item value="4:3">35mm (4:3)</QueueSelect.Item>
                       </QueueSelect.Group>
                     </QueueSelect.Viewport>
                   </QueueSelect.Content>
@@ -113,8 +95,7 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
                     key={name}
                     className={styles.TemplateItem}
                     value={name}
-                    onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}
-                  >
+                    onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}>
                     {name}
                   </QueueToggleGroup.Item>
                 ))}
@@ -122,18 +103,10 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({
             </div>
           </div>
           <QueueDialog.Footer>
-            <QueueButton
-              type="button"
-              size="small"
-              color="red"
-              onClick={(): void => props.onOpenChange?.(false)}>
+            <QueueButton type="button" size="small" color="red" onClick={(): void => props.onOpenChange?.(false)}>
               취소
             </QueueButton>
-            <QueueButton
-              type="button"
-              size="small"
-              color="blue"
-              onClick={onSubmitClick}>
+            <QueueButton type="button" size="small" color="blue" onClick={onSubmitClick}>
               확인
             </QueueButton>
           </QueueDialog.Footer>

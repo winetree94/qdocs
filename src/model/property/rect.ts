@@ -5,7 +5,7 @@ export type QueueRect = {
   y: number;
   width: number;
   height: number;
-}
+};
 
 export interface WithRect {
   [OBJECT_PROPERTY_META.RECT]: QueueRect;

@@ -26,8 +26,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const [editNamePageIndex, setEditNamePageIndex] = useState<number>(-1);
-  const [deleteConfirmPageIndex, setDeleteConfirmPageIndex] =
-    useState<number>(-1);
+  const [deleteConfirmPageIndex, setDeleteConfirmPageIndex] = useState<number>(-1);
 
   const setQueuePageIndex = (index: number): void => {
     dispatch(
@@ -39,7 +38,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
         queuePosition: 'pause',
         selectedObjectUUIDs: [],
         selectionMode: 'normal',
-      })
+      }),
     );
   };
 
@@ -73,10 +72,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
     setQueuePageIndex(Math.min(index, newPages.length - 1));
   };
 
-  const onDragStart = (
-    e: React.DragEvent<HTMLSpanElement>,
-    index: number
-  ): void => {
+  const onDragStart = (e: React.DragEvent<HTMLSpanElement>, index: number): void => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', `${index}`);
   };
@@ -131,10 +127,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
                 {pages.map((page, index, self) => (
                   <QueueContextMenu.Root key={index}>
                     <QueueContextMenu.Trigger
-                      className={clsx(
-                        'page-item',
-                        dragOverIndex === index && styles.dragOver
-                      )}
+                      className={clsx('page-item', dragOverIndex === index && styles.dragOver)}
                       draggable="true"
                       data-index={index}
                       onDragStart={(e): void => onDragStart(e, index)}
@@ -149,39 +142,25 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
                     </QueueContextMenu.Trigger>
                     <QueueContextMenu.Portal>
                       <QueueContextMenu.Content>
-                        <QueueContextMenu.Item
-                          onClick={(): void =>
-                            movePage(index, Math.max(index - 1, 0))
-                          }>
+                        <QueueContextMenu.Item onClick={(): void => movePage(index, Math.max(index - 1, 0))}>
                           페이지를 왼쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void =>
-                            movePage(
-                              index,
-                              Math.min(index + 1, self.length - 1)
-                            )
-                          }>
+                          onClick={(): void => movePage(index, Math.min(index + 1, self.length - 1))}>
                           페이지를 오른쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item
-                          onClick={(): void => createPage(Math.max(index, 0))}>
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index, 0))}>
                           왼쪽에 페이지 추가
                         </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void =>
-                            createPage(Math.min(index + 1, self.length))
-                          }>
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index + 1, self.length))}>
                           오른쪽에 페이지 추가
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item
-                          onClick={(): void => onPageCopy(index)}>
+                        <QueueContextMenu.Item onClick={(): void => onPageCopy(index)}>
                           페이지 복제
                         </QueueContextMenu.Item>
-                        <QueueContextMenu.Item
-                          onClick={(): void => setEditNamePageIndex(index)}>
+                        <QueueContextMenu.Item onClick={(): void => setEditNamePageIndex(index)}>
                           페이지 이름 변경
                         </QueueContextMenu.Item>
                         {pages.length >= 2 && (
@@ -189,9 +168,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
                             <QueueContextMenu.Separator />
                             <QueueContextMenu.Item
                               className={styles.Remove}
-                              onClick={(): void =>
-                                setDeleteConfirmPageIndex(index)
-                              }>
+                              onClick={(): void => setDeleteConfirmPageIndex(index)}>
                               페이지 삭제
                             </QueueContextMenu.Item>
                           </>
@@ -209,8 +186,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
         </QueueToggleGroup.Root>
       </div>
       <div>
-        <QueueIconButton
-          onClick={(): void => createPage(pages.length)}>
+        <QueueIconButton onClick={(): void => createPage(pages.length)}>
           <SvgRemixIcon icon="ri-add-fill" />
         </QueueIconButton>
       </div>
@@ -219,15 +195,11 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
       {deleteConfirmPageIndex !== -1 && (
         <QueueAlertDialog.Root
           open={deleteConfirmPageIndex !== -1}
-          onOpenChange={(opened): void =>
-            !opened && setDeleteConfirmPageIndex(-1)
-          }>
+          onOpenChange={(opened): void => !opened && setDeleteConfirmPageIndex(-1)}>
           <QueueAlertDialog.Overlay />
           <QueueAlertDialog.Content>
             <QueueAlertDialog.Title>페이지 삭제</QueueAlertDialog.Title>
-            <QueueAlertDialog.Description>
-              페이지를 삭제하시겠습니까?
-            </QueueAlertDialog.Description>
+            <QueueAlertDialog.Description>페이지를 삭제하시겠습니까?</QueueAlertDialog.Description>
             <QueueAlertDialog.Footer>
               <QueueAlertDialog.Cancel size="small" color="red">
                 취소
@@ -235,9 +207,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
               <QueueAlertDialog.Action
                 size="small"
                 color="blue"
-                onClick={(): void =>
-                  onPageDeleteSubmit(deleteConfirmPageIndex)
-                }>
+                onClick={(): void => onPageDeleteSubmit(deleteConfirmPageIndex)}>
                 확인
               </QueueAlertDialog.Action>
             </QueueAlertDialog.Footer>

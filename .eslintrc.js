@@ -1,12 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'react-app',
-    'react-app/jest',
-    'prettier',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'react-app', 'react-app/jest', 'prettier'],
   settings: {
     'import/resolver': {
       node: {
@@ -15,11 +9,12 @@ module.exports = {
       },
     },
   },
+  plugins: ['prettier'],
   rules: {
     semi: ['error', 'always'],
     quotes: ['error', 'single'],
+    indent: 'off',
     'no-trailing-spaces': ['error'],
-    // indent: ['error', 2],
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/naming-convention': [
       'error',
@@ -28,15 +23,10 @@ module.exports = {
         format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
       },
     ],
-    '@typescript-eslint/ban-types': [
-      'error',
-      // {
-      //   types: {
-      //     '{}': false,
-      //   },
-      // },
-    ],
+    '@typescript-eslint/typedef': ['error'],
+    '@typescript-eslint/ban-types': ['error'],
     '@typescript-eslint/no-unused-vars': ['error'],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    'prettier/prettier': ['error'],
   },
 };

@@ -1,33 +1,22 @@
 import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import {
-  WithFade,
-  WithFill,
-  WithRect,
-  WithRotation,
-  WithScale,
-  WithStroke,
-  WithText,
-} from 'model/property';
+import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
 
 export interface QueueLine
   extends WithEffects,
-  WithRect,
-  WithFade,
-  WithFill,
-  WithRotation,
-  WithScale,
-  WithStroke,
-  WithText {
+    WithRect,
+    WithFade,
+    WithFill,
+    WithRotation,
+    WithScale,
+    WithStroke,
+    WithText {
   type: 'line';
   uuid: string;
 }
 
-export const createDefaultLine = (
-  documentRect: QueueDocumentRect,
-  queueIndex: number
-): QueueLine => {
+export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: number): QueueLine => {
   const width = 300;
   const height = 300;
   return {

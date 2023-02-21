@@ -12,13 +12,13 @@ export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectControllerTimingFunction = ({
-  effectType,
-}: EffectControllerTimingFunctionProps): ReactElement => {
+export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
+    settings.selectedObjectUUIDs.includes(object.uuid),
+  );
   const [firstSelectedObject] = selectedObjects;
 
   const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
@@ -30,26 +30,26 @@ export const EffectControllerTimingFunction = ({
         timing: timingFunction as AnimatorTimingFunctionType,
       };
 
-      dispatch(setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...effects,
-          [objectUUID]: {
-            ...effects[objectUUID],
-            [effectType]: nextEffect,
+      dispatch(
+        setObjectQueueEffects({
+          page: settings.queuePage,
+          queueIndex: settings.queueIndex,
+          effects: {
+            ...effects,
+            [objectUUID]: {
+              ...effects[objectUUID],
+              [effectType]: nextEffect,
+            },
           },
-        }
-      }));
+        }),
+      );
     });
   };
 
   return (
     <div>
       <p className="text-sm">timing function</p>
-      <QueueSelect.Root
-        defaultValue={firstObjectEffect.timing}
-        onValueChange={handleTimingFunctionChange}>
+      <QueueSelect.Root defaultValue={firstObjectEffect.timing} onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Trigger>
           <QueueSelect.Value />
           <QueueSelect.Icon>

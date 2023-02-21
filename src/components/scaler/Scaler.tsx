@@ -10,13 +10,7 @@ export interface ScalerProps {
   children?: ReactNode;
 }
 
-export const Scaler: FunctionComponent<ScalerProps> = ({
-  scale,
-  width,
-  height,
-  className,
-  children,
-}) => {
+export const Scaler: FunctionComponent<ScalerProps> = ({ scale, width, height, className, children }) => {
   return (
     <div className={clsx(styles.Root, className)}>
       <div

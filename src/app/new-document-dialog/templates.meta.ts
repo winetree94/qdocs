@@ -9,16 +9,20 @@ export interface TemplateMeta {
   getTemplate(): Promise<QueueDocument>;
 }
 
-export const TEMPLATES: TemplateMeta[] = [{
-  name: 'Empty',
-  preview: '',
-  getTemplate: () => fetch(emptyUrl).then(r => r.json()),
-}, {
-  name: 'Animated Text',
-  preview: '',
-  getTemplate: () => fetch(animatedTextUrl).then(r => r.json()),
-}, {
-  name: 'Play',
-  preview: '',
-  getTemplate: () => fetch(playUrl).then(r => r.json()),
-}];
+export const TEMPLATES: TemplateMeta[] = [
+  {
+    name: 'Empty',
+    preview: '',
+    getTemplate: () => fetch(emptyUrl).then((r) => r.json()),
+  },
+  {
+    name: 'Animated Text',
+    preview: '',
+    getTemplate: () => fetch(animatedTextUrl).then((r) => r.json()),
+  },
+  {
+    name: 'Play',
+    preview: '',
+    getTemplate: () => fetch(playUrl).then((r) => r.json()),
+  },
+];

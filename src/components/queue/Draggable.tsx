@@ -3,11 +3,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { QueueObjectContainerContext } from './Container';
 import { QueueAnimatableContext } from './QueueAnimation';
 
-export interface DraggableProps
-  extends React.BaseHTMLAttributes<HTMLDivElement> {
-  onMousedown?: (
-    event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-  ) => void;
+export interface DraggableProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+  onMousedown?: (event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => void;
   onDraggingStart?: (initEvent: MouseEvent, event: MouseEvent) => void;
   onDraggingMove?: (initEvent: MouseEvent, event: MouseEvent) => void;
   onDraggingEnd?: (initEvent: MouseEvent, event: MouseEvent) => void;
@@ -23,8 +20,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
 }) => {
   const { detail } = useContext(QueueObjectContainerContext);
   const meta = useContext(QueueAnimatableContext);
-  const [initMousedownEvent, setInitMousedownEvent] =
-    useState<MouseEvent | null>(null);
+  const [initMousedownEvent, setInitMousedownEvent] = useState<MouseEvent | null>(null);
 
   const onDocumentMousemove = useCallback(
     (event: MouseEvent) => {
@@ -32,7 +28,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
         onDraggingMove(initMousedownEvent!, event);
       }
     },
-    [initMousedownEvent, onDraggingMove]
+    [initMousedownEvent, onDraggingMove],
   );
 
   const onDocumentMouseup = useCallback(
@@ -42,7 +38,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
       }
       setInitMousedownEvent(null);
     },
-    [initMousedownEvent, onDraggingEnd]
+    [initMousedownEvent, onDraggingEnd],
   );
 
   useEffect(() => {
@@ -58,9 +54,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
   }, [initMousedownEvent, onDocumentMousemove, onDocumentMouseup]);
 
   const onContainerMousedown = useCallback(
-    (
-      initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>
-    ): void => {
+    (initEvent: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>): void => {
       if (onMousedown) {
         onMousedown(initEvent);
       }
@@ -72,7 +66,7 @@ export const Draggable: React.FunctionComponent<DraggableProps> = ({
       }
       setInitMousedownEvent(initEvent.nativeEvent);
     },
-    [onMousedown, onDraggingStart, detail]
+    [onMousedown, onDraggingStart, detail],
   );
 
   return (

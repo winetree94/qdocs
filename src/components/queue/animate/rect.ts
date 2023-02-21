@@ -12,10 +12,7 @@ export interface RectAnimation {
  * @description
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환
  */
-export const getCurrentRect = (
-  object: QueueObjectType,
-  index: number
-): QueueRect => {
+export const getCurrentRect = (object: QueueObjectType, index: number): QueueRect => {
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is MoveEffect => effect.type === 'rect')
@@ -25,16 +22,13 @@ export const getCurrentRect = (
 export const getRectAnimation = (
   object: QueueObjectType,
   index: number,
-  position: 'forward' | 'backward' | 'pause'
+  position: 'forward' | 'backward' | 'pause',
 ): RectAnimation | null => {
   if (position === 'pause') {
     return null;
   }
 
-  const fromRect = getCurrentRect(
-    object,
-    position === 'forward' ? index - 1 : index + 1
-  );
+  const fromRect = getCurrentRect(object, position === 'forward' ? index - 1 : index + 1);
 
   const moveEffect = object.effects.find((effect): effect is MoveEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -61,11 +55,7 @@ export const getRectAnimation = (
   };
 };
 
-export const getAnimatableRect = (
-  progress: number,
-  targetRect: QueueRect,
-  fromRect?: QueueRect
-): QueueRect => {
+export const getAnimatableRect = (progress: number, targetRect: QueueRect, fromRect?: QueueRect): QueueRect => {
   if (progress < 0 || !fromRect) {
     return targetRect;
   }
