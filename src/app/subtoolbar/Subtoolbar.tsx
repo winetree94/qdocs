@@ -1,13 +1,12 @@
-import { useRedo, useUndo } from 'cdk/hooks/useUndo';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectEffectsByQueues } from 'store/effects';
-import { queueDocumentPages } from 'store/page';
-import { currentQueueRanges, documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectObjectEffectsByQueue, selectPages } from 'store/document/selectors';
+import { setSettings } from 'store/settings/actions';
+import { selectQueueRange, selectSettings } from 'store/settings/selectors';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
 
@@ -18,14 +17,12 @@ export type QueueSubtoolbarProps = {
 export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   fitToScreen
 }) => {
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
-  const pages = useRecoilValue(queueDocumentPages);
-  const effectsByQueues = useRecoilValue(objectEffectsByQueues);
+  const settings = useSelector(selectSettings);
+  const dispatch = useDispatch();
+  const pages = useSelector(selectPages);
+  const effectsByQueues = useSelector(selectObjectEffectsByQueue);
   const currentEffectsByQueues = effectsByQueues[settings.queuePage];
-  const ranges = useRecoilValue(currentQueueRanges);
-
-  const undo = useUndo();
-  const redo = useRedo();
+  const ranges = useSelector(selectQueueRange);
 
   const setQueueIndex = (
     index: number,
@@ -33,18 +30,26 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   ): void => {
     const target = Math.max(0, index);
     const sameIndex = settings.queueIndex === target;
-    setSettings({
+    dispatch(setSettings({
       ...settings,
       queueIndex: target,
       queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
       queueStart: play ? performance.now() : -1,
       selectedObjectUUIDs: [],
       selectionMode: 'normal',
-    });
+    }));
   };
 
-  const increaseScale = (): void => setSettings({ ...settings, scale: settings.scale + 0.05 });
-  const decreaseScale = (): void => setSettings({ ...settings, scale: Math.max(settings.scale - 0.05, 0.25) });
+  const increaseScale = (): void => {
+    dispatch(
+      setSettings({ ...settings, scale: settings.scale + 0.05 })
+    );
+  };
+  const decreaseScale = (): void => {
+    dispatch(
+      setSettings({ ...settings, scale: Math.max(settings.scale - 0.05, 0.25) })
+    );
+  };
   const setCurrentQueueIndex = (index: number): void => setQueueIndex(index, false);
   const goToPreviousQueue = (): void => setQueueIndex(settings.queueIndex - 1, true);
   const goToNextQueue = (): void => setQueueIndex(settings.queueIndex + 1, true);
@@ -108,7 +113,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
       <QueueScrollArea.Viewport>
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
-            <QueueIconButton onClick={undo}>
+            <QueueIconButton onClick={console.log}>
               <SvgRemixIcon
                 width={15}
                 height={15}
@@ -116,7 +121,7 @@ export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
               />
             </QueueIconButton>
 
-            <QueueIconButton onClick={redo}>
+            <QueueIconButton onClick={console.log}>
               <SvgRemixIcon
                 width={15}
                 height={15}

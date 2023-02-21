@@ -1,14 +1,15 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectEffectsByQueues } from 'store/effects';
-import { queueDocumentPages } from 'store/page';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectObjectEffectsByQueue, selectPages } from 'store/document/selectors';
+import { setSettings } from 'store/settings/actions';
+import { selectSettings } from 'store/settings/selectors';
 import styles from './PresentationRemote.module.scss';
 
 export const PresentationRemote: React.FC = () => {
-  const effectsByQueues = useRecoilValue(objectEffectsByQueues);
-  const pages = useRecoilValue(queueDocumentPages);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const dispatch = useDispatch();
+  const effectsByQueues = useSelector(selectObjectEffectsByQueue);
+  const pages = useSelector(selectPages);
+  const settings = useSelector(selectSettings);
 
   const setQueueIndex = (
     index: number,
@@ -16,28 +17,30 @@ export const PresentationRemote: React.FC = () => {
   ): void => {
     const target = Math.max(0, index);
     const sameIndex = settings.queueIndex === target;
-    setSettings({
+    dispatch(setSettings({
       ...settings,
       queueIndex: target,
       queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
       queueStart: play ? performance.now() : -1,
       selectedObjectUUIDs: [],
       selectionMode: 'normal',
-    });
+    }));
   };
 
   const rewind = (): void => {
     const targetPageQueueIndex = settings.queueIndex - 1;
     if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
-      setSettings({
-        ...settings,
-        queuePage: settings.queuePage - 1,
-        queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
-        queuePosition: 'pause',
-        queueStart: -1,
-        selectedObjectUUIDs: [],
-        selectionMode: 'normal',
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          queuePage: settings.queuePage - 1,
+          queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
+          queuePosition: 'pause',
+          queueStart: -1,
+          selectedObjectUUIDs: [],
+          selectionMode: 'normal',
+        })
+      );
       return;
     }
     if (targetPageQueueIndex < 0) {
@@ -52,15 +55,17 @@ export const PresentationRemote: React.FC = () => {
       targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
       settings.queuePage < pages.length - 1
     ) {
-      setSettings({
-        ...settings,
-        queuePage: settings.queuePage + 1,
-        queueIndex: 0,
-        queuePosition: 'pause',
-        queueStart: -1,
-        selectedObjectUUIDs: [],
-        selectionMode: 'normal',
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          queuePage: settings.queuePage + 1,
+          queueIndex: 0,
+          queuePosition: 'pause',
+          queueStart: -1,
+          selectedObjectUUIDs: [],
+          selectionMode: 'normal',
+        })
+      );
       return;
     }
     if (targetPageQueueIndex > effectsByQueues[settings.queuePage].length - 1) {

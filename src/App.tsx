@@ -1,18 +1,16 @@
 import { FunctionComponent } from 'react';
-import { RecoilRoot } from 'recoil';
 import { RootLayout } from './app/root-layout/RootLayout';
+import { Provider } from 'react-redux';
 
 import 'tailwindcss/tailwind.css';
 import './App.scss';
-import { RecoilUndoRoot } from 'cdk/hooks/useUndo';
+import { store } from 'store';
 
 const App: FunctionComponent = () => {
   return (
-    <RecoilRoot>
-      <RecoilUndoRoot>
-        <RootLayout></RootLayout>
-      </RecoilUndoRoot>
-    </RecoilRoot>
+    <Provider store={store}>
+      <RootLayout></RootLayout>
+    </Provider>
   );
 };
 

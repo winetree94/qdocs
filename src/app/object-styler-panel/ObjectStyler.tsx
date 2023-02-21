@@ -19,11 +19,10 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { documentState } from 'store/document';
-import { objectDefaultProps } from 'store/effects';
-import { objectByUUID } from 'store/object';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { setDocument, setObjectDefaultProps } from 'store/document/actions';
+import { selectDocument, selectObjectDefaultProps, selectPageObjectByUUID } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
 import classes from './ObjectStyler.module.scss';
 
 // context start
@@ -269,22 +268,19 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
+  const settings = useSelector(selectSettings);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const [props, setProps] = useRecoilState(
-    objectDefaultProps({
-      pageIndex: settings.queuePage,
-    })
-  );
+  const props = useSelector(selectObjectDefaultProps(settings.queuePage));
+  const object = useSelector(selectPageObjectByUUID(settings.queuePage, firstObject.uuid));
+  const dispatch = useDispatch();
 
-  const object = useRecoilValue(
-    objectByUUID({
-      pageIndex: settings.queuePage,
-      uuid: firstObject.uuid,
-    })
-  );
+  // const [props, setProps] = useRecoilState(
+  //   objectDefaultProps({
+  //     pageIndex: settings.queuePage,
+  //   })
+  // );
 
   const text = props[firstObject.uuid].text;
 
@@ -299,18 +295,22 @@ const ObjectStyleText = (): ReactElement => {
 
   const updateText = useCallback(
     (text: Partial<QueueText>): void => {
-      setProps({
-        ...props,
-        [firstObject.uuid]: {
-          ...props[firstObject.uuid],
-          text: {
-            ...props[firstObject.uuid].text,
-            ...text,
+      dispatch(setObjectDefaultProps({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        props: {
+          ...props,
+          [firstObject.uuid]: {
+            ...props[firstObject.uuid],
+            text: {
+              ...props[firstObject.uuid].text,
+              ...text,
+            },
           },
-        },
-      });
+        }
+      }));
     },
-    [firstObject.uuid, props, setProps]
+    [dispatch, firstObject.uuid, props, settings.queueIndex, settings.queuePage]
   );
 
   useEffect(() => {
@@ -431,8 +431,9 @@ export const ObjectStylerPanel = ({
   className,
   ...props
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
-  const settings = useRecoilValue(documentSettingsState);
-  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const settings = useSelector(selectSettings);
+  const queueDocument = useSelector(selectDocument);
+  const dispatch = useDispatch();
   const selectedObjects = queueDocument!.pages[
     settings.queuePage
   ].objects.filter((object) =>
@@ -502,7 +503,9 @@ export const ObjectStylerPanel = ({
       objects: newObjects,
     };
 
-    setQueueDocument({ ...queueDocument!, pages: newPages });
+    dispatch(setDocument({
+      ...queueDocument!, pages: newPages
+    }));
     setDocumentHistory();
   };
 

@@ -1,13 +1,13 @@
 import { FunctionComponent } from 'react';
 import clsx from 'clsx';
-import { useRecoilState } from 'recoil';
-import { documentSettingsState } from '../../store/settings';
-import { documentState } from '../../store/document';
 import styles from './LeftPanel.module.scss';
 import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
+import { useSelector } from 'react-redux';
+import { selectDocument } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -15,8 +15,8 @@ export const PanelTabType = {
 } as const;
 
 export const LeftPanel: FunctionComponent = () => {
-  const [queueDocument] = useRecoilState(documentState);
-  const [settings] = useRecoilState(documentSettingsState);
+  const queueDocument = useSelector(selectDocument);
+  const settings = useSelector(selectSettings);
 
   const selectedObjects = queueDocument!.pages[
     settings.queuePage

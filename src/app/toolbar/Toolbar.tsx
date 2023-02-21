@@ -1,7 +1,5 @@
 import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 import styles from './Toolbar.module.scss';
-import { documentState } from 'store/document';
-import { useRecoilState } from 'recoil';
 import clsx from 'clsx';
 import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
@@ -15,6 +13,9 @@ import {
   NewDocumentDialog,
   NewDocumentDialogProps,
 } from 'app/new-document-dialog/NewDocumentDialog';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectDocument } from 'store/document/selectors';
+import { setDocument } from 'store/document/actions';
 
 export interface ToolbarModel {
   key: string;
@@ -30,7 +31,8 @@ export interface ToolbarProps {
 export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   onItemClicked,
 }) => {
-  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const queueDocument = useSelector(selectDocument);
+  const dispatch = useDispatch();
   const [documentTitle, setDocumentTitle] = useState('');
 
   const [alertDialog, setAlertDialog] =
@@ -52,10 +54,12 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
     const previous = (queueDocument?.documentName || '').trim();
     const current = documentTitle.trim();
     if (previous !== current) {
-      setQueueDocument({
-        ...queueDocument!,
-        documentName: current,
-      });
+      dispatch(
+        setDocument({
+          ...queueDocument!,
+          documentName: current,
+        })
+      );
     }
   };
 
@@ -67,13 +71,13 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
           '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
         onAction: () =>
           setNewDocumentDialogProps({
-            onSubmit: (document) => setQueueDocument(document),
+            onSubmit: (document) => dispatch(setDocument(document)),
           }),
       });
       return;
     }
     setNewDocumentDialogProps({
-      onSubmit: (document) => setQueueDocument(document),
+      onSubmit: (document) => dispatch(setDocument(document)),
     });
   };
 
@@ -94,7 +98,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
           const document = JSON.parse(result) as QueueDocument;
-          setQueueDocument(document);
+          dispatch(setDocument(document));
         };
         fileReader.readAsText(file);
       } catch (e) {
@@ -129,7 +133,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   };
 
   const clearDocument = (): void => {
-    setQueueDocument(null);
+    dispatch(setDocument(null));
   };
 
   const onCloseDocumentClick = (): void => {

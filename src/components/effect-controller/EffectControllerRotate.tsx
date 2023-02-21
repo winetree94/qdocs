@@ -1,19 +1,15 @@
 import { RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectQueueEffects } from 'store/effects';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { setObjectQueueEffects } from 'store/document/actions';
+import { selectObjectQueueEffects } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
 
 export const EffectControllerRotate = (): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
-
-  const [effects, setEffects] = useRecoilState(
-    objectQueueEffects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-    })
-  );
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect =
     effects[settings.selectedObjectUUIDs[0]].rotate;
@@ -29,12 +25,16 @@ export const EffectControllerRotate = (): ReactElement => {
         },
       };
 
-      setEffects((prevEffects) => ({
-        ...prevEffects,
-        [objectUUID]: {
-          ...prevEffects[objectUUID],
-          rotate: nextEffect,
-        },
+      dispatch(setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...effects,
+          [objectUUID]: {
+            ...effects[objectUUID],
+            rotate: nextEffect,
+          },
+        }
       }));
     });
   };

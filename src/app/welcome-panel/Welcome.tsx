@@ -4,17 +4,19 @@ import { QueueButton } from 'components/button/Button';
 import { QueueH2 } from 'components/head/Head';
 import { QueueDocument } from 'model/document';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { documentState } from 'store/document';
+import { useDispatch } from 'react-redux';
+import { setDocument } from 'store/document/actions';
 import styles from './Welcome.module.scss';
 
 export const Welcome: React.FC = () => {
-  const [, setQueueDocument] = useRecoilState(documentState);
+  const dispatch = useDispatch();
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
   const onNewDocumentClick = (): void => {
     setNewDocumentDialogProps({
-      onSubmit: (document) => setQueueDocument(document),
+      onSubmit: (document) => {
+        dispatch(setDocument(document));
+      },
     });
   };
 
@@ -35,7 +37,7 @@ export const Welcome: React.FC = () => {
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
           const document = JSON.parse(result) as QueueDocument;
-          setQueueDocument(document);
+          dispatch(setDocument(document));
         };
         fileReader.readAsText(file);
       } catch (e) {

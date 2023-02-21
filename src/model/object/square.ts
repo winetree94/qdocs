@@ -10,7 +10,6 @@ import {
   WithStroke,
   WithText,
 } from 'model/property';
-import { QueueObjectType } from '.';
 
 export interface QueueSquare
   extends WithEffects,
@@ -23,25 +22,6 @@ export interface QueueSquare
   WithText {
   type: 'rect';
   uuid: string;
-}
-
-export function isExistObjectOnQueue(
-  object: QueueObjectType,
-  index: number
-): boolean {
-  const createEffect = object.effects.find(
-    (effect) => effect.type === 'create'
-  )!;
-  const removeEffect = object.effects.find(
-    (effect) => effect.type === 'remove'
-  );
-  if (index < createEffect.index) {
-    return false;
-  }
-  if (removeEffect && index > removeEffect.index) {
-    return false;
-  }
-  return true;
 }
 
 export const createDefaultSquare = (

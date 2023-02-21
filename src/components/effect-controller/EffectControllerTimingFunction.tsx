@@ -3,10 +3,10 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
-import { queueObjects } from 'store/object';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { setObjectQueueEffects } from 'store/document/actions';
+import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -15,21 +15,10 @@ export type EffectControllerTimingFunctionProps = {
 export const EffectControllerTimingFunction = ({
   effectType,
 }: EffectControllerTimingFunctionProps): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
-
-  const [effects, setEffects] = useRecoilState(
-    objectQueueEffects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-    })
-  );
-
-  const selectedObjects = useRecoilValue(
-    queueObjects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-    })
-  ).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const selectedObjects = useSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   const [firstSelectedObject] = selectedObjects;
 
   const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
@@ -41,12 +30,16 @@ export const EffectControllerTimingFunction = ({
         timing: timingFunction as AnimatorTimingFunctionType,
       };
 
-      setEffects((prevEffects) => ({
-        ...prevEffects,
-        [objectUUID]: {
-          ...prevEffects[objectUUID],
-          [effectType]: nextEffect,
-        },
+      dispatch(setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...effects,
+          [objectUUID]: {
+            ...effects[objectUUID],
+            [effectType]: nextEffect,
+          },
+        }
       }));
     });
   };

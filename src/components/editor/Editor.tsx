@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import {
   useEffect,
   useLayoutEffect,
@@ -13,50 +14,32 @@ import clsx from 'clsx';
 import styles from './Editor.module.scss';
 import { QueueObjectType } from 'model/object';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { queueObjects } from 'store/object';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useBatching } from 'cdk/hooks/useUndo';
 import { ResizerEvent } from 'components/queue/Resizer';
-import {
-  objectDefaultProps,
-  ObjectQueueEffects,
-  objectQueueEffects,
-  objectQueueProps,
-  ObjectQueueProps,
-} from 'store/effects';
 import { MoveEffect, RotateEffect } from 'model/effect';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
-import { documentState } from 'store/document';
 import { PresentationRemote } from './PresentationRemote';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { ObjectQueueEffects, ObjectQueueProps, selectDocument, selectObjectDefaultProps, selectObjectQueueEffects, selectObjectQueueProps, selectQueueObjects } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
+import { setSettings } from 'store/settings/actions';
+import { setObjectDefaultProps, setObjectQueueEffects } from 'store/document/actions';
 
 export const QueueEditor: React.FC = () => {
+  const dispatch = useDispatch();
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
-  const { startBatch, endBatch } = useBatching();
 
-  const queueDocument = useRecoilValue(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const queueDocument = useSelector(selectDocument);
+  const settings = useSelector(selectSettings);
 
-  const objects = useRecoilValue(queueObjects({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-  }));
+  const objects = useSelector(selectQueueObjects(settings.queuePage, settings.queueIndex));
 
-  const [defaultProps, setDefaultProps] = useRecoilState(objectDefaultProps({
-    pageIndex: settings.queuePage,
-  }));
+  const defaultProps = useSelector(selectObjectDefaultProps(settings.queuePage));
 
-  const queueProps = useRecoilValue(objectQueueProps({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-  }));
+  const queueProps = useSelector(selectObjectQueueProps(settings.queuePage, settings.queueIndex));
 
-  const [queueEffects, setQueueEffects] = useRecoilState(objectQueueEffects({
-    pageIndex: settings.queuePage,
-    queueIndex: settings.queueIndex,
-  }));
+  const queueEffects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
     [key: string]: ObjectQueueProps;
@@ -69,10 +52,12 @@ export const QueueEditor: React.FC = () => {
       root.clientWidth / (queueDocument!.documentRect.width + 40),
       root.clientHeight / (queueDocument!.documentRect.height + 40)
     );
-    setSettings({
-      ...settings,
-      scale: Math.max(scale, 0.1),
-    });
+    dispatch(
+      setSettings({
+        ...settings,
+        scale: Math.max(scale, 0.1),
+      })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,20 +68,24 @@ export const QueueEditor: React.FC = () => {
     event.stopPropagation();
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey && !selected) {
-      setSettings({
-        ...settings,
-        selectionMode: 'normal',
-        selectedObjectUUIDs: [object.uuid],
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          selectionMode: 'normal',
+          selectedObjectUUIDs: [object.uuid],
+        })
+      );
     } else {
-      setSettings({
-        ...settings,
-        selectionMode: 'normal',
-        selectedObjectUUIDs: [
-          ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
-          object.uuid,
-        ],
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          selectionMode: 'normal',
+          selectedObjectUUIDs: [
+            ...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid),
+            object.uuid,
+          ],
+        })
+      );
     }
   };
 
@@ -105,15 +94,16 @@ export const QueueEditor: React.FC = () => {
     object: QueueObjectType
   ): void => {
     event.stopPropagation();
-    setSettings({
-      ...settings,
-      selectionMode: 'detail',
-      selectedObjectUUIDs: [object.uuid],
-    });
+    dispatch(
+      setSettings({
+        ...settings,
+        selectionMode: 'detail',
+        selectedObjectUUIDs: [object.uuid],
+      })
+    );
   };
 
   const onObjectDragStart = (): void => {
-    startBatch();
     setCapturedObjectProps(queueProps);
   };
 
@@ -150,10 +140,14 @@ export const QueueEditor: React.FC = () => {
       return result;
     }, {});
 
-    setQueueEffects({
-      ...queueEffects,
-      ...updateModels,
-    });
+    dispatch(setObjectQueueEffects({
+      page: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      effects: {
+        ...queueEffects,
+        ...updateModels,
+      },
+    }));
   };
 
   const onObjectDragMove = (
@@ -165,7 +159,6 @@ export const QueueEditor: React.FC = () => {
 
   const onObjectDragEnd = (initEvent: MouseEvent, event: MouseEvent): void => {
     onUpdateDrag(initEvent, event);
-    endBatch();
   };
 
   /**
@@ -221,11 +214,13 @@ export const QueueEditor: React.FC = () => {
         rect.y + rect.height <= y + height
       );
     });
-    setSettings({
-      ...settings,
-      selectionMode: 'normal',
-      selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
-    });
+    dispatch(
+      setSettings({
+        ...settings,
+        selectionMode: 'normal',
+        selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
+      })
+    );
   };
 
   const resizeObjectRect = (uuid: string, rect: ResizerEvent): void => {
@@ -240,17 +235,22 @@ export const QueueEditor: React.FC = () => {
         ...rect
       }
     };
-    setQueueEffects({
-      ...queueEffects,
-      [uuid]: {
-        ...queueEffects[uuid],
-        rect: nextEffect,
-      }
-    });
+    dispatch(
+      setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...queueEffects,
+          [uuid]: {
+            ...queueEffects[uuid],
+            rect: nextEffect,
+          }
+        },
+      })
+    );
   };
 
   const onResizeStart = (object: QueueObjectType, rect: ResizerEvent): void => {
-    startBatch();
     resizeObjectRect(object.uuid, rect);
   };
 
@@ -260,7 +260,6 @@ export const QueueEditor: React.FC = () => {
 
   const onResizeEnd = (object: QueueObjectType, rect: ResizerEvent): void => {
     resizeObjectRect(object.uuid, rect);
-    endBatch();
   };
 
   const updateObjectRotate = (uuid: string, degree: number): void => {
@@ -274,17 +273,22 @@ export const QueueEditor: React.FC = () => {
         degree: degree,
       }
     };
-    setQueueEffects({
-      ...queueEffects,
-      [uuid]: {
-        ...queueEffects[uuid],
-        rotate: nextEffect,
-      }
-    });
+    dispatch(
+      setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...queueEffects,
+          [uuid]: {
+            ...queueEffects[uuid],
+            rotate: nextEffect,
+          }
+        }
+      })
+    );
   };
 
   const onRotateStart = (): void => {
-    startBatch();
   };
 
   const onRotateMove = (uuid: string, degree: number): void => {
@@ -293,7 +297,6 @@ export const QueueEditor: React.FC = () => {
 
   const onRotateEnd = (uuid: string, degree: number): void => {
     updateObjectRotate(uuid, degree);
-    endBatch();
   };
 
   useEffect(() => {
@@ -305,10 +308,12 @@ export const QueueEditor: React.FC = () => {
         document.body.clientWidth / queueDocument!.documentRect.width,
         document.body.clientHeight / queueDocument!.documentRect.height
       );
-      setSettings({
-        ...settings,
-        scale: Math.max(scale, 0.1),
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          scale: Math.max(scale, 0.1),
+        })
+      );
     };
     const observer = new ResizeObserver(resize);
     observer.observe(document.body);
@@ -318,35 +323,43 @@ export const QueueEditor: React.FC = () => {
   }, [settings.presentationMode]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
-    setDefaultProps({
-      ...defaultProps,
-      [object.uuid]: {
-        ...defaultProps[object.uuid],
-        text: {
-          ...defaultProps[object.uuid].text,
-          text,
+    dispatch(setObjectDefaultProps({
+      page: settings.queuePage,
+      queueIndex: settings.queueIndex,
+      props: {
+        ...defaultProps,
+        [object.uuid]: {
+          ...defaultProps[object.uuid],
+          text: {
+            ...defaultProps[object.uuid].text,
+            text,
+          }
         }
       }
-    });
+    }));
   };
 
   const onRootContextMenuOpenChange = (open: boolean): void => {
     if (open) {
-      setSettings({
-        ...settings,
-        selectionMode: 'normal',
-        selectedObjectUUIDs: [],
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          selectionMode: 'normal',
+          selectedObjectUUIDs: [],
+        })
+      );
     }
   };
 
   const onObjectContextMenuOpenChange = (uuid: string, open: boolean): void => {
     if (open && !settings.selectedObjectUUIDs.includes(uuid)) {
-      setSettings({
-        ...settings,
-        selectionMode: 'normal',
-        selectedObjectUUIDs: [uuid],
-      });
+      dispatch(
+        setSettings({
+          ...settings,
+          selectionMode: 'normal',
+          selectedObjectUUIDs: [uuid],
+        })
+      );
     }
   };
 

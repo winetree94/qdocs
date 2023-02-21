@@ -2,20 +2,20 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { documentState } from 'store/document';
-import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
-import { queueDocumentPageObjects } from 'store/page';
-import { documentSettingsState } from 'store/settings';
 import styles from './Context.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSettings } from 'store/settings/selectors';
+import { ObjectQueueEffects, selectDocument, selectObjectQueueEffects, selectPageObjects } from 'store/document/selectors';
+import { setDocument, setObjectQueueEffects, setPageObjects } from 'store/document/actions';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
-  const settings = useRecoilValue(documentSettingsState);
-  const [objects, setObjects] = useRecoilState(queueDocumentPageObjects(settings.queuePage));
-  const [effects, setEffects] = useRecoilState(objectQueueEffects({ pageIndex: settings.queuePage, queueIndex: settings.queueIndex }));
-  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const objects = useSelector(selectPageObjects(settings.queuePage));
+  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const queueDocument = useSelector(selectDocument);
 
   const changeObjectIndex = (
     fromUUIDs: string[],
@@ -71,10 +71,10 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       ...queueDocument!.pages[settings.queuePage],
       objects: objects,
     };
-    setQueueDocument({
+    dispatch(setDocument({
       ...queueDocument!,
       pages: newPages,
-    });
+    }));
   };
 
   /**
@@ -101,10 +101,14 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
     }, {});
 
     if (Object.values(updateModels).length > 0) {
-      setEffects({
-        ...effects,
-        ...updateModels,
-      });
+      dispatch(setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...effects,
+          ...updateModels,
+        }
+      }));
     }
     if (pendingCompleteRemoveUUIDs.length > 0) {
       onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
@@ -116,9 +120,12 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 오브젝트를 영구히 제거
    */
   const onCompletelyRemoveClick = (uuids: string[]): void => {
-    setObjects([
-      ...objects.filter((object) => !uuids.includes(object.uuid)),
-    ]);
+    dispatch(setPageObjects({
+      page: settings.queuePage,
+      objects: [
+        ...objects.filter((object) => !uuids.includes(object.uuid)),
+      ]
+    }));
   };
 
   return (

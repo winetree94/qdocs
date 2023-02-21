@@ -1,19 +1,15 @@
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { objectQueueEffects } from 'store/effects';
-import { documentSettingsState } from 'store/settings';
+import { useDispatch, useSelector } from 'react-redux';
+import { setObjectQueueEffects } from 'store/document/actions';
+import { selectObjectQueueEffects } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
 
 export const EffectControllerRect = (): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
-
-  const [effects, setEffects] = useRecoilState(
-    objectQueueEffects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-    })
-  );
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
 
@@ -28,12 +24,16 @@ export const EffectControllerRect = (): ReactElement => {
         },
       };
 
-      setEffects((prevEffects) => ({
-        ...prevEffects,
-        [objectUUID]: {
-          ...prevEffects[objectUUID],
-          rect: nextEffect,
-        },
+      dispatch(setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...effects,
+          [objectUUID]: {
+            ...effects[objectUUID],
+            rect: nextEffect,
+          },
+        }
       }));
     });
   };

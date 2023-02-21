@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react';
 import clsx from 'clsx';
-import { useRecoilState } from 'recoil';
 import styles from './ObjectPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
 import { createDefaultSquare } from 'model/object/square';
@@ -22,9 +21,12 @@ import { QueueObjectType } from 'model/object';
 import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { documentState } from 'store/document';
-import { documentSettingsState } from 'store/settings';
 import { QueueInput } from 'components/input/Input';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectDocument } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
+import { setDocument } from 'store/document/actions';
+import { setSettings } from 'store/settings/actions';
 
 export interface QueueObject {
   key: string;
@@ -134,8 +136,9 @@ const createItemData = memoize(
 
 export const ObjectPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const [queueDocument, setQueueDocument] = useRecoilState(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const dispatch = useDispatch();
+  const queueDocument = useSelector(selectDocument);
+  const settings = useSelector(selectSettings);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
@@ -169,17 +172,17 @@ export const ObjectPanel: FunctionComponent = () => {
           objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
         };
         newPages[settings.queuePage].objects.push(figure);
-        setQueueDocument({
+        dispatch(setDocument({
           ...queueDocument!,
           pages: newPages,
-        });
-        setSettings({
+        }));
+        dispatch(setSettings({
           ...settings,
           selectedObjectUUIDs: [figure.uuid],
-        });
+        }));
       };
     },
-    [queueDocument, settings, setQueueDocument, setSettings]
+    [queueDocument, settings, dispatch]
   );
 
   const createSquare = createFigure(createDefaultSquare);

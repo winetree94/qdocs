@@ -1,9 +1,10 @@
 import { ReactElement } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { QueueEffectType } from 'model/effect';
-import { ObjectQueueEffects, objectQueueEffects } from 'store/effects';
-import { documentSettingsState } from 'store/settings';
 import { Slider } from 'components/slider';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectSettings } from 'store/settings/selectors';
+import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/document/selectors';
+import { setObjectQueueEffects } from 'store/document/actions';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -11,14 +12,9 @@ export type EffectControllerFadeProps = {
 };
 
 export const EffectControllerFade = (): ReactElement => {
-  const settings = useRecoilValue(documentSettingsState);
-
-  const [effects, setEffects] = useRecoilState(
-    objectQueueEffects({
-      pageIndex: settings.queuePage,
-      queueIndex: settings.queueIndex,
-    })
-  );
+  const dispatch = useDispatch();
+  const settings = useSelector(selectSettings);
+  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;
 
@@ -48,12 +44,16 @@ export const EffectControllerFade = (): ReactElement => {
         },
       };
 
-      setEffects((prevEffects) => ({
-        ...prevEffects,
-        [objectUUID]: {
-          ...prevEffects[objectUUID],
-          fade: nextEffect,
-        },
+      dispatch(setObjectQueueEffects({
+        page: settings.queuePage,
+        queueIndex: settings.queueIndex,
+        effects: {
+          ...effects,
+          [objectUUID]: {
+            ...effects[objectUUID],
+            fade: nextEffect,
+          },
+        }
       }));
     });
   };

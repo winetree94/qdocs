@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/button/Button';
 import { FunctionComponent, ReactNode, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import styles from './BottomPanel.module.scss';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
@@ -10,16 +9,22 @@ import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { cloneDeep } from 'lodash';
-import { documentSettingsState } from 'store/settings';
-import { queueDocumentPages } from 'store/page';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectPages } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
+import { setSettings } from 'store/settings/actions';
+import { setPages } from 'store/document/actions';
 
 export interface BottomPanelProps {
   children?: ReactNode;
 }
 
 export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
-  const [pages, setPages] = useRecoilState(queueDocumentPages);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const pages = useSelector(selectPages);
+  const settings = useSelector(selectSettings);
+  const dispatch = useDispatch();
+  // const [pages, setPages] = useRecoilState(queueDocumentPages);
+  // const [settings, setSettings] = useRecoilState(documentSettingsState);
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const [editNamePageIndex, setEditNamePageIndex] = useState<number>(-1);
@@ -27,15 +32,17 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
     useState<number>(-1);
 
   const setQueuePageIndex = (index: number): void => {
-    setSettings({
-      ...settings,
-      queuePage: index,
-      queueIndex: 0,
-      queueStart: -1,
-      queuePosition: 'pause',
-      selectedObjectUUIDs: [],
-      selectionMode: 'normal',
-    });
+    dispatch(
+      setSettings({
+        ...settings,
+        queuePage: index,
+        queueIndex: 0,
+        queueStart: -1,
+        queuePosition: 'pause',
+        selectedObjectUUIDs: [],
+        selectionMode: 'normal',
+      })
+    );
   };
 
   const navigatePage = (index: number): void => {
@@ -47,7 +54,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
     const page = newPages[from];
     newPages.splice(from, 1);
     newPages.splice(to, 0, page);
-    setPages(newPages);
+    dispatch(setPages(newPages));
     setQueuePageIndex(to);
   };
 
@@ -57,14 +64,14 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
       pageName: `Page-${newPages.length + 1}`,
       objects: [],
     });
-    setPages(newPages);
+    dispatch(setPages(newPages));
     setQueuePageIndex(index);
   };
 
   const removePage = (index: number): void => {
     const newPages = [...pages];
     newPages.splice(index, 1);
-    setPages(newPages);
+    dispatch(setPages(newPages));
     setQueuePageIndex(Math.min(index, newPages.length - 1));
   };
 
@@ -96,7 +103,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
       ...newPages[index],
       pageName: pageName.trim(),
     };
-    setPages(newPages);
+    dispatch(setPages(newPages));
     setEditNamePageIndex(-1);
   };
 
@@ -104,7 +111,7 @@ export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
     const cloned = cloneDeep(pages[index]);
     cloned.pageName = `${cloned.pageName} (copy)`;
     const newPages = [...pages];
-    setPages([...newPages.slice(0, index + 1), cloned, ...newPages.slice(index + 1)]);
+    dispatch(setPages([...newPages.slice(0, index + 1), cloned, ...newPages.slice(index + 1)]));
     setQueuePageIndex(index + 1);
   };
 

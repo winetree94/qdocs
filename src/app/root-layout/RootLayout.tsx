@@ -1,28 +1,33 @@
 import { createContext, FunctionComponent, ReactNode, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { documentSettingsState } from '../../store/settings';
 import { QueueEditor } from '../../components/editor/Editor';
 import { LeftPanel } from '../left-panel/LeftPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
-import { documentState } from 'store/document';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectDocument } from 'store/document/selectors';
+import { selectSettings } from 'store/settings/selectors';
+import { setSettings } from 'store/settings/actions';
 
 export const RootContext = createContext({});
 
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
-  const [queueDocument] = useRecoilState(documentState);
-  const [settings, setSettings] = useRecoilState(documentSettingsState);
+  const queueDocument = useSelector(selectDocument);
+  const settings = useSelector(selectSettings);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && settings.presentationMode) {
-        setSettings({ ...settings, presentationMode: false });
+        dispatch(setSettings({
+          ...settings,
+          presentationMode: false
+        }));
       }
     };
     const onContextmenu = (event: MouseEvent): void => {
@@ -36,7 +41,7 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
     document.addEventListener('contextmenu', onContextmenu);
     window.onbeforeunload = (): string => 'beforeUnload';
     return cleaner;
-  }, [settings, setSettings]);
+  }, [settings, dispatch]);
 
   return (
     <RootContext.Provider value={{}}>
