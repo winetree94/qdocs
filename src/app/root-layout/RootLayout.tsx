@@ -7,19 +7,19 @@ import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectDocument } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { setSettings } from 'store/settings/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const RootContext = createContext({});
 
 export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (
   props
 ) => {
-  const queueDocument = useSelector(selectDocument);
-  const settings = useSelector(selectSettings);
-  const dispatch = useDispatch();
+  const queueDocument = useAppSelector(selectDocument);
+  const settings = useAppSelector(selectSettings);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent): void => {

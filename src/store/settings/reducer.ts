@@ -21,6 +21,8 @@ export const settingsReducer = createReducer<QueueDocumentSettings>({
   selectedObjectUUIDs: [],
   scale: 0.25,
   presentationMode: false,
-}, {
-  [setSettings.type]: (_, action) => action.payload,
+}, (builder) => {
+  builder.addCase(setSettings, (state, action) => {
+    return { ...state, ...action.payload };
+  });
 });

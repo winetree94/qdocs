@@ -19,27 +19,27 @@ import { MoveEffect, RotateEffect } from 'model/effect';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { PresentationRemote } from './PresentationRemote';
-import { useDispatch, useSelector } from 'react-redux';
 import { ObjectQueueEffects, ObjectQueueProps, selectDocument, selectObjectDefaultProps, selectObjectQueueEffects, selectObjectQueueProps, selectQueueObjects } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { setSettings } from 'store/settings/actions';
 import { setObjectDefaultProps, setObjectQueueEffects } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const QueueEditor: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
 
-  const queueDocument = useSelector(selectDocument);
-  const settings = useSelector(selectSettings);
+  const queueDocument = useAppSelector(selectDocument);
+  const settings = useAppSelector(selectSettings);
 
-  const objects = useSelector(selectQueueObjects(settings.queuePage, settings.queueIndex));
+  const objects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex));
 
-  const defaultProps = useSelector(selectObjectDefaultProps(settings.queuePage));
+  const defaultProps = useAppSelector(selectObjectDefaultProps(settings.queuePage));
 
-  const queueProps = useSelector(selectObjectQueueProps(settings.queuePage, settings.queueIndex));
+  const queueProps = useAppSelector(selectObjectQueueProps(settings.queuePage, settings.queueIndex));
 
-  const queueEffects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const queueEffects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
     [key: string]: ObjectQueueProps;

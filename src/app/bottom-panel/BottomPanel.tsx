@@ -9,20 +9,20 @@ import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { cloneDeep } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectPages } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { setSettings } from 'store/settings/actions';
 import { setPages } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export interface BottomPanelProps {
   children?: ReactNode;
 }
 
 export const BottomPanel: FunctionComponent<BottomPanelProps> = () => {
-  const pages = useSelector(selectPages);
-  const settings = useSelector(selectSettings);
-  const dispatch = useDispatch();
+  const pages = useAppSelector(selectPages);
+  const settings = useAppSelector(selectSettings);
+  const dispatch = useAppDispatch();
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const [editNamePageIndex, setEditNamePageIndex] = useState<number>(-1);

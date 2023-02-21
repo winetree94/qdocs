@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectObjectEffectsByQueue, selectPages } from 'store/document/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { setSettings } from 'store/settings/actions';
 import { selectQueueRange, selectSettings } from 'store/settings/selectors';
 import { QueueIconButton } from '../../components/button/Button';
@@ -17,12 +17,12 @@ export type QueueSubtoolbarProps = {
 export const QueueSubtoolbar: React.FC<QueueSubtoolbarProps> = ({
   fitToScreen
 }) => {
-  const settings = useSelector(selectSettings);
-  const dispatch = useDispatch();
-  const pages = useSelector(selectPages);
-  const effectsByQueues = useSelector(selectObjectEffectsByQueue);
+  const settings = useAppSelector(selectSettings);
+  const dispatch = useAppDispatch();
+  const pages = useAppSelector(selectPages);
+  const effectsByQueues = useAppSelector(selectObjectEffectsByQueue);
   const currentEffectsByQueues = effectsByQueues[settings.queuePage];
-  const ranges = useSelector(selectQueueRange);
+  const ranges = useAppSelector(selectQueueRange);
 
   const setQueueIndex = (
     index: number,

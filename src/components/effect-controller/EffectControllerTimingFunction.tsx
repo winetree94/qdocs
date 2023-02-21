@@ -3,9 +3,9 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { setObjectQueueEffects } from 'store/document/actions';
 import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { selectSettings } from 'store/settings/selectors';
 
 export type EffectControllerTimingFunctionProps = {
@@ -15,10 +15,10 @@ export type EffectControllerTimingFunctionProps = {
 export const EffectControllerTimingFunction = ({
   effectType,
 }: EffectControllerTimingFunctionProps): ReactElement => {
-  const dispatch = useDispatch();
-  const settings = useSelector(selectSettings);
-  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const selectedObjects = useSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
+  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   const [firstSelectedObject] = selectedObjects;
 
   const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];

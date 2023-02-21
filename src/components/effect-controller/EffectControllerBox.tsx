@@ -11,10 +11,10 @@ import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from 'store/settings/selectors';
 import { selectDocument, selectQueueObjects } from 'store/document/selectors';
 import { setDocument } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -122,10 +122,10 @@ const createEffect = (
 };
 
 export const EffectControllerBox = (): ReactElement | null => {
-  const dispatch = useDispatch();
-  const settings = useSelector(selectSettings);
-  const queueDocument = useSelector(selectDocument);
-  const selectedObjects = useSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
+  const queueDocument = useAppSelector(selectDocument);
+  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) => settings.selectedObjectUUIDs.includes(object.uuid));
   const hasSelectedObjects = selectedObjects.length > 0;
 
   const [firstObject] = selectedObjects;

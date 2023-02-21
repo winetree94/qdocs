@@ -1,15 +1,15 @@
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { setObjectQueueEffects } from 'store/document/actions';
 import { selectObjectQueueEffects } from 'store/document/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { selectSettings } from 'store/settings/selectors';
 
 export const EffectControllerRect = (): ReactElement => {
-  const dispatch = useDispatch();
-  const settings = useSelector(selectSettings);
-  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
+  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
 

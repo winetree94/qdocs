@@ -5,9 +5,9 @@ import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
-import { useSelector } from 'react-redux';
 import { selectDocument } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
+import { useAppSelector } from 'store/hooks';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -15,8 +15,8 @@ export const PanelTabType = {
 } as const;
 
 export const LeftPanel: FunctionComponent = () => {
-  const queueDocument = useSelector(selectDocument);
-  const settings = useSelector(selectSettings);
+  const queueDocument = useAppSelector(selectDocument);
+  const settings = useAppSelector(selectSettings);
 
   const selectedObjects = queueDocument!.pages[
     settings.queuePage

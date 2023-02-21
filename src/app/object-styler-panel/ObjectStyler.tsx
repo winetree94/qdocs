@@ -19,9 +19,9 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { setDocument, setObjectDefaultProps } from 'store/document/actions';
 import { selectDocument, selectObjectDefaultProps, selectPageObjectByUUID } from 'store/document/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { selectSettings } from 'store/settings/selectors';
 import classes from './ObjectStyler.module.scss';
 
@@ -268,13 +268,13 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const settings = useSelector(selectSettings);
+  const settings = useAppSelector(selectSettings);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const props = useSelector(selectObjectDefaultProps(settings.queuePage));
-  const object = useSelector(selectPageObjectByUUID(settings.queuePage, firstObject.uuid));
-  const dispatch = useDispatch();
+  const props = useAppSelector(selectObjectDefaultProps(settings.queuePage));
+  const object = useAppSelector(selectPageObjectByUUID(settings.queuePage, firstObject.uuid));
+  const dispatch = useAppDispatch();
 
   // const [props, setProps] = useRecoilState(
   //   objectDefaultProps({
@@ -431,9 +431,9 @@ export const ObjectStylerPanel = ({
   className,
   ...props
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
-  const settings = useSelector(selectSettings);
-  const queueDocument = useSelector(selectDocument);
-  const dispatch = useDispatch();
+  const settings = useAppSelector(selectSettings);
+  const queueDocument = useAppSelector(selectDocument);
+  const dispatch = useAppDispatch();
   const selectedObjects = queueDocument!.pages[
     settings.queuePage
   ].objects.filter((object) =>

@@ -13,9 +13,9 @@ import {
   NewDocumentDialog,
   NewDocumentDialogProps,
 } from 'app/new-document-dialog/NewDocumentDialog';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectDocument } from 'store/document/selectors';
 import { setDocument } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export interface ToolbarModel {
   key: string;
@@ -31,8 +31,8 @@ export interface ToolbarProps {
 export const QueueToolbar: FunctionComponent<ToolbarProps> = ({
   onItemClicked,
 }) => {
-  const queueDocument = useSelector(selectDocument);
-  const dispatch = useDispatch();
+  const queueDocument = useAppSelector(selectDocument);
+  const dispatch = useAppDispatch();
   const [documentTitle, setDocumentTitle] = useState('');
 
   const [alertDialog, setAlertDialog] =

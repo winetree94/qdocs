@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { QueueDocument } from 'model/document';
 import { OBJECT_PROPERTY_META } from 'model/meta';
 import { setDocument, setObjectCurrentBasesEffect, setObjectDefaultProps, setObjectQueueEffects, setPageObjects, setPageObjectsByUUID, setPages } from './actions';
+
 export const documentReducer = createReducer<QueueDocument>(null, builder => {
   builder.addCase(setDocument, (state, action) => {
     return action.payload;

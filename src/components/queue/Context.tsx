@@ -3,19 +3,19 @@ import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from 'store/settings/selectors';
 import { ObjectQueueEffects, selectDocument, selectObjectQueueEffects, selectPageObjects } from 'store/document/selectors';
 import { setDocument, setObjectQueueEffects, setPageObjects } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
-  const dispatch = useDispatch();
-  const settings = useSelector(selectSettings);
-  const objects = useSelector(selectPageObjects(settings.queuePage));
-  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const queueDocument = useSelector(selectDocument);
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
+  const objects = useAppSelector(selectPageObjects(settings.queuePage));
+  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const queueDocument = useAppSelector(selectDocument);
 
   const changeObjectIndex = (
     fromUUIDs: string[],

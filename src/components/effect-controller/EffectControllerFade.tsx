@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
 import { QueueEffectType } from 'model/effect';
 import { Slider } from 'components/slider';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectSettings } from 'store/settings/selectors';
 import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/document/selectors';
 import { setObjectQueueEffects } from 'store/document/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -12,9 +12,9 @@ export type EffectControllerFadeProps = {
 };
 
 export const EffectControllerFade = (): ReactElement => {
-  const dispatch = useDispatch();
-  const settings = useSelector(selectSettings);
-  const effects = useSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
+  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;
 

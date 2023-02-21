@@ -22,11 +22,11 @@ import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueInput } from 'components/input/Input';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectDocument } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { setDocument } from 'store/document/actions';
 import { setSettings } from 'store/settings/actions';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export interface QueueObject {
   key: string;
@@ -136,9 +136,9 @@ const createItemData = memoize(
 
 export const ObjectPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const dispatch = useDispatch();
-  const queueDocument = useSelector(selectDocument);
-  const settings = useSelector(selectSettings);
+  const dispatch = useAppDispatch();
+  const queueDocument = useAppSelector(selectDocument);
+  const settings = useAppSelector(selectSettings);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
