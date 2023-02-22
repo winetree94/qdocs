@@ -2,9 +2,18 @@ import { RootState } from 'store';
 import { objectEntityAdapter } from './object.reducer';
 
 const selectSelf = (state: RootState) => state.objects;
+const selectors = objectEntityAdapter.getSelectors(selectSelf);
 
-const selectObjects = objectEntityAdapter.getSelectors(selectSelf).selectAll;
+const all = selectors.selectAll;
+const byId = selectors.selectById;
+const entities = selectors.selectEntities;
+const ids = selectors.selectIds;
+const total = selectors.selectTotal;
 
 export const ObjectSelectors = {
-  selectObjects,
+  all,
+  byId,
+  entities,
+  ids,
+  total,
 };

@@ -154,10 +154,10 @@ export const BaseQueueSubtoolbar = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
-  docs: DocumentSelectors.selectDocs(state),
-  settings: SettingSelectors.selectSettings(state),
+  docs: DocumentSelectors.document(state),
+  settings: SettingSelectors.settings(state),
   effectsByQueues: selectObjectEffectsByQueue(state),
-  ranges: SettingSelectors.selectQueueRange(state),
+  ranges: SettingSelectors.queueRange(state),
 });
 
 const mapToDispatchProps = (dispatch: AppDispatch) => ({

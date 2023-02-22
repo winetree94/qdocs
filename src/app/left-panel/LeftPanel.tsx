@@ -14,7 +14,7 @@ export const PanelTabType = {
 } as const;
 
 export const LeftPanel: FunctionComponent = () => {
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const hasSelectedObjects = settings.selectedObjectUUIDs.length > 0;
 
   return (

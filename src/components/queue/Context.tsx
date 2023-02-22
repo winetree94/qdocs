@@ -15,9 +15,9 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
+  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const currentPage = queueDocument!.pages[settings.queuePage];
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {

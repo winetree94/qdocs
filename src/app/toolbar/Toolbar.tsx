@@ -23,7 +23,7 @@ export interface ToolbarProps {
 }
 
 export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
-  const docs = useAppSelector(DocumentSelectors.selectDocs);
+  const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
 
   const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);

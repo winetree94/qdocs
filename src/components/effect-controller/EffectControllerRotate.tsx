@@ -8,7 +8,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].rotate;

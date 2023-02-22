@@ -119,8 +119,8 @@ const createEffect = (
 
 export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
-  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
+  const settings = useAppSelector(SettingSelectors.settings);
+  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),
   );

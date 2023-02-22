@@ -9,8 +9,8 @@ import { SettingSelectors } from 'store/settings/selectors';
 export const PresentationRemote: React.FC = () => {
   const dispatch = useAppDispatch();
   const effectsByQueues = useAppSelector(selectObjectEffectsByQueue);
-  const pages = useAppSelector(PageSelectors.selectPages);
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const pages = useAppSelector(PageSelectors.all);
+  const settings = useAppSelector(SettingSelectors.settings);
 
   const setQueueIndex = (index: number, play?: boolean): void => {
     const target = Math.max(0, index);

@@ -8,7 +8,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 
 export const EffectControllerRect = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;

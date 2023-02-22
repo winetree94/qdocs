@@ -21,11 +21,12 @@ import {
 } from 'react';
 import { loadDocument } from 'store/document/actions';
 import { DocumentSelectors } from 'store/document/selectors';
-import { selectObjectDefaultProps, selectPageObjectByUUID } from 'store/legacy/selectors';
+import { selectPageObjectByUUID } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
 import classes from './ObjectStyler.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
+import { ObjectSelectors } from 'store/object/object.selectors';
 
 // context start
 interface ObjectStylerContextValue {
@@ -214,21 +215,15 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const props = useAppSelector(selectObjectDefaultProps(settings.queuePage));
   const object = useAppSelector(selectPageObjectByUUID(settings.queuePage, firstObject.uuid));
   const dispatch = useAppDispatch();
 
-  // const [props, setProps] = useRecoilState(
-  //   objectDefaultProps({
-  //     pageIndex: settings.queuePage,
-  //   })
-  // );
-
-  const text = props[firstObject.uuid].text;
+  const props = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.uuid));
+  const text = props.text;
 
   const [currentText, setCurrentText] = useState(object.text);
 
@@ -242,23 +237,18 @@ const ObjectStyleText = (): ReactElement => {
   const updateText = useCallback(
     (text: Partial<QueueText>): void => {
       dispatch(
-        objectsSlice.actions.setObjectDefaultProps({
-          page: settings.queuePage,
-          queueIndex: settings.queueIndex,
-          props: {
-            ...props,
-            [firstObject.uuid]: {
-              ...props[firstObject.uuid],
-              text: {
-                ...props[firstObject.uuid].text,
-                ...text,
-              },
+        objectsSlice.actions.updateObject({
+          id: firstObject.uuid,
+          changes: {
+            text: {
+              ...object.text,
+              ...text,
             },
           },
         }),
       );
     },
-    [dispatch, firstObject.uuid, props, settings.queueIndex, settings.queuePage],
+    [dispatch, firstObject.uuid, object.text],
   );
 
   useEffect(() => {
@@ -373,8 +363,8 @@ export const ObjectStylerPanel = ({
   className,
   ...props
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
-  const settings = useAppSelector(SettingSelectors.selectSettings);
-  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
+  const settings = useAppSelector(SettingSelectors.settings);
+  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const dispatch = useAppDispatch();
   const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),

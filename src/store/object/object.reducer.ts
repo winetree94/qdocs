@@ -1,10 +1,11 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { OBJECT_PROPERTY_META } from 'model/meta';
 import { QueueObjectType } from 'model/object';
 import { loadDocument } from 'store/document/actions';
-import { ObjectQueueEffects, ObjectQueueProps } from 'store/legacy/selectors';
+import { ObjectQueueEffects } from 'store/legacy/selectors';
 
-export const objectEntityAdapter = createEntityAdapter<QueueObjectType>({
+export type NormalizedQueueObjectType = QueueObjectType & { effectIds: string[] };
+
+export const objectEntityAdapter = createEntityAdapter<NormalizedQueueObjectType>({
   selectId: (object) => object.uuid,
 });
 
@@ -28,7 +29,7 @@ export const objectsSlice = createSlice({
       }>,
     ) => {
       if (!state) return null;
-      const objects: QueueObjectType[] = state.ids.map((id) => state.entities[id]!);
+      const objects: NormalizedQueueObjectType[] = state.ids.map((id) => state.entities[id]!);
 
       const newObjects = objects.map((object) => {
         const newObject = { ...object, effects: [...object.effects] };
@@ -222,40 +223,15 @@ export const objectsSlice = createSlice({
         newObjects.map((object) => ({ id: object.uuid, changes: object })),
       );
     },
-
-    setObjectDefaultProps: (
-      state,
-      action: PayloadAction<{
-        page: number;
-        queueIndex: number;
-        props: { [key: string]: ObjectQueueProps };
-      }>,
-    ) => {
-      const objects = state.ids.map((id) => state.entities[id]);
-      const newObjects = objects.map((object) => {
-        const newObject = {
-          ...object,
-          fade: action.payload.props[object.uuid][OBJECT_PROPERTY_META.FADE],
-          fill: action.payload.props[object.uuid][OBJECT_PROPERTY_META.FILL],
-          rect: action.payload.props[object.uuid][OBJECT_PROPERTY_META.RECT],
-          rotate: action.payload.props[object.uuid][OBJECT_PROPERTY_META.ROTATE],
-          scale: action.payload.props[object.uuid][OBJECT_PROPERTY_META.SCALE],
-          stroke: action.payload.props[object.uuid][OBJECT_PROPERTY_META.STROKE],
-          text: action.payload.props[object.uuid][OBJECT_PROPERTY_META.TEXT],
-        };
-        return newObject;
-      });
-      return objectEntityAdapter.updateMany(
-        state,
-        newObjects.map((object) => ({ id: object.uuid, changes: object })),
-      );
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadDocument, (state, action) => {
-      const normalized = action.payload.pages.reduce<QueueObjectType[]>((result, page) => {
+      const normalized = action.payload.pages.reduce<NormalizedQueueObjectType[]>((result, page) => {
         page.objects.forEach((object) => {
-          result.push(object);
+          result.push({
+            ...object,
+            effectIds: object.effects.map((effect) => effect.uuid),
+          });
         });
         return result;
       }, []);

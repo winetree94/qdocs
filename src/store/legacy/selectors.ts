@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createSelector } from '@reduxjs/toolkit';
-import { generateUUID } from 'cdk/functions/uuid';
 import {
-  BaseQueueEffect,
   CreateEffect,
   FadeEffect,
   FillEffect,
@@ -44,7 +42,7 @@ export interface ObjectQueueProps {
 /**
  * @deprecated
  */
-const selectPages = createSelector(DocumentSelectors.selectSerializedDocument, (document) => document?.pages ?? []);
+const selectPages = createSelector(DocumentSelectors.serialized, (document) => document?.pages ?? []);
 
 /**
  * @deprecated
@@ -205,46 +203,6 @@ export const selectObjectQueueProps = (page: number, queueIndex: number) => {
         );
       final[object.uuid] = props;
       return final;
-    }, {});
-  });
-};
-
-/**
- * @deprecated
- */
-export const selectObjectDefaultProps = (page: number) => {
-  return createSelector(selectPage(page), (page) => {
-    return page.objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
-      const props = {
-        [OBJECT_PROPERTY_META.FADE]: object.fade,
-        [OBJECT_PROPERTY_META.FILL]: object.fill,
-        [OBJECT_PROPERTY_META.RECT]: object.rect,
-        [OBJECT_PROPERTY_META.ROTATE]: object.rotate,
-        [OBJECT_PROPERTY_META.SCALE]: object.scale,
-        [OBJECT_PROPERTY_META.STROKE]: object.stroke,
-        [OBJECT_PROPERTY_META.TEXT]: object.text,
-      };
-      final[object.uuid] = props;
-      return final;
-    }, {});
-  });
-};
-
-/**
- * @deprecated
- */
-export const selectObjectCurrentBasesEffect = (page: number, queueIndex: number, uuids: string[]) => {
-  return createSelector(selectPageObjects(page), (objects) => {
-    return objects.reduce<{ [key: string]: BaseQueueEffect }>((result, object) => {
-      result[object.uuid] = object.effects
-        .filter((effect) => effect.index <= queueIndex)
-        .reduce<BaseQueueEffect>((_, effect) => effect, {
-          uuid: generateUUID(),
-          index: 0,
-          duration: 0,
-          timing: 'linear',
-        });
-      return result;
     }, {});
   });
 };

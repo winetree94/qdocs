@@ -13,7 +13,7 @@ export type EffectControllerFadeProps = {
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;

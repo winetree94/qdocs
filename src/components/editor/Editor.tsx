@@ -16,7 +16,6 @@ import { PresentationRemote } from './PresentationRemote';
 import {
   ObjectQueueEffects,
   ObjectQueueProps,
-  selectObjectDefaultProps,
   selectObjectQueueEffects,
   selectObjectQueueProps,
   selectQueueObjects,
@@ -36,9 +35,6 @@ export interface BaseQueueEditorProps {
   queueDocument: QueueDocument;
   settings: QueueDocumentSettings;
   objects: QueueObjectType[];
-  defaultProps: {
-    [key: string]: ObjectQueueProps;
-  };
   queueProps: {
     [key: string]: ObjectQueueProps;
   };
@@ -51,7 +47,6 @@ export const BaseQueueEditor = ({
   queueDocument,
   settings,
   objects,
-  defaultProps,
   queueProps,
   queueEffects,
 }: BaseQueueEditorProps) => {
@@ -270,17 +265,12 @@ export const BaseQueueEditor = ({
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
     dispatch(
-      objectsSlice.actions.setObjectDefaultProps({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        props: {
-          ...defaultProps,
-          [object.uuid]: {
-            ...defaultProps[object.uuid],
-            text: {
-              ...defaultProps[object.uuid].text,
-              text,
-            },
+      objectsSlice.actions.updateObject({
+        id: object.uuid,
+        changes: {
+          text: {
+            ...object.text,
+            text,
           },
         },
       }),
@@ -385,14 +375,13 @@ export const BaseQueueEditor = ({
 };
 
 export const mapStateToProps = (state: RootState) => {
-  const settings = SettingSelectors.selectSettings(state);
+  const settings = SettingSelectors.settings(state);
   return {
-    queueDocument: DocumentSelectors.selectSerializedDocument(state),
+    queueDocument: DocumentSelectors.serialized(state),
     settings: settings,
     objects: selectQueueObjects(settings.queuePage, settings.queueIndex)(state),
     queueProps: selectObjectQueueProps(settings.queuePage, settings.queueIndex)(state),
     queueEffects: selectObjectQueueEffects(settings.queuePage, settings.queueIndex)(state),
-    defaultProps: selectObjectDefaultProps(settings.queuePage)(state),
   };
 };
 

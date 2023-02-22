@@ -12,7 +12,7 @@ export type EffectControllerDurationProps = {
 
 export const EffectControllerDuration = ({ effectType }: EffectControllerDurationProps): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),

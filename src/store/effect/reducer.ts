@@ -6,18 +6,18 @@ export type NormalizedQueueEffect = {
   uuid: string;
 } & QueueEffectType;
 
-const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({
-  selectId: (object) => object.uuid,
+export const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({
+  selectId: (effect) => effect.uuid,
 });
 
 export const effectSlice = createSlice({
   name: 'effects',
   initialState: effectEntityAdapter.getInitialState(),
   reducers: {
-    setObjects: effectEntityAdapter.setAll,
-    addObject: effectEntityAdapter.addOne,
-    removeObject: effectEntityAdapter.removeOne,
-    updateObject: effectEntityAdapter.updateOne,
+    setEffects: effectEntityAdapter.setAll,
+    addEffect: effectEntityAdapter.addOne,
+    removeEffect: effectEntityAdapter.removeOne,
+    updateEffect: effectEntityAdapter.updateOne,
   },
   extraReducers: (builder) => {
     builder.addCase(loadDocument, (state, action) => {

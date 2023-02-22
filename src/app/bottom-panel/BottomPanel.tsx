@@ -245,9 +245,9 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
 };
 
 const mapToStateProps = (state: RootState) => ({
-  settings: SettingSelectors.selectSettings(state),
-  docs: DocumentSelectors.selectDocs(state),
-  docsPages: PageSelectors.selectPageEntries(state),
+  settings: SettingSelectors.settings(state),
+  docs: DocumentSelectors.document(state),
+  docsPages: PageSelectors.entities(state),
 });
 
 export const BottomPanel = connect(mapToStateProps)(BaseBottomPanel);

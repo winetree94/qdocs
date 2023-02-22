@@ -121,8 +121,8 @@ const createItemData = memoize(
 export const ObjectPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const dispatch = useAppDispatch();
-  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
-  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const queueDocument = useAppSelector(DocumentSelectors.serialized);
+  const settings = useAppSelector(SettingSelectors.settings);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
