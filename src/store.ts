@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { docsSlice } from 'store/docs/reducer';
+import { docsSlice } from 'store/document/reducer';
 import { effectSlice } from 'store/effect/effect';
 import { objectsSlice } from 'store/object/object.reducer';
 import { pagesSlice } from 'store/page/reducer';

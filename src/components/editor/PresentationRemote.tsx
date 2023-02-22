@@ -1,16 +1,16 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { selectObjectEffectsByQueue } from 'store/document/selectors';
+import { selectObjectEffectsByQueue } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { PageSelectors } from 'store/page/selectors';
 import { documentSettingsSlice } from 'store/settings/reducer';
-import { selectSettings } from 'store/settings/selectors';
 import styles from './PresentationRemote.module.scss';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export const PresentationRemote: React.FC = () => {
   const dispatch = useAppDispatch();
   const effectsByQueues = useAppSelector(selectObjectEffectsByQueue);
   const pages = useAppSelector(PageSelectors.selectPages);
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
 
   const setQueueIndex = (index: number, play?: boolean): void => {
     const target = Math.max(0, index);

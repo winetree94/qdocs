@@ -3,20 +3,21 @@ import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
-import { selectSettings } from 'store/settings/selectors';
-import { ObjectQueueEffects, selectDocumentLegacy, selectObjectQueueEffects } from 'store/document/selectors';
+import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 import { objectsSlice } from 'store/object/object.reducer';
 import { pagesSlice } from 'store/page/reducer';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const queueDocument = useAppSelector(selectDocumentLegacy);
+  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
   const currentPage = queueDocument!.pages[settings.queuePage];
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {

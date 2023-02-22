@@ -7,9 +7,9 @@ import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
 import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { selectDocs } from 'store/docs/selectors';
+import { DocumentSelectors } from 'store/document/selectors';
 
 export interface ToolbarModel {
   key: string;
@@ -23,7 +23,7 @@ export interface ToolbarProps {
 }
 
 export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
-  const docs = useAppSelector(selectDocs);
+  const docs = useAppSelector(DocumentSelectors.selectDocs);
   const dispatch = useAppDispatch();
 
   const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);

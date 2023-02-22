@@ -1,10 +1,10 @@
 import { Slider } from 'components/slider';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
+import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
-import { selectSettings } from 'store/settings/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -12,7 +12,7 @@ export type EffectControllerDurationProps = {
 
 export const EffectControllerDuration = ({ effectType }: EffectControllerDurationProps): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),

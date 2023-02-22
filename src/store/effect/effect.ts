@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { QueueEffectType } from 'model/effect';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 
 export type NormalizedQueueEffect = {
   uuid: string;

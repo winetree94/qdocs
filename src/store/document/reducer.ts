@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 
 export interface NormalizedQueueDocument {
   documentName: string;

@@ -16,13 +16,11 @@ import { PresentationRemote } from './PresentationRemote';
 import {
   ObjectQueueEffects,
   ObjectQueueProps,
-  selectDocumentLegacy,
   selectObjectDefaultProps,
   selectObjectQueueEffects,
   selectObjectQueueProps,
   selectQueueObjects,
-} from 'store/document/selectors';
-import { selectSettings } from 'store/settings/selectors';
+} from 'store/legacy/selectors';
 import { useAppDispatch } from 'store/hooks';
 import { useEventSelector } from 'cdk/hooks/event-dispatcher';
 import { fitScreenSizeEvent } from 'app/events/event';
@@ -31,6 +29,8 @@ import { RootState } from 'store';
 import { connect } from 'react-redux';
 import { QueueDocument } from 'model/document';
 import { objectsSlice } from 'store/object/object.reducer';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export interface BaseQueueEditorProps {
   queueDocument: QueueDocument;
@@ -385,9 +385,9 @@ export const BaseQueueEditor = ({
 };
 
 export const mapStateToProps = (state: RootState) => {
-  const settings = selectSettings(state);
+  const settings = SettingSelectors.selectSettings(state);
   return {
-    queueDocument: selectDocumentLegacy(state),
+    queueDocument: DocumentSelectors.selectSerializedDocument(state),
     settings: settings,
     objects: selectQueueObjects(settings.queuePage, settings.queueIndex)(state),
     queueProps: selectObjectQueueProps(settings.queuePage, settings.queueIndex)(state),

@@ -15,11 +15,11 @@ import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueInput } from 'components/input/Input';
-import { selectDocumentLegacy } from 'store/document/selectors';
-import { selectSettings } from 'store/settings/selectors';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { documentSettingsSlice } from 'store/settings/reducer';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export interface QueueObject {
   key: string;
@@ -121,8 +121,8 @@ const createItemData = memoize(
 export const ObjectPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const dispatch = useAppDispatch();
-  const queueDocument = useAppSelector(selectDocumentLegacy);
-  const settings = useAppSelector(selectSettings);
+  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{

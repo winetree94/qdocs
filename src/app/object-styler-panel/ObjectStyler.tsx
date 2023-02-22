@@ -19,12 +19,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { loadDocument } from 'store/docs/actions';
-import { selectDocumentLegacy, selectObjectDefaultProps, selectPageObjectByUUID } from 'store/document/selectors';
+import { loadDocument } from 'store/document/actions';
+import { DocumentSelectors } from 'store/document/selectors';
+import { selectObjectDefaultProps, selectPageObjectByUUID } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
-import { selectSettings } from 'store/settings/selectors';
 import classes from './ObjectStyler.module.scss';
+import { SettingSelectors } from 'store/settings/selectors';
 
 // context start
 interface ObjectStylerContextValue {
@@ -213,7 +214,7 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
@@ -372,8 +373,8 @@ export const ObjectStylerPanel = ({
   className,
   ...props
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
-  const settings = useAppSelector(selectSettings);
-  const queueDocument = useAppSelector(selectDocumentLegacy);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
   const dispatch = useAppDispatch();
   const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),

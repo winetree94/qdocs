@@ -3,10 +3,10 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
+import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
-import { selectSettings } from 'store/settings/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -14,7 +14,7 @@ export type EffectControllerTimingFunctionProps = {
 
 export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),

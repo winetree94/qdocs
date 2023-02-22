@@ -7,13 +7,13 @@ import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
-import { selectSettings } from 'store/settings/selectors';
 import { useAppDispatch } from 'store/hooks';
 import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
 import { AppDispatch, RootState } from 'store';
 import { connect } from 'react-redux';
-import { NormalizedQueueDocument } from 'store/docs/reducer';
-import { selectDocs } from 'store/docs/selectors';
+import { NormalizedQueueDocument } from 'store/document/reducer';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export interface BaseRootLayoutProps {
   docs: NormalizedQueueDocument;
@@ -79,8 +79,8 @@ export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
 };
 
 const mapStateToProps = (state: RootState) => ({
-  docs: selectDocs(state),
-  settings: selectSettings(state),
+  docs: DocumentSelectors.selectDocs(state),
+  settings: SettingSelectors.selectSettings(state),
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({});

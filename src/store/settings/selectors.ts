@@ -4,9 +4,9 @@ import { QueueDocumentSettings } from './reducer';
 
 const selectSelf = (state: RootState): QueueDocumentSettings => state.settings;
 
-export const selectSettings = createSelector(selectSelf, (state) => state);
+const selectSettings = createSelector(selectSelf, (state) => state);
 
-export const selectQueueRange = createSelector(selectSettings, (settings) => {
+const selectQueueRange = createSelector(selectSettings, (settings) => {
   const { queueIndex } = settings;
   const ranges: number[] = [];
   const rangeStart = Math.max(queueIndex - 2, 0);
@@ -16,3 +16,8 @@ export const selectQueueRange = createSelector(selectSettings, (settings) => {
   }
   return ranges;
 });
+
+export const SettingSelectors = {
+  selectSettings,
+  selectQueueRange,
+};

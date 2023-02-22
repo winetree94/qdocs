@@ -5,8 +5,8 @@ import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
-import { selectSettings } from 'store/settings/selectors';
 import { useAppSelector } from 'store/hooks';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -14,7 +14,7 @@ export const PanelTabType = {
 } as const;
 
 export const LeftPanel: FunctionComponent = () => {
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const hasSelectedObjects = settings.selectedObjectUUIDs.length > 0;
 
   return (

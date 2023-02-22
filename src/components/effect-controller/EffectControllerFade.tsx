@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
 import { QueueEffectType } from 'model/effect';
 import { Slider } from 'components/slider';
-import { selectSettings } from 'store/settings/selectors';
-import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/document/selectors';
+import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -13,7 +13,7 @@ export type EffectControllerFadeProps = {
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;

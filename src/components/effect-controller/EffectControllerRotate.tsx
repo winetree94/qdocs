@@ -1,14 +1,14 @@
 import { RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
-import { selectObjectQueueEffects } from 'store/document/selectors';
+import { selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/object.reducer';
-import { selectSettings } from 'store/settings/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].rotate;

@@ -6,14 +6,14 @@ import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { AppDispatch, RootState } from 'store';
-import { ObjectQueueEffects, selectObjectEffectsByQueue } from 'store/document/selectors';
-import { selectQueueRange, selectSettings } from 'store/settings/selectors';
+import { ObjectQueueEffects, selectObjectEffectsByQueue } from 'store/legacy/selectors';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
 import { connect } from 'react-redux';
 import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
-import { NormalizedQueueDocument } from 'store/docs/reducer';
-import { selectDocs } from 'store/docs/selectors';
+import { NormalizedQueueDocument } from 'store/document/reducer';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export type BaseQueueSubtoolbarProps = {
   docs: NormalizedQueueDocument;
@@ -154,10 +154,10 @@ export const BaseQueueSubtoolbar = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
-  docs: selectDocs(state),
-  settings: selectSettings(state),
+  docs: DocumentSelectors.selectDocs(state),
+  settings: SettingSelectors.selectSettings(state),
   effectsByQueues: selectObjectEffectsByQueue(state),
-  ranges: selectQueueRange(state),
+  ranges: SettingSelectors.selectQueueRange(state),
 });
 
 const mapToDispatchProps = (dispatch: AppDispatch) => ({

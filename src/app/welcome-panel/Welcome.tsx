@@ -4,7 +4,7 @@ import { QueueButton } from 'components/button/Button';
 import { QueueH2 } from 'components/head/Head';
 import { QueueDocument } from 'model/document';
 import { useState } from 'react';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
 

@@ -1,8 +1,8 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { OBJECT_PROPERTY_META } from 'model/meta';
 import { QueueObjectType } from 'model/object';
-import { loadDocument } from 'store/docs/actions';
-import { ObjectQueueEffects, ObjectQueueProps } from 'store/document/selectors';
+import { loadDocument } from 'store/document/actions';
+import { ObjectQueueEffects, ObjectQueueProps } from 'store/legacy/selectors';
 
 export const objectEntityAdapter = createEntityAdapter<QueueObjectType>({
   selectId: (object) => object.uuid,

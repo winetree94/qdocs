@@ -13,12 +13,12 @@ import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/red
 import { generateUUID } from 'cdk/functions/uuid';
 import { RootState } from 'store';
 import { connect } from 'react-redux';
-import { selectSettings } from 'store/settings/selectors';
-import { docsSlice, NormalizedQueueDocument } from 'store/docs/reducer';
+import { docsSlice, NormalizedQueueDocument } from 'store/document/reducer';
 import { Dictionary } from '@reduxjs/toolkit';
 import { NormalizedQueueDocumentPage, pagesSlice } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
-import { selectDocs } from 'store/docs/selectors';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 export interface BaseBottomPanelProps {
   docs: NormalizedQueueDocument;
@@ -245,8 +245,8 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
 };
 
 const mapToStateProps = (state: RootState) => ({
-  settings: selectSettings(state),
-  docs: selectDocs(state),
+  settings: SettingSelectors.selectSettings(state),
+  docs: DocumentSelectors.selectDocs(state),
   docsPages: PageSelectors.selectPageEntries(state),
 });
 

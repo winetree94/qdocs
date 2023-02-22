@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { loadDocument } from 'store/docs/actions';
+import { loadDocument } from 'store/document/actions';
 
 export interface NormalizedQueueDocumentPage {
   uuid: string;

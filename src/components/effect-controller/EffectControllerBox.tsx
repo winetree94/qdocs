@@ -7,11 +7,12 @@ import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
-import { selectSettings } from 'store/settings/selectors';
-import { selectDocumentLegacy, selectQueueObjects } from 'store/document/selectors';
-import { loadDocument } from 'store/docs/actions';
+import { selectQueueObjects } from 'store/legacy/selectors';
+import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { generateUUID } from 'cdk/functions/uuid';
+import { DocumentSelectors } from 'store/document/selectors';
+import { SettingSelectors } from 'store/settings/selectors';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -118,8 +119,8 @@ const createEffect = (
 
 export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(selectSettings);
-  const queueDocument = useAppSelector(selectDocumentLegacy);
+  const settings = useAppSelector(SettingSelectors.selectSettings);
+  const queueDocument = useAppSelector(DocumentSelectors.selectSerializedDocument);
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),
   );
