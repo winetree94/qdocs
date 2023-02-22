@@ -1,9 +1,9 @@
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { setObjectQueueEffects } from 'store/document/actions';
 import { selectObjectQueueEffects } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { objectsSlice } from 'store/object/object.reducer';
 import { selectSettings } from 'store/settings/selectors';
 
 export const EffectControllerRect = (): ReactElement => {
@@ -25,7 +25,7 @@ export const EffectControllerRect = (): ReactElement => {
       };
 
       dispatch(
-        setObjectQueueEffects({
+        objectsSlice.actions.setObjectQueueEffects({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           effects: {

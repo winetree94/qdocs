@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import styles from './Toolbar.module.scss';
 import clsx from 'clsx';
 import { QueueDocument } from 'model/document';
@@ -7,9 +7,9 @@ import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
 import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
-import { selectDocument } from 'store/document/selectors';
-import { setDocument } from 'store/document/actions';
+import { loadDocument } from 'store/docs/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { selectDocs } from 'store/docs/selectors';
 
 export interface ToolbarModel {
   key: string;
@@ -22,49 +22,27 @@ export interface ToolbarProps {
   onItemClicked?: (item: ToolbarModel) => void;
 }
 
-export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked }) => {
-  const queueDocument = useAppSelector(selectDocument);
+export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
+  const docs = useAppSelector(selectDocs);
   const dispatch = useAppDispatch();
-  const [documentTitle, setDocumentTitle] = useState('');
 
   const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
-  useEffect(() => {
-    setDocumentTitle(queueDocument?.documentName || '');
-  }, [queueDocument?.documentName]);
-
-  const onTitleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setDocumentTitle(event.target.value);
-  };
-
-  const onTitleInputBlur = (): void => {
-    const previous = (queueDocument?.documentName || '').trim();
-    const current = documentTitle.trim();
-    if (previous !== current) {
-      dispatch(
-        setDocument({
-          ...queueDocument!,
-          documentName: current,
-        }),
-      );
-    }
-  };
-
   const onNewDocumentClick = (): void => {
-    if (queueDocument) {
+    if (docs) {
       setAlertDialog({
         title: '현재 열려있는 문서가 있습니다.',
         description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
         onAction: () =>
           setNewDocumentDialogProps({
-            onSubmit: (document) => dispatch(setDocument(document)),
+            onSubmit: (document) => dispatch(loadDocument(document)),
           }),
       });
       return;
     }
     setNewDocumentDialogProps({
-      onSubmit: (document) => dispatch(setDocument(document)),
+      onSubmit: (document) => dispatch(loadDocument(document)),
     });
   };
 
@@ -85,7 +63,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
           const document = JSON.parse(result) as QueueDocument;
-          dispatch(setDocument(document));
+          dispatch(loadDocument(document));
         };
         fileReader.readAsText(file);
       } catch (e) {
@@ -96,7 +74,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
   };
 
   const onOpenDcoumentClick = (): void => {
-    if (queueDocument) {
+    if (docs) {
       setAlertDialog({
         title: '현재 열려있는 문서가 있습니다.',
         description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
@@ -108,23 +86,23 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
   };
 
   const onSaveDocumentClick = (): void => {
-    if (!queueDocument) return;
-    const stringified = JSON.stringify(queueDocument);
-    const blob = new Blob([stringified], { type: 'octet/stream' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${queueDocument.documentName}.que`;
-    a.click();
-    URL.revokeObjectURL(url);
+    if (!docs) return;
+    // const stringified = JSON.stringify(queueDocument);
+    // const blob = new Blob([stringified], { type: 'octet/stream' });
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = `${queueDocument.documentName}.que`;
+    // a.click();
+    // URL.revokeObjectURL(url);
   };
 
   const clearDocument = (): void => {
-    dispatch(setDocument(null));
+    dispatch(loadDocument(null));
   };
 
   const onCloseDocumentClick = (): void => {
-    if (queueDocument) {
+    if (docs) {
       setAlertDialog({
         title: '현재 열려있는 문서가 있습니다.',
         description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
@@ -142,13 +120,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
       </div>
       <div className={clsx(styles.ContentContainer)}>
         <div className={clsx(styles.TitleContainer)}>
-          <QueueInput
-            disabled={!queueDocument}
-            type="text"
-            value={documentTitle}
-            onChange={onTitleInputChange}
-            onBlur={onTitleInputBlur}
-          />
+          <QueueInput disabled={!docs} type="text" />
         </div>
         <QueueMenubar.Root>
           <QueueMenubar.Menu>
@@ -158,11 +130,11 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
                 <QueueMenubar.Item onClick={onNewDocumentClick}>새 문서</QueueMenubar.Item>
                 <QueueMenubar.Separator />
                 <QueueMenubar.Item onClick={onOpenDcoumentClick}>문서 열기</QueueMenubar.Item>
-                <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!queueDocument}>
+                <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!docs}>
                   문서 저장
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onCloseDocumentClick} disabled={!queueDocument}>
+                <QueueMenubar.Item onClick={onCloseDocumentClick} disabled={!docs}>
                   문서 닫기
                 </QueueMenubar.Item>
               </QueueMenubar.Content>
@@ -173,13 +145,13 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
             <QueueMenubar.Trigger>수정</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled={!queueDocument}>실행 취소</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!queueDocument}>다시 실행</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>실행 취소</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>다시 실행</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!queueDocument}>붙여넣기</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>붙여넣기</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!queueDocument}>제목 수정</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!queueDocument}>페이지 설정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>제목 수정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>페이지 설정</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -188,7 +160,7 @@ export const QueueToolbar: FunctionComponent<ToolbarProps> = ({ onItemClicked })
             <QueueMenubar.Trigger>보기</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled={!queueDocument}>프레젠테이션 모드 시작</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs}>프레젠테이션 모드 시작</QueueMenubar.Item>
                 <QueueMenubar.Separator />
                 <QueueMenubar.Item>전체 화면</QueueMenubar.Item>
               </QueueMenubar.Content>

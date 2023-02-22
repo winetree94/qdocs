@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
-import { getCurrentRect } from '../queue/animate/rect';
 import { QueueObject } from 'components/queue';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import clsx from 'clsx';
@@ -17,60 +16,70 @@ import { PresentationRemote } from './PresentationRemote';
 import {
   ObjectQueueEffects,
   ObjectQueueProps,
-  selectDocument,
+  selectDocumentLegacy,
   selectObjectDefaultProps,
   selectObjectQueueEffects,
   selectObjectQueueProps,
   selectQueueObjects,
 } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
-import { setSettings } from 'store/settings/actions';
-import { setObjectDefaultProps, setObjectQueueEffects } from 'store/document/actions';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { useAppDispatch } from 'store/hooks';
 import { useEventSelector } from 'cdk/hooks/event-dispatcher';
 import { fitScreenSizeEvent } from 'app/events/event';
+import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
+import { RootState } from 'store';
+import { connect } from 'react-redux';
+import { QueueDocument } from 'model/document';
+import { objectsSlice } from 'store/object/object.reducer';
 
-export const QueueEditor: React.FC = () => {
+export interface BaseQueueEditorProps {
+  queueDocument: QueueDocument;
+  settings: QueueDocumentSettings;
+  objects: QueueObjectType[];
+  defaultProps: {
+    [key: string]: ObjectQueueProps;
+  };
+  queueProps: {
+    [key: string]: ObjectQueueProps;
+  };
+  queueEffects: {
+    [key: string]: ObjectQueueEffects;
+  };
+}
+
+export const BaseQueueEditor = ({
+  queueDocument,
+  settings,
+  objects,
+  defaultProps,
+  queueProps,
+  queueEffects,
+}: BaseQueueEditorProps) => {
   const dispatch = useAppDispatch();
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
-
-  const queueDocument = useAppSelector(selectDocument);
-  const settings = useAppSelector(selectSettings);
-
-  const objects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex));
-  const defaultProps = useAppSelector(selectObjectDefaultProps(settings.queuePage));
-  const queueProps = useAppSelector(selectObjectQueueProps(settings.queuePage, settings.queueIndex));
-  const queueEffects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
     [key: string]: ObjectQueueProps;
   }>({});
 
-  const canvasSizeToFit = (): void => {
+  const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current!;
-    const scale = Math.min(
+    const targetScale = Math.min(
       root.clientWidth / (queueDocument!.documentRect.width + 40),
       root.clientHeight / (queueDocument!.documentRect.height + 40),
     );
-    if (settings.scale === scale) {
+    if (settings.scale === targetScale) {
       return;
     }
-    dispatch(
-      setSettings({
-        ...settings,
-        scale: Math.max(scale, 0.1),
-      }),
-    );
-  };
+    dispatch(documentSettingsSlice.actions.setScale(targetScale));
+  }, [dispatch, queueDocument, settings]);
 
   // 최초 렌더링 시 스케일 계산
-  useLayoutEffect(() => {
-    canvasSizeToFit();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => canvasSizeToFit(), []);
 
-  useEventSelector(fitScreenSizeEvent, () => canvasSizeToFit());
+  useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
 
   const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -80,20 +89,14 @@ export const QueueEditor: React.FC = () => {
     const selected = settings.selectedObjectUUIDs.includes(object.uuid);
     if (!event.shiftKey && !selected) {
       dispatch(
-        setSettings({
+        documentSettingsSlice.actions.setSelection({
           ...settings,
           selectionMode: 'normal',
-          selectedObjectUUIDs: [object.uuid],
+          uuids: [object.uuid],
         }),
       );
     } else {
-      dispatch(
-        setSettings({
-          ...settings,
-          selectionMode: 'normal',
-          selectedObjectUUIDs: [...settings.selectedObjectUUIDs.filter((id) => id !== object.uuid), object.uuid],
-        }),
-      );
+      dispatch(documentSettingsSlice.actions.addSelection(object.uuid));
     }
   };
 
@@ -103,16 +106,11 @@ export const QueueEditor: React.FC = () => {
   ): void => {
     event.stopPropagation();
     dispatch(
-      setSettings({
-        ...settings,
+      documentSettingsSlice.actions.setSelection({
         selectionMode: 'detail',
-        selectedObjectUUIDs: [object.uuid],
+        uuid: object.uuid,
       }),
     );
-  };
-
-  const onObjectDragStart = (): void => {
-    setCapturedObjectProps(queueProps);
   };
 
   const onUpdateDrag = (initEvent: MouseEvent, event: MouseEvent): void => {
@@ -148,7 +146,7 @@ export const QueueEditor: React.FC = () => {
     }, {});
 
     dispatch(
-      setObjectQueueEffects({
+      objectsSlice.actions.setObjectQueueEffects({
         page: settings.queuePage,
         queueIndex: settings.queueIndex,
         effects: {
@@ -169,27 +167,6 @@ export const QueueEditor: React.FC = () => {
 
   /**
    * @description
-   * 드로잉 시작 시 시작 지점에 오브젝트가 있으면 드로잉을 취소 (오브젝트 이동 동작을 수행해야 함)
-   */
-  const onDrawStart = (event: DrawEvent, cancel: () => void): void => {
-    if (!canvasDiv.current) {
-      return;
-    }
-    const rect = canvasDiv.current.getBoundingClientRect();
-    const absScale = 1 / settings.scale;
-    const x = (event.drawClientX - rect.x) * absScale;
-    const y = (event.drawClientY - rect.y) * absScale;
-    const hasSelectableObject = queueDocument!.pages[settings.queuePage].objects.some((object) => {
-      const rect = getCurrentRect(object, settings.queueIndex);
-      return rect.x <= x && rect.y <= y && rect.x + rect.width >= x && rect.y + rect.height >= y;
-    });
-    if (hasSelectableObject) {
-      cancel();
-    }
-  };
-
-  /**
-   * @description
    * 드로잉 종료 시 범위 내 오브젝트를 선택
    */
   const onDrawEnd = (event: DrawEvent): void => {
@@ -202,15 +179,17 @@ export const QueueEditor: React.FC = () => {
     const y = (event.drawClientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
-    const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) => {
-      const rect = getCurrentRect(object, settings.queueIndex);
-      return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
-    });
+
+    const rangeObjectUUIDs = Object.entries(queueProps)
+      .filter(([_, { rect }]) => {
+        return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
+      })
+      .map(([uuid]) => uuid);
+
     dispatch(
-      setSettings({
-        ...settings,
+      documentSettingsSlice.actions.setSelection({
         selectionMode: 'normal',
-        selectedObjectUUIDs: selectedObjects.map((object) => object.uuid),
+        uuids: rangeObjectUUIDs,
       }),
     );
   };
@@ -228,7 +207,7 @@ export const QueueEditor: React.FC = () => {
       },
     };
     dispatch(
-      setObjectQueueEffects({
+      objectsSlice.actions.setObjectQueueEffects({
         page: settings.queuePage,
         queueIndex: settings.queueIndex,
         effects: {
@@ -240,18 +219,6 @@ export const QueueEditor: React.FC = () => {
         },
       }),
     );
-  };
-
-  const onResizeStart = (object: QueueObjectType, rect: ResizerEvent): void => {
-    resizeObjectRect(object.uuid, rect);
-  };
-
-  const onResizeMove = (object: QueueObjectType, rect: ResizerEvent): void => {
-    resizeObjectRect(object.uuid, rect);
-  };
-
-  const onResizeEnd = (object: QueueObjectType, rect: ResizerEvent): void => {
-    resizeObjectRect(object.uuid, rect);
   };
 
   const updateObjectRotate = (uuid: string, degree: number): void => {
@@ -266,7 +233,7 @@ export const QueueEditor: React.FC = () => {
       },
     };
     dispatch(
-      setObjectQueueEffects({
+      objectsSlice.actions.setObjectQueueEffects({
         page: settings.queuePage,
         queueIndex: settings.queueIndex,
         effects: {
@@ -280,45 +247,30 @@ export const QueueEditor: React.FC = () => {
     );
   };
 
-  const onRotateStart = (): void => {};
-
-  const onRotateMove = (uuid: string, degree: number): void => {
-    updateObjectRotate(uuid, degree);
-  };
-
-  const onRotateEnd = (uuid: string, degree: number): void => {
-    updateObjectRotate(uuid, degree);
-  };
+  const maximizeScale = useCallback(() => {
+    const scale = Math.min(
+      document.body.clientWidth / queueDocument!.documentRect.width,
+      document.body.clientHeight / queueDocument!.documentRect.height,
+    );
+    if (settings.scale === scale) {
+      return;
+    }
+    dispatch(documentSettingsSlice.actions.setScale(scale));
+  }, [dispatch, queueDocument, settings.scale]);
 
   useEffect(() => {
     if (!settings.presentationMode) {
       return;
     }
-    const maximize = (): void => {
-      const scale = Math.min(
-        document.body.clientWidth / queueDocument!.documentRect.width,
-        document.body.clientHeight / queueDocument!.documentRect.height,
-      );
-      if (settings.scale === scale) {
-        return;
-      }
-      dispatch(
-        setSettings({
-          ...settings,
-          scale: Math.max(scale, 0.1),
-        }),
-      );
-    };
-    const observer = new ResizeObserver(maximize);
+    const observer = new ResizeObserver(maximizeScale);
     observer.observe(document.body);
-    maximize();
+    maximizeScale();
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.presentationMode]);
+  }, [dispatch, maximizeScale, queueDocument, settings.presentationMode, settings.scale]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
     dispatch(
-      setObjectDefaultProps({
+      objectsSlice.actions.setObjectDefaultProps({
         page: settings.queuePage,
         queueIndex: settings.queueIndex,
         props: {
@@ -335,39 +287,27 @@ export const QueueEditor: React.FC = () => {
     );
   };
 
-  const onRootContextMenuOpenChange = (open: boolean): void => {
-    if (open) {
-      dispatch(
-        setSettings({
-          ...settings,
-          selectionMode: 'normal',
-          selectedObjectUUIDs: [],
-        }),
-      );
-    }
-  };
-
   const onObjectContextMenuOpenChange = (uuid: string, open: boolean): void => {
     if (open && !settings.selectedObjectUUIDs.includes(uuid)) {
       dispatch(
-        setSettings({
-          ...settings,
+        documentSettingsSlice.actions.setSelection({
           selectionMode: 'normal',
-          selectedObjectUUIDs: [uuid],
+          uuids: [uuid],
         }),
       );
     }
   };
 
   return (
-    <QueueContextMenu.Root onOpenChange={onRootContextMenuOpenChange}>
+    <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
-        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
+        <QueueScrollArea.Root
+          className={clsx(styles.ScrollAreaRoot)}
+          onMouseDown={() => dispatch(documentSettingsSlice.actions.resetSelection())}>
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
               scale={settings.scale}
               drawer={<div className={clsx(styles.drawer, 'w-full', 'h-full')}></div>}
-              onDrawStart={onDrawStart}
               onDrawEnd={onDrawEnd}
               className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>
               <Scaler
@@ -402,18 +342,17 @@ export const QueueEditor: React.FC = () => {
                             <QueueObject.Drag
                               onMousedown={(event): void => onObjectMousedown(event, object)}
                               onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
-                              onDraggingStart={onObjectDragStart}
+                              onDraggingStart={() => setCapturedObjectProps(queueProps)}
                               onDraggingMove={onObjectDragMove}
                               onDraggingEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
                               <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)} />
                               <QueueObject.Resizer
-                                onResizeStart={(event): void => onResizeStart(object, event)}
-                                onResizeMove={(event): void => onResizeMove(object, event)}
-                                onResizeEnd={(event): void => onResizeEnd(object, event)}
-                                onRotateStart={(): void => onRotateStart()}
-                                onRotateMove={(event): void => onRotateMove(object.uuid, event.degree)}
-                                onRotateEnd={(event): void => onRotateEnd(object.uuid, event.degree)}
+                                onResizeStart={(event): void => resizeObjectRect(object.uuid, event)}
+                                onResizeMove={(event): void => resizeObjectRect(object.uuid, event)}
+                                onResizeEnd={(event): void => resizeObjectRect(object.uuid, event)}
+                                onRotateMove={(event): void => updateObjectRotate(object.uuid, event.degree)}
+                                onRotateEnd={(event): void => updateObjectRotate(object.uuid, event.degree)}
                               />
                             </QueueObject.Drag>
                           </QueueObject.Animator>
@@ -444,3 +383,17 @@ export const QueueEditor: React.FC = () => {
     </QueueContextMenu.Root>
   );
 };
+
+export const mapStateToProps = (state: RootState) => {
+  const settings = selectSettings(state);
+  return {
+    queueDocument: selectDocumentLegacy(state),
+    settings: settings,
+    objects: selectQueueObjects(settings.queuePage, settings.queueIndex)(state),
+    queueProps: selectObjectQueueProps(settings.queuePage, settings.queueIndex)(state),
+    queueEffects: selectObjectQueueEffects(settings.queuePage, settings.queueIndex)(state),
+    defaultProps: selectObjectDefaultProps(settings.queuePage)(state),
+  };
+};
+
+export const QueueEditor = connect(mapStateToProps)(BaseQueueEditor);

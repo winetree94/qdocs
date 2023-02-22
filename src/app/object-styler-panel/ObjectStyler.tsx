@@ -19,9 +19,10 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { setDocument, setObjectDefaultProps } from 'store/document/actions';
-import { selectDocument, selectObjectDefaultProps, selectPageObjectByUUID } from 'store/document/selectors';
+import { loadDocument } from 'store/docs/actions';
+import { selectDocumentLegacy, selectObjectDefaultProps, selectPageObjectByUUID } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { objectsSlice } from 'store/object/object.reducer';
 import { selectSettings } from 'store/settings/selectors';
 import classes from './ObjectStyler.module.scss';
 
@@ -240,7 +241,7 @@ const ObjectStyleText = (): ReactElement => {
   const updateText = useCallback(
     (text: Partial<QueueText>): void => {
       dispatch(
-        setObjectDefaultProps({
+        objectsSlice.actions.setObjectDefaultProps({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           props: {
@@ -372,7 +373,7 @@ export const ObjectStylerPanel = ({
   ...props
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
   const settings = useAppSelector(selectSettings);
-  const queueDocument = useAppSelector(selectDocument);
+  const queueDocument = useAppSelector(selectDocumentLegacy);
   const dispatch = useAppDispatch();
   const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),
@@ -440,7 +441,7 @@ export const ObjectStylerPanel = ({
     };
 
     dispatch(
-      setDocument({
+      loadDocument({
         ...queueDocument!,
         pages: newPages,
       }),

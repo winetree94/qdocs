@@ -3,8 +3,8 @@ import { QueueEffectType } from 'model/effect';
 import { Slider } from 'components/slider';
 import { selectSettings } from 'store/settings/selectors';
 import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/document/selectors';
-import { setObjectQueueEffects } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { objectsSlice } from 'store/object/object.reducer';
 
 export type EffectControllerFadeProps = {
   uuid: string;
@@ -43,7 +43,7 @@ export const EffectControllerFade = (): ReactElement => {
       };
 
       dispatch(
-        setObjectQueueEffects({
+        objectsSlice.actions.setObjectQueueEffects({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           effects: {

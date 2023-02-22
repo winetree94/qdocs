@@ -4,23 +4,20 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
 import { selectSettings } from 'store/settings/selectors';
-import {
-  ObjectQueueEffects,
-  selectDocument,
-  selectObjectQueueEffects,
-  selectPageObjects,
-} from 'store/document/selectors';
-import { setDocument, setObjectQueueEffects, setPageObjects } from 'store/document/actions';
+import { ObjectQueueEffects, selectDocumentLegacy, selectObjectQueueEffects } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { loadDocument } from 'store/docs/actions';
+import { objectsSlice } from 'store/object/object.reducer';
+import { pagesSlice } from 'store/page/reducer';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
-  const objects = useAppSelector(selectPageObjects(settings.queuePage));
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const queueDocument = useAppSelector(selectDocument);
+  const queueDocument = useAppSelector(selectDocumentLegacy);
+  const currentPage = queueDocument!.pages[settings.queuePage];
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     const objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
@@ -70,7 +67,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       objects: objects,
     };
     dispatch(
-      setDocument({
+      loadDocument({
         ...queueDocument!,
         pages: newPages,
       }),
@@ -104,7 +101,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
 
     if (Object.values(updateModels).length > 0) {
       dispatch(
-        setObjectQueueEffects({
+        objectsSlice.actions.setObjectQueueEffects({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           effects: {
@@ -124,12 +121,16 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 오브젝트를 영구히 제거
    */
   const onCompletelyRemoveClick = (uuids: string[]): void => {
+    const currentUUIDs = currentPage.objects.map((object) => object.uuid);
     dispatch(
-      setPageObjects({
-        page: settings.queuePage,
-        objects: [...objects.filter((object) => !uuids.includes(object.uuid))],
+      pagesSlice.actions.updatePage({
+        id: currentPage.uuid,
+        changes: {
+          objects: currentUUIDs.filter((uuid) => !uuids.includes(uuid)),
+        },
       }),
     );
+    dispatch(objectsSlice.actions.removeObjects(uuids));
   };
 
   return (

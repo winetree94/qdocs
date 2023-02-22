@@ -15,7 +15,6 @@ module.exports = {
     quotes: ['error', 'single'],
     indent: 'off',
     'no-trailing-spaces': ['error'],
-    '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/naming-convention': [
       'error',
       {

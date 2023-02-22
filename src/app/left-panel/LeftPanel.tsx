@@ -5,7 +5,6 @@ import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
-import { selectDocument } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
 import { useAppSelector } from 'store/hooks';
 
@@ -15,13 +14,8 @@ export const PanelTabType = {
 } as const;
 
 export const LeftPanel: FunctionComponent = () => {
-  const queueDocument = useAppSelector(selectDocument);
   const settings = useAppSelector(selectSettings);
-
-  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid),
-  );
-  const hasSelectedObjects = selectedObjects.length > 0;
+  const hasSelectedObjects = settings.selectedObjectUUIDs.length > 0;
 
   return (
     <div className={clsx(styles.container, 'flex', 'flex-col')}>

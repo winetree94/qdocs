@@ -8,9 +8,10 @@ import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 import { selectSettings } from 'store/settings/selectors';
-import { selectDocument, selectQueueObjects } from 'store/document/selectors';
-import { setDocument } from 'store/document/actions';
+import { selectDocumentLegacy, selectQueueObjects } from 'store/document/selectors';
+import { loadDocument } from 'store/docs/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { generateUUID } from 'cdk/functions/uuid';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -45,6 +46,7 @@ const createEffect = (
   queueObject: QueueObjectType,
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect = {
+    uuid: generateUUID(),
     duration: 1000,
     index: queueIndex,
     timing: 'linear',
@@ -117,7 +119,7 @@ const createEffect = (
 export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
-  const queueDocument = useAppSelector(selectDocument);
+  const queueDocument = useAppSelector(selectDocumentLegacy);
   const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
     settings.selectedObjectUUIDs.includes(object.uuid),
   );
@@ -154,7 +156,7 @@ export const EffectControllerBox = (): ReactElement | null => {
     };
 
     dispatch(
-      setDocument({
+      loadDocument({
         ...queueDocument!,
         pages: newPages,
       }),

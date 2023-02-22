@@ -1,21 +1,22 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { selectObjectEffectsByQueue, selectPages } from 'store/document/selectors';
+import { selectObjectEffectsByQueue } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { setSettings } from 'store/settings/actions';
+import { PageSelectors } from 'store/page/selectors';
+import { documentSettingsSlice } from 'store/settings/reducer';
 import { selectSettings } from 'store/settings/selectors';
 import styles from './PresentationRemote.module.scss';
 
 export const PresentationRemote: React.FC = () => {
   const dispatch = useAppDispatch();
   const effectsByQueues = useAppSelector(selectObjectEffectsByQueue);
-  const pages = useAppSelector(selectPages);
+  const pages = useAppSelector(PageSelectors.selectPages);
   const settings = useAppSelector(selectSettings);
 
   const setQueueIndex = (index: number, play?: boolean): void => {
     const target = Math.max(0, index);
     const sameIndex = settings.queueIndex === target;
     dispatch(
-      setSettings({
+      documentSettingsSlice.actions.setSettings({
         ...settings,
         queueIndex: target,
         queuePosition: sameIndex ? 'pause' : settings.queueIndex < target ? 'forward' : 'backward',
@@ -30,7 +31,7 @@ export const PresentationRemote: React.FC = () => {
     const targetPageQueueIndex = settings.queueIndex - 1;
     if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
       dispatch(
-        setSettings({
+        documentSettingsSlice.actions.setSettings({
           ...settings,
           queuePage: settings.queuePage - 1,
           queueIndex: effectsByQueues[settings.queuePage - 1].length - 1,
@@ -52,7 +53,7 @@ export const PresentationRemote: React.FC = () => {
     const targetPageQueueIndex = settings.queueIndex + 1;
     if (targetPageQueueIndex >= effectsByQueues[settings.queuePage].length && settings.queuePage < pages.length - 1) {
       dispatch(
-        setSettings({
+        documentSettingsSlice.actions.setSettings({
           ...settings,
           queuePage: settings.queuePage + 1,
           queueIndex: 0,

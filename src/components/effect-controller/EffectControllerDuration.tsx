@@ -1,9 +1,9 @@
 import { Slider } from 'components/slider';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { setObjectQueueEffects } from 'store/document/actions';
 import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { objectsSlice } from 'store/object/object.reducer';
 import { selectSettings } from 'store/settings/selectors';
 
 export type EffectControllerDurationProps = {
@@ -44,7 +44,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       };
 
       dispatch(
-        setObjectQueueEffects({
+        objectsSlice.actions.setObjectQueueEffects({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           effects: {

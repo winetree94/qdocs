@@ -1,4 +1,4 @@
-import { createContext, FunctionComponent, ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import { QueueEditor } from '../../components/editor/Editor';
 import { LeftPanel } from '../left-panel/LeftPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
@@ -7,23 +7,27 @@ import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
-import { selectDocument } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
-import { setSettings } from 'store/settings/actions';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { useAppDispatch } from 'store/hooks';
+import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
+import { AppDispatch, RootState } from 'store';
+import { connect } from 'react-redux';
+import { NormalizedQueueDocument } from 'store/docs/reducer';
+import { selectDocs } from 'store/docs/selectors';
 
-export const RootContext = createContext({});
+export interface BaseRootLayoutProps {
+  docs: NormalizedQueueDocument;
+  settings: QueueDocumentSettings;
+}
 
-export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (props) => {
-  const queueDocument = useAppSelector(selectDocument);
-  const settings = useAppSelector(selectSettings);
+export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && settings.presentationMode) {
         dispatch(
-          setSettings({
+          documentSettingsSlice.actions.setSettings({
             ...settings,
             presentationMode: false,
           }),
@@ -44,34 +48,41 @@ export const RootLayout: FunctionComponent<{ children?: ReactNode }> = (props) =
   }, [settings, dispatch]);
 
   return (
-    <RootContext.Provider value={{}}>
-      <div className={styles.container}>
-        {!settings.presentationMode ? (
-          <>
-            <QueueToolbar />
-            {queueDocument && <QueueSubtoolbar />}
-          </>
-        ) : null}
-        {queueDocument && (
-          <div className={clsx(styles.Content)}>
-            {!settings.presentationMode && (
-              <div className={clsx(styles.Left)}>
-                <LeftPanel />
-              </div>
-            )}
-            <div className={clsx(styles.Right)}>
-              <QueueEditor />
-              {!settings.presentationMode && <BottomPanel />}
+    <div className={styles.container}>
+      {!settings.presentationMode ? (
+        <>
+          <QueueToolbar />
+          {docs && <QueueSubtoolbar />}
+        </>
+      ) : null}
+      {docs && (
+        <div className={clsx(styles.Content)}>
+          {!settings.presentationMode && (
+            <div className={clsx(styles.Left)}>
+              <LeftPanel />
             </div>
+          )}
+          <div className={clsx(styles.Right)}>
+            <QueueEditor />
+            {!settings.presentationMode && <BottomPanel />}
           </div>
-        )}
+        </div>
+      )}
 
-        {!queueDocument && (
-          <div className={clsx(styles.Content)}>
-            <Welcome></Welcome>
-          </div>
-        )}
-      </div>
-    </RootContext.Provider>
+      {!docs && (
+        <div className={clsx(styles.Content)}>
+          <Welcome></Welcome>
+        </div>
+      )}
+    </div>
   );
 };
+
+const mapStateToProps = (state: RootState) => ({
+  docs: selectDocs(state),
+  settings: selectSettings(state),
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({});
+
+export const RootLayout = connect(mapStateToProps, mapDispatchToProps)(BaseRootLayout);

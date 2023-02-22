@@ -8,6 +8,7 @@
   "pages": [
     {
       "pageName": "Page-1",
+      "uuid": "asdfklasjf3n",
       "objects": [
         {
           "type": "rect",
@@ -46,12 +47,14 @@
           },
           "effects": [
             {
+              "uuid": "1",
               "type": "create",
               "timing": "linear",
               "duration": 0,
               "index": 0
             },
             {
+              "uuid": "2",
               "type": "rect",
               "duration": 1000,
               "index": 1,
@@ -64,6 +67,7 @@
               }
             },
             {
+              "uuid": "3",
               "type": "rect",
               "duration": 1000,
               "index": 2,
@@ -76,6 +80,7 @@
               }
             },
             {
+              "uuid": "4",
               "type": "rect",
               "duration": 1000,
               "index": 3,
@@ -126,12 +131,14 @@
           },
           "effects": [
             {
+              "uuid": "5",
               "type": "create",
               "timing": "linear",
               "duration": 0,
               "index": 0
             },
             {
+              "uuid": "6",
               "type": "rect",
               "duration": 1000,
               "index": 1,
@@ -149,6 +156,7 @@
     },
     {
       "pageName": "Page-2",
+      "uuid": "asdfklasjf3n2",
       "objects": [
         {
           "type": "rect",
@@ -187,12 +195,14 @@
           },
           "effects": [
             {
+              "uuid": "7",
               "type": "create",
               "timing": "linear",
               "duration": 0,
               "index": 0
             },
             {
+              "uuid": "8",
               "type": "remove",
               "duration": 0,
               "timing": "linear",
@@ -204,6 +214,7 @@
     },
     {
       "pageName": "Page-3",
+      "uuid": "asdfklasjf3nsdf",
       "objects": [
         {
           "type": "rect",
@@ -242,6 +253,7 @@
           },
           "effects": [
             {
+              "uuid": "9",
               "type": "create",
               "timing": "linear",
               "duration": 0,
@@ -253,6 +265,7 @@
     },
     {
       "pageName": "Page-4",
+      "uuid": "asdfklasjf3nasdfasdfsad",
       "objects": [
         {
           "type": "icon",
@@ -292,6 +305,7 @@
           },
           "effects": [
             {
+              "uuid": "10",
               "type": "create",
               "timing": "linear",
               "duration": 0,

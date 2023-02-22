@@ -15,11 +15,11 @@ import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueInput } from 'components/input/Input';
-import { selectDocument } from 'store/document/selectors';
+import { selectDocumentLegacy } from 'store/document/selectors';
 import { selectSettings } from 'store/settings/selectors';
-import { setDocument } from 'store/document/actions';
-import { setSettings } from 'store/settings/actions';
+import { loadDocument } from 'store/docs/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { documentSettingsSlice } from 'store/settings/reducer';
 
 export interface QueueObject {
   key: string;
@@ -121,7 +121,7 @@ const createItemData = memoize(
 export const ObjectPanel: FunctionComponent = () => {
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const dispatch = useAppDispatch();
-  const queueDocument = useAppSelector(selectDocument);
+  const queueDocument = useAppSelector(selectDocumentLegacy);
   const settings = useAppSelector(selectSettings);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
@@ -149,13 +149,13 @@ export const ObjectPanel: FunctionComponent = () => {
         };
         newPages[settings.queuePage].objects.push(figure);
         dispatch(
-          setDocument({
+          loadDocument({
             ...queueDocument!,
             pages: newPages,
           }),
         );
         dispatch(
-          setSettings({
+          documentSettingsSlice.actions.setSettings({
             ...settings,
             selectedObjectUUIDs: [figure.uuid],
           }),

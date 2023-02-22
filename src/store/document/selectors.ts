@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { createSelector } from '@reduxjs/toolkit';
+import { generateUUID } from 'cdk/functions/uuid';
+import { QueueDocument } from 'model/document';
 import {
   BaseQueueEffect,
   CreateEffect,
@@ -42,16 +44,41 @@ export interface ObjectQueueProps {
 
 const selectSelf = (state: RootState): RootState => state;
 
-export const selectDocument = createSelector(selectSelf, (state) => state.document);
+/**
+ * @deprecated
+ */
+export const selectDocumentLegacy = createSelector(selectSelf, (state) => {
+  const legacyDocumentModel: QueueDocument = {
+    ...state.document,
+    pages: state.document.pages.map((page) => ({
+      ...state.pages.entities[page],
+      objects: state.pages.entities[page].objects.map((uuid) => state.objects.entities[uuid]),
+    })),
+  };
+  return legacyDocumentModel;
+  // return state.document;
+});
 
-export const selectPages = createSelector(selectDocument, (document) => document?.pages ?? []);
+/**
+ * @deprecated
+ */
+const selectPages = createSelector(selectDocumentLegacy, (document) => document?.pages ?? []);
 
-export const selectPage = (page: number) => createSelector(selectPages, (pages) => pages[page]);
+/**
+ * @deprecated
+ */
+const selectPage = (page: number) => createSelector(selectPages, (pages) => pages[page]);
 
+/**
+ * @deprecated
+ */
 export const selectPageObjects = (page: number) => createSelector(selectPage(page), (page) => page?.objects ?? []);
 
-export const selectQueueObjects = (page: number, queueIndex: number) =>
-  createSelector(selectPageObjects(page), (objects) => {
+/**
+ * @deprecated
+ */
+export const selectQueueObjects = (page: number, queueIndex: number) => {
+  return createSelector(selectPageObjects(page), (objects) => {
     return objects.filter((object) => {
       const createEffect = object.effects.find((effect) => effect.type === 'create');
       const removeEffect = object.effects.find((effect) => effect.type === 'remove');
@@ -64,19 +91,31 @@ export const selectQueueObjects = (page: number, queueIndex: number) =>
       return true;
     });
   });
+};
 
-export const selectPageObjectsByUUID = (page: number) =>
-  createSelector(selectPageObjects(page), (objects) => {
+/**
+ * @deprecated
+ */
+export const selectPageObjectsByUUID = (page: number) => {
+  return createSelector(selectPageObjects(page), (objects) => {
     const result: { [key: string]: QueueObjectType } = {};
     objects.forEach((object) => {
       result[object.uuid] = object;
     });
     return result;
   });
+};
 
-export const selectPageObjectByUUID = (page: number, uuid: string) =>
-  createSelector(selectPageObjectsByUUID(page), (objects) => objects[uuid]);
+/**
+ * @deprecated
+ */
+export const selectPageObjectByUUID = (page: number, uuid: string) => {
+  return createSelector(selectPageObjectsByUUID(page), (objects) => objects[uuid]);
+};
 
+/**
+ * @deprecated
+ */
 export const selectObjectEffectsByQueue = createSelector(selectPages, (pages) => {
   return pages.reduce<{ [key: string]: ObjectQueueEffects }[][]>((result, current) => {
     const queues: { [key: string]: ObjectQueueEffects }[] = [];
@@ -132,11 +171,18 @@ export const selectObjectEffectsByQueue = createSelector(selectPages, (pages) =>
   }, []);
 });
 
-export const selectObjectQueueEffects = (page: number, queueIndex: number) =>
-  createSelector(selectObjectEffectsByQueue, (objectEffects) => objectEffects[page]?.[queueIndex] || {});
+/**
+ * @deprecated
+ */
+export const selectObjectQueueEffects = (page: number, queueIndex: number) => {
+  return createSelector(selectObjectEffectsByQueue, (objectEffects) => objectEffects[page]?.[queueIndex] || {});
+};
 
-export const selectObjectQueueProps = (page: number, queueIndex: number) =>
-  createSelector(selectPage(page), (page) => {
+/**
+ * @deprecated
+ */
+export const selectObjectQueueProps = (page: number, queueIndex: number) => {
+  return createSelector(selectPage(page), (page) => {
     return page.objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
       const props = object.effects
         .filter((effect) => effect.index <= queueIndex)
@@ -179,9 +225,13 @@ export const selectObjectQueueProps = (page: number, queueIndex: number) =>
       return final;
     }, {});
   });
+};
 
-export const selectObjectDefaultProps = (page: number) =>
-  createSelector(selectPage(page), (page) => {
+/**
+ * @deprecated
+ */
+export const selectObjectDefaultProps = (page: number) => {
+  return createSelector(selectPage(page), (page) => {
     return page.objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
       const props = {
         [OBJECT_PROPERTY_META.FADE]: object.fade,
@@ -196,13 +246,18 @@ export const selectObjectDefaultProps = (page: number) =>
       return final;
     }, {});
   });
+};
 
-export const selectObjectCurrentBasesEffect = (page: number, queueIndex: number, uuids: string[]) =>
-  createSelector(selectPageObjects(page), (objects) => {
+/**
+ * @deprecated
+ */
+export const selectObjectCurrentBasesEffect = (page: number, queueIndex: number, uuids: string[]) => {
+  return createSelector(selectPageObjects(page), (objects) => {
     return objects.reduce<{ [key: string]: BaseQueueEffect }>((result, object) => {
       result[object.uuid] = object.effects
         .filter((effect) => effect.index <= queueIndex)
         .reduce<BaseQueueEffect>((_, effect) => effect, {
+          uuid: generateUUID(),
           index: 0,
           duration: 0,
           timing: 'linear',
@@ -210,3 +265,4 @@ export const selectObjectCurrentBasesEffect = (page: number, queueIndex: number,
       return result;
     }, {});
   });
+};

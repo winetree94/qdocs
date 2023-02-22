@@ -3,9 +3,9 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { setObjectQueueEffects } from 'store/document/actions';
 import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { objectsSlice } from 'store/object/object.reducer';
 import { selectSettings } from 'store/settings/selectors';
 
 export type EffectControllerTimingFunctionProps = {
@@ -31,7 +31,7 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
       };
 
       dispatch(
-        setObjectQueueEffects({
+        objectsSlice.actions.setObjectQueueEffects({
           page: settings.queuePage,
           queueIndex: settings.queueIndex,
           effects: {

@@ -1,8 +1,10 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store';
+import { QueueDocumentSettings } from './reducer';
 
-const selectSelf = (state: RootState): RootState => state;
-export const selectSettings = createSelector(selectSelf, (state) => state.settings);
+const selectSelf = (state: RootState): QueueDocumentSettings => state.settings;
+
+export const selectSettings = createSelector(selectSelf, (state) => state);
 
 export const selectQueueRange = createSelector(selectSettings, (settings) => {
   const { queueIndex } = settings;

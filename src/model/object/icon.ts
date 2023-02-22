@@ -58,6 +58,7 @@ export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: n
     },
     effects: [
       {
+        uuid: generateUUID(),
         type: 'create',
         timing: 'linear',
         duration: 0,

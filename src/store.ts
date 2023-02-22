@@ -1,12 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { documentReducer } from 'store/document/reducer';
-import { settingsReducer } from 'store/settings/reducer';
+import { docsSlice } from 'store/docs/reducer';
+import { effectSlice } from 'store/effect/effect';
+import { objectsSlice } from 'store/object/object.reducer';
+import { pagesSlice } from 'store/page/reducer';
+import { documentSettingsSlice } from 'store/settings/reducer';
 
 export const store = configureStore({
   devTools: true,
   reducer: {
-    document: documentReducer,
-    settings: settingsReducer,
+    [documentSettingsSlice.name]: documentSettingsSlice.reducer,
+    [docsSlice.name]: docsSlice.reducer,
+    [pagesSlice.name]: pagesSlice.reducer,
+    [objectsSlice.name]: objectsSlice.reducer,
+    [effectSlice.name]: effectSlice.reducer,
   },
 });
 

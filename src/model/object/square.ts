@@ -56,6 +56,7 @@ export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex:
     },
     effects: [
       {
+        uuid: generateUUID(),
         type: 'create',
         timing: 'linear',
         duration: 0,
