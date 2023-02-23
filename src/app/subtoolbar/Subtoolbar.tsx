@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { AppDispatch, RootState } from 'store';
 import { ObjectQueueEffects, selectObjectEffectsByQueue } from 'store/legacy/selectors';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
@@ -14,9 +13,14 @@ import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/red
 import { NormalizedQueueDocument } from 'store/document/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
+import { Dispatch } from '@reduxjs/toolkit';
+import { RootState } from 'store';
+import { NormalizedQueueDocumentPage } from 'store/page/reducer';
+import { PageSelectors } from 'store/page/selectors';
 
 export type BaseQueueSubtoolbarProps = {
   docs: NormalizedQueueDocument;
+  pages: NormalizedQueueDocumentPage[];
   settings: QueueDocumentSettings;
   effectsByQueues: { [key: string]: ObjectQueueEffects }[][];
   ranges: number[];
@@ -30,6 +34,7 @@ export type BaseQueueSubtoolbarProps = {
 export const BaseQueueSubtoolbar = ({
   docs,
   settings,
+  pages,
   effectsByQueues,
   ranges,
   increaseScale,
@@ -55,10 +60,7 @@ export const BaseQueueSubtoolbar = ({
 
   const onPlayQueueClick = (): void => {
     const targetPageQueueIndex = settings.queueIndex + 1;
-    if (
-      targetPageQueueIndex >= effectsByQueues[settings.queuePage].length &&
-      settings.queuePage < docs.pages.length - 1
-    ) {
+    if (targetPageQueueIndex >= effectsByQueues[settings.queuePage].length && settings.queuePage < pages.length - 1) {
       changeQueuePage(settings.queuePage + 1, 0);
       return;
     }
@@ -116,7 +118,7 @@ export const BaseQueueSubtoolbar = ({
               <QueueIconButton
                 className={clsx(
                   styles.QueueIndicator,
-                  currentEffectsByQueues[queue] ? styles.HasEffect : '',
+                  currentEffectsByQueues?.[queue] ? styles.HasEffect : '',
                   queue === settings.queueIndex ? styles.Current : '',
                 )}
                 key={queue}
@@ -158,9 +160,10 @@ const mapStateToProps = (state: RootState) => ({
   settings: SettingSelectors.settings(state),
   effectsByQueues: selectObjectEffectsByQueue(state),
   ranges: SettingSelectors.queueRange(state),
+  pages: PageSelectors.all(state),
 });
 
-const mapToDispatchProps = (dispatch: AppDispatch) => ({
+const mapToDispatchProps = (dispatch: Dispatch) => ({
   increaseScale: () => {
     dispatch(documentSettingsSlice.actions.increaseScale());
   },

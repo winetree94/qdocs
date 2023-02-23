@@ -162,6 +162,7 @@ export const documentSettingsSlice = createSlice({
       };
     },
   },
+
   extraReducers: (builder) => {
     // 문서 로딩 시 설정 초기화, 현재는 loadDocument 가 많이 발생해서 안됨
     // builder.addCase(loadDocument, () => initialState);

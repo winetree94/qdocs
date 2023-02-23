@@ -13,8 +13,8 @@ import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/red
 import { generateUUID } from 'cdk/functions/uuid';
 import { RootState } from 'store';
 import { connect } from 'react-redux';
-import { docsSlice, NormalizedQueueDocument } from 'store/document/reducer';
-import { Dictionary } from '@reduxjs/toolkit';
+import { NormalizedQueueDocument } from 'store/document/reducer';
+import { Dictionary, EntityId } from '@reduxjs/toolkit';
 import { NormalizedQueueDocumentPage, pagesSlice } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
 import { DocumentSelectors } from 'store/document/selectors';
@@ -22,16 +22,17 @@ import { SettingSelectors } from 'store/settings/selectors';
 
 export interface BaseBottomPanelProps {
   docs: NormalizedQueueDocument;
+  docsPageIds: EntityId[];
   docsPages: Dictionary<NormalizedQueueDocumentPage>;
   settings: QueueDocumentSettings;
 }
 
-export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelProps) => {
+export const BaseBottomPanel = ({ docs, docsPages, docsPageIds, settings }: BaseBottomPanelProps) => {
   const dispatch = useAppDispatch();
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
-  const [editNamePageIndex, setEditNamePageIndex] = useState<string>('');
-  const [deleteConfirmPageIndex, setDeleteConfirmPageIndex] = useState<string>('');
+  const [editNamePageIndex, setEditNamePageIndex] = useState<EntityId>('');
+  const [deleteConfirmPageIndex, setDeleteConfirmPageIndex] = useState<EntityId>('');
 
   const setQueuePageIndex = (index: number): void => {
     dispatch(
@@ -51,44 +52,38 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
     setQueuePageIndex(index);
   };
 
-  const movePage = (from: number, to: number): void => {
+  const movePage = (from: EntityId, to: EntityId): void => {
     dispatch(
-      docsSlice.actions.changePageIndex({
-        fromIndex: from,
-        toIndex: to,
+      pagesSlice.actions.switchPageIndex({
+        from: from,
+        to: to,
       }),
     );
-    setQueuePageIndex(to);
+    // setQueuePageIndex(to);
   };
 
   const createPage = (index: number): void => {
     const uuid = generateUUID();
     dispatch(
       pagesSlice.actions.addPage({
+        documentId: docs.uuid,
         uuid: uuid,
+        index,
         pageName: `Page-${Object.values(docsPages).length + 1}`,
-        objects: [],
-      }),
-    );
-    dispatch(
-      docsSlice.actions.addPageToIndex({
-        pageId: uuid,
-        index: index,
       }),
     );
     setQueuePageIndex(index);
   };
 
-  const removePage = (uuid: string): void => {
-    const index = docs.pages.indexOf(uuid);
+  const removePage = (uuid: EntityId): void => {
+    const index = docsPageIds.indexOf(uuid);
     dispatch(pagesSlice.actions.removePage(uuid));
-    dispatch(docsSlice.actions.removePage(uuid));
-    setQueuePageIndex(Math.min(index, docs.pages.length - 1));
+    setQueuePageIndex(Math.min(index, docsPageIds.length - 1));
   };
 
-  const onDragStart = (e: React.DragEvent<HTMLSpanElement>, index: number): void => {
+  const onDragStart = (e: React.DragEvent<HTMLSpanElement>, uuid: EntityId): void => {
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', `${index}`);
+    e.dataTransfer.setData('text/plain', `${uuid}`);
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>): boolean => {
@@ -97,15 +92,15 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
   };
 
   const onDrop = (e: React.DragEvent<HTMLDivElement>): void => {
-    const from = Number(e.dataTransfer.getData('text/plain'));
+    const from = e.dataTransfer.getData('text/plain') as string;
     if (!e.currentTarget || !e.currentTarget.classList.contains('page-item')) {
       return;
     }
-    const to = Number(e.currentTarget.getAttribute('data-index'));
+    const to = e.currentTarget.getAttribute('data-uuid') as string;
     movePage(from, to);
   };
 
-  const onPageNameEdit = (pageName: string, uuid: string): void => {
+  const onPageNameEdit = (pageName: string, uuid: EntityId): void => {
     dispatch(
       pagesSlice.actions.updatePage({
         id: uuid,
@@ -118,14 +113,17 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
   };
 
   const onPageCopy = (index: number): void => {
-    // const cloned = cloneDeep(pages[index]);
-    // cloned.pageName = `${cloned.pageName} (copy)`;
-    // const newPages = [...pages];
-    // dispatch(setPages([...newPages.slice(0, index + 1), cloned, ...newPages.slice(index + 1)]));
-    // setQueuePageIndex(index + 1);
+    const newId = generateUUID();
+    dispatch(
+      pagesSlice.actions.copyPage({
+        fromId: docsPageIds[index],
+        index: index,
+        newId: newId,
+      }),
+    );
   };
 
-  const onPageDeleteSubmit = (uuid: string): void => {
+  const onPageDeleteSubmit = (uuid: EntityId): void => {
     removePage(uuid);
     setDeleteConfirmPageIndex('');
   };
@@ -140,29 +138,29 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
           <QueueScrollArea.Root>
             <QueueScrollArea.Viewport>
               <div className={clsx(styles.Pages)}>
-                {docs.pages.map((uuid, index, self) => (
+                {docsPageIds.map((uuid, index, self) => (
                   <QueueContextMenu.Root key={index}>
                     <QueueContextMenu.Trigger
                       className={clsx('page-item', dragOverIndex === index && styles.dragOver)}
                       draggable="true"
-                      data-index={index}
-                      onDragStart={(e): void => onDragStart(e, index)}
+                      data-uuid={uuid}
+                      onDragStart={(e): void => onDragStart(e, uuid)}
                       onDragEnter={(): void => setDragOverIndex(index)}
                       onDragEnd={(): void => setDragOverIndex(-1)}
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       onDoubleClick={(): void => setEditNamePageIndex(uuid)}>
                       <QueueToggleGroup.Item value={`${index}`} size="small">
-                        {docsPages[uuid].pageName}
+                        {docsPages[uuid]?.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>
                     <QueueContextMenu.Portal>
                       <QueueContextMenu.Content>
-                        <QueueContextMenu.Item onClick={(): void => movePage(index, Math.max(index - 1, 0))}>
+                        <QueueContextMenu.Item onClick={(): void => movePage(uuid, self[Math.max(index - 1, 0)])}>
                           페이지를 왼쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => movePage(index, Math.min(index + 1, self.length - 1))}>
+                          onClick={(): void => movePage(uuid, self[Math.min(index + 1, self.length - 1)])}>
                           페이지를 오른쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
@@ -179,7 +177,7 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
                         <QueueContextMenu.Item onClick={(): void => setEditNamePageIndex(uuid)}>
                           페이지 이름 변경
                         </QueueContextMenu.Item>
-                        {docs.pages.length >= 2 && (
+                        {docsPageIds.length >= 2 && (
                           <>
                             <QueueContextMenu.Separator />
                             <QueueContextMenu.Item
@@ -202,7 +200,7 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
         </QueueToggleGroup.Root>
       </div>
       <div>
-        <QueueIconButton onClick={(): void => createPage(docs.pages.length)}>
+        <QueueIconButton onClick={(): void => createPage(docsPageIds.length)}>
           <SvgRemixIcon icon="ri-add-fill" />
         </QueueIconButton>
       </div>
@@ -247,6 +245,7 @@ export const BaseBottomPanel = ({ docs, docsPages, settings }: BaseBottomPanelPr
 const mapToStateProps = (state: RootState) => ({
   settings: SettingSelectors.settings(state),
   docs: DocumentSelectors.document(state),
+  docsPageIds: PageSelectors.ids(state),
   docsPages: PageSelectors.entities(state),
 });
 

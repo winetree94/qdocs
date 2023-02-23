@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
@@ -9,7 +10,6 @@ import styles from './Editor.module.scss';
 import { QueueObjectType } from 'model/object';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { ResizerEvent } from 'components/queue/Resizer';
-import { MoveEffect, RotateEffect } from 'model/effect';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { PresentationRemote } from './PresentationRemote';
@@ -27,9 +27,11 @@ import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/red
 import { RootState } from 'store';
 import { connect } from 'react-redux';
 import { QueueDocument } from 'model/document';
-import { objectsSlice } from 'store/object/object.reducer';
+import { objectsSlice } from 'store/object/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
+import { QueueRect } from 'model/property';
+import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
 
 export interface BaseQueueEditorProps {
   queueDocument: QueueDocument;
@@ -118,38 +120,52 @@ export const BaseQueueEditor = ({
     const adjacentTargetX = event.shiftKey ? targetX : adjacent(targetX, 30);
     const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
-    const updateModels = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: ObjectQueueEffects;
-    }>((result, uuid) => {
-      const nextEffect: MoveEffect = {
-        type: 'rect',
-        duration: 1000,
-        index: settings.queueIndex,
-        timing: 'linear',
-        ...queueEffects[uuid]?.rect,
-        prop: {
-          ...queueProps[uuid].rect,
-          x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
-          y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
-        },
-      };
-      result[uuid] = {
-        ...queueEffects[uuid],
-        rect: nextEffect,
-      };
-      return result;
-    }, {});
-
-    dispatch(
-      objectsSlice.actions.setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...queueEffects,
-          ...updateModels,
-        },
-      }),
+    const updateModel = settings.selectedObjectUUIDs.reduce<{
+      objects: { id: string; changes: { rect: QueueRect } }[];
+      effects: NormalizedQueueEffect[];
+    }>(
+      (result, uuid) => {
+        const effects = queueEffects[uuid];
+        if (effects?.create) {
+          result.objects.push({
+            id: uuid,
+            changes: {
+              rect: {
+                ...queueProps[uuid].rect,
+                x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
+                y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
+              },
+            },
+          });
+        } else {
+          result.effects.push({
+            type: 'rect',
+            duration: 1000,
+            objectId: uuid,
+            index: settings.queueIndex,
+            timing: 'linear',
+            ...effects?.rect,
+            prop: {
+              ...queueProps[uuid].rect,
+              x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
+              y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
+            },
+          });
+        }
+        return result;
+      },
+      {
+        objects: [],
+        effects: [],
+      },
     );
+
+    if (updateModel.effects.length) {
+      dispatch(effectSlice.actions.upsertEffects(updateModel.effects));
+    }
+    if (updateModel.objects.length) {
+      dispatch(objectsSlice.actions.updateObjects(updateModel.objects));
+    }
   };
 
   const onObjectDragMove = (initEvent: MouseEvent, event: MouseEvent): void => {
@@ -190,56 +206,63 @@ export const BaseQueueEditor = ({
   };
 
   const resizeObjectRect = (uuid: string, rect: ResizerEvent): void => {
-    const nextEffect: MoveEffect = {
-      type: 'rect',
-      duration: 1000,
-      index: settings.queueIndex,
-      timing: 'linear',
-      ...queueEffects[uuid]?.rect,
-      prop: {
-        ...queueProps[uuid].rect,
-        ...rect,
-      },
-    };
-    dispatch(
-      objectsSlice.actions.setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...queueEffects,
-          [uuid]: {
-            ...queueEffects[uuid],
-            rect: nextEffect,
+    if (queueEffects[uuid]?.create) {
+      dispatch(
+        objectsSlice.actions.updateObject({
+          id: uuid,
+          changes: {
+            rect: {
+              ...queueProps[uuid].rect,
+              ...rect,
+            },
           },
-        },
-      }),
-    );
+        }),
+      );
+    } else {
+      dispatch(
+        effectSlice.actions.upsertEffect({
+          type: 'rect',
+          duration: 1000,
+          objectId: uuid,
+          timing: 'linear',
+          index: settings.queueIndex,
+          ...queueEffects[uuid]?.rect,
+          prop: {
+            ...queueProps[uuid].rect,
+            ...rect,
+          },
+        }),
+      );
+    }
   };
 
   const updateObjectRotate = (uuid: string, degree: number): void => {
-    const nextEffect: RotateEffect = {
-      type: 'rotate',
-      duration: 1000,
-      index: settings.queueIndex,
-      timing: 'linear',
-      ...queueEffects[uuid]?.rotate,
-      prop: {
-        degree: degree,
-      },
-    };
-    dispatch(
-      objectsSlice.actions.setObjectQueueEffects({
-        page: settings.queuePage,
-        queueIndex: settings.queueIndex,
-        effects: {
-          ...queueEffects,
-          [uuid]: {
-            ...queueEffects[uuid],
-            rotate: nextEffect,
+    if (queueEffects[uuid]?.create) {
+      dispatch(
+        objectsSlice.actions.updateObject({
+          id: uuid,
+          changes: {
+            rotate: {
+              degree: degree,
+            },
           },
-        },
-      }),
-    );
+        }),
+      );
+    } else {
+      dispatch(
+        effectSlice.actions.upsertEffect({
+          type: 'rotate',
+          duration: 1000,
+          objectId: uuid,
+          timing: 'linear',
+          index: settings.queueIndex,
+          ...queueEffects[uuid]?.rotate,
+          prop: {
+            degree: degree,
+          },
+        }),
+      );
+    }
   };
 
   const maximizeScale = useCallback(() => {

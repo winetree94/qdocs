@@ -10,7 +10,6 @@ import { EffectControllerTimingFunction } from 'components/effect-controller/Eff
 import { selectQueueObjects } from 'store/legacy/selectors';
 import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { generateUUID } from 'cdk/functions/uuid';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 
@@ -47,7 +46,6 @@ const createEffect = (
   queueObject: QueueObjectType,
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect<void> = {
-    uuid: generateUUID(),
     duration: 1000,
     index: queueIndex,
     timing: 'linear',

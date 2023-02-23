@@ -23,10 +23,10 @@ import { loadDocument } from 'store/document/actions';
 import { DocumentSelectors } from 'store/document/selectors';
 import { selectPageObjectByUUID } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { objectsSlice } from 'store/object/object.reducer';
+import { objectsSlice } from 'store/object/reducer';
 import classes from './ObjectStyler.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
-import { ObjectSelectors } from 'store/object/object.selectors';
+import { ObjectSelectors } from 'store/object/selectors';
 
 // context start
 interface ObjectStylerContextValue {

@@ -1,5 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { QueueDocument } from 'model/document';
+import { QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import { RootState } from 'store';
 
 const selectSelf = (state: RootState) => state.document;
@@ -22,9 +24,20 @@ const serialized = createSelector(
     }
     const legacyDocumentModel: QueueDocument = {
       ...state.document,
-      pages: state.document.pages.map((page) => ({
+      pages: state.pages.ids.map((page) => ({
         ...state.pages.entities[page],
-        objects: state.pages.entities[page].objects.map((uuid) => state.objects.entities[uuid]),
+        objects: Object.values(state.objects.entities)
+          .filter((object) => object.pageId === page)
+          .map<QueueObjectType>((object) => {
+            return {
+              ...object,
+              effects: Object.values(state.effects.entities)
+                .filter((effect) => effect.objectId === object.uuid)
+                .map<QueueEffectType>(({ objectId, ...effect }) => ({
+                  ...effect,
+                })),
+            } as QueueObjectType;
+          }),
       })),
     };
     return legacyDocumentModel;

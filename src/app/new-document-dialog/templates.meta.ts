@@ -1,7 +1,7 @@
 import { QueueDocument } from 'model/document';
-import emptyUrl from 'assets/templates/empty.que';
 import animatedTextUrl from 'assets/templates/animated-text.que';
 import playUrl from 'assets/templates/play.que';
+import { generateUUID } from 'cdk/functions/uuid';
 
 export interface TemplateMeta {
   name: string;
@@ -13,7 +13,23 @@ export const TEMPLATES: TemplateMeta[] = [
   {
     name: 'Empty',
     preview: '',
-    getTemplate: () => fetch(emptyUrl).then((r) => r.json()),
+    getTemplate: () =>
+      Promise.resolve({
+        uuid: generateUUID(),
+        documentName: '새 문서',
+        documentRect: {
+          width: 1920,
+          height: 1080,
+          fill: '#ffffff',
+        },
+        pages: [
+          {
+            uuid: generateUUID(),
+            pageName: '새 페이지',
+            objects: [],
+          },
+        ],
+      }),
   },
   {
     name: 'Animated Text',

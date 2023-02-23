@@ -6,8 +6,8 @@ import styles from './Context.module.scss';
 import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { loadDocument } from 'store/document/actions';
-import { objectsSlice } from 'store/object/object.reducer';
-import { pagesSlice } from 'store/page/reducer';
+// import { objectsSlice } from 'store/object/object.reducer';
+// import { pagesSlice } from 'store/page/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 
@@ -18,7 +18,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
-  const currentPage = queueDocument!.pages[settings.queuePage];
+  // const currentPage = queueDocument!.pages[settings.queuePage];
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     const objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
@@ -101,16 +101,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
     }, {});
 
     if (Object.values(updateModels).length > 0) {
-      dispatch(
-        objectsSlice.actions.setObjectQueueEffects({
-          page: settings.queuePage,
-          queueIndex: settings.queueIndex,
-          effects: {
-            ...effects,
-            ...updateModels,
-          },
-        }),
-      );
+      // todo
     }
     if (pendingCompleteRemoveUUIDs.length > 0) {
       onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
@@ -122,16 +113,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 오브젝트를 영구히 제거
    */
   const onCompletelyRemoveClick = (uuids: string[]): void => {
-    const currentUUIDs = currentPage.objects.map((object) => object.uuid);
-    dispatch(
-      pagesSlice.actions.updatePage({
-        id: currentPage.uuid,
-        changes: {
-          objects: currentUUIDs.filter((uuid) => !uuids.includes(uuid)),
-        },
-      }),
-    );
-    dispatch(objectsSlice.actions.removeObjects(uuids));
+    // todo
   };
 
   return (

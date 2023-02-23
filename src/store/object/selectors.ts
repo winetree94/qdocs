@@ -1,5 +1,5 @@
 import { RootState } from 'store';
-import { objectEntityAdapter } from './object.reducer';
+import { objectEntityAdapter } from './reducer';
 
 const selectSelf = (state: RootState) => state.objects;
 const selectors = objectEntityAdapter.getSelectors(selectSelf);

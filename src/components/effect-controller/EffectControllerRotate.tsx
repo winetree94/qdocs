@@ -3,8 +3,9 @@ import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
 import { selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { objectsSlice } from 'store/object/object.reducer';
+// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
+import { effectSlice } from 'store/effect/reducer';
 
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -25,16 +26,10 @@ export const EffectControllerRotate = (): ReactElement => {
       };
 
       dispatch(
-        objectsSlice.actions.setObjectQueueEffects({
-          page: settings.queuePage,
-          queueIndex: settings.queueIndex,
-          effects: {
-            ...effects,
-            [objectUUID]: {
-              ...effects[objectUUID],
-              rotate: nextEffect,
-            },
-          },
+        effectSlice.actions.upsertEffect({
+          ...nextEffect,
+          objectId: objectUUID,
+          index: settings.queueIndex,
         }),
       );
     });

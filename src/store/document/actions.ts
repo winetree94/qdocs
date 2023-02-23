@@ -7,3 +7,7 @@ import { QueueDocument } from 'model/document';
  * 문서 로딩 이후의 동작은 각각의 독립적인 액션을 사용할 것
  */
 export const loadDocument = createAction<QueueDocument | null>('Document/setDocument');
+
+export const DocumentActions = {
+  loadDocument,
+};

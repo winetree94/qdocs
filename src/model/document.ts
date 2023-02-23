@@ -13,6 +13,7 @@ export interface QueueDocumentPage {
 }
 
 export interface QueueDocument {
+  uuid: string;
   documentName: string;
   documentRect: QueueDocumentRect;
   pages: QueueDocumentPage[];

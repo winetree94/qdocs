@@ -3,8 +3,9 @@ import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { objectsSlice } from 'store/object/object.reducer';
+// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
+import { effectSlice } from 'store/effect/reducer';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -44,16 +45,10 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       };
 
       dispatch(
-        objectsSlice.actions.setObjectQueueEffects({
-          page: settings.queuePage,
-          queueIndex: settings.queueIndex,
-          effects: {
-            ...effects,
-            [objectUUID]: {
-              ...effects[objectUUID],
-              [effectType]: nextEffect,
-            },
-          },
+        effectSlice.actions.upsertEffect({
+          ...nextEffect,
+          objectId: objectUUID,
+          index: settings.queueIndex,
         }),
       );
     });

@@ -15,11 +15,10 @@ import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueInput } from 'components/input/Input';
-import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { documentSettingsSlice } from 'store/settings/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
+import { objectsSlice } from 'store/object/reducer';
 
 export interface QueueObject {
   key: string;
@@ -142,22 +141,13 @@ export const ObjectPanel: FunctionComponent = () => {
     ): ((iconClassName?: string) => void) => {
       return (iconClassName) => {
         const figure = createDefaultShape(queueDocument!.documentRect, settings.queueIndex, iconClassName);
-        const newPages = queueDocument!.pages.slice(0);
-        newPages[settings.queuePage] = {
-          ...queueDocument!.pages[settings.queuePage],
-          objects: queueDocument!.pages[settings.queuePage].objects.slice(0),
-        };
-        newPages[settings.queuePage].objects.push(figure);
         dispatch(
-          loadDocument({
-            ...queueDocument!,
-            pages: newPages,
-          }),
-        );
-        dispatch(
-          documentSettingsSlice.actions.setSettings({
-            ...settings,
-            selectedObjectUUIDs: [figure.uuid],
+          objectsSlice.actions.addOne({
+            queueIndex: settings.queueIndex,
+            object: {
+              pageId: queueDocument!.pages[settings.queuePage].uuid,
+              ...figure,
+            },
           }),
         );
       };

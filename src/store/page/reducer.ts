@@ -1,36 +1,86 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
+import { QueueDocumentPage } from 'model/document';
 import { loadDocument } from 'store/document/actions';
 
-export interface NormalizedQueueDocumentPage {
-  uuid: string;
-  pageName: string;
-  objects: string[];
+export interface NormalizedQueueDocumentPage extends Omit<QueueDocumentPage, 'objects'> {
+  index: number;
+  documentId: string;
 }
 
 export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage>({
   selectId: (page) => page.uuid,
+  sortComparer: (a, b) => a.index - b.index,
 });
 
 export const pagesSlice = createSlice({
   name: 'pages',
   initialState: pageEntityAdapter.getInitialState(),
   reducers: {
-    setPages: pageEntityAdapter.setAll,
     addPage: pageEntityAdapter.addOne,
     removePage: pageEntityAdapter.removeOne,
     updatePage: pageEntityAdapter.updateOne,
+    updatePages: pageEntityAdapter.updateMany,
+
+    switchPageIndex: (
+      state,
+      action: PayloadAction<{
+        from: EntityId;
+        to: EntityId;
+      }>,
+    ) => {
+      const { from, to } = action.payload;
+      const fromPage = state.entities[from];
+      const toPage = state.entities[to];
+
+      if (!fromPage || !toPage) {
+        console.error(`${action.type} - page not found`);
+        return state;
+      }
+
+      const fromIndex = fromPage.index;
+      const toIndex = toPage.index;
+      toPage.index = fromIndex;
+      fromPage.index = toIndex;
+
+      return pageEntityAdapter.updateMany(state, [
+        { id: from, changes: fromPage },
+        { id: to, changes: toPage },
+      ]);
+    },
+
+    copyPage: (
+      state,
+      action: PayloadAction<{
+        fromId: EntityId;
+        newId: string;
+        index: number;
+      }>,
+    ) => {
+      const page = state.entities[action.payload.fromId];
+
+      if (!page) {
+        console.error(`${action.type} - page not found`);
+        return state;
+      }
+
+      const newPage = {
+        ...page,
+        uuid: action.payload.newId,
+        index: action.payload.index,
+        pageName: `${page.pageName} (copy)`,
+      };
+
+      return pageEntityAdapter.addOne(state, newPage);
+    },
   },
   extraReducers: (builder) => {
-    /**
-     * @deprecated
-     * 레거시 액션 호환을 위해 유지
-     */
     builder.addCase(loadDocument, (state, action) => {
-      pageEntityAdapter.setAll(state, {
-        ...action.payload.pages.map((page) => ({
+      return pageEntityAdapter.setAll(state, {
+        ...action.payload.pages.map((page, index) => ({
+          documentId: action.payload.uuid,
           pageName: page.pageName,
+          index: index,
           uuid: page.uuid,
-          objects: page.objects.map((object) => object.uuid),
         })),
       });
     });

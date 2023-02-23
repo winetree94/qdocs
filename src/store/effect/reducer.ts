@@ -2,10 +2,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { QueueEffectType } from 'model/effect';
 import { loadDocument } from 'store/document/actions';
 
-export type NormalizedQueueEffect = {
-  uuid: string;
-  objectId: string;
-} & QueueEffectType;
+export type NormalizedQueueEffect = { objectId: string } & QueueEffectType;
 
 export const getEffectEntityKey = (effect: NormalizedQueueEffect) =>
   `${effect.objectId}-${effect.index}-${effect.type}`;
@@ -18,11 +15,9 @@ export const effectSlice = createSlice({
   name: 'effects',
   initialState: effectEntityAdapter.getInitialState(),
   reducers: {
-    setEffects: effectEntityAdapter.setAll,
-    addEffect: effectEntityAdapter.addOne,
-    removeEffect: effectEntityAdapter.removeOne,
-    updateEffect: effectEntityAdapter.updateOne,
+    upsertEffect: effectEntityAdapter.upsertOne,
     upsertEffects: effectEntityAdapter.upsertMany,
+    removeMany: effectEntityAdapter.removeMany,
   },
   extraReducers: (builder) => {
     builder.addCase(loadDocument, (state, action) => {
@@ -30,15 +25,19 @@ export const effectSlice = createSlice({
         page.objects.forEach((object) => {
           object.effects.forEach((effect) => {
             result.push({
-              uuid: effect.uuid,
               objectId: object.uuid,
+              duration: effect.duration,
+              index: effect.index,
+              prop: effect.prop,
+              timing: effect.timing,
+              type: effect.type,
               ...effect,
             });
           });
         });
         return result;
       }, []);
-      effectEntityAdapter.setAll(state, normalized);
+      return effectEntityAdapter.setAll(state, normalized);
     });
   },
 });
