@@ -17,6 +17,9 @@ const document = createSelector(selectSelf, (docs) => docs);
 const serialized = createSelector(
   (state: RootState) => state,
   (state) => {
+    if (!state.document) {
+      return null;
+    }
     const legacyDocumentModel: QueueDocument = {
       ...state.document,
       pages: state.document.pages.map((page) => ({

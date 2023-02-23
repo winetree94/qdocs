@@ -25,6 +25,7 @@ export interface ToolbarProps {
 export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
+  const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
 
   const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
@@ -87,14 +88,14 @@ export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
 
   const onSaveDocumentClick = (): void => {
     if (!docs) return;
-    // const stringified = JSON.stringify(queueDocument);
-    // const blob = new Blob([stringified], { type: 'octet/stream' });
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = `${queueDocument.documentName}.que`;
-    // a.click();
-    // URL.revokeObjectURL(url);
+    const stringified = JSON.stringify(serializedDocumentModel);
+    const blob = new Blob([stringified], { type: 'octet/stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${serializedDocumentModel.documentName}.que`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const clearDocument = (): void => {
