@@ -12,7 +12,7 @@ export const effectMiddleware = createTypedListenerMiddleware();
 effectMiddleware.startListening({
   actionCreator: objectsSlice.actions.addOne,
   effect: (action, api) => {
-    if (!action.payload.queueIndex) {
+    if (action.payload.queueIndex === undefined) {
       return;
     }
     api.dispatch(
@@ -35,7 +35,7 @@ effectMiddleware.startListening({
 effectMiddleware.startListening({
   actionCreator: objectsSlice.actions.addMany,
   effect: (action, api) => {
-    if (!action.payload.queueIndex) {
+    if (action.payload.queueIndex === undefined) {
       return;
     }
     api.dispatch(
