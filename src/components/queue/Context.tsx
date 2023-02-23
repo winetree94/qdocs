@@ -10,6 +10,7 @@ import { loadDocument } from 'store/document/actions';
 // import { pagesSlice } from 'store/page/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
+import { objectsSlice } from 'store/object/reducer';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
@@ -113,7 +114,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 오브젝트를 영구히 제거
    */
   const onCompletelyRemoveClick = (uuids: string[]): void => {
-    // todo
+    dispatch(objectsSlice.actions.removeMany(uuids));
   };
 
   return (

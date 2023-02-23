@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 export interface QueueDocumentSettings {
   queuePage: number;
@@ -108,11 +108,11 @@ export const documentSettingsSlice = createSlice({
       };
     },
 
-    removeSelection: (state, action: PayloadAction<string>) => {
+    removeSelection: (state, action: PayloadAction<EntityId[]>) => {
       return {
         ...state,
         selectionMode: 'normal',
-        selectedObjectUUIDs: state.selectedObjectUUIDs.filter((uuid) => uuid !== action.payload),
+        selectedObjectUUIDs: state.selectedObjectUUIDs.filter((uuid) => !action.payload.includes(uuid)),
       };
     },
 
