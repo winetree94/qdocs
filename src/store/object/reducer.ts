@@ -44,10 +44,12 @@ export const objectsSlice = createSlice({
     builder.addCase(loadDocument, (state, action) => {
       const normalized = action.payload.pages.reduce<NormalizedQueueObjectType[]>((result, page) => {
         page.objects.forEach((object) => {
-          result.push({
+          const normalizedObject = {
             pageId: page.uuid,
             ...object,
-          });
+          };
+          delete normalizedObject.effects; // 레거시 셀렉터에 의해서 값이 들어가는 것을 방지
+          result.push(normalizedObject);
         });
         return result;
       }, []);
