@@ -4,10 +4,14 @@ import { loadDocument } from 'store/document/actions';
 
 export type NormalizedQueueEffect = {
   uuid: string;
+  objectId: string;
 } & QueueEffectType;
 
+export const getEffectEntityKey = (effect: NormalizedQueueEffect) =>
+  `${effect.objectId}-${effect.index}-${effect.type}`;
+
 export const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({
-  selectId: (effect) => effect.uuid,
+  selectId: getEffectEntityKey,
 });
 
 export const effectSlice = createSlice({
@@ -18,6 +22,7 @@ export const effectSlice = createSlice({
     addEffect: effectEntityAdapter.addOne,
     removeEffect: effectEntityAdapter.removeOne,
     updateEffect: effectEntityAdapter.updateOne,
+    upsertEffects: effectEntityAdapter.upsertMany,
   },
   extraReducers: (builder) => {
     builder.addCase(loadDocument, (state, action) => {
@@ -25,7 +30,8 @@ export const effectSlice = createSlice({
         page.objects.forEach((object) => {
           object.effects.forEach((effect) => {
             result.push({
-              uuid: object.uuid,
+              uuid: effect.uuid,
+              objectId: object.uuid,
               ...effect,
             });
           });
