@@ -18,8 +18,8 @@ export const EffectControllerRect = (): ReactElement => {
       const nextEffect: MoveEffect = {
         ...effects[objectUUID].rect,
         index: settings.queueIndex,
-        rect: {
-          ...effects[objectUUID].rect.rect,
+        prop: {
+          ...effects[objectUUID].rect.prop,
           ...rect,
         },
       };
@@ -47,7 +47,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.rect.width}
+          value={firstObjectRectEffect.prop.width}
           onChange={(e): void => handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -56,7 +56,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.rect.height}
+          value={firstObjectRectEffect.prop.height}
           onChange={(e): void => handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -65,7 +65,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.rect.x}
+          value={firstObjectRectEffect.prop.x}
           onChange={(e): void => handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -74,7 +74,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.rect.y}
+          value={firstObjectRectEffect.prop.y}
           onChange={(e): void => handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })}
         />
       </div>

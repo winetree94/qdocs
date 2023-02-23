@@ -18,8 +18,8 @@ export const EffectControllerRotate = (): ReactElement => {
       const nextEffect: RotateEffect = {
         ...effects[objectUUID].rotate,
         index: settings.queueIndex,
-        rotate: {
-          ...effects[objectUUID].rotate.rotate,
+        prop: {
+          ...effects[objectUUID].rotate.prop,
           ...rotate,
         },
       };
@@ -48,7 +48,7 @@ export const EffectControllerRotate = (): ReactElement => {
           className="w-full"
           type="number"
           step={5}
-          value={firstObjectRotateEffect.rotate.degree}
+          value={firstObjectRotateEffect.prop.degree}
           onChange={(e): void => {
             handleCurrentRotateChange({ degree: parseInt(e.target.value) });
           }}

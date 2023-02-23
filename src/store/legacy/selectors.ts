@@ -169,25 +169,25 @@ export const selectObjectQueueProps = (page: number, queueIndex: number) => {
         .reduce(
           (result, effect) => {
             if (effect.type === 'fade') {
-              result[OBJECT_PROPERTY_META.FADE] = effect.fade;
+              result[OBJECT_PROPERTY_META.FADE] = effect.prop;
             }
             if (effect.type === 'fill') {
-              result[OBJECT_PROPERTY_META.FILL] = effect.fill;
+              result[OBJECT_PROPERTY_META.FILL] = effect.prop;
             }
             if (effect.type === 'rect') {
-              result[OBJECT_PROPERTY_META.RECT] = effect.rect;
+              result[OBJECT_PROPERTY_META.RECT] = effect.prop;
             }
             if (effect.type === 'rotate') {
-              result[OBJECT_PROPERTY_META.ROTATE] = effect.rotate;
+              result[OBJECT_PROPERTY_META.ROTATE] = effect.prop;
             }
             if (effect.type === 'scale') {
-              result[OBJECT_PROPERTY_META.SCALE] = effect.scale;
+              result[OBJECT_PROPERTY_META.SCALE] = effect.prop;
             }
             if (effect.type === 'stroke') {
-              result[OBJECT_PROPERTY_META.STROKE] = effect.stroke;
+              result[OBJECT_PROPERTY_META.STROKE] = effect.prop;
             }
             if (effect.type === 'text') {
-              result[OBJECT_PROPERTY_META.TEXT] = effect.text;
+              result[OBJECT_PROPERTY_META.TEXT] = effect.prop;
             }
             return result;
           },

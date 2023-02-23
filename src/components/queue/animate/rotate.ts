@@ -12,7 +12,7 @@ export const getCurrentRotate = (object: QueueObjectType, index: number): QueueR
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is RotateEffect => effect.type === 'rotate')
-    .reduce<QueueRotate>((_, effect) => effect.rotate, object.rotate);
+    .reduce<QueueRotate>((_, effect) => effect.prop, object.rotate);
 };
 
 export const getRotateAnimation = (
@@ -39,7 +39,7 @@ export const getRotateAnimation = (
     position === 'backward'
       ? {
           ...rotateEffect,
-          rotate: {
+          prop: {
             ...getCurrentRotate(object, index),
           },
         }

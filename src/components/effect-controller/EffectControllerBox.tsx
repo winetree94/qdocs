@@ -46,11 +46,12 @@ const createEffect = (
   queueIndex: QueueEffectType['index'],
   queueObject: QueueObjectType,
 ): QueueEffectType => {
-  const baseQueueEffect: BaseQueueEffect = {
+  const baseQueueEffect: BaseQueueEffect<void> = {
     uuid: generateUUID(),
     duration: 1000,
     index: queueIndex,
     timing: 'linear',
+    prop: undefined,
   };
 
   switch (effectType) {
@@ -62,7 +63,7 @@ const createEffect = (
       return {
         ...baseQueueEffect,
         type: 'fade',
-        fade: initialFade?.type === 'fade' ? initialFade.fade : queueObject.fade,
+        prop: initialFade?.type === 'fade' ? initialFade.prop : queueObject.fade,
       };
     }
     case 'rect': {
@@ -74,10 +75,10 @@ const createEffect = (
 
           if (effect.type === 'rect') {
             return {
-              width: rect.width + effect.rect.width,
-              height: rect.height + effect.rect.height,
-              x: rect.x + effect.rect.x,
-              y: rect.y + effect.rect.y,
+              width: rect.width + effect.prop.width,
+              height: rect.height + effect.prop.height,
+              x: rect.x + effect.prop.x,
+              y: rect.y + effect.prop.y,
             };
           }
 
@@ -90,7 +91,7 @@ const createEffect = (
       return {
         ...baseQueueEffect,
         type: 'rect',
-        rect: initialRect,
+        prop: initialRect,
       };
     }
     case 'rotate': {
@@ -100,7 +101,7 @@ const createEffect = (
         }
 
         if (effect.type === 'rotate') {
-          return degree + effect.rotate.degree;
+          return degree + effect.prop.degree;
         }
 
         return degree;
@@ -109,7 +110,7 @@ const createEffect = (
       return {
         ...baseQueueEffect,
         type: 'rotate',
-        rotate: {
+        prop: {
           degree: initialDegree,
         },
       };

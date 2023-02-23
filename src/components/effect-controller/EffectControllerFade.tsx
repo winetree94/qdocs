@@ -36,8 +36,8 @@ export const EffectControllerFade = (): ReactElement => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
       const nextEffect: ObjectQueueEffects['fade'] = {
         ...firstObjectRotateEffect,
-        fade: {
-          ...firstObjectRotateEffect.fade,
+        prop: {
+          ...firstObjectRotateEffect.prop,
           opacity,
         },
       };
@@ -61,7 +61,7 @@ export const EffectControllerFade = (): ReactElement => {
   return (
     <>
       <div>
-        <input type="number" value={firstObjectRotateEffect.fade.opacity} hidden readOnly />
+        <input type="number" value={firstObjectRotateEffect.prop.opacity} hidden readOnly />
         <p className="text-sm">fade</p>
         <div className="flex items-center gap-2">
           <div className="w-5/12">
@@ -69,7 +69,7 @@ export const EffectControllerFade = (): ReactElement => {
               className="w-full"
               type="number"
               name="fadeEffectOpacity"
-              value={firstObjectRotateEffect.fade.opacity}
+              value={firstObjectRotateEffect.prop.opacity}
               step={0.1}
               onChange={(e): void => {
                 handleCurrentOpacityChange(e.target.value);
@@ -81,7 +81,7 @@ export const EffectControllerFade = (): ReactElement => {
               min={0}
               max={1}
               step={0.1}
-              value={[firstObjectRotateEffect.fade.opacity]}
+              value={[firstObjectRotateEffect.prop.opacity]}
               onValueChange={(value): void => {
                 handleCurrentOpacityChange(value);
               }}

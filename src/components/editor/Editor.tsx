@@ -127,7 +127,7 @@ export const BaseQueueEditor = ({
         index: settings.queueIndex,
         timing: 'linear',
         ...queueEffects[uuid]?.rect,
-        rect: {
+        prop: {
           ...queueProps[uuid].rect,
           x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
           y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
@@ -196,7 +196,7 @@ export const BaseQueueEditor = ({
       index: settings.queueIndex,
       timing: 'linear',
       ...queueEffects[uuid]?.rect,
-      rect: {
+      prop: {
         ...queueProps[uuid].rect,
         ...rect,
       },
@@ -223,7 +223,7 @@ export const BaseQueueEditor = ({
       index: settings.queueIndex,
       timing: 'linear',
       ...queueEffects[uuid]?.rotate,
-      rotate: {
+      prop: {
         degree: degree,
       },
     };

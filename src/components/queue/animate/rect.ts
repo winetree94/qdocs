@@ -16,7 +16,7 @@ export const getCurrentRect = (object: QueueObjectType, index: number): QueueRec
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is MoveEffect => effect.type === 'rect')
-    .reduce<QueueRect>((_, effect) => effect.rect, object.rect);
+    .reduce<QueueRect>((_, effect) => effect.prop, object.rect);
 };
 
 export const getRectAnimation = (
@@ -43,7 +43,7 @@ export const getRectAnimation = (
     position === 'backward'
       ? {
           ...moveEffect,
-          rect: {
+          prop: {
             ...getCurrentRect(object, index),
           },
         }

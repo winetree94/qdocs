@@ -42,13 +42,13 @@ export const objectsSlice = createSlice({
          * 편의성 때문에 여기서 넣었는데 이게 맞는지는 고민이 필요
          */
         if (newObject.effects[existCreateEffectIndex].index === action.payload.queueIndex) {
-          newObject.fade = action.payload.effects[object.uuid].fade?.fade || newObject.fade;
-          newObject.fill = action.payload.effects[object.uuid].fill?.fill || newObject.fill;
-          newObject.rect = action.payload.effects[object.uuid].rect?.rect || newObject.rect;
-          newObject.rotate = action.payload.effects[object.uuid].rotate?.rotate || newObject.rotate;
-          newObject.scale = action.payload.effects[object.uuid].scale?.scale || newObject.scale;
-          newObject.stroke = action.payload.effects[object.uuid].stroke?.stroke || newObject.stroke;
-          newObject.text = action.payload.effects[object.uuid].text?.text || newObject.text;
+          newObject.fade = action.payload.effects[object.uuid].fade?.prop || newObject.fade;
+          newObject.fill = action.payload.effects[object.uuid].fill?.prop || newObject.fill;
+          newObject.rect = action.payload.effects[object.uuid].rect?.prop || newObject.rect;
+          newObject.rotate = action.payload.effects[object.uuid].rotate?.prop || newObject.rotate;
+          newObject.scale = action.payload.effects[object.uuid].scale?.prop || newObject.scale;
+          newObject.stroke = action.payload.effects[object.uuid].stroke?.prop || newObject.stroke;
+          newObject.text = action.payload.effects[object.uuid].text?.prop || newObject.text;
           return newObject;
         }
 

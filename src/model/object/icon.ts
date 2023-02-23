@@ -63,6 +63,7 @@ export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: n
         timing: 'linear',
         duration: 0,
         index: queueIndex,
+        prop: undefined,
       },
     ],
   };

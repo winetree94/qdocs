@@ -61,6 +61,7 @@ export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex:
         timing: 'linear',
         duration: 0,
         index: queueIndex,
+        prop: undefined,
       },
     ],
   };

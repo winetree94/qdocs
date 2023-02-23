@@ -12,7 +12,7 @@ export const getCurrentFade = (object: QueueObjectType, index: number): QueueFad
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is FadeEffect => effect.type === 'fade')
-    .reduce<QueueFade>((_, effect) => effect.fade, object.fade);
+    .reduce<QueueFade>((_, effect) => effect.prop, object.fade);
 };
 
 export const getFadeAnimation = (
@@ -39,7 +39,7 @@ export const getFadeAnimation = (
     position === 'backward'
       ? {
           ...fadeEffect,
-          fade: {
+          prop: {
             ...getCurrentFade(object, index),
           },
         }

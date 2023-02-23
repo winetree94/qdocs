@@ -12,7 +12,7 @@ export const getCurrentScale = (object: QueueObjectType, index: number): QueueSc
   return object.effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is ScaleEffect => effect.type === 'scale')
-    .reduce<QueueScale>((_, effect) => effect.scale, object.scale);
+    .reduce<QueueScale>((_, effect) => effect.prop, object.scale);
 };
 
 export const getScaleAnimation = (
@@ -39,7 +39,7 @@ export const getScaleAnimation = (
     position === 'backward'
       ? {
           ...scaleEffect,
-          scale: {
+          prop: {
             ...getCurrentScale(object, index),
           },
         }
