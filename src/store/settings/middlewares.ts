@@ -38,7 +38,7 @@ settingsMiddleware.startListening({
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
     const pageId = pages[settings.queuePage].uuid;
-    const byEffects = pages.map((page) => EffectSelectors.allByPageIdEffectIndex(state, page.uuid));
+    const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.uuid));
     const pageIndex = pages.findIndex((page) => page.uuid === pageId);
     const queueIndex = settings.queueIndex;
 
@@ -77,7 +77,7 @@ settingsMiddleware.startListening({
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
     const pageId = pages[settings.queuePage].uuid;
-    const byEffects = pages.map((page) => EffectSelectors.allByPageIdEffectIndex(state, page.uuid));
+    const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.uuid));
     const pageIndex = pages.findIndex((page) => page.uuid === pageId);
     const queueIndex = settings.queueIndex;
 

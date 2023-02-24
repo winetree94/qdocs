@@ -1,8 +1,8 @@
 import { createAction } from '@reduxjs/toolkit';
 
-const rewind = createAction('rewind');
+const rewind = createAction('settings/rewind');
 
-const play = createAction('play');
+const play = createAction('settings/play');
 
 export const SettingsActions = {
   rewind,

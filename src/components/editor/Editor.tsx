@@ -13,52 +13,38 @@ import { ResizerEvent } from 'components/queue/Resizer';
 import { adjacent } from 'cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
 import { PresentationRemote } from './PresentationRemote';
-import {
-  ObjectQueueEffects,
-  ObjectQueueProps,
-  selectObjectQueueEffects,
-  selectObjectQueueProps,
-  selectQueueObjects,
-} from 'store/legacy/selectors';
-import { useAppDispatch } from 'store/hooks';
+import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/legacy/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { useEventSelector } from 'cdk/hooks/event-dispatcher';
 import { fitScreenSizeEvent } from 'app/events/event';
 import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
 import { RootState } from 'store';
 import { connect } from 'react-redux';
 import { QueueDocument } from 'model/document';
-import { objectsSlice } from 'store/object/reducer';
+import { NormalizedQueueObjectType, objectsSlice } from 'store/object/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
 import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
+import { EffectSelectors } from 'store/effect/selectors';
 
 export interface BaseQueueEditorProps {
   queueDocument: QueueDocument;
   settings: QueueDocumentSettings;
   objects: QueueObjectType[];
-  queueProps: {
-    [key: string]: ObjectQueueProps;
-  };
   queueEffects: {
     [key: string]: ObjectQueueEffects;
   };
 }
 
-export const BaseQueueEditor = ({
-  queueDocument,
-  settings,
-  objects,
-  queueProps,
-  queueEffects,
-}: BaseQueueEditorProps) => {
+export const BaseQueueEditor = ({ queueDocument, settings, objects, queueEffects }: BaseQueueEditorProps) => {
   const dispatch = useAppDispatch();
+
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
 
-  const [capturedObjectProps, setCapturedObjectProps] = useState<{
-    [key: string]: ObjectQueueProps;
-  }>({});
+  const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
+  const [capturedObjectProps, setCapturedObjectProps] = useState<{ [key: string]: NormalizedQueueObjectType }>({});
 
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current!;
@@ -131,7 +117,7 @@ export const BaseQueueEditor = ({
             id: uuid,
             changes: {
               rect: {
-                ...queueProps[uuid].rect,
+                ...props[uuid].rect,
                 x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
                 y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
               },
@@ -146,7 +132,7 @@ export const BaseQueueEditor = ({
             timing: 'linear',
             ...effects?.rect,
             prop: {
-              ...queueProps[uuid].rect,
+              ...props[uuid].rect,
               x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
               y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
             },
@@ -191,7 +177,7 @@ export const BaseQueueEditor = ({
     const width = event.width * absScale;
     const height = event.height * absScale;
 
-    const rangeObjectUUIDs = Object.entries(queueProps)
+    const rangeObjectUUIDs = Object.entries(props)
       .filter(([_, { rect }]) => {
         return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
       })
@@ -212,7 +198,7 @@ export const BaseQueueEditor = ({
           id: uuid,
           changes: {
             rect: {
-              ...queueProps[uuid].rect,
+              ...props[uuid].rect,
               ...rect,
             },
           },
@@ -228,7 +214,7 @@ export const BaseQueueEditor = ({
           index: settings.queueIndex,
           ...queueEffects[uuid]?.rect,
           prop: {
-            ...queueProps[uuid].rect,
+            ...props[uuid].rect,
             ...rect,
           },
         }),
@@ -355,7 +341,7 @@ export const BaseQueueEditor = ({
                             <QueueObject.Drag
                               onMousedown={(event): void => onObjectMousedown(event, object)}
                               onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
-                              onDraggingStart={() => setCapturedObjectProps(queueProps)}
+                              onDraggingStart={() => setCapturedObjectProps(props)}
                               onDraggingMove={onObjectDragMove}
                               onDraggingEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
@@ -403,7 +389,6 @@ export const mapStateToProps = (state: RootState) => {
     queueDocument: DocumentSelectors.serialized(state),
     settings: settings,
     objects: selectQueueObjects(settings.queuePage, settings.queueIndex)(state),
-    queueProps: selectObjectQueueProps(settings.queuePage, settings.queueIndex)(state),
     queueEffects: selectObjectQueueEffects(settings.queuePage, settings.queueIndex)(state),
   };
 };

@@ -14,7 +14,6 @@ import {
 } from 'model/effect';
 import { OBJECT_PROPERTY_META } from 'model/meta';
 import { QueueObjectType } from 'model/object';
-import { QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale, QueueStroke, QueueText } from 'model/property';
 import { DocumentSelectors } from 'store/document/selectors';
 
 export interface ObjectQueueEffects {
@@ -27,16 +26,6 @@ export interface ObjectQueueEffects {
   [OBJECT_PROPERTY_META.STROKE]?: Omit<StrokeEffect, 'index'>;
   [OBJECT_PROPERTY_META.TEXT]?: Omit<TextEffect, 'index'>;
   [OBJECT_EFFECT_META.REMOVE]?: Omit<RemoveEffect, 'index'>;
-}
-
-export interface ObjectQueueProps {
-  [OBJECT_PROPERTY_META.FADE]: QueueFade;
-  [OBJECT_PROPERTY_META.FILL]: QueueFill;
-  [OBJECT_PROPERTY_META.RECT]: QueueRect;
-  [OBJECT_PROPERTY_META.ROTATE]: QueueRotate;
-  [OBJECT_PROPERTY_META.SCALE]: QueueScale;
-  [OBJECT_PROPERTY_META.STROKE]: QueueStroke;
-  [OBJECT_PROPERTY_META.TEXT]: QueueText;
 }
 
 /**
@@ -156,53 +145,4 @@ export const selectObjectEffectsByQueue = createSelector(selectPages, (pages) =>
  */
 export const selectObjectQueueEffects = (page: number, queueIndex: number) => {
   return createSelector(selectObjectEffectsByQueue, (objectEffects) => objectEffects[page]?.[queueIndex] || {});
-};
-
-/**
- * @deprecated
- */
-export const selectObjectQueueProps = (page: number, queueIndex: number) => {
-  return createSelector(selectPage(page), (page) => {
-    return page.objects.reduce<{ [key: string]: ObjectQueueProps }>((final, object) => {
-      const props = object.effects
-        .filter((effect) => effect.index <= queueIndex)
-        .reduce(
-          (result, effect) => {
-            if (effect.type === 'fade') {
-              result[OBJECT_PROPERTY_META.FADE] = effect.prop;
-            }
-            if (effect.type === 'fill') {
-              result[OBJECT_PROPERTY_META.FILL] = effect.prop;
-            }
-            if (effect.type === 'rect') {
-              result[OBJECT_PROPERTY_META.RECT] = effect.prop;
-            }
-            if (effect.type === 'rotate') {
-              result[OBJECT_PROPERTY_META.ROTATE] = effect.prop;
-            }
-            if (effect.type === 'scale') {
-              result[OBJECT_PROPERTY_META.SCALE] = effect.prop;
-            }
-            if (effect.type === 'stroke') {
-              result[OBJECT_PROPERTY_META.STROKE] = effect.prop;
-            }
-            if (effect.type === 'text') {
-              result[OBJECT_PROPERTY_META.TEXT] = effect.prop;
-            }
-            return result;
-          },
-          {
-            [OBJECT_PROPERTY_META.FADE]: object.fade,
-            [OBJECT_PROPERTY_META.FILL]: object.fill,
-            [OBJECT_PROPERTY_META.RECT]: object.rect,
-            [OBJECT_PROPERTY_META.ROTATE]: object.rotate,
-            [OBJECT_PROPERTY_META.SCALE]: object.scale,
-            [OBJECT_PROPERTY_META.STROKE]: object.stroke,
-            [OBJECT_PROPERTY_META.TEXT]: object.text,
-          },
-        );
-      final[object.uuid] = props;
-      return final;
-    }, {});
-  });
 };
