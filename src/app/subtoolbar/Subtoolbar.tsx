@@ -5,73 +5,46 @@ import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { ObjectQueueEffects, selectObjectEffectsByQueue } from 'store/legacy/selectors';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
-import { connect } from 'react-redux';
-import { documentSettingsSlice, QueueDocumentSettings } from 'store/settings/reducer';
-import { NormalizedQueueDocument } from 'store/document/reducer';
-import { DocumentSelectors } from 'store/document/selectors';
+import { useSelector } from 'react-redux';
+import { documentSettingsSlice } from 'store/settings/reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { Dispatch } from '@reduxjs/toolkit';
-import { RootState } from 'store';
-import { NormalizedQueueDocumentPage } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { EffectSelectors } from 'store/effect/selectors';
+import { SettingsActions } from 'store/settings/actions';
 
-export type BaseQueueSubtoolbarProps = {
-  docs: NormalizedQueueDocument;
-  pages: NormalizedQueueDocumentPage[];
-  settings: QueueDocumentSettings;
-  effectsByQueues: { [key: string]: ObjectQueueEffects }[][];
-  ranges: number[];
-  increaseScale: () => void;
-  decreaseScale: () => void;
-  changeQueueIndex: (targetIndex: number, play: boolean) => void;
-  changeQueuePage: (targetPage: number, targetIndex: number) => void;
-  startPresentation: () => void;
-};
-
-export const BaseQueueSubtoolbar = ({
-  docs,
-  settings,
-  pages,
-  effectsByQueues,
-  ranges,
-  increaseScale,
-  decreaseScale,
-  changeQueueIndex,
-  changeQueuePage,
-  startPresentation,
-}: BaseQueueSubtoolbarProps) => {
-  const currentEffectsByQueues = effectsByQueues[settings.queuePage];
+export const QueueSubtoolbar = () => {
+  const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
 
-  const onRewindQueueClick = (): void => {
-    const targetPageQueueIndex = settings.queueIndex - 1;
-    if (targetPageQueueIndex < 0 && settings.queuePage > 0) {
-      changeQueuePage(settings.queuePage - 1, effectsByQueues[settings.queuePage - 1].length - 1);
-      return;
-    }
-    if (targetPageQueueIndex < 0) {
-      return;
-    }
-    changeQueueIndex(settings.queueIndex - 1, true);
-  };
+  const settings = useAppSelector(SettingSelectors.settings);
+  const pages = useSelector(PageSelectors.all);
 
-  const onPlayQueueClick = (): void => {
-    const targetPageQueueIndex = settings.queueIndex + 1;
-    if (targetPageQueueIndex >= effectsByQueues[settings.queuePage].length && settings.queuePage < pages.length - 1) {
-      changeQueuePage(settings.queuePage + 1, 0);
-      return;
-    }
-    if (targetPageQueueIndex > effectsByQueues[settings.queuePage].length - 1) {
-      return;
-    }
-    changeQueueIndex(settings.queueIndex + 1, true);
+  const ranges: number[] = [];
+  const { queueIndex } = settings;
+  const rangeStart = Math.max(queueIndex - 2, 0);
+  const rangeEnd = rangeStart + 5;
+  for (let i = rangeStart; i < rangeEnd; i++) {
+    ranges.push(i);
+  }
+
+  const byEffectIndex = useAppSelector((state) =>
+    EffectSelectors.allByPageIdEffectIndex(state, pages[settings.queuePage].uuid),
+  );
+
+  const changeQueueIndex = (targetIndex: number, play: boolean): void => {
+    dispatch(
+      documentSettingsSlice.actions.setQueueIndex({
+        queueIndex: targetIndex,
+        play: play,
+      }),
+    );
   };
 
   const onPresentationStartClick = (): void => {
-    startPresentation();
+    dispatch(documentSettingsSlice.actions.setPresentationMode(true));
     document.documentElement.requestFullscreen();
   };
 
@@ -108,7 +81,7 @@ export const BaseQueueSubtoolbar = ({
           </div>
 
           <div className={styles.ItemGroup}>
-            <QueueIconButton onClick={onRewindQueueClick}>
+            <QueueIconButton onClick={() => dispatch(SettingsActions.rewind())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-left-s-fill'} />
             </QueueIconButton>
             <QueueIconButton onClick={() => changeQueueIndex(settings.queueIndex - 1, true)}>
@@ -118,7 +91,7 @@ export const BaseQueueSubtoolbar = ({
               <QueueIconButton
                 className={clsx(
                   styles.QueueIndicator,
-                  currentEffectsByQueues?.[queue] ? styles.HasEffect : '',
+                  byEffectIndex?.[queue] ? styles.HasEffect : '',
                   queue === settings.queueIndex ? styles.Current : '',
                 )}
                 key={queue}
@@ -129,20 +102,21 @@ export const BaseQueueSubtoolbar = ({
             <QueueIconButton onClick={() => changeQueueIndex(settings.queueIndex + 1, true)}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-line'} />
             </QueueIconButton>
-            <QueueIconButton onClick={onPlayQueueClick}>
+            <QueueIconButton onClick={() => dispatch(SettingsActions.play())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-right-s-fill'} />
             </QueueIconButton>
           </div>
+
           <div className={styles.ItemGroup}>
             <QueueSeparator.Root orientation="vertical" decorative className={styles.Separator} />
 
             <QueueIconButton onClick={() => eventDispatch(fitScreenSizeEvent())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-fullscreen-fill'} />
             </QueueIconButton>
-            <QueueIconButton onClick={decreaseScale}>
+            <QueueIconButton onClick={() => dispatch(documentSettingsSlice.actions.decreaseScale())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
             </QueueIconButton>
-            <QueueIconButton onClick={increaseScale}>
+            <QueueIconButton onClick={() => dispatch(documentSettingsSlice.actions.increaseScale())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-add-line'} />
             </QueueIconButton>
           </div>
@@ -154,41 +128,3 @@ export const BaseQueueSubtoolbar = ({
     </QueueScrollArea.Root>
   );
 };
-
-const mapStateToProps = (state: RootState) => ({
-  docs: DocumentSelectors.document(state),
-  settings: SettingSelectors.settings(state),
-  effectsByQueues: selectObjectEffectsByQueue(state),
-  ranges: SettingSelectors.queueRange(state),
-  pages: PageSelectors.all(state),
-});
-
-const mapToDispatchProps = (dispatch: Dispatch) => ({
-  increaseScale: () => {
-    dispatch(documentSettingsSlice.actions.increaseScale());
-  },
-  decreaseScale: () => {
-    dispatch(documentSettingsSlice.actions.decreaseScale());
-  },
-  changeQueueIndex: (targetIndex: number, play?: boolean) => {
-    dispatch(
-      documentSettingsSlice.actions.setQueueIndex({
-        queueIndex: targetIndex,
-        play: play,
-      }),
-    );
-  },
-  changeQueuePage: (targetPage: number, targetIndex: number) => {
-    dispatch(
-      documentSettingsSlice.actions.movePage({
-        pageIndex: targetPage,
-        queueIndex: targetIndex,
-      }),
-    );
-  },
-  startPresentation: () => {
-    dispatch(documentSettingsSlice.actions.setPresentationMode(true));
-  },
-});
-
-export const QueueSubtoolbar = connect(mapStateToProps, mapToDispatchProps)(BaseQueueSubtoolbar);

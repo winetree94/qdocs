@@ -36,6 +36,10 @@ export const documentSettingsSlice = createSlice({
   name: 'settings',
   initialState: initialState,
   reducers: {
+    updateSettings: (state, action: PayloadAction<Partial<QueueDocumentSettings>>) => {
+      return { ...state, ...action.payload };
+    },
+
     setSettings: (state, action: PayloadAction<QueueDocumentSettings>) => {
       return { ...state, ...action.payload };
     },

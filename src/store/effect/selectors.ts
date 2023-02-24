@@ -13,7 +13,8 @@ import {
 } from 'model/effect';
 import { OBJECT_PROPERTY_META } from 'model/meta';
 import { RootState } from 'store';
-import { effectEntityAdapter } from './reducer';
+import { ObjectSelectors } from 'store/object/selectors';
+import { effectEntityAdapter, NormalizedQueueEffect } from './reducer';
 
 export interface ObjectQueueEffects {
   [OBJECT_EFFECT_META.CREATE]?: Omit<CreateEffect, 'index'>;
@@ -39,10 +40,32 @@ const byIds = createSelector([entities, (state: RootState, ids: string[]) => ids
   return ids.map((id) => state[id]);
 });
 
+const allByPageId = createSelector([all, ObjectSelectors.idSetOfPageId], (effects, ids) => {
+  return effects.filter(({ objectId }) => ids.has(objectId));
+});
+
+const allByPageIdEffectIndex = createSelector([allByPageId], (effects) => {
+  const map = effects.reduce<NormalizedQueueEffect[][]>((result, effect) => {
+    if (!result[effect.index]) {
+      result[effect.index] = [];
+    }
+    result[effect.index].push(effect);
+    return result;
+  }, []);
+  for (let i = 0; i < map.length; i++) {
+    if (!map[i]) {
+      map[i] = [];
+    }
+  }
+  return map;
+});
+
 export const EffectSelectors = {
   all,
   ids,
   byId,
-  byIds,
   entities,
+  byIds,
+  allByPageId,
+  allByPageIdEffectIndex,
 };

@@ -18,11 +18,7 @@ export interface ToolbarModel {
   children: ToolbarModel[];
 }
 
-export interface ToolbarProps {
-  onItemClicked?: (item: ToolbarModel) => void;
-}
-
-export const QueueToolbar = ({ onItemClicked }: ToolbarProps) => {
+export const QueueToolbar = () => {
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
