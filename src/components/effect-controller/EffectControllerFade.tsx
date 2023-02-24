@@ -1,23 +1,26 @@
 import { ReactElement } from 'react';
-import { QueueEffectType } from 'model/effect';
+import { FadeEffect } from 'model/effect';
 import { Slider } from 'components/slider';
-import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
+import { ObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice } from 'store/effect/reducer';
-
-export type EffectControllerFadeProps = {
-  uuid: string;
-  effectType: QueueEffectType['type'];
-};
+import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
+import { EffectSelectors } from 'store/effect/selectors';
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
-  const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].fade;
+  const firstObjectRotateEffect = useAppSelector((state) =>
+    EffectSelectors.byId(
+      state,
+      getEffectEntityKey({
+        index: settings.queueIndex,
+        objectId: settings.selectedObjectUUIDs[0],
+        type: 'fade',
+      }),
+    ),
+  ) as FadeEffect;
 
   const handleCurrentOpacityChange = (opacityValue: number | number[] | string): void => {
     let opacity = 1;

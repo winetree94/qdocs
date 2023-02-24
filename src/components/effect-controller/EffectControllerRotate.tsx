@@ -1,26 +1,33 @@
 import { RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
-import { selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice } from 'store/effect/reducer';
+import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
+import { EffectSelectors } from 'store/effect/selectors';
 
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
-  const firstObjectRotateEffect = effects[settings.selectedObjectUUIDs[0]].rotate;
+  const firstObjectRotateEffect = useAppSelector((state) =>
+    EffectSelectors.byId(
+      state,
+      getEffectEntityKey({
+        index: settings.queueIndex,
+        objectId: settings.selectedObjectUUIDs[0],
+        type: 'rotate',
+      }),
+    ),
+  ) as RotateEffect;
 
-  const handleCurrentRotateChange = (rotate: Partial<QueueRotate>): void => {
+  const handleCurrentRotateChange = (rotate: QueueRotate): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
       const nextEffect: RotateEffect = {
-        ...effects[objectUUID].rotate,
+        ...firstObjectRotateEffect,
         index: settings.queueIndex,
         prop: {
-          ...effects[objectUUID].rotate.prop,
+          ...firstObjectRotateEffect,
           ...rotate,
         },
       };

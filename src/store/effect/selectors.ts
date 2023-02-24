@@ -18,6 +18,10 @@ const byIds = createSelector([entities, (_: RootState, ids: string[]) => ids], (
   return ids.map((id) => state[id]);
 });
 
+const byObjectId = createSelector([entities, (_: RootState, id: string) => id], (state, id) => {
+  return Object.values(state).filter(({ objectId }) => objectId === id);
+});
+
 const allOfObjectId = createSelector([all, (_: RootState, id: string) => id], (effects, id) => {
   return effects.filter(({ objectId }) => objectId === id);
 });
@@ -109,6 +113,7 @@ export const EffectSelectors = {
   byId,
   entities,
   byIds,
+  byObjectId,
   groupByObjectId,
   allOfObjectId,
   allByPageId,

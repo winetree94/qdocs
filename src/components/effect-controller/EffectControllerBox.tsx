@@ -7,11 +7,11 @@ import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
-import { selectQueueObjects } from 'store/legacy/selectors';
 import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
+import { EffectSelectors } from 'store/effect/selectors';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -121,18 +121,18 @@ export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
-  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid),
-  );
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const hasSelectedObjects = selectedObjects.length > 0;
-
   const [firstObject] = selectedObjects;
-  const objectCurrentEffects = firstObject.effects.filter((effect) => effect.index === settings.queueIndex);
+
+  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, firstObject.uuid));
+
+  const objectCurrentEffects = effects.filter((effect) => effect.index === settings.queueIndex);
   const addableEffectTypes = Object.values(OBJECT_ADDABLE_EFFECTS[firstObject.type]);
   const currentQueueObjectEffectTypes = objectCurrentEffects.map(
     (currentQueueObjectEffect) => currentQueueObjectEffect.type,
   );
-  const createEffectIndex = firstObject.effects.find((effect) => effect.type === OBJECT_EFFECT_META.CREATE).index;
+  const createEffectIndex = effects.find((effect) => effect.type === OBJECT_EFFECT_META.CREATE).index;
 
   const handleAddEffectItemClick = (effectType: QueueEffectType['type']): void => {
     const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
@@ -173,7 +173,7 @@ export const EffectControllerBox = (): ReactElement | null => {
       <div>
         <p className="font-medium">Object effects</p>
         <ul>
-          {firstObject.effects.map((effect, index) => (
+          {effects.map((effect, index) => (
             <li key={`effect-${index}`}>
               <span>#{effect.index + 1} </span>
               <span>{effect.type}</span>

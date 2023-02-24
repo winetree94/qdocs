@@ -3,11 +3,10 @@ import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
-import { ObjectQueueEffects, selectObjectQueueEffects, selectQueueObjects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice } from 'store/effect/reducer';
+import { effectSlice, getEffectEntityKey, NormalizedQueueEffect } from 'store/effect/reducer';
+import { EffectSelectors } from 'store/effect/selectors';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -16,18 +15,21 @@ export type EffectControllerTimingFunctionProps = {
 export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const selectedObjects = useAppSelector(selectQueueObjects(settings.queuePage, settings.queueIndex)).filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid),
+  const firstObjectEffect = useAppSelector((state) =>
+    EffectSelectors.byId(
+      state,
+      getEffectEntityKey({
+        index: settings.queueIndex,
+        objectId: settings.selectedObjectUUIDs[0],
+        type: effectType,
+      }),
+    ),
   );
-  const [firstSelectedObject] = selectedObjects;
-
-  const firstObjectEffect = effects[firstSelectedObject.uuid][effectType];
 
   const handleTimingFunctionChange = (timingFunction: string): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
-      const nextEffect: ObjectQueueEffects[QueueEffectType['type']] = {
-        ...effects[objectUUID][effectType],
+      const nextEffect: NormalizedQueueEffect = {
+        ...firstObjectEffect,
         timing: timingFunction as AnimatorTimingFunctionType,
       };
 

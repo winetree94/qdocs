@@ -4,7 +4,7 @@ import { loadDocument } from 'store/document/actions';
 
 export type NormalizedQueueEffect = { objectId: string } & QueueEffectType;
 
-export const getEffectEntityKey = (effect: NormalizedQueueEffect) =>
+export const getEffectEntityKey = (effect: Pick<NormalizedQueueEffect, 'index' | 'objectId' | 'type'>) =>
   `${effect.objectId}-${effect.index}-${effect.type}`;
 
 export const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({

@@ -21,7 +21,6 @@ import {
 } from 'react';
 import { loadDocument } from 'store/document/actions';
 import { DocumentSelectors } from 'store/document/selectors';
-import { selectPageObjectByUUID } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { objectsSlice } from 'store/object/reducer';
 import classes from './ObjectStyler.module.scss';
@@ -215,11 +214,10 @@ const ObjectStylerOpacity = (): ReactElement => {
 };
 
 const ObjectStyleText = (): ReactElement => {
-  const settings = useAppSelector(SettingSelectors.settings);
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const object = useAppSelector(selectPageObjectByUUID(settings.queuePage, firstObject.uuid));
+  const object = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.uuid));
   const dispatch = useAppDispatch();
 
   const props = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.uuid));

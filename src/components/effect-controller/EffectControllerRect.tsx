@@ -1,26 +1,33 @@
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
-import { selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-// import { objectsSlice } from 'store/object/object.reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice } from 'store/effect/reducer';
+import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
+import { EffectSelectors } from 'store/effect/selectors';
 
 export const EffectControllerRect = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
-  const firstObjectRectEffect = effects[settings.selectedObjectUUIDs[0]].rect;
+  const firstObjectRectEffect = useAppSelector((state) =>
+    EffectSelectors.byId(
+      state,
+      getEffectEntityKey({
+        index: settings.queueIndex,
+        objectId: settings.selectedObjectUUIDs[0],
+        type: 'rect',
+      }),
+    ),
+  ) as MoveEffect;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
       const nextEffect: MoveEffect = {
-        ...effects[objectUUID].rect,
+        ...firstObjectRectEffect,
         index: settings.queueIndex,
         prop: {
-          ...effects[objectUUID].rect.prop,
+          ...firstObjectRectEffect.prop,
           ...rect,
         },
       };
