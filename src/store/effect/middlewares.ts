@@ -16,7 +16,7 @@ effectMiddleware.startListening({
       return;
     }
     api.dispatch(
-      effectSlice.actions.upsertEffect({
+      effectSlice.actions.addEffect({
         type: 'create',
         duration: 0,
         index: action.payload.queueIndex,

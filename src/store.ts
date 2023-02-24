@@ -8,6 +8,7 @@ import { pageMiddleware } from 'store/page/middlewares';
 import { pagesSlice } from 'store/page/reducer';
 import { settingsMiddleware } from 'store/settings/middlewares';
 import { documentSettingsSlice } from 'store/settings/reducer';
+import { storageSlice } from 'store/storage/reducer';
 
 export const store = configureStore({
   devTools: true,
@@ -17,6 +18,7 @@ export const store = configureStore({
     [pagesSlice.name]: pagesSlice.reducer,
     [objectsSlice.name]: objectsSlice.reducer,
     [effectSlice.name]: effectSlice.reducer,
+    [storageSlice.name]: storageSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(

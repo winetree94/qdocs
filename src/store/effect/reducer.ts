@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { QueueEffectType } from 'model/effect';
 import { loadDocument } from 'store/document/actions';
 
@@ -15,9 +15,18 @@ export const effectSlice = createSlice({
   name: 'effects',
   initialState: effectEntityAdapter.getInitialState(),
   reducers: {
-    upsertEffect: effectEntityAdapter.upsertOne,
-    upsertEffects: effectEntityAdapter.upsertMany,
-    removeMany: effectEntityAdapter.removeMany,
+    addEffect: (state, action: PayloadAction<NormalizedQueueEffect>) => {
+      return effectEntityAdapter.addOne(state, action);
+    },
+    upsertEffect: (state, action: PayloadAction<NormalizedQueueEffect>) => {
+      return effectEntityAdapter.upsertOne(state, action);
+    },
+    upsertEffects: (state, action: PayloadAction<NormalizedQueueEffect[]>) => {
+      return effectEntityAdapter.upsertMany(state, action);
+    },
+    removeMany: (state, action: PayloadAction<string[]>) => {
+      return effectEntityAdapter.removeMany(state, action);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadDocument, (state, action) => {

@@ -5,10 +5,6 @@ import { forwardRef } from 'react';
 import styles from './Context.module.scss';
 import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { loadDocument } from 'store/document/actions';
-// import { objectsSlice } from 'store/object/object.reducer';
-// import { pagesSlice } from 'store/page/reducer';
-import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { objectsSlice } from 'store/object/reducer';
 
@@ -18,62 +14,9 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
-  // const currentPage = queueDocument!.pages[settings.queuePage];
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
-    const objects = queueDocument!.pages[settings.queuePage].objects.slice(0);
-    switch (to) {
-      case 'start':
-        objects.sort((a, b) => {
-          if (fromUUIDs.includes(a.uuid)) {
-            return 1;
-          }
-          if (fromUUIDs.includes(b.uuid)) {
-            return -1;
-          }
-          return 0;
-        });
-        break;
-      case 'end':
-        objects.sort((a, b) => {
-          if (fromUUIDs.includes(a.uuid)) {
-            return -1;
-          }
-          if (fromUUIDs.includes(b.uuid)) {
-            return 1;
-          }
-          return 0;
-        });
-        break;
-      case 'forward':
-        fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
-          const object = objects[objectIndex];
-          objects.splice(objectIndex, 1);
-          objects.splice(Math.min(objectIndex + 1, objects.length), 0, object);
-        });
-        break;
-      case 'backward':
-        fromUUIDs.forEach((uuid) => {
-          const objectIndex = objects.findIndex((object) => object.uuid === uuid);
-          const object = objects[objectIndex];
-          objects.splice(objectIndex, 1);
-          objects.splice(Math.min(objectIndex - 1, objects.length), 0, object);
-        });
-        break;
-    }
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: objects,
-    };
-    dispatch(
-      loadDocument({
-        ...queueDocument!,
-        pages: newPages,
-      }),
-    );
+    // todo sorting 은 완전히 다시 짜야함
   };
 
   /**
