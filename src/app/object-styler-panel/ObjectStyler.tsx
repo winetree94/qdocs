@@ -1,17 +1,14 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { debounce } from 'cdk/functions/debounce';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { Slider } from 'components';
 import { QueueInput } from 'components/input/Input';
 import { QueueSelect } from 'components/select/Select';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
-import { QueueObjectType, QueueSquare } from 'model/object';
 import { QueueText } from 'model/property';
 import {
   ChangeEvent,
   createContext,
   FormEvent,
-  HTMLAttributes,
   PropsWithChildren,
   ReactElement,
   useCallback,
@@ -19,17 +16,15 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { loadDocument } from 'store/document/actions';
-import { DocumentSelectors } from 'store/document/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { objectsSlice } from 'store/object/reducer';
+import { NormalizedQueueObjectType, objectsSlice } from 'store/object/reducer';
 import classes from './ObjectStyler.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectSelectors } from 'store/object/selectors';
 
 // context start
 interface ObjectStylerContextValue {
-  objects: QueueObjectType[];
+  objects: NormalizedQueueObjectType[];
 }
 
 const ObjectStylerContext = createContext<ObjectStylerContextValue | null>(null);
@@ -48,7 +43,7 @@ const useObjectStylerContext = (): ObjectStylerContextValue => {
 // ------------- styler start -------------
 type StyleChangeValue = { [k: string]: FormDataEntryValue };
 interface ObjectStylerProps extends PropsWithChildren {
-  objects: QueueObjectType[];
+  objects: NormalizedQueueObjectType[];
   onStyleChange?: (value: StyleChangeValue) => void;
 }
 
@@ -120,7 +115,7 @@ const ObjectStylerStroke = (): ReactElement | null => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const tempType = firstObject as QueueSquare;
+  const tempType = firstObject;
   const [width, setWidth] = useState([tempType.stroke.width]);
 
   const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -356,40 +351,22 @@ ObjectStyler.Opacity = ObjectStylerOpacity;
 ObjectStyler.Text = ObjectStyleText;
 // ------------- styler end -------------
 
-export const ObjectStylerPanel = ({
-  children,
-  className,
-  ...props
-}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>): ReactElement | null => {
-  const settings = useAppSelector(SettingSelectors.settings);
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
+export const ObjectStylerPanel = (): ReactElement | null => {
   const dispatch = useAppDispatch();
-  const selectedObjects = queueDocument!.pages[settings.queuePage].objects.filter((object) =>
-    settings.selectedObjectUUIDs.includes(object.uuid),
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const setDocumentHistory = useCallback(
-    debounce(() => {
-      console.log('history save');
-    }, 500),
-    [],
-  );
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
 
   const handleStyleChange = (value: StyleChangeValue): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
-      if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-        return object;
-      }
-
-      // 선택된 오브젝트 -> 변경되는 스타일 적용해야함
-      const updatedModel = ((): QueueObjectType => {
+    const updateModels = selectedObjects.map<{
+      id: string;
+      changes: Partial<NormalizedQueueObjectType>;
+    }>((object) => ({
+      id: object.uuid,
+      changes: (() => {
         switch (object.type) {
           case 'rect':
           case 'circle':
           case 'line':
             return {
-              ...object,
               fill: {
                 ...object.fill,
                 color: value.backgroundColor as string,
@@ -407,7 +384,6 @@ export const ObjectStylerPanel = ({
             };
           case 'icon':
             return {
-              ...object,
               fill: {
                 ...object.fill,
                 color: value.backgroundColor as string,
@@ -418,24 +394,9 @@ export const ObjectStylerPanel = ({
               },
             };
         }
-      })();
-
-      return updatedModel;
-    });
-
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects,
-    };
-
-    dispatch(
-      loadDocument({
-        ...queueDocument!,
-        pages: newPages,
-      }),
-    );
-    setDocumentHistory();
+      })(),
+    }));
+    dispatch(objectsSlice.actions.updateObjects(updateModels));
   };
 
   return (
