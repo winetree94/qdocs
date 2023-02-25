@@ -20,10 +20,11 @@ export interface QueueIcon
 export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: number, iconType: string): QueueIcon => {
   const width = 300;
   const height = 300;
+  const objectId = generateUUID();
   return {
     type: 'icon',
     iconType: iconType,
-    uuid: generateUUID(),
+    uuid: objectId,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
@@ -60,6 +61,7 @@ export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: n
       {
         type: 'create',
         timing: 'linear',
+        objectId: objectId,
         duration: 0,
         index: queueIndex,
         prop: undefined,

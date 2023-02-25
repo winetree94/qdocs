@@ -1,20 +1,12 @@
 import { createTypedListenerMiddleware } from 'middleware';
 import { EffectSelectors } from 'store/effect/selectors';
 import { objectsSlice } from 'store/object/reducer';
-import { pagesSlice } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
 import { SettingsActions } from './actions';
 import { documentSettingsSlice } from './reducer';
 import { SettingSelectors } from './selectors';
 
 export const settingsMiddleware = createTypedListenerMiddleware();
-
-settingsMiddleware.startListening({
-  actionCreator: pagesSlice.actions.removePage,
-  effect: (action, listenerApi) => {
-    // listenerApi.dispatch(docsSlice.actions.removePage(action.payload));
-  },
-});
 
 /**
  * @description

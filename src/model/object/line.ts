@@ -19,9 +19,10 @@ export interface QueueLine
 export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: number): QueueLine => {
   const width = 300;
   const height = 300;
+  const objectId = generateUUID();
   return {
     type: 'line',
-    uuid: generateUUID(),
+    uuid: objectId,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
@@ -58,6 +59,7 @@ export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: n
       {
         type: 'create',
         timing: 'linear',
+        objectId,
         duration: 0,
         index: queueIndex,
         prop: undefined,

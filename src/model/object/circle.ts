@@ -19,9 +19,10 @@ export interface QueueCircle
 export const createDefaultCircle = (documentRect: QueueDocumentRect, queueIndex: number): QueueCircle => {
   const width = 300;
   const height = 300;
+  const objectId = generateUUID();
   return {
     type: 'circle',
-    uuid: generateUUID(),
+    uuid: objectId,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
@@ -58,6 +59,7 @@ export const createDefaultCircle = (documentRect: QueueDocumentRect, queueIndex:
       {
         type: 'create',
         timing: 'linear',
+        objectId: objectId,
         duration: 0,
         index: queueIndex,
         prop: undefined,

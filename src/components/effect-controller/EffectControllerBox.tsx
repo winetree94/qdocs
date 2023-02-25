@@ -3,15 +3,16 @@ import { EffectControllerIndex } from 'components/effect-controller/EffectContro
 import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
 import { Dropdown } from 'components/dropdown';
-import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
+import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
 import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
-import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
+import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
+import { NormalizedQueueObjectType } from 'store/object/reducer';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -43,21 +44,21 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
 const createEffect = (
   effectType: QueueEffectType['type'],
   queueIndex: QueueEffectType['index'],
-  queueObject: QueueObjectType,
+  queueObject: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect<void> = {
     type: 'fade',
     duration: 1000,
     index: queueIndex,
+    objectId: queueObject.uuid,
     timing: 'linear',
     prop: undefined,
   };
 
   switch (effectType) {
     case 'fade': {
-      const initialFade = queueObject.effects.find(
-        (effect) => effect.index === queueIndex - 1 && effect.type === 'fade',
-      );
+      const initialFade = effects.find((effect) => effect.index === queueIndex - 1 && effect.type === 'fade');
 
       return {
         ...baseQueueEffect,
@@ -66,7 +67,7 @@ const createEffect = (
       };
     }
     case 'rect': {
-      const initialRect = queueObject.effects.reduce(
+      const initialRect = effects.reduce(
         (rect, effect) => {
           if (effect.index > queueIndex) {
             return rect;
@@ -94,7 +95,7 @@ const createEffect = (
       };
     }
     case 'rotate': {
-      const initialDegree = queueObject.effects.reduce((degree, effect) => {
+      const initialDegree = effects.reduce((degree, effect) => {
         if (effect.index > queueIndex) {
           return degree;
         }
@@ -135,33 +136,20 @@ export const EffectControllerBox = (): ReactElement | null => {
   const createEffectIndex = effects.find((effect) => effect.type === OBJECT_EFFECT_META.CREATE).index;
 
   const handleAddEffectItemClick = (effectType: QueueEffectType['type']): void => {
-    const newObjects = queueDocument!.pages[settings.queuePage].objects.map((object) => {
-      if (!settings.selectedObjectUUIDs.includes(object.uuid)) {
-        return object;
-      }
-
-      const newEffects = [...object.effects];
-      const newIndex = newEffects.findIndex((effect) => effect.index === settings.queueIndex);
-      newEffects.splice(newIndex, 0, createEffect(effectType, settings.queueIndex, object));
-
-      return {
-        ...object,
-        effects: newEffects,
-      };
+    const models = selectedObjects.map((object) => {
+      const newEffects = [...effects];
+      return createEffect(
+        effectType,
+        settings.queueIndex,
+        {
+          ...object,
+          pageId: queueDocument!.pages[settings.queuePage].uuid,
+        },
+        newEffects,
+      );
     });
 
-    const newPages = queueDocument!.pages.slice(0);
-    newPages[settings.queuePage] = {
-      ...queueDocument!.pages[settings.queuePage],
-      objects: newObjects,
-    };
-
-    dispatch(
-      loadDocument({
-        ...queueDocument!,
-        pages: newPages,
-      }),
-    );
+    dispatch(effectSlice.actions.upsertEffects(models));
   };
 
   if (!hasSelectedObjects) {
