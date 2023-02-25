@@ -15,14 +15,14 @@ export const EffectControllerRotate = (): ReactElement => {
       state,
       getEffectEntityKey({
         index: settings.queueIndex,
-        objectId: settings.selectedObjectUUIDs[0],
+        objectId: settings.selectedObjectIds[0],
         type: 'rotate',
       }),
     ),
   ) as RotateEffect;
 
   const handleCurrentRotateChange = (rotate: QueueRotate): void => {
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect: RotateEffect = {
         ...firstObjectRotateEffect,
         index: settings.queueIndex,
@@ -35,7 +35,7 @@ export const EffectControllerRotate = (): ReactElement => {
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
         }),
       );

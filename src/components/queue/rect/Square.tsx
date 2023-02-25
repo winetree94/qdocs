@@ -9,7 +9,7 @@ import styles from './Square.module.scss';
 export const Square = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
-  const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;
+  const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.id}`;
   const fill = convertHex(
     containerContext.object.fill.color,
     containerContext.object.fill.opacity * animation.fade.opacity,

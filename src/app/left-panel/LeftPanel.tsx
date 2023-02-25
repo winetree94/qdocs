@@ -15,7 +15,7 @@ export const PanelTabType = {
 
 export const LeftPanel: FunctionComponent = () => {
   const settings = useAppSelector(SettingSelectors.settings);
-  const hasSelectedObjects = settings.selectedObjectUUIDs.length > 0;
+  const hasSelectedObjects = settings.selectedObjectIds.length > 0;
 
   return (
     <div className={clsx(styles.container, 'flex', 'flex-col')}>

@@ -1,4 +1,4 @@
-import { generateUUID } from 'cdk/functions/uuid';
+import { nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
@@ -14,17 +14,17 @@ export interface QueueIcon
     WithText {
   type: 'icon';
   iconType: string;
-  uuid: string;
+  id: string;
 }
 
 export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: number, iconType: string): QueueIcon => {
   const width = 300;
   const height = 300;
-  const objectId = generateUUID();
+  const objectId = nanoid();
   return {
     type: 'icon',
     iconType: iconType,
-    uuid: objectId,
+    id: objectId,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
@@ -59,6 +59,7 @@ export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: n
     },
     effects: [
       {
+        id: nanoid(),
         type: 'create',
         timing: 'linear',
         objectId: objectId,

@@ -20,14 +20,14 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
       state,
       getEffectEntityKey({
         index: settings.queueIndex,
-        objectId: settings.selectedObjectUUIDs[0],
+        objectId: settings.selectedObjectIds[0],
         type: effectType,
       }),
     ),
   );
 
   const handleTimingFunctionChange = (timingFunction: string): void => {
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect: NormalizedQueueEffect = {
         ...firstObjectEffect,
         timing: timingFunction as AnimatorTimingFunctionType,
@@ -36,7 +36,7 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
         }),
       );

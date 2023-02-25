@@ -13,6 +13,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
 import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
 import { NormalizedQueueObjectType } from 'store/object/reducer';
+import { nanoid } from '@reduxjs/toolkit';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -48,11 +49,12 @@ const createEffect = (
   effects: NormalizedQueueEffect[],
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect<void> = {
+    id: nanoid(),
     type: 'fade',
     duration: 1000,
     delay: 0,
     index: queueIndex,
-    objectId: queueObject.uuid,
+    objectId: queueObject.id,
     timing: 'linear',
     prop: undefined,
   };
@@ -127,7 +129,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   const hasSelectedObjects = selectedObjects.length > 0;
   const [firstObject] = selectedObjects;
 
-  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, firstObject.uuid));
+  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, firstObject.id));
 
   const objectCurrentEffects = effects.filter((effect) => effect.index === settings.queueIndex);
   const addableEffectTypes = Object.values(OBJECT_ADDABLE_EFFECTS[firstObject.type]);
@@ -144,7 +146,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         settings.queueIndex,
         {
           ...object,
-          pageId: queueDocument!.pages[settings.queuePage].uuid,
+          pageId: queueDocument!.pages[settings.queuePage].id,
         },
         newEffects,
       );

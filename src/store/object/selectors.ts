@@ -16,7 +16,7 @@ const allByPageId = createSelector([all, (_: RootState, id: EntityId) => id], (o
 });
 
 const idSetOfPageId = createSelector([allByPageId], (objects) => {
-  return new Set<string>(objects.map(({ uuid }) => uuid));
+  return new Set<string>(objects.map(({ id }) => id));
 });
 
 export const ObjectSelectors = {

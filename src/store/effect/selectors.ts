@@ -63,12 +63,12 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
 const allEffectedObjects = createSelector(
   [SettingSelectors.settings, PageSelectors.all, ObjectSelectors.all, groupByObjectId],
   (settings, pages, objects, effects) => {
-    const pageId = pages[settings.queuePage].uuid;
+    const pageId = pages[settings.queuePage].id;
     return objects
       .filter((object) => object.pageId === pageId)
       .reduce<NormalizedQueueObjectType[]>((result, current) => {
         const object = { ...current };
-        effects[current.uuid]
+        effects[current.id]
           .filter(({ index }) => index <= settings.queueIndex)
           .filter((effect) => effect.type !== 'create' && effect.type !== 'remove')
           .forEach((effect) => {
@@ -102,7 +102,7 @@ const allEffectedObjects = createSelector(
 
 const allEffectedObjectsMap = createSelector([allEffectedObjects], (objects) => {
   return objects.reduce<Record<string, NormalizedQueueObjectType>>((result, object) => {
-    result[object.uuid] = object;
+    result[object.id] = object;
     return result;
   }, {});
 });

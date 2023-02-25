@@ -31,7 +31,7 @@ export const QueueSubtoolbar = () => {
   }
 
   const byEffectIndex = useAppSelector((state) =>
-    EffectSelectors.allByPageAndEffectIndex(state, pages[settings.queuePage].uuid),
+    EffectSelectors.allByPageAndEffectIndex(state, pages[settings.queuePage].id),
   );
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {

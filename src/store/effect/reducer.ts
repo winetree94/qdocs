@@ -34,7 +34,7 @@ export const effectSlice = createSlice({
         page.objects.forEach((object) => {
           object.effects.forEach((effect) => {
             result.push({
-              objectId: object.uuid,
+              objectId: object.id,
               duration: effect.duration,
               index: effect.index,
               prop: effect.prop,

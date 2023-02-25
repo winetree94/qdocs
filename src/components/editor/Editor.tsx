@@ -31,12 +31,12 @@ export const QueueEditor = () => {
 
   const queueDocument = useAppSelector(DocumentSelectors.document);
   const settings = useAppSelector(SettingSelectors.settings);
-  const pageUUID = useAppSelector(SettingSelectors.currentPageUUID);
-  const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, pageUUID));
+  const pageId = useAppSelector(SettingSelectors.currentPageId);
+  const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, pageId));
   const effects = useAppSelector(EffectSelectors.all);
 
   const effectsGroupByObjectId = effects.reduce<{
-    [uuid: string]: NormalizedQueueEffect[];
+    [id: string]: NormalizedQueueEffect[];
   }>((result, effect) => {
     if (!result[effect.objectId]) {
       result[effect.objectId] = [];
@@ -46,8 +46,8 @@ export const QueueEditor = () => {
   }, {});
 
   const queueObjects = objects.filter((object) => {
-    const createEffect = effectsGroupByObjectId[object.uuid].find((effect) => effect.type === 'create');
-    const removeEffect = effectsGroupByObjectId[object.uuid].find((effect) => effect.type === 'remove');
+    const createEffect = effectsGroupByObjectId[object.id].find((effect) => effect.type === 'create');
+    const removeEffect = effectsGroupByObjectId[object.id].find((effect) => effect.type === 'remove');
     if (settings.queueIndex < createEffect.index) {
       return false;
     }
@@ -60,7 +60,7 @@ export const QueueEditor = () => {
   const queueEffectsGroupByObjectId = effects
     .filter((effect) => effect.index === settings.queueIndex)
     .reduce<{
-      [uuid: string]: NormalizedQueueEffect[];
+      [id: string]: NormalizedQueueEffect[];
     }>((result, effect) => {
       if (!result[effect.objectId]) {
         result[effect.objectId] = [];
@@ -95,17 +95,17 @@ export const QueueEditor = () => {
     object: NormalizedQueueObjectType,
   ): void => {
     event.stopPropagation();
-    const selected = settings.selectedObjectUUIDs.includes(object.uuid);
+    const selected = settings.selectedObjectIds.includes(object.id);
     if (!event.shiftKey && !selected) {
       dispatch(
         documentSettingsSlice.actions.setSelection({
           ...settings,
           selectionMode: 'normal',
-          uuids: [object.uuid],
+          ids: [object.id],
         }),
       );
     } else {
-      dispatch(documentSettingsSlice.actions.addSelection(object.uuid));
+      dispatch(documentSettingsSlice.actions.addSelection(object.id));
     }
   };
 
@@ -117,7 +117,7 @@ export const QueueEditor = () => {
     dispatch(
       documentSettingsSlice.actions.setSelection({
         selectionMode: 'detail',
-        uuid: object.uuid,
+        id: object.id,
       }),
     );
   };
@@ -132,38 +132,38 @@ export const QueueEditor = () => {
     const adjacentTargetX = event.shiftKey ? targetX : adjacent(targetX, 30);
     const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
-    const updateModel = settings.selectedObjectUUIDs.reduce<{
+    const updateModel = settings.selectedObjectIds.reduce<{
       objects: { id: string; changes: { rect: QueueRect } }[];
       effects: NormalizedQueueEffect[];
     }>(
-      (result, uuid) => {
-        if (queueEffectsGroupByObjectId[uuid]?.find((effect) => effect.type === 'create')) {
+      (result, id) => {
+        if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
           result.objects.push({
-            id: uuid,
+            id: id,
             changes: {
               rect: {
-                ...props[uuid].rect,
-                x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
-                y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
+                ...props[id].rect,
+                x: capturedObjectProps[id].rect.x + adjacentTargetX,
+                y: capturedObjectProps[id].rect.y + adjacentTargetY,
               },
             },
           });
         } else {
-          const existRectEffect = queueEffectsGroupByObjectId[uuid]?.find(
+          const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
             (effect) => effect.type === 'rect',
           ) as MoveEffect;
           result.effects.push({
             type: 'rect',
             duration: 1000,
             delay: 0,
-            objectId: uuid,
+            objectId: id,
             index: settings.queueIndex,
             timing: 'linear',
             ...existRectEffect,
             prop: {
-              ...props[uuid].rect,
-              x: capturedObjectProps[uuid].rect.x + adjacentTargetX,
-              y: capturedObjectProps[uuid].rect.y + adjacentTargetY,
+              ...props[id].rect,
+              x: capturedObjectProps[id].rect.x + adjacentTargetX,
+              y: capturedObjectProps[id].rect.y + adjacentTargetY,
             },
           });
         }
@@ -206,46 +206,46 @@ export const QueueEditor = () => {
     const width = event.width * absScale;
     const height = event.height * absScale;
 
-    const rangeObjectUUIDs = Object.entries(props)
+    const rangeObjectIds = Object.entries(props)
       .filter(([_, { rect }]) => {
         return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
       })
-      .map(([uuid]) => uuid);
+      .map(([id]) => id);
 
     dispatch(
       documentSettingsSlice.actions.setSelection({
         selectionMode: 'normal',
-        uuids: rangeObjectUUIDs,
+        ids: rangeObjectIds,
       }),
     );
   };
 
-  const resizeObjectRect = (uuid: string, rect: ResizerEvent): void => {
-    if (queueEffectsGroupByObjectId[uuid]?.find((effect) => effect.type === 'create')) {
+  const resizeObjectRect = (id: string, rect: ResizerEvent): void => {
+    if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
       dispatch(
         objectsSlice.actions.updateObject({
-          id: uuid,
+          id: id,
           changes: {
             rect: {
-              ...props[uuid].rect,
+              ...props[id].rect,
               ...rect,
             },
           },
         }),
       );
     } else {
-      const existRectEffect = queueEffectsGroupByObjectId[uuid]?.find((effect) => effect.type === 'rect') as MoveEffect;
+      const existRectEffect = queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'rect') as MoveEffect;
       dispatch(
         effectSlice.actions.upsertEffect({
           type: 'rect',
           duration: 1000,
           delay: 0,
-          objectId: uuid,
+          objectId: id,
           timing: 'linear',
           index: settings.queueIndex,
           ...existRectEffect,
           prop: {
-            ...props[uuid].rect,
+            ...props[id].rect,
             ...rect,
           },
         }),
@@ -253,11 +253,11 @@ export const QueueEditor = () => {
     }
   };
 
-  const updateObjectRotate = (uuid: string, degree: number): void => {
-    if (queueEffectsGroupByObjectId[uuid]?.find((effect) => effect.type === 'create')) {
+  const updateObjectRotate = (id: string, degree: number): void => {
+    if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
       dispatch(
         objectsSlice.actions.updateObject({
-          id: uuid,
+          id: id,
           changes: {
             rotate: {
               degree: degree,
@@ -266,7 +266,7 @@ export const QueueEditor = () => {
         }),
       );
     } else {
-      const existRotateEffect = queueEffectsGroupByObjectId[uuid]?.find(
+      const existRotateEffect = queueEffectsGroupByObjectId[id]?.find(
         (effect) => effect.type === 'rotate',
       ) as RotateEffect;
       dispatch(
@@ -274,7 +274,7 @@ export const QueueEditor = () => {
           type: 'rotate',
           duration: 1000,
           delay: 0,
-          objectId: uuid,
+          objectId: id,
           timing: 'linear',
           index: settings.queueIndex,
           ...existRotateEffect,
@@ -310,7 +310,7 @@ export const QueueEditor = () => {
   const onTextEdit = (object: NormalizedQueueObjectType, text: string): void => {
     dispatch(
       objectsSlice.actions.updateObject({
-        id: object.uuid,
+        id: object.id,
         changes: {
           text: {
             ...object.text,
@@ -321,12 +321,12 @@ export const QueueEditor = () => {
     );
   };
 
-  const onObjectContextMenuOpenChange = (uuid: string, open: boolean): void => {
-    if (open && !settings.selectedObjectUUIDs.includes(uuid)) {
+  const onObjectContextMenuOpenChange = (id: string, open: boolean): void => {
+    if (open && !settings.selectedObjectIds.includes(id)) {
       dispatch(
         documentSettingsSlice.actions.setSelection({
           selectionMode: 'normal',
-          uuids: [uuid],
+          ids: [id],
         }),
       );
     }
@@ -358,16 +358,14 @@ export const QueueEditor = () => {
                   }}>
                   {queueObjects.map((object) => (
                     <QueueContextMenu.Root
-                      key={object.uuid}
-                      onOpenChange={(open): void => onObjectContextMenuOpenChange(object.uuid, open)}>
+                      key={object.id}
+                      onOpenChange={(open): void => onObjectContextMenuOpenChange(object.id, open)}>
                       <QueueContextMenu.Trigger>
                         <QueueObject.Container
                           object={object}
-                          detail={
-                            settings.selectionMode === 'detail' && settings.selectedObjectUUIDs.includes(object.uuid)
-                          }
+                          detail={settings.selectionMode === 'detail' && settings.selectedObjectIds.includes(object.id)}
                           documentScale={settings.scale}
-                          selected={settings.selectedObjectUUIDs.includes(object.uuid)}>
+                          selected={settings.selectedObjectIds.includes(object.id)}>
                           <QueueObject.Animator
                             queueIndex={settings.queueIndex}
                             queuePosition={settings.queuePosition}
@@ -381,11 +379,11 @@ export const QueueEditor = () => {
                               <QueueObject.Rect></QueueObject.Rect>
                               <QueueObject.Text onEdit={(e) => onTextEdit(object, e)} />
                               <QueueObject.Resizer
-                                onResizeStart={(e) => resizeObjectRect(object.uuid, e)}
-                                onResizeMove={(e) => resizeObjectRect(object.uuid, e)}
-                                onResizeEnd={(e) => resizeObjectRect(object.uuid, e)}
-                                onRotateMove={(e) => updateObjectRotate(object.uuid, e.degree)}
-                                onRotateEnd={(e) => updateObjectRotate(object.uuid, e.degree)}
+                                onResizeStart={(e) => resizeObjectRect(object.id, e)}
+                                onResizeMove={(e) => resizeObjectRect(object.id, e)}
+                                onResizeEnd={(e) => resizeObjectRect(object.id, e)}
+                                onRotateMove={(e) => updateObjectRotate(object.id, e.degree)}
+                                onRotateEnd={(e) => updateObjectRotate(object.id, e.degree)}
                               />
                             </QueueObject.Drag>
                           </QueueObject.Animator>

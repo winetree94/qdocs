@@ -7,7 +7,7 @@ export interface NormalizedQueueObjectType extends Omit<QueueObjectType, 'effect
 }
 
 export const objectEntityAdapter = createEntityAdapter<NormalizedQueueObjectType>({
-  selectId: (object) => object.uuid,
+  selectId: (object) => object.id,
 });
 
 export const objectsSlice = createSlice({
@@ -45,7 +45,7 @@ export const objectsSlice = createSlice({
       const normalized = action.payload.pages.reduce<NormalizedQueueObjectType[]>((result, page) => {
         page.objects.forEach((object) => {
           const normalizedObject = {
-            pageId: page.uuid,
+            pageId: page.id,
             ...object,
           };
           delete normalizedObject.effects; // 레거시 셀렉터에 의해서 값이 들어가는 것을 방지

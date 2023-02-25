@@ -15,7 +15,7 @@ export const EffectControllerFade = (): ReactElement => {
       state,
       getEffectEntityKey({
         index: settings.queueIndex,
-        objectId: settings.selectedObjectUUIDs[0],
+        objectId: settings.selectedObjectIds[0],
         type: 'fade',
       }),
     ),
@@ -36,7 +36,7 @@ export const EffectControllerFade = (): ReactElement => {
       opacity = parseFloat(opacityValue);
     }
 
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect = {
         ...firstObjectRotateEffect,
         prop: {
@@ -48,7 +48,7 @@ export const EffectControllerFade = (): ReactElement => {
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
           type: 'fade',
         }),

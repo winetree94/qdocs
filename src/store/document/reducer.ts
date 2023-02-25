@@ -10,9 +10,9 @@ export const documentSlice = createSlice({
   initialState: null as NormalizedQueueDocument,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loadDocument, (state, action) => {
+    builder.addCase(loadDocument, (state, action): NormalizedQueueDocument => {
       return {
-        uuid: action.payload.uuid,
+        id: action.payload.id,
         documentName: action.payload.documentName,
         documentRect: {
           fill: action.payload.documentRect.fill,

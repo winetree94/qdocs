@@ -1,4 +1,4 @@
-import { generateUUID } from 'cdk/functions/uuid';
+import { nanoid } from '@reduxjs/toolkit';
 import { createTypedListenerMiddleware } from 'middleware';
 import { pagesSlice } from 'store/page/reducer';
 import { NormalizedQueueObjectType, objectsSlice } from './reducer';
@@ -15,10 +15,10 @@ objectMiddleware.startListening({
   effect: (action, api) => {
     const state = api.getState();
     const pageId = action.payload;
-    const uuids = ObjectSelectors.all(state)
+    const ids = ObjectSelectors.all(state)
       .filter((object) => object.pageId === pageId)
-      .map((object) => object.uuid);
-    api.dispatch(objectsSlice.actions.removeMany(uuids));
+      .map((object) => object.id);
+    api.dispatch(objectsSlice.actions.removeMany(ids));
   },
 });
 
@@ -29,7 +29,7 @@ objectMiddleware.startListening({
     const objects = ObjectSelectors.all(state).filter((object) => object.pageId === action.payload.fromId);
     const newObjects = objects.map<NormalizedQueueObjectType>((object) => ({
       ...object,
-      uuid: generateUUID(),
+      id: nanoid(),
       pageId: action.payload.newId,
     }));
     api.dispatch(

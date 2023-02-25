@@ -1,7 +1,7 @@
-import { generateUUID } from 'cdk/functions/uuid';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface QueueSquare
   extends WithEffects,
@@ -13,16 +13,16 @@ export interface QueueSquare
     WithStroke,
     WithText {
   type: 'rect';
-  uuid: string;
+  id: string;
 }
 
 export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex: number): QueueSquare => {
   const width = 300;
   const height = 300;
-  const objectId = generateUUID();
+  const objectId = nanoid();
   return {
     type: 'rect',
-    uuid: objectId,
+    id: objectId,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
@@ -57,6 +57,7 @@ export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex:
     },
     effects: [
       {
+        id: nanoid(),
         type: 'create',
         timing: 'linear',
         objectId: objectId,

@@ -1,7 +1,7 @@
 import { QueueDocument } from 'model/document';
 import animatedTextUrl from 'assets/templates/animated-text.que';
 import playUrl from 'assets/templates/play.que';
-import { generateUUID } from 'cdk/functions/uuid';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface TemplateMeta {
   name: string;
@@ -15,7 +15,7 @@ export const TEMPLATES: TemplateMeta[] = [
     preview: '',
     getTemplate: () =>
       Promise.resolve({
-        uuid: generateUUID(),
+        id: nanoid(),
         documentName: '새 문서',
         documentRect: {
           width: 1920,
@@ -24,7 +24,7 @@ export const TEMPLATES: TemplateMeta[] = [
         },
         pages: [
           {
-            uuid: generateUUID(),
+            id: nanoid(),
             pageName: '새 페이지',
             objects: [],
           },

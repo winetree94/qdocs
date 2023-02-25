@@ -67,6 +67,9 @@
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="2" />
       </indentOptions>
+      <arrangement>
+        <rules />
+      </arrangement>
     </codeStyleSettings>
   </code_scheme>
 </component>

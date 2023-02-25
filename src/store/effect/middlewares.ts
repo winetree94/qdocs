@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit';
 import { createTypedListenerMiddleware } from 'middleware';
 import { objectsSlice } from 'store/object/reducer';
 import { effectSlice, getEffectEntityKey } from './reducer';
@@ -17,11 +18,12 @@ effectMiddleware.startListening({
     }
     api.dispatch(
       effectSlice.actions.addEffect({
+        id: nanoid(),
         type: 'create',
         duration: 0,
         delay: 0,
         index: action.payload.queueIndex,
-        objectId: action.payload.object.uuid,
+        objectId: action.payload.object.id,
         prop: undefined,
         timing: 'linear',
       }),
@@ -42,11 +44,12 @@ effectMiddleware.startListening({
     api.dispatch(
       effectSlice.actions.upsertEffects(
         action.payload.objects.map((object) => ({
+          id: nanoid(),
           type: 'create',
           duration: 0,
           delay: 0,
           index: action.payload.queueIndex,
-          objectId: object.uuid,
+          objectId: object.id,
           prop: undefined,
           timing: 'linear',
         })),
@@ -63,9 +66,9 @@ effectMiddleware.startListening({
   actionCreator: objectsSlice.actions.removeMany,
   effect: (action, api) => {
     const state = api.getState();
-    const uuids = EffectSelectors.all(state)
+    const ids = EffectSelectors.all(state)
       .filter((effect) => action.payload.includes(effect.objectId))
       .map((effect) => getEffectEntityKey(effect));
-    api.dispatch(effectSlice.actions.removeMany(uuids));
+    api.dispatch(effectSlice.actions.removeMany(ids));
   },
 });

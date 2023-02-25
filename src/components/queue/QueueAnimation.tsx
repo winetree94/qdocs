@@ -43,7 +43,7 @@ export interface ObjectAnimatableProps {
 
 export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart }: ObjectAnimatableProps) => {
   const { object } = useContext(QueueObjectContainerContext);
-  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, object.uuid));
+  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, object.id));
   const currentFade = getCurrentFade(object, effects, queueIndex);
   const animatableFade = queueStart > 0 ? getFadeAnimation(object, effects, queueIndex, queuePosition) : undefined;
   const currentRect = getCurrentRect(object, effects, queueIndex);

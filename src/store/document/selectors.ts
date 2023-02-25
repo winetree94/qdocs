@@ -32,10 +32,10 @@ const serialized = createSelector(
             return {
               ...object,
               effects: Object.values(state.effects.entities)
-                .filter((effect) => effect.objectId === object.uuid)
+                .filter((effect) => effect.objectId === object.id)
                 .map<QueueEffectType>(({ objectId, ...effect }) => ({
                   ...effect,
-                  objectId: object.uuid,
+                  objectId: object.id,
                 })),
             } as QueueObjectType;
           }),

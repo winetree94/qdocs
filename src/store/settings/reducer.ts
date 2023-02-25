@@ -2,35 +2,37 @@ import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
 import { loadDocument } from 'store/document/actions';
 
 export interface QueueDocumentSettings {
+  documentId: string;
   queuePage: number;
   queueIndex: number;
   queueStart: number;
   queuePosition: 'forward' | 'backward' | 'pause';
   selectionMode: 'normal' | 'detail';
-  selectedObjectUUIDs: string[];
+  selectedObjectIds: string[];
   scale: number;
   presentationMode: boolean;
 }
 
 const initialState: QueueDocumentSettings = {
+  documentId: '',
   queuePage: 0,
   queueIndex: 0,
   queueStart: 0,
   queuePosition: 'forward',
   selectionMode: 'normal',
-  selectedObjectUUIDs: [],
+  selectedObjectIds: [],
   scale: 0.25,
   presentationMode: false,
 };
 
 export interface DetailSelectionAction {
   selectionMode: 'detail';
-  uuid: string;
+  id: string;
 }
 
 export interface NormalSelectionAction {
   selectionMode: 'normal';
-  uuids: string[];
+  ids: string[];
 }
 
 export const documentSettingsSlice = createSlice({
@@ -79,7 +81,7 @@ export const documentSettingsSlice = createSlice({
         queueIndex: Math.max(action.payload.queueIndex, 0),
         queuePosition: 'pause',
         queueStart: -1,
-        selectedObjectUUIDs: [],
+        selectedObjectIds: [],
         selectionMode: 'normal',
       };
     },
@@ -91,12 +93,12 @@ export const documentSettingsSlice = createSlice({
         case 'detail':
           pending.queueStart = -1;
           pending.selectionMode = 'detail';
-          pending.selectedObjectUUIDs = [action.payload.uuid];
+          pending.selectedObjectIds = [action.payload.id];
           break;
         case 'normal':
           pending.queueStart = -1;
           pending.selectionMode = 'normal';
-          pending.selectedObjectUUIDs = action.payload.uuids;
+          pending.selectedObjectIds = action.payload.ids;
       }
 
       return {
@@ -109,7 +111,7 @@ export const documentSettingsSlice = createSlice({
       return {
         ...state,
         selectionMode: 'normal',
-        selectedObjectUUIDs: [...state.selectedObjectUUIDs, action.payload],
+        selectedObjectIds: [...state.selectedObjectIds, action.payload],
       };
     },
 
@@ -117,7 +119,7 @@ export const documentSettingsSlice = createSlice({
       return {
         ...state,
         selectionMode: 'normal',
-        selectedObjectUUIDs: state.selectedObjectUUIDs.filter((uuid) => !action.payload.includes(uuid)),
+        selectedObjectIds: state.selectedObjectIds.filter((id) => !action.payload.includes(id)),
       };
     },
 
@@ -125,15 +127,15 @@ export const documentSettingsSlice = createSlice({
       return {
         ...state,
         selectionMode: 'normal',
-        selectedObjectUUIDs: [],
+        selectedObjectIds: [],
       };
     },
 
-    setPresentationMode: (state, action: PayloadAction<boolean>) => {
+    setPresentationMode: (state, action: PayloadAction<boolean>): QueueDocumentSettings => {
       return {
         ...state,
         presentationMode: action.payload,
-        selectedObjectUUIDs: [],
+        selectedObjectIds: [],
         selectionMode: 'normal',
       };
     },
@@ -162,7 +164,7 @@ export const documentSettingsSlice = createSlice({
           ? 'forward'
           : 'backward',
         queueStart: action.payload.play ? performance.now() : -1,
-        selectedObjectUUIDs: [],
+        selectedObjectIds: [],
         selectionMode: 'normal',
       };
     },

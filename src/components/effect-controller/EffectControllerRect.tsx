@@ -15,14 +15,14 @@ export const EffectControllerRect = (): ReactElement => {
       state,
       getEffectEntityKey({
         index: settings.queueIndex,
-        objectId: settings.selectedObjectUUIDs[0],
+        objectId: settings.selectedObjectIds[0],
         type: 'rect',
       }),
     ),
   ) as MoveEffect;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect: MoveEffect = {
         ...firstObjectRectEffect,
         index: settings.queueIndex,
@@ -35,7 +35,7 @@ export const EffectControllerRect = (): ReactElement => {
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
         }),
       );

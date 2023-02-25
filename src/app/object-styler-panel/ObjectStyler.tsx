@@ -212,10 +212,10 @@ const ObjectStyleText = (): ReactElement => {
   const { objects } = useObjectStylerContext();
   const [firstObject] = objects;
 
-  const object = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.uuid));
+  const object = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.id));
   const dispatch = useAppDispatch();
 
-  const props = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.uuid));
+  const props = useAppSelector((state) => ObjectSelectors.byId(state, firstObject.id));
   const text = props.text;
 
   const [currentText, setCurrentText] = useState(object.text);
@@ -231,7 +231,7 @@ const ObjectStyleText = (): ReactElement => {
     (text: Partial<QueueText>): void => {
       dispatch(
         objectsSlice.actions.updateObject({
-          id: firstObject.uuid,
+          id: firstObject.id,
           changes: {
             text: {
               ...object.text,
@@ -241,7 +241,7 @@ const ObjectStyleText = (): ReactElement => {
         }),
       );
     },
-    [dispatch, firstObject.uuid, object.text],
+    [dispatch, firstObject.id, object.text],
   );
 
   useEffect(() => {
@@ -360,7 +360,7 @@ export const ObjectStylerPanel = (): ReactElement | null => {
       id: string;
       changes: Partial<NormalizedQueueObjectType>;
     }>((object) => ({
-      id: object.uuid,
+      id: object.id,
       changes: (() => {
         switch (object.type) {
           case 'rect':

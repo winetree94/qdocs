@@ -13,7 +13,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
 
-  const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
+  const changeObjectIndex = (fromIds: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     // todo sorting 은 완전히 다시 짜야함
   };
 
@@ -22,39 +22,15 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 현재 큐에서 오브젝트를 제거, 생성된 큐에서 제거를 시도한 경우 영구히 제거한다.
    */
   const onRemoveObject = (): void => {
-    // const pendingCompleteRemoveUUIDs: string[] = [];
-    // const updateModels = settings.selectedObjectUUIDs.reduce<{
-    //   [key: string]: ObjectQueueEffects;
-    // }>((result, uuid) => {
-    //   if (effects[uuid].create) {
-    //     pendingCompleteRemoveUUIDs.push(uuid);
-    //     return result;
-    //   }
-    //   result[uuid] = {
-    //     ...effects[uuid],
-    //     remove: {
-    //       type: 'remove',
-    //       duration: 0,
-    //       timing: 'linear',
-    //       ...effects[uuid]?.remove,
-    //     },
-    //   };
-    //   return result;
-    // }, {});
-    // if (Object.values(updateModels).length > 0) {
-    //   // todo
-    // }
-    // if (pendingCompleteRemoveUUIDs.length > 0) {
-    //   onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
-    // }
+    // todo
   };
 
   /**
    * @description
    * 오브젝트를 영구히 제거
    */
-  const onCompletelyRemoveClick = (uuids: string[]): void => {
-    dispatch(objectsSlice.actions.removeMany(uuids));
+  const onCompletelyRemoveClick = (ids: string[]): void => {
+    dispatch(objectsSlice.actions.removeMany(ids));
   };
 
   return (
@@ -62,7 +38,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
         현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectUUIDs)}>
+      <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectIds)}>
         오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
@@ -73,16 +49,16 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'start')}>
+      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
         맨 앞으로 가져오기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'end')}>
+      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'end')}>
         맨 뒤로 보내기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'forward')}>
+      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'forward')}>
         앞으로 가져오기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectUUIDs, 'backward')}>
+      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'backward')}>
         뒤로 보내기
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />

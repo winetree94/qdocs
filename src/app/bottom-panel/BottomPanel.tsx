@@ -10,8 +10,7 @@ import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { documentSettingsSlice } from 'store/settings/reducer';
-import { generateUUID } from 'cdk/functions/uuid';
-import { EntityId } from '@reduxjs/toolkit';
+import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { pagesSlice } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
 import { DocumentSelectors } from 'store/document/selectors';
@@ -24,8 +23,8 @@ export const BottomPanel = () => {
   const pages = useAppSelector(PageSelectors.all);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
-  const [editNamePageUUID, setEditNamePageUUID] = useState<EntityId>('');
-  const [deleteConfirmPageUUID, setDeleteConfirmPageUUID] = useState<EntityId>('');
+  const [editNamePageId, setEditNamePageId] = useState<EntityId>('');
+  const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<EntityId>('');
 
   const setQueuePageIndex = (index: number): void => {
     dispatch(
@@ -35,7 +34,7 @@ export const BottomPanel = () => {
         queueIndex: 0,
         queueStart: -1,
         queuePosition: 'pause',
-        selectedObjectUUIDs: [],
+        selectedObjectIds: [],
         selectionMode: 'normal',
       }),
     );
@@ -56,11 +55,11 @@ export const BottomPanel = () => {
   };
 
   const createPage = (index: number): void => {
-    const uuid = generateUUID();
+    const id = nanoid();
     dispatch(
       pagesSlice.actions.addPage({
-        documentId: document.uuid,
-        uuid: uuid,
+        documentId: document.id,
+        id: id,
         index,
         pageName: `Page-${pages.length + 1}`,
       }),
@@ -68,15 +67,15 @@ export const BottomPanel = () => {
     setQueuePageIndex(index);
   };
 
-  const removePage = (uuid: EntityId): void => {
-    const index = pages.findIndex((page) => page.uuid === uuid);
-    dispatch(pagesSlice.actions.removePage(uuid));
+  const removePage = (id: EntityId): void => {
+    const index = pages.findIndex((page) => page.id === id);
+    dispatch(pagesSlice.actions.removePage(id));
     setQueuePageIndex(Math.min(index, pages.length - 1));
   };
 
-  const onDragStart = (e: React.DragEvent<HTMLSpanElement>, uuid: EntityId): void => {
+  const onDragStart = (e: React.DragEvent<HTMLSpanElement>, id: EntityId): void => {
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', `${uuid}`);
+    e.dataTransfer.setData('text/plain', `${id}`);
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>): boolean => {
@@ -89,36 +88,36 @@ export const BottomPanel = () => {
     if (!e.currentTarget || !e.currentTarget.classList.contains('page-item')) {
       return;
     }
-    const to = e.currentTarget.getAttribute('data-uuid') as string;
+    const to = e.currentTarget.getAttribute('data-id') as string;
     movePage(from, to);
   };
 
-  const onPageNameEdit = (pageName: string, uuid: EntityId): void => {
+  const onPageNameEdit = (pageName: string, id: EntityId): void => {
     dispatch(
       pagesSlice.actions.updatePage({
-        id: uuid,
+        id: id,
         changes: {
           pageName: pageName.trim(),
         },
       }),
     );
-    setEditNamePageUUID('');
+    setEditNamePageId('');
   };
 
   const onPageCopy = (index: number): void => {
-    const newId = generateUUID();
+    const newId = nanoid();
     dispatch(
       pagesSlice.actions.copyPage({
-        fromId: pages[index].uuid,
+        fromId: pages[index].id,
         index: index,
         newId: newId,
       }),
     );
   };
 
-  const onPageDeleteSubmit = (uuid: EntityId): void => {
-    removePage(uuid);
-    setDeleteConfirmPageUUID('');
+  const onPageDeleteSubmit = (id: EntityId): void => {
+    removePage(id);
+    setDeleteConfirmPageId('');
   };
 
   return (
@@ -136,25 +135,24 @@ export const BottomPanel = () => {
                     <QueueContextMenu.Trigger
                       className={clsx('page-item', dragOverIndex === index && styles.dragOver)}
                       draggable="true"
-                      data-uuid={page.uuid}
-                      onDragStart={(e): void => onDragStart(e, page.uuid)}
+                      data-id={page.id}
+                      onDragStart={(e): void => onDragStart(e, page.id)}
                       onDragEnter={(): void => setDragOverIndex(index)}
                       onDragEnd={(): void => setDragOverIndex(-1)}
                       onDragOver={onDragOver}
                       onDrop={onDrop}
-                      onDoubleClick={(): void => setEditNamePageUUID(page.uuid)}>
+                      onDoubleClick={(): void => setEditNamePageId(page.id)}>
                       <QueueToggleGroup.Item value={`${index}`} size="small">
                         {page.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>
                     <QueueContextMenu.Portal>
                       <QueueContextMenu.Content>
-                        <QueueContextMenu.Item
-                          onClick={(): void => movePage(page.uuid, self[Math.max(index - 1, 0)].uuid)}>
+                        <QueueContextMenu.Item onClick={(): void => movePage(page.id, self[Math.max(index - 1, 0)].id)}>
                           페이지를 왼쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
-                          onClick={(): void => movePage(page.uuid, self[Math.min(index + 1, self.length - 1)].uuid)}>
+                          onClick={(): void => movePage(page.id, self[Math.min(index + 1, self.length - 1)].id)}>
                           페이지를 오른쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
@@ -168,7 +166,7 @@ export const BottomPanel = () => {
                         <QueueContextMenu.Item onClick={(): void => onPageCopy(index)}>
                           페이지 복제
                         </QueueContextMenu.Item>
-                        <QueueContextMenu.Item onClick={(): void => setEditNamePageUUID(page.uuid)}>
+                        <QueueContextMenu.Item onClick={(): void => setEditNamePageId(page.id)}>
                           페이지 이름 변경
                         </QueueContextMenu.Item>
                         {pages.length >= 2 && (
@@ -176,7 +174,7 @@ export const BottomPanel = () => {
                             <QueueContextMenu.Separator />
                             <QueueContextMenu.Item
                               className={styles.Remove}
-                              onClick={(): void => setDeleteConfirmPageUUID(page.uuid)}>
+                              onClick={(): void => setDeleteConfirmPageId(page.id)}>
                               페이지 삭제
                             </QueueContextMenu.Item>
                           </>
@@ -200,10 +198,10 @@ export const BottomPanel = () => {
       </div>
 
       {/* 페이지 삭제 확인 다이얼로그 */}
-      {deleteConfirmPageUUID && (
+      {deleteConfirmPageId && (
         <QueueAlertDialog.Root
-          open={!!deleteConfirmPageUUID}
-          onOpenChange={(opened): void => !opened && setDeleteConfirmPageUUID('')}>
+          open={!!deleteConfirmPageId}
+          onOpenChange={(opened): void => !opened && setDeleteConfirmPageId('')}>
           <QueueAlertDialog.Overlay />
           <QueueAlertDialog.Content>
             <QueueAlertDialog.Title>페이지 삭제</QueueAlertDialog.Title>
@@ -215,7 +213,7 @@ export const BottomPanel = () => {
               <QueueAlertDialog.Action
                 size="small"
                 color="blue"
-                onClick={(): void => onPageDeleteSubmit(deleteConfirmPageUUID)}>
+                onClick={(): void => onPageDeleteSubmit(deleteConfirmPageId)}>
                 확인
               </QueueAlertDialog.Action>
             </QueueAlertDialog.Footer>
@@ -224,12 +222,12 @@ export const BottomPanel = () => {
       )}
 
       {/* 페이지 이름 수정 다이얼로그 */}
-      {editNamePageUUID && (
+      {editNamePageId && (
         <EditPageNameDialog
-          open={!!editNamePageUUID}
-          onOpenChange={(opened): void => !opened && setEditNamePageUUID('')}
-          pageName={pages.find((page) => page.uuid === editNamePageUUID).pageName}
-          onSubmit={(value): void => onPageNameEdit(value, editNamePageUUID)}
+          open={!!editNamePageId}
+          onOpenChange={(opened): void => !opened && setEditNamePageId('')}
+          pageName={pages.find((page) => page.id === editNamePageId).pageName}
+          onSubmit={(value): void => onPageNameEdit(value, editNamePageId)}
         />
       )}
     </div>

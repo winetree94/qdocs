@@ -27,7 +27,7 @@ pageMiddleware.startListening({
           return;
         }
         result.push({
-          id: page.uuid,
+          id: page.id,
           changes: { index: index },
         });
       });

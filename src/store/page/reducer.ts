@@ -8,7 +8,7 @@ export interface NormalizedQueueDocumentPage extends Omit<QueueDocumentPage, 'ob
 }
 
 export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage>({
-  selectId: (page) => page.uuid,
+  selectId: (page) => page.id,
   sortComparer: (a, b) => a.index - b.index,
 });
 
@@ -63,9 +63,9 @@ export const pagesSlice = createSlice({
         return state;
       }
 
-      const newPage = {
+      const newPage: NormalizedQueueDocumentPage = {
         ...page,
-        uuid: action.payload.newId,
+        id: action.payload.newId,
         index: action.payload.index,
         pageName: `${page.pageName} (copy)`,
       };
@@ -77,10 +77,10 @@ export const pagesSlice = createSlice({
     builder.addCase(loadDocument, (state, action) => {
       return pageEntityAdapter.setAll(state, {
         ...action.payload.pages.map((page, index) => ({
-          documentId: action.payload.uuid,
+          documentId: action.payload.id,
           pageName: page.pageName,
           index: index,
-          uuid: page.uuid,
+          id: page.id,
         })),
       });
     });

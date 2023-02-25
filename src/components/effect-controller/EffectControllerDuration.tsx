@@ -18,7 +18,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       state,
       getEffectEntityKey({
         index: settings.queueIndex,
-        objectId: settings.selectedObjectUUIDs[0],
+        objectId: settings.selectedObjectIds[0],
         type: effectType,
       }),
     ),
@@ -43,7 +43,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       duration = parseFloat(durationValue);
     }
 
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect: NormalizedQueueEffect = {
         ...effect,
         duration: duration * 1000,
@@ -52,7 +52,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
         }),
       );
@@ -74,7 +74,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       delay = parseFloat(delayValue);
     }
 
-    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+    settings.selectedObjectIds.forEach((objectId) => {
       const nextEffect: NormalizedQueueEffect = {
         ...effect,
         delay: delay * 1000,
@@ -83,7 +83,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       dispatch(
         effectSlice.actions.upsertEffect({
           ...nextEffect,
-          objectId: objectUUID,
+          objectId: objectId,
           index: settings.queueIndex,
         }),
       );
