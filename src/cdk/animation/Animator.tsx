@@ -45,7 +45,7 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
   );
 
   useLayoutEffect(() => {
-    setProgresses(calculateProgress(performance.now()));
+    setProgresses(calculateProgress(performance.now()).map((progress) => (progress === 1 ? 1 : 0)));
     frameRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameRef.current);
   }, [animate, calculateProgress]);
