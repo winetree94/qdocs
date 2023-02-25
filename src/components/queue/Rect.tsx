@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from 'react';
+import { useContext } from 'react';
 import { QueueObjectContainerContext } from './Container';
 import { Circle } from './rect/Circle';
 import { Icon } from './rect/Icon';
@@ -9,7 +9,7 @@ export interface RectProps {
   onRectMousedown?(): void;
 }
 
-export const Rect: FunctionComponent<RectProps> = (props) => {
+export const Rect = (props: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
   switch (containerContext.object.type) {
     case 'circle':

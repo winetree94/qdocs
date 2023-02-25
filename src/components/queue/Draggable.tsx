@@ -8,14 +8,14 @@ export interface DraggableProps extends React.BaseHTMLAttributes<HTMLDivElement>
   onDraggingEnd?: (initEvent: MouseEvent, event: MouseEvent) => void;
 }
 
-export const Draggable: React.FunctionComponent<DraggableProps> = ({
+export const Draggable = ({
   children,
   onMousedown,
   onDraggingStart,
   onDraggingMove,
   onDraggingEnd,
   ...divProps
-}) => {
+}: DraggableProps) => {
   const { detail } = useContext(QueueObjectContainerContext);
   const [initMousedownEvent, setInitMousedownEvent] = useState<MouseEvent | null>(null);
 

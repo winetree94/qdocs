@@ -1,5 +1,5 @@
 import styles from './Draw.module.scss';
-import { FunctionComponent, ReactNode, useRef, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 export interface DrawEvent {
@@ -21,20 +21,12 @@ export interface DrawProps {
   scale?: number;
   children?: ReactNode;
   className?: string;
-  drawer?: ReactNode;
   onDrawStart?: (event: DrawEvent, cancel: () => void) => void;
   onDrawMove?: (event: DrawEvent, cancel: () => void) => void;
   onDrawEnd?: (event: DrawEvent) => void;
 }
 
-export const Drawable: FunctionComponent<DrawProps> = ({
-  children,
-  className,
-  drawer,
-  onDrawStart,
-  onDrawMove,
-  onDrawEnd,
-}) => {
+export const Drawable = ({ children, className, onDrawStart, onDrawMove, onDrawEnd }: DrawProps) => {
   const container = useRef<HTMLDivElement>(null);
 
   const [position, setPosition] = useState<{
@@ -161,18 +153,18 @@ export const Drawable: FunctionComponent<DrawProps> = ({
   };
 
   return (
-    <div className={clsx(styles.drawer, className)} ref={container} onMouseDown={onMouseDown}>
+    <div className={clsx(styles.Drawer, className)} ref={container} onMouseDown={onMouseDown}>
       {children}
       {isDrawing && (
         <div
-          className={styles.draw}
+          className={styles.Draw}
           style={{
             top: position.y,
             left: position.x,
             width: position.width,
             height: position.height,
           }}>
-          {drawer}
+          <div className={clsx(styles.Preview, 'w-full', 'h-full')}></div>
         </div>
       )}
     </div>

@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { convertHex } from 'components/queue/color/convertHex';
-import { FunctionComponent, useContext } from 'react';
+import { useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
 import styles from './Square.module.scss';
 
-export const Square: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
+export const Square = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.uuid}`;

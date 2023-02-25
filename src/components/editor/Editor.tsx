@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
@@ -340,7 +338,6 @@ export const QueueEditor = () => {
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
               scale={settings.scale}
-              drawer={<div className={clsx(styles.drawer, 'w-full', 'h-full')}></div>}
               onDrawEnd={onDrawEnd}
               className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>
               <Scaler
@@ -373,19 +370,19 @@ export const QueueEditor = () => {
                             queuePosition={settings.queuePosition}
                             queueStart={settings.queueStart}>
                             <QueueObject.Drag
-                              onMousedown={(event): void => onObjectMousedown(event, object)}
-                              onDoubleClick={(event): void => onObjectDoubleClick(event, object)}
+                              onMousedown={(e) => onObjectMousedown(e, object)}
+                              onDoubleClick={(e) => onObjectDoubleClick(e, object)}
                               onDraggingStart={() => setCapturedObjectProps(props)}
                               onDraggingMove={onObjectDragMove}
                               onDraggingEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
-                              <QueueObject.Text onEdit={(e): void => onTextEdit(object, e)} />
+                              <QueueObject.Text onEdit={(e) => onTextEdit(object, e)} />
                               <QueueObject.Resizer
-                                onResizeStart={(event): void => resizeObjectRect(object.uuid, event)}
-                                onResizeMove={(event): void => resizeObjectRect(object.uuid, event)}
-                                onResizeEnd={(event): void => resizeObjectRect(object.uuid, event)}
-                                onRotateMove={(event): void => updateObjectRotate(object.uuid, event.degree)}
-                                onRotateEnd={(event): void => updateObjectRotate(object.uuid, event.degree)}
+                                onResizeStart={(e) => resizeObjectRect(object.uuid, e)}
+                                onResizeMove={(e) => resizeObjectRect(object.uuid, e)}
+                                onResizeEnd={(e) => resizeObjectRect(object.uuid, e)}
+                                onRotateMove={(e) => updateObjectRotate(object.uuid, e.degree)}
+                                onRotateEnd={(e) => updateObjectRotate(object.uuid, e.degree)}
                               />
                             </QueueObject.Drag>
                           </QueueObject.Animator>

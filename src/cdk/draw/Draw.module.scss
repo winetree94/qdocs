@@ -1,7 +1,14 @@
-.drawer {
+.Drawer {
   position: relative;
 }
 
-.draw {
+.Draw {
   position: absolute;
+}
+
+.Preview {
+  position: relative;
+  border: 1px solid var(--blue7);
+  background-color: var(--blue5);
+  opacity: 0.5;
 }

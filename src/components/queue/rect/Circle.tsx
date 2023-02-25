@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { convertHex } from 'components/queue/color/convertHex';
-import { FunctionComponent, useContext } from 'react';
+import { useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
 import styles from './Circle.module.scss';
 
-export const Circle: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
+export const Circle = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
 

@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { QueueIcon } from 'model/object/icon';
-import { FunctionComponent, useContext } from 'react';
+import { useContext } from 'react';
 import { QueueObjectContainerContext, QueueObjectContainerContextType } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
 import symbolPath from 'assets/remixicon.symbol.svg';
 
-export const Icon: FunctionComponent<RectProps> = ({ onRectMousedown }) => {
+export const Icon = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext<QueueObjectContainerContextType<QueueIcon>>(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   return (

@@ -1,55 +1,58 @@
-import { createContext, FunctionComponent, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { isEqual } from 'lodash';
+import { createContext, useCallback, useLayoutEffect, useReducer, useRef } from 'react';
 import { AnimatorTimingFunctionType, getTimingFunction } from './timing';
 
-const AnimatableContext = createContext<number>(-1);
+const AnimatorsContext = createContext<number[]>([]);
 
-export interface AnimatorProps {
-  children: (value: number) => React.ReactNode;
-  start: number;
-  timing?: AnimatorTimingFunctionType;
-  duration?: number;
+export interface AnimatorsProps {
+  children?: (values: number[]) => React.ReactNode;
+  start?: number;
+  animations: {
+    timing?: AnimatorTimingFunctionType;
+    duration: number;
+  }[];
 }
 
-export const Animator: FunctionComponent<AnimatorProps> = ({
-  children,
-  start,
-  timing = 'linear',
-  duration = 0,
-}: AnimatorProps) => {
-  const now = performance.now();
-  const actived = (now - start) / duration < 1;
+const reducer = (previous: number[], current: number[]) => {
+  return isEqual(previous, current) ? previous : current;
+};
 
-  const ref = useRef<number>(0);
-  const [progress, setProgress] = useState<number>(-1);
+export const Animators = ({ start, animations, children }: AnimatorsProps) => {
+  const frameRef = useRef<number>(-1);
+  const [progresses, setProgresses] = useReducer(reducer, []);
+
+  const calculateProgress = useCallback(
+    (time: number) => {
+      const currentProgresses = animations.map(({ duration = 0, timing = 'linear' }) => {
+        const timeFraction = (time - start) / duration;
+        const progress = getTimingFunction(timing)(timeFraction);
+        return Math.max(Math.min(1, progress), 0);
+      });
+      return currentProgresses;
+    },
+    [animations, start],
+  );
 
   const animate = useCallback(
-    (time: number): void => {
-      let timeFraction = (time - start) / duration;
-      if (timeFraction > 1) timeFraction = 1;
-      const progress = getTimingFunction(timing)(timeFraction);
-      setProgress(progress);
-      if (timeFraction < 1) {
-        ref.current = requestAnimationFrame(animate);
-      } else {
-        setProgress(-1);
+    (time: number) => {
+      const currentProgresses = calculateProgress(time);
+      setProgresses(currentProgresses);
+      if (Math.min(...currentProgresses) < 1) {
+        frameRef.current = requestAnimationFrame(animate);
       }
     },
-    [start, duration, timing],
+    [calculateProgress],
   );
 
   useLayoutEffect(() => {
-    if (!start || start < 0) return;
-    setProgress(0);
-    ref.current = requestAnimationFrame(animate);
-    return () => {
-      setProgress(-1);
-      cancelAnimationFrame(ref.current);
-    };
-  }, [start, animate]);
+    setProgresses(calculateProgress(performance.now()));
+    frameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameRef.current);
+  }, [animate, calculateProgress]);
 
   return (
-    <AnimatableContext.Provider value={actived ? Math.max(progress, 0) : progress}>
-      <AnimatableContext.Consumer>{children}</AnimatableContext.Consumer>
-    </AnimatableContext.Provider>
+    <AnimatorsContext.Provider value={progresses}>
+      <AnimatorsContext.Consumer>{children}</AnimatorsContext.Consumer>
+    </AnimatorsContext.Provider>
   );
 };
