@@ -1,4 +1,4 @@
-import { createSelector } from '@reduxjs/toolkit';
+import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { objectEntityAdapter } from './reducer';
 
@@ -11,7 +11,7 @@ const entities = selectors.selectEntities;
 const ids = selectors.selectIds;
 const total = selectors.selectTotal;
 
-const allByPageId = createSelector([all, (_: RootState, id: string) => id], (objects, id) => {
+const allByPageId = createSelector([all, (_: RootState, id: EntityId) => id], (objects, id) => {
   return objects.filter((object) => object.pageId === id);
 });
 

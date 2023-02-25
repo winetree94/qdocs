@@ -3,7 +3,6 @@ import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
-import { ObjectQueueEffects, selectObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { objectsSlice } from 'store/object/reducer';
@@ -13,7 +12,6 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
 > = forwardRef((_, ref) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effects = useAppSelector(selectObjectQueueEffects(settings.queuePage, settings.queueIndex));
 
   const changeObjectIndex = (fromUUIDs: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     // todo sorting 은 완전히 다시 짜야함
@@ -24,32 +22,31 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 현재 큐에서 오브젝트를 제거, 생성된 큐에서 제거를 시도한 경우 영구히 제거한다.
    */
   const onRemoveObject = (): void => {
-    const pendingCompleteRemoveUUIDs: string[] = [];
-    const updateModels = settings.selectedObjectUUIDs.reduce<{
-      [key: string]: ObjectQueueEffects;
-    }>((result, uuid) => {
-      if (effects[uuid].create) {
-        pendingCompleteRemoveUUIDs.push(uuid);
-        return result;
-      }
-      result[uuid] = {
-        ...effects[uuid],
-        remove: {
-          type: 'remove',
-          duration: 0,
-          timing: 'linear',
-          ...effects[uuid]?.remove,
-        },
-      };
-      return result;
-    }, {});
-
-    if (Object.values(updateModels).length > 0) {
-      // todo
-    }
-    if (pendingCompleteRemoveUUIDs.length > 0) {
-      onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
-    }
+    // const pendingCompleteRemoveUUIDs: string[] = [];
+    // const updateModels = settings.selectedObjectUUIDs.reduce<{
+    //   [key: string]: ObjectQueueEffects;
+    // }>((result, uuid) => {
+    //   if (effects[uuid].create) {
+    //     pendingCompleteRemoveUUIDs.push(uuid);
+    //     return result;
+    //   }
+    //   result[uuid] = {
+    //     ...effects[uuid],
+    //     remove: {
+    //       type: 'remove',
+    //       duration: 0,
+    //       timing: 'linear',
+    //       ...effects[uuid]?.remove,
+    //     },
+    //   };
+    //   return result;
+    // }, {});
+    // if (Object.values(updateModels).length > 0) {
+    //   // todo
+    // }
+    // if (pendingCompleteRemoveUUIDs.length > 0) {
+    //   onCompletelyRemoveClick(pendingCompleteRemoveUUIDs);
+    // }
   };
 
   /**

@@ -1,22 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FadeEffect } from 'model/effect';
-import { QueueObjectType } from 'model/object';
 import { QueueFade } from 'model/property';
+import { NormalizedQueueEffect } from 'store/effect/reducer';
+import { NormalizedQueueObjectType } from 'store/object/reducer';
 
 export interface FadeAnimation {
   fromFade: QueueFade;
   fadeEffect: FadeEffect;
 }
 
-export const getCurrentFade = (object: QueueObjectType, index: number): QueueFade => {
-  return object.effects
+export const getCurrentFade = (
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
+  index: number,
+): QueueFade => {
+  return effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is FadeEffect => effect.type === 'fade')
     .reduce<QueueFade>((_, effect) => effect.prop, object.fade);
 };
 
 export const getFadeAnimation = (
-  object: QueueObjectType,
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): FadeAnimation | null => {
@@ -24,9 +30,9 @@ export const getFadeAnimation = (
     return null;
   }
 
-  const fromFade = getCurrentFade(object, position === 'forward' ? index - 1 : index + 1);
+  const fromFade = getCurrentFade(object, effects, position === 'forward' ? index - 1 : index + 1);
 
-  const fadeEffect = object.effects.find((effect): effect is FadeEffect => {
+  const fadeEffect = effects.find((effect): effect is FadeEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
     return effect.index === targetIndex && effect.type === 'fade';
   });
@@ -40,7 +46,7 @@ export const getFadeAnimation = (
       ? {
           ...fadeEffect,
           prop: {
-            ...getCurrentFade(object, index),
+            ...getCurrentFade(object, effects, index),
           },
         }
       : fadeEffect;

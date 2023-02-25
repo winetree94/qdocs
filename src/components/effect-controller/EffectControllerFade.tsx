@@ -1,7 +1,6 @@
 import { ReactElement } from 'react';
 import { FadeEffect } from 'model/effect';
 import { Slider } from 'components/slider';
-import { ObjectQueueEffects } from 'store/legacy/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
@@ -38,7 +37,7 @@ export const EffectControllerFade = (): ReactElement => {
     }
 
     settings.selectedObjectUUIDs.forEach((objectUUID) => {
-      const nextEffect: ObjectQueueEffects['fade'] = {
+      const nextEffect = {
         ...firstObjectRotateEffect,
         prop: {
           ...firstObjectRotateEffect.prop,

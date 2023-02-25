@@ -1,6 +1,8 @@
 import { Animator } from 'cdk/animation/Animator';
 import { QueueFade, QueueRect, QueueRotate, QueueScale } from 'model/property';
 import { createContext, FunctionComponent, ReactElement, useContext } from 'react';
+import { EffectSelectors } from 'store/effect/selectors';
+import { useAppSelector } from 'store/hooks';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
 import { getAnimatableRotate, getCurrentRotate, getRotateAnimation } from './animate/rotate';
@@ -46,14 +48,15 @@ export const ObjectAnimator: FunctionComponent<ObjectAnimatableProps> = ({
   queueStart,
 }) => {
   const { object } = useContext(QueueObjectContainerContext);
-  const currentFade = getCurrentFade(object, queueIndex);
-  const animatableFade = queueStart > 0 ? getFadeAnimation(object, queueIndex, queuePosition) : undefined;
-  const currentRect = getCurrentRect(object, queueIndex);
-  const animatableRect = queueStart > 0 ? getRectAnimation(object, queueIndex, queuePosition) : undefined;
-  const currentRotate = getCurrentRotate(object, queueIndex);
-  const animatableRotate = queueStart > 0 ? getRotateAnimation(object, queueIndex, queuePosition) : undefined;
-  const currentScale = getCurrentScale(object, queueIndex);
-  const animatableScale = queueStart > 0 ? getScaleAnimation(object, queueIndex, queuePosition) : undefined;
+  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, object.uuid));
+  const currentFade = getCurrentFade(object, effects, queueIndex);
+  const animatableFade = queueStart > 0 ? getFadeAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const currentRect = getCurrentRect(object, effects, queueIndex);
+  const animatableRect = queueStart > 0 ? getRectAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const currentRotate = getCurrentRotate(object, effects, queueIndex);
+  const animatableRotate = queueStart > 0 ? getRotateAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const currentScale = getCurrentScale(object, effects, queueIndex);
+  const animatableScale = queueStart > 0 ? getScaleAnimation(object, effects, queueIndex, queuePosition) : undefined;
 
   return (
     <Animator

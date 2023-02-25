@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MoveEffect } from 'model/effect';
-import { QueueObjectType } from 'model/object';
 import { QueueRect } from 'model/property';
+import { NormalizedQueueEffect } from 'store/effect/reducer';
+import { NormalizedQueueObjectType } from 'store/object/reducer';
 
 export interface RectAnimation {
   fromRect: QueueRect;
@@ -12,15 +13,20 @@ export interface RectAnimation {
  * @description
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환
  */
-export const getCurrentRect = (object: QueueObjectType, index: number): QueueRect => {
-  return object.effects
+export const getCurrentRect = (
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
+  index: number,
+): QueueRect => {
+  return effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is MoveEffect => effect.type === 'rect')
     .reduce<QueueRect>((_, effect) => effect.prop, object.rect);
 };
 
 export const getRectAnimation = (
-  object: QueueObjectType,
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): RectAnimation | null => {
@@ -28,9 +34,9 @@ export const getRectAnimation = (
     return null;
   }
 
-  const fromRect = getCurrentRect(object, position === 'forward' ? index - 1 : index + 1);
+  const fromRect = getCurrentRect(object, effects, position === 'forward' ? index - 1 : index + 1);
 
-  const moveEffect = object.effects.find((effect): effect is MoveEffect => {
+  const moveEffect = effects.find((effect): effect is MoveEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
     return effect.index === targetIndex && effect.type === 'rect';
   });
@@ -44,7 +50,7 @@ export const getRectAnimation = (
       ? {
           ...moveEffect,
           prop: {
-            ...getCurrentRect(object, index),
+            ...getCurrentRect(object, effects, index),
           },
         }
       : moveEffect;

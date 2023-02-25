@@ -1,22 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RotateEffect } from 'model/effect';
-import { QueueObjectType } from 'model/object';
 import { QueueRotate } from 'model/property';
+import { NormalizedQueueEffect } from 'store/effect/reducer';
+import { NormalizedQueueObjectType } from 'store/object/reducer';
 
 export interface RotateAnimation {
   fromRotate: QueueRotate;
   rotateEffect: RotateEffect;
 }
 
-export const getCurrentRotate = (object: QueueObjectType, index: number): QueueRotate => {
-  return object.effects
+export const getCurrentRotate = (
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
+  index: number,
+): QueueRotate => {
+  return effects
     .filter((effect) => effect.index <= index)
     .filter((effect): effect is RotateEffect => effect.type === 'rotate')
     .reduce<QueueRotate>((_, effect) => effect.prop, object.rotate);
 };
 
 export const getRotateAnimation = (
-  object: QueueObjectType,
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): RotateAnimation | null => {
@@ -24,9 +30,9 @@ export const getRotateAnimation = (
     return null;
   }
 
-  const fromRotate = getCurrentRotate(object, position === 'forward' ? index - 1 : index + 1);
+  const fromRotate = getCurrentRotate(object, effects, position === 'forward' ? index - 1 : index + 1);
 
-  const rotateEffect = object.effects.find((effect): effect is RotateEffect => {
+  const rotateEffect = effects.find((effect): effect is RotateEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
     return effect.index === targetIndex && effect.type === 'rotate';
   });
@@ -40,7 +46,7 @@ export const getRotateAnimation = (
       ? {
           ...rotateEffect,
           prop: {
-            ...getCurrentRotate(object, index),
+            ...getCurrentRotate(object, effects, index),
           },
         }
       : rotateEffect;
