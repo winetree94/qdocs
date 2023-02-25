@@ -155,6 +155,7 @@ export const QueueEditor = () => {
           result.effects.push({
             type: 'rect',
             duration: 1000,
+            delay: 0,
             objectId: uuid,
             index: settings.queueIndex,
             timing: 'linear',
@@ -238,6 +239,7 @@ export const QueueEditor = () => {
         effectSlice.actions.upsertEffect({
           type: 'rect',
           duration: 1000,
+          delay: 0,
           objectId: uuid,
           timing: 'linear',
           index: settings.queueIndex,
@@ -271,6 +273,7 @@ export const QueueEditor = () => {
         effectSlice.actions.upsertEffect({
           type: 'rotate',
           duration: 1000,
+          delay: 0,
           objectId: uuid,
           timing: 'linear',
           index: settings.queueIndex,

@@ -61,6 +61,7 @@ export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: n
         timing: 'linear',
         objectId,
         duration: 0,
+        delay: 0,
         index: queueIndex,
         prop: undefined,
       },

@@ -5,6 +5,7 @@ export interface BaseQueueEffect<T> {
   type: keyof Omit<QueueObjectType, 'effects' | 'type' | 'uuid'> | 'create' | 'remove';
   objectId: string;
   index: number;
+  delay: number;
   duration: number;
   timing: AnimatorTimingFunctionType;
   prop: T;

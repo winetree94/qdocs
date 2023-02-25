@@ -26,6 +26,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
 
   const firstObjectEffect = effect;
   const convertedDuration = firstObjectEffect.duration / 1000;
+  const convertedDealy = firstObjectEffect.delay / 1000;
 
   const handleDurationChange = (durationValue: number | number[] | string): void => {
     let duration = 1000;
@@ -58,6 +59,37 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
     });
   };
 
+  const handleDelayChange = (delayValue: number | number[] | string): void => {
+    let delay = 1000;
+
+    if (typeof delayValue === 'number') {
+      delay = delayValue;
+    }
+
+    if (Array.isArray(delayValue)) {
+      delay = delayValue[0];
+    }
+
+    if (typeof delayValue === 'string') {
+      delay = parseFloat(delayValue);
+    }
+
+    settings.selectedObjectUUIDs.forEach((objectUUID) => {
+      const nextEffect: NormalizedQueueEffect = {
+        ...effect,
+        delay: delay * 1000,
+      };
+
+      dispatch(
+        effectSlice.actions.upsertEffect({
+          ...nextEffect,
+          objectId: objectUUID,
+          index: settings.queueIndex,
+        }),
+      );
+    });
+  };
+
   return (
     <div>
       <p className="text-sm">duration</p>
@@ -78,6 +110,27 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
             step={0.1}
             value={[convertedDuration]}
             onValueChange={(duration): void => handleDurationChange(duration)}
+          />
+        </div>
+      </div>
+      <p className="text-sm">delay</p>
+      <div className="flex items-center gap-2">
+        <div className="w-5/12">
+          <input
+            className="w-full"
+            type="number"
+            step={0.1}
+            value={convertedDealy}
+            onChange={(e): void => handleDelayChange(e.currentTarget.value)}
+          />
+        </div>
+        <div className="flex items-center w-full">
+          <Slider
+            min={0}
+            max={10}
+            step={0.1}
+            value={[convertedDealy]}
+            onValueChange={(duration): void => handleDelayChange(duration)}
           />
         </div>
       </div>

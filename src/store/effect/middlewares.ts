@@ -19,6 +19,7 @@ effectMiddleware.startListening({
       effectSlice.actions.addEffect({
         type: 'create',
         duration: 0,
+        delay: 0,
         index: action.payload.queueIndex,
         objectId: action.payload.object.uuid,
         prop: undefined,
@@ -43,6 +44,7 @@ effectMiddleware.startListening({
         action.payload.objects.map((object) => ({
           type: 'create',
           duration: 0,
+          delay: 0,
           index: action.payload.queueIndex,
           objectId: object.uuid,
           prop: undefined,

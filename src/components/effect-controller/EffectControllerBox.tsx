@@ -50,6 +50,7 @@ const createEffect = (
   const baseQueueEffect: BaseQueueEffect<void> = {
     type: 'fade',
     duration: 1000,
+    delay: 0,
     index: queueIndex,
     objectId: queueObject.uuid,
     timing: 'linear',

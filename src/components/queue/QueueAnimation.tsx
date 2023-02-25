@@ -57,18 +57,22 @@ export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart
     {
       timing: animatableRect?.moveEffect.timing,
       duration: animatableRect?.moveEffect.duration || 0,
+      delay: animatableRect?.moveEffect.delay || 0,
     },
     {
       timing: animatableFade?.fadeEffect.timing,
       duration: animatableFade?.fadeEffect.duration || 0,
+      delay: animatableFade?.fadeEffect.delay || 0,
     },
     {
       timing: animatableScale?.scaleEffect.timing,
       duration: animatableScale?.scaleEffect.duration || 0,
+      delay: animatableScale?.scaleEffect.delay || 0,
     },
     {
       timing: animatableRotate?.rotateEffect.timing,
       duration: animatableRotate?.rotateEffect.duration || 0,
+      delay: animatableRotate?.rotateEffect.delay || 0,
     },
   ];
 

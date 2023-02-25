@@ -8,8 +8,9 @@ export interface AnimatorsProps {
   children?: (values: number[]) => React.ReactNode;
   start?: number;
   animations: {
+    delay?: number;
     timing?: AnimatorTimingFunctionType;
-    duration: number;
+    duration?: number;
   }[];
 }
 
@@ -23,9 +24,11 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
 
   const calculateProgress = useCallback(
     (time: number) => {
-      const currentProgresses = animations.map(({ duration = 0, timing = 'linear' }) => {
-        const timeFraction = (time - start) / duration;
-        const progress = getTimingFunction(timing)(timeFraction);
+      const currentProgresses = animations.map(({ duration = 0, delay = 1000, timing = 'linear' }) => {
+        const delayedTimeFraction = (time - start) / delay;
+        if (delayedTimeFraction < 1) return 0;
+        const animationTimeFraction = (time - start - delay) / duration;
+        const progress = getTimingFunction(timing)(animationTimeFraction);
         return Math.max(Math.min(1, progress), 0);
       });
       return currentProgresses;
