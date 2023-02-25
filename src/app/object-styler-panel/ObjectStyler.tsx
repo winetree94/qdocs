@@ -17,10 +17,11 @@ import {
   useState,
 } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { NormalizedQueueObjectType, objectsSlice } from 'store/object/reducer';
+import { objectsSlice } from 'store/object/reducer';
 import classes from './ObjectStyler.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectSelectors } from 'store/object/selectors';
+import { NormalizedQueueObjectType } from '../../store/object/model';
 
 // context start
 interface ObjectStylerContextValue {

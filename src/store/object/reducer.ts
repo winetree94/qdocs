@@ -1,10 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { QueueObjectType } from 'model/object';
 import { loadDocument } from 'store/document/actions';
-
-export interface NormalizedQueueObjectType extends Omit<QueueObjectType, 'effects'> {
-  pageId: string;
-}
+import { NormalizedQueueObjectType } from './model';
 
 export const objectEntityAdapter = createEntityAdapter<NormalizedQueueObjectType>({
   selectId: (object) => object.id,

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
-import { NormalizedQueueEffect } from 'store/effect/reducer';
-import { NormalizedQueueObjectType } from 'store/object/reducer';
+import { NormalizedQueueObjectType } from '../../../store/object/model';
+import { NormalizedQueueEffect } from '../../../store/effect';
 
 export interface RotateAnimation {
   fromRotate: QueueRotate;

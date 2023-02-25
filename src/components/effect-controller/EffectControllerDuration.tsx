@@ -3,8 +3,9 @@ import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice, getEffectEntityKey, NormalizedQueueEffect } from 'store/effect/reducer';
+import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
+import { NormalizedQueueEffect } from '../../store/effect';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];

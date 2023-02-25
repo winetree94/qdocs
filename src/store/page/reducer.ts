@@ -1,11 +1,6 @@
 import { createEntityAdapter, createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
-import { QueueDocumentPage } from 'model/document';
 import { loadDocument } from 'store/document/actions';
-
-export interface NormalizedQueueDocumentPage extends Omit<QueueDocumentPage, 'objects'> {
-  index: number;
-  documentId: string;
-}
+import { NormalizedQueueDocumentPage } from './model';
 
 export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage>({
   selectId: (page) => page.id,

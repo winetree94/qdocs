@@ -142,7 +142,7 @@ export const ObjectPanel: FunctionComponent = () => {
       return (iconClassName) => {
         const figure = createDefaultShape(queueDocument!.documentRect, settings.queueIndex, iconClassName);
         const object = {
-          pageId: queueDocument!.pages[settings.queuePage].id,
+          pageId: settings.queuePage,
           ...figure,
         };
         delete object.effects; // 불필요한 값 스토어에 들어가는 것 방지, create 함수들이 스토어 모델을 반환하도록 개선 필요

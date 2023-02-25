@@ -1,8 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { QueueEffectType } from 'model/effect';
 import { loadDocument } from 'store/document/actions';
-
-export type NormalizedQueueEffect = QueueEffectType;
+import { NormalizedQueueEffect } from './model';
 
 export const getEffectEntityKey = (effect: Pick<NormalizedQueueEffect, 'index' | 'objectId' | 'type'>) =>
   `${effect.objectId}-${effect.index}-${effect.type}`;

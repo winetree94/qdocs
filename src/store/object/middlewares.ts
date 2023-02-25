@@ -1,8 +1,9 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { createTypedListenerMiddleware } from 'middleware';
 import { pagesSlice } from 'store/page/reducer';
-import { NormalizedQueueObjectType, objectsSlice } from './reducer';
+import { objectsSlice } from './reducer';
 import { ObjectSelectors } from './selectors';
+import { NormalizedQueueObjectType } from './model';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 

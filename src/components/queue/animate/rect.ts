@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
-import { NormalizedQueueEffect } from 'store/effect/reducer';
-import { NormalizedQueueObjectType } from 'store/object/reducer';
+import { NormalizedQueueObjectType } from '../../../store/object/model';
+import { NormalizedQueueEffect } from '../../../store/effect';
 
 export interface RectAnimation {
   fromRect: QueueRect;

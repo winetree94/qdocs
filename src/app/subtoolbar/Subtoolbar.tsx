@@ -7,10 +7,8 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
-import { useSelector } from 'react-redux';
 import { documentSettingsSlice } from 'store/settings/reducer';
 import { SettingSelectors } from 'store/settings/selectors';
-import { PageSelectors } from 'store/page/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { EffectSelectors } from 'store/effect/selectors';
 import { SettingsActions } from 'store/settings/actions';
@@ -20,7 +18,6 @@ export const QueueSubtoolbar = () => {
   const eventDispatch = useEventDispatch();
 
   const settings = useAppSelector(SettingSelectors.settings);
-  const pages = useSelector(PageSelectors.all);
 
   const ranges: number[] = [];
   const { queueIndex } = settings;
@@ -30,9 +27,7 @@ export const QueueSubtoolbar = () => {
     ranges.push(i);
   }
 
-  const byEffectIndex = useAppSelector((state) =>
-    EffectSelectors.allByPageAndEffectIndex(state, pages[settings.queuePage].id),
-  );
+  const byEffectIndex = useAppSelector((state) => EffectSelectors.allByPageAndEffectIndex(state, settings.queuePage));
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
     dispatch(

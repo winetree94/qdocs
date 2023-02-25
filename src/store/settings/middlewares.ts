@@ -29,27 +29,28 @@ settingsMiddleware.startListening({
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
-    const pageId = pages[settings.queuePage].id;
+    const pageId = settings.queuePage;
     const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.id));
     const pageIndex = pages.findIndex((page) => page.id === pageId);
     const queueIndex = settings.queueIndex;
 
-    let targetPage = pageIndex;
+    const targetPageId = pages[pageIndex].id;
+    let targetPageIndex = pageIndex;
     let targetQueue = queueIndex;
     if (byEffects[pageIndex][queueIndex + 1]) {
       targetQueue = queueIndex + 1;
     } else if (byEffects[pageIndex + 1]) {
-      targetPage = pageIndex + 1;
+      targetPageIndex = pageIndex + 1;
       targetQueue = 0;
     }
 
-    if (settings.queuePage === targetPage && settings.queueIndex === targetQueue) {
+    if (pageId === targetPageId && settings.queueIndex === targetQueue) {
       return;
     }
 
     api.dispatch(
       documentSettingsSlice.actions.updateSettings({
-        queuePage: targetPage,
+        queuePage: targetPageIndex,
         queueIndex: targetQueue,
         queuePosition: 'forward',
         queueStart: performance.now(),
@@ -68,27 +69,28 @@ settingsMiddleware.startListening({
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
-    const pageId = pages[settings.queuePage].id;
+    const pageId = settings.queuePage;
     const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.id));
     const pageIndex = pages.findIndex((page) => page.id === pageId);
     const queueIndex = settings.queueIndex;
 
-    let targetPage = pageIndex;
+    const targetPageId = pages[pageIndex].id;
+    let targetPageIndex = pageIndex;
     let targetQueue = queueIndex;
     if (byEffects[pageIndex][queueIndex - 1]) {
       targetQueue = queueIndex - 1;
     } else if (byEffects[pageIndex - 1]) {
-      targetPage = pageIndex - 1;
-      targetQueue = byEffects[targetPage].length - 1;
+      targetPageIndex = pageIndex - 1;
+      targetQueue = byEffects[targetPageIndex].length - 1;
     }
 
-    if (settings.queuePage === targetPage && settings.queueIndex === targetQueue) {
+    if (pageId === targetPageId && settings.queueIndex === targetQueue) {
       return;
     }
 
     api.dispatch(
       documentSettingsSlice.actions.updateSettings({
-        queuePage: targetPage,
+        queuePage: targetPageIndex,
         queueIndex: targetQueue,
         queuePosition: 'backward',
         queueStart: performance.now(),

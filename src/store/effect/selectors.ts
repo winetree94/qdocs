@@ -1,10 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { NormalizedQueueObjectType } from 'store/object/reducer';
 import { ObjectSelectors } from 'store/object/selectors';
 import { PageSelectors } from 'store/page/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectEntityAdapter, NormalizedQueueEffect } from './reducer';
+import { effectEntityAdapter } from './reducer';
+import { NormalizedQueueObjectType } from '../object/model';
+import { NormalizedQueueEffect } from './model';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -63,7 +64,7 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
 const allEffectedObjects = createSelector(
   [SettingSelectors.settings, PageSelectors.all, ObjectSelectors.all, groupByObjectId],
   (settings, pages, objects, effects) => {
-    const pageId = pages[settings.queuePage].id;
+    const pageId = settings.queuePage;
     return objects
       .filter((object) => object.pageId === pageId)
       .reduce<NormalizedQueueObjectType[]>((result, current) => {

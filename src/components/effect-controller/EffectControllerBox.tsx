@@ -8,12 +8,12 @@ import { QueueButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
-import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
-import { NormalizedQueueObjectType } from 'store/object/reducer';
+import { effectSlice } from 'store/effect/reducer';
 import { nanoid } from '@reduxjs/toolkit';
+import { NormalizedQueueObjectType } from '../../store/object/model';
+import { NormalizedQueueEffect } from '../../store/effect';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -124,7 +124,6 @@ const createEffect = (
 export const EffectControllerBox = (): ReactElement | null => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const hasSelectedObjects = selectedObjects.length > 0;
   const [firstObject] = selectedObjects;
@@ -146,7 +145,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         settings.queueIndex,
         {
           ...object,
-          pageId: queueDocument!.pages[settings.queuePage].id,
+          pageId: settings.queuePage,
         },
         newEffects,
       );

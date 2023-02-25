@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
-import { QueueDocument } from 'model/document';
+import { createSlice } from '@reduxjs/toolkit';
 import { loadDocument } from 'store/document/actions';
-
-export type NormalizedQueueDocument = Omit<QueueDocument, 'pages'>;
+import { NormalizedQueueDocument } from './model';
 
 export const documentSlice = createSlice({
   name: 'document',

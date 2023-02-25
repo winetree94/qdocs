@@ -26,11 +26,11 @@ export const BottomPanel = () => {
   const [editNamePageId, setEditNamePageId] = useState<EntityId>('');
   const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<EntityId>('');
 
-  const setQueuePageIndex = (index: number): void => {
+  const setQueuePageIndex = (id: string): void => {
     dispatch(
       documentSettingsSlice.actions.setSettings({
         ...settings,
-        queuePage: index,
+        queuePage: id,
         queueIndex: 0,
         queueStart: -1,
         queuePosition: 'pause',
@@ -40,8 +40,8 @@ export const BottomPanel = () => {
     );
   };
 
-  const navigatePage = (index: number): void => {
-    setQueuePageIndex(index);
+  const navigatePage = (id: string): void => {
+    setQueuePageIndex(id);
   };
 
   const movePage = (from: EntityId, to: EntityId): void => {
@@ -55,22 +55,23 @@ export const BottomPanel = () => {
   };
 
   const createPage = (index: number): void => {
-    const id = nanoid();
+    const newId = nanoid();
     dispatch(
       pagesSlice.actions.addPage({
         documentId: document.id,
-        id: id,
+        id: newId,
         index,
         pageName: `Page-${pages.length + 1}`,
       }),
     );
-    setQueuePageIndex(index);
+    setQueuePageIndex(newId);
   };
 
   const removePage = (id: EntityId): void => {
     const index = pages.findIndex((page) => page.id === id);
     dispatch(pagesSlice.actions.removePage(id));
-    setQueuePageIndex(Math.min(index, pages.length - 1));
+    const sliced = pages.slice(0).filter((page) => page.id !== id);
+    setQueuePageIndex(sliced[index]?.id || sliced[sliced.length - 1]?.id);
   };
 
   const onDragStart = (e: React.DragEvent<HTMLSpanElement>, id: EntityId): void => {
@@ -126,7 +127,7 @@ export const BottomPanel = () => {
         <QueueToggleGroup.Root
           type="single"
           value={`${settings.queuePage}`}
-          onValueChange={(value): void => navigatePage(Number(value))}>
+          onValueChange={(value): void => navigatePage(value)}>
           <QueueScrollArea.Root>
             <QueueScrollArea.Viewport>
               <div className={clsx(styles.Pages)}>
@@ -142,7 +143,7 @@ export const BottomPanel = () => {
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       onDoubleClick={(): void => setEditNamePageId(page.id)}>
-                      <QueueToggleGroup.Item value={`${index}`} size="small">
+                      <QueueToggleGroup.Item value={page.id} size="small">
                         {page.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>

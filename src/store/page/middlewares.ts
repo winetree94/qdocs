@@ -1,7 +1,8 @@
 import { isAnyOf } from '@reduxjs/toolkit';
 import { createTypedListenerMiddleware } from 'middleware';
-import { NormalizedQueueDocumentPage, pagesSlice } from './reducer';
+import { pagesSlice } from './reducer';
 import { PageSelectors } from './selectors';
+import { NormalizedQueueDocumentPage } from './model';
 
 export const pageMiddleware = createTypedListenerMiddleware();
 

@@ -1,21 +1,10 @@
 import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
 import { loadDocument } from 'store/document/actions';
-
-export interface QueueDocumentSettings {
-  documentId: string;
-  queuePage: number;
-  queueIndex: number;
-  queueStart: number;
-  queuePosition: 'forward' | 'backward' | 'pause';
-  selectionMode: 'normal' | 'detail';
-  selectedObjectIds: string[];
-  scale: number;
-  presentationMode: boolean;
-}
+import { QueueDocumentSettings } from './model';
 
 const initialState: QueueDocumentSettings = {
   documentId: '',
-  queuePage: 0,
+  queuePage: '',
   queueIndex: 0,
   queueStart: 0,
   queuePosition: 'forward',
@@ -71,13 +60,13 @@ export const documentSettingsSlice = createSlice({
     movePage: (
       state,
       action: PayloadAction<{
-        pageIndex: number;
+        pageIndex: string;
         queueIndex: number;
       }>,
     ) => {
       return {
         ...state,
-        queuePage: Math.max(action.payload.pageIndex, 0),
+        queuePage: action.payload.pageIndex,
         queueIndex: Math.max(action.payload.queueIndex, 0),
         queuePosition: 'pause',
         queueStart: -1,

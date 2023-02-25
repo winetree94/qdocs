@@ -2,17 +2,17 @@
 
 import { QueueObjectType } from 'model/object';
 import { createContext, FunctionComponent } from 'react';
-import { NormalizedQueueObjectType } from 'store/object/reducer';
+import { NormalizedQueueObjectType } from '../../store/object/model';
 
-export interface QueueObjectContainerContextType<T extends QueueObjectType = any> {
+export interface QueueObjectContainerContextType<T extends QueueObjectType> {
   object: T;
   documentScale: number;
   detail: boolean;
   selected: boolean;
 }
 
-export const QueueObjectContainerContext = createContext<QueueObjectContainerContextType>(
-  {} as QueueObjectContainerContextType,
+export const QueueObjectContainerContext = createContext<QueueObjectContainerContextType<any>>(
+  {} as QueueObjectContainerContextType<any>,
 );
 
 export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTMLDivElement> {

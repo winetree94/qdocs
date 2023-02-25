@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { angle } from 'cdk/math/angle';
 import { center } from 'cdk/math/center';
 import clsx from 'clsx';

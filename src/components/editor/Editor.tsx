@@ -14,14 +14,16 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { useEventSelector } from 'cdk/hooks/event-dispatcher';
 import { fitScreenSizeEvent } from 'app/events/event';
 import { documentSettingsSlice } from 'store/settings/reducer';
-import { NormalizedQueueObjectType, objectsSlice } from 'store/object/reducer';
+import { objectsSlice } from 'store/object/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
-import { effectSlice, NormalizedQueueEffect } from 'store/effect/reducer';
+import { effectSlice } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { MoveEffect, RotateEffect } from 'model/effect';
 import { ObjectSelectors } from 'store/object/selectors';
+import { NormalizedQueueObjectType } from '../../store/object/model';
+import { NormalizedQueueEffect } from '../../store/effect';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +33,7 @@ export const QueueEditor = () => {
 
   const queueDocument = useAppSelector(DocumentSelectors.document);
   const settings = useAppSelector(SettingSelectors.settings);
-  const pageId = useAppSelector(SettingSelectors.currentPageId);
+  const pageId = useAppSelector(SettingSelectors.pageId);
   const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, pageId));
   const effects = useAppSelector(EffectSelectors.all);
 
