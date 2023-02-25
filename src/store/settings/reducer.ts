@@ -4,7 +4,7 @@ import { QueueDocumentSettings } from './model';
 
 const initialState: QueueDocumentSettings = {
   documentId: '',
-  queuePage: '',
+  pageId: '',
   queueIndex: 0,
   queueStart: 0,
   queuePosition: 'forward',
@@ -61,13 +61,13 @@ export const documentSettingsSlice = createSlice({
       state,
       action: PayloadAction<{
         pageIndex: string;
-        queueIndex: number;
+        pageId: number;
       }>,
     ) => {
       return {
         ...state,
-        queuePage: action.payload.pageIndex,
-        queueIndex: Math.max(action.payload.queueIndex, 0),
+        pageId: action.payload.pageIndex,
+        queueIndex: Math.max(action.payload.pageId, 0),
         queuePosition: 'pause',
         queueStart: -1,
         selectedObjectIds: [],
@@ -164,6 +164,12 @@ export const documentSettingsSlice = createSlice({
      * @description
      * 새로운 문서 열람시 초기화
      */
-    builder.addCase(loadDocument, () => initialState);
+    builder.addCase(loadDocument, (state, action): QueueDocumentSettings => {
+      return {
+        ...initialState,
+        documentId: action.payload.id,
+        pageId: action.payload.pages[0].id,
+      };
+    });
   },
 });

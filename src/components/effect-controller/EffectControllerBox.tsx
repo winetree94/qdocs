@@ -145,7 +145,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         settings.queueIndex,
         {
           ...object,
-          pageId: settings.queuePage,
+          pageId: settings.pageId,
         },
         newEffects,
       );

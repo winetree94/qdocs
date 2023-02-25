@@ -8,6 +8,13 @@ import { QueueDocument } from 'model/document';
  */
 export const loadDocument = createAction<QueueDocument | null>('Document/setDocument');
 
+/**
+ * @description
+ * 문서를 닫음
+ */
+export const closeDocument = createAction('Document/closeDocument');
+
 export const DocumentActions = {
   loadDocument,
+  closeDocument,
 };

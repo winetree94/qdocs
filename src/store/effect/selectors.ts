@@ -64,7 +64,7 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
 const allEffectedObjects = createSelector(
   [SettingSelectors.settings, PageSelectors.all, ObjectSelectors.all, groupByObjectId],
   (settings, pages, objects, effects) => {
-    const pageId = settings.queuePage;
+    const pageId = settings.pageId;
     return objects
       .filter((object) => object.pageId === pageId)
       .reduce<NormalizedQueueObjectType[]>((result, current) => {

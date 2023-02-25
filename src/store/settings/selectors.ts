@@ -9,7 +9,7 @@ const settings = createSelector(selectSelf, (state) => state);
 
 const documentId = createSelector(selectSelf, (state) => state.documentId);
 
-const pageId = createSelector(selectSelf, (settings) => settings.queuePage);
+const pageId = createSelector(selectSelf, (settings) => settings.pageId);
 
 const queueIndex = createSelector(selectSelf, (state) => state.queueIndex);
 

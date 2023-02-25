@@ -8,7 +8,7 @@ export interface QueueDocumentSettings {
    * @description
    * 현재 선택된 page id
    */
-  queuePage: string;
+  pageId: string;
   /**
    * @description
    * 현재 선택된 queue index

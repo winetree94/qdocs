@@ -30,7 +30,7 @@ export const BottomPanel = () => {
     dispatch(
       documentSettingsSlice.actions.setSettings({
         ...settings,
-        queuePage: id,
+        pageId: id,
         queueIndex: 0,
         queueStart: -1,
         queuePosition: 'pause',
@@ -126,7 +126,7 @@ export const BottomPanel = () => {
       <div className={clsx(styles.pageHolder)}>
         <QueueToggleGroup.Root
           type="single"
-          value={`${settings.queuePage}`}
+          value={`${settings.pageId}`}
           onValueChange={(value): void => navigatePage(value)}>
           <QueueScrollArea.Root>
             <QueueScrollArea.Viewport>
