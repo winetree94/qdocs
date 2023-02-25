@@ -1,14 +1,16 @@
+import { EntityId } from '@reduxjs/toolkit';
+
 export interface QueueDocumentSettings {
   /**
    * @description
    * 현재 열려있는 문서 id
    */
-  documentId: string;
+  documentId: EntityId;
   /**
    * @description
    * 현재 선택된 page id
    */
-  pageId: string;
+  pageId: EntityId;
   /**
    * @description
    * 현재 선택된 queue index
@@ -33,7 +35,7 @@ export interface QueueDocumentSettings {
    * @description
    * 선택된 오브젝트 id 목록
    */
-  selectedObjectIds: string[];
+  selectedObjectIds: EntityId[];
   /**
    * @description
    * 현재 문서의 스케일

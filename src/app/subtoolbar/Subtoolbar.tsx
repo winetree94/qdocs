@@ -7,7 +7,6 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { QueueIconButton } from '../../components/button/Button';
 import styles from './Subtoolbar.module.scss';
-import { documentSettingsSlice } from 'store/settings/reducer';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { EffectSelectors } from 'store/effect/selectors';
@@ -31,7 +30,7 @@ export const QueueSubtoolbar = () => {
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
     dispatch(
-      documentSettingsSlice.actions.setQueueIndex({
+      SettingsActions.setQueueIndex({
         queueIndex: targetIndex,
         play: play,
       }),
@@ -39,7 +38,7 @@ export const QueueSubtoolbar = () => {
   };
 
   const onPresentationStartClick = (): void => {
-    dispatch(documentSettingsSlice.actions.setPresentationMode(true));
+    dispatch(SettingsActions.setPresentationMode(true));
     document.documentElement.requestFullscreen();
   };
 
@@ -108,10 +107,10 @@ export const QueueSubtoolbar = () => {
             <QueueIconButton onClick={() => eventDispatch(fitScreenSizeEvent())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-fullscreen-fill'} />
             </QueueIconButton>
-            <QueueIconButton onClick={() => dispatch(documentSettingsSlice.actions.decreaseScale())}>
+            <QueueIconButton onClick={() => dispatch(SettingsActions.decreaseScale())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-subtract-line'} />
             </QueueIconButton>
-            <QueueIconButton onClick={() => dispatch(documentSettingsSlice.actions.increaseScale())}>
+            <QueueIconButton onClick={() => dispatch(SettingsActions.increaseScale())}>
               <SvgRemixIcon width={15} height={15} icon={'ri-add-line'} />
             </QueueIconButton>
           </div>

@@ -1,6 +1,7 @@
-import { createEntityAdapter, createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
-import { loadDocument } from 'store/document/actions';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { NormalizedQueueDocumentPage } from './model';
+import { DocumentActions } from '../document';
+import { PageActions } from './actions';
 
 export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage>({
   selectId: (page) => page.id,
@@ -10,19 +11,25 @@ export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage
 export const pagesSlice = createSlice({
   name: 'pages',
   initialState: pageEntityAdapter.getInitialState(),
-  reducers: {
-    addPage: pageEntityAdapter.addOne,
-    removePage: pageEntityAdapter.removeOne,
-    updatePage: pageEntityAdapter.updateOne,
-    updatePages: pageEntityAdapter.updateMany,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(PageActions.addPage, (state, action) => {
+      return pageEntityAdapter.addOne(state, action.payload);
+    });
 
-    switchPageIndex: (
-      state,
-      action: PayloadAction<{
-        from: EntityId;
-        to: EntityId;
-      }>,
-    ) => {
+    builder.addCase(PageActions.removePage, (state, action) => {
+      return pageEntityAdapter.removeOne(state, action.payload);
+    });
+
+    builder.addCase(PageActions.updatePage, (state, action) => {
+      return pageEntityAdapter.updateOne(state, action.payload);
+    });
+
+    builder.addCase(PageActions.updatePages, (state, action) => {
+      return pageEntityAdapter.updateMany(state, action.payload);
+    });
+
+    builder.addCase(PageActions.switchPageIndex, (state, action) => {
       const { from, to } = action.payload;
       const fromPage = state.entities[from];
       const toPage = state.entities[to];
@@ -41,16 +48,9 @@ export const pagesSlice = createSlice({
         { id: from, changes: fromPage },
         { id: to, changes: toPage },
       ]);
-    },
+    });
 
-    copyPage: (
-      state,
-      action: PayloadAction<{
-        fromId: EntityId;
-        newId: string;
-        index: number;
-      }>,
-    ) => {
+    builder.addCase(PageActions.copyPage, (state, action) => {
       const page = state.entities[action.payload.fromId];
 
       if (!page) {
@@ -66,10 +66,9 @@ export const pagesSlice = createSlice({
       };
 
       return pageEntityAdapter.addOne(state, newPage);
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(loadDocument, (state, action) => {
+    });
+
+    builder.addCase(DocumentActions.loadDocument, (state, action) => {
       return pageEntityAdapter.setAll(state, {
         ...action.payload.pages.map((page, index) => ({
           documentId: action.payload.id,

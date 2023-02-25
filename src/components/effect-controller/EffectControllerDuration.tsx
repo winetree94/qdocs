@@ -3,9 +3,9 @@ import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
+import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
-import { NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -51,7 +51,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       };
 
       dispatch(
-        effectSlice.actions.upsertEffect({
+        EffectActions.upsertEffect({
           ...nextEffect,
           objectId: objectId,
           index: settings.queueIndex,
@@ -82,7 +82,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       };
 
       dispatch(
-        effectSlice.actions.upsertEffect({
+        EffectActions.upsertEffect({
           ...nextEffect,
           objectId: objectId,
           index: settings.queueIndex,

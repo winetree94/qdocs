@@ -3,8 +3,9 @@ import { FadeEffect } from 'model/effect';
 import { Slider } from 'components/slider';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { effectSlice, getEffectEntityKey } from 'store/effect/reducer';
+import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
+import { EffectActions } from '../../store/effect';
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -46,7 +47,7 @@ export const EffectControllerFade = (): ReactElement => {
       };
 
       dispatch(
-        effectSlice.actions.upsertEffect({
+        EffectActions.upsertEffect({
           ...nextEffect,
           objectId: objectId,
           index: settings.queueIndex,

@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loadDocument } from 'store/document/actions';
 import { NormalizedQueueDocument } from './model';
+import { DocumentActions } from './actions';
 
 export const documentSlice = createSlice({
   name: 'document',
   initialState: null as NormalizedQueueDocument,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loadDocument, (state, action): NormalizedQueueDocument => {
+    builder.addCase(DocumentActions.loadDocument, (state, action): NormalizedQueueDocument => {
       return {
         id: action.payload.id,
         documentName: action.payload.documentName,

@@ -13,17 +13,17 @@ import { PresentationRemote } from './PresentationRemote';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { useEventSelector } from 'cdk/hooks/event-dispatcher';
 import { fitScreenSizeEvent } from 'app/events/event';
-import { documentSettingsSlice } from 'store/settings/reducer';
-import { objectsSlice } from 'store/object/reducer';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
-import { effectSlice } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { MoveEffect, RotateEffect } from 'model/effect';
 import { ObjectSelectors } from 'store/object/selectors';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import { NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { EntityId } from '@reduxjs/toolkit';
+import { SettingsActions } from '../../store/settings';
+import { ObjectActions } from '../../store/object';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();
@@ -83,7 +83,7 @@ export const QueueEditor = () => {
     if (settings.scale === targetScale) {
       return;
     }
-    dispatch(documentSettingsSlice.actions.setScale(targetScale));
+    dispatch(SettingsActions.setScale(targetScale));
   }, [dispatch, queueDocument, settings]);
 
   // 최초 렌더링 시 스케일 계산
@@ -100,14 +100,14 @@ export const QueueEditor = () => {
     const selected = settings.selectedObjectIds.includes(object.id);
     if (!event.shiftKey && !selected) {
       dispatch(
-        documentSettingsSlice.actions.setSelection({
+        SettingsActions.setSelection({
           ...settings,
           selectionMode: 'normal',
           ids: [object.id],
         }),
       );
     } else {
-      dispatch(documentSettingsSlice.actions.addSelection(object.id));
+      dispatch(SettingsActions.addSelection(object.id));
     }
   };
 
@@ -117,7 +117,7 @@ export const QueueEditor = () => {
   ): void => {
     event.stopPropagation();
     dispatch(
-      documentSettingsSlice.actions.setSelection({
+      SettingsActions.setSelection({
         selectionMode: 'detail',
         id: object.id,
       }),
@@ -135,7 +135,7 @@ export const QueueEditor = () => {
     const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
     const updateModel = settings.selectedObjectIds.reduce<{
-      objects: { id: string; changes: { rect: QueueRect } }[];
+      objects: { id: EntityId; changes: { rect: QueueRect } }[];
       effects: NormalizedQueueEffect[];
     }>(
       (result, id) => {
@@ -178,10 +178,10 @@ export const QueueEditor = () => {
     );
 
     if (updateModel.effects.length) {
-      dispatch(effectSlice.actions.upsertEffects(updateModel.effects));
+      dispatch(EffectActions.upsertEffects(updateModel.effects));
     }
     if (updateModel.objects.length) {
-      dispatch(objectsSlice.actions.updateObjects(updateModel.objects));
+      dispatch(ObjectActions.updateObjects(updateModel.objects));
     }
   };
 
@@ -215,17 +215,17 @@ export const QueueEditor = () => {
       .map(([id]) => id);
 
     dispatch(
-      documentSettingsSlice.actions.setSelection({
+      SettingsActions.setSelection({
         selectionMode: 'normal',
         ids: rangeObjectIds,
       }),
     );
   };
 
-  const resizeObjectRect = (id: string, rect: ResizerEvent): void => {
+  const resizeObjectRect = (id: EntityId, rect: ResizerEvent): void => {
     if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
       dispatch(
-        objectsSlice.actions.updateObject({
+        ObjectActions.updateObject({
           id: id,
           changes: {
             rect: {
@@ -238,7 +238,7 @@ export const QueueEditor = () => {
     } else {
       const existRectEffect = queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'rect') as MoveEffect;
       dispatch(
-        effectSlice.actions.upsertEffect({
+        EffectActions.upsertEffect({
           type: 'rect',
           duration: 1000,
           delay: 0,
@@ -255,10 +255,10 @@ export const QueueEditor = () => {
     }
   };
 
-  const updateObjectRotate = (id: string, degree: number): void => {
+  const updateObjectRotate = (id: EntityId, degree: number): void => {
     if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
       dispatch(
-        objectsSlice.actions.updateObject({
+        ObjectActions.updateObject({
           id: id,
           changes: {
             rotate: {
@@ -272,7 +272,7 @@ export const QueueEditor = () => {
         (effect) => effect.type === 'rotate',
       ) as RotateEffect;
       dispatch(
-        effectSlice.actions.upsertEffect({
+        EffectActions.upsertEffect({
           type: 'rotate',
           duration: 1000,
           delay: 0,
@@ -296,7 +296,7 @@ export const QueueEditor = () => {
     if (settings.scale === scale) {
       return;
     }
-    dispatch(documentSettingsSlice.actions.setScale(scale));
+    dispatch(SettingsActions.setScale(scale));
   }, [dispatch, queueDocument, settings.scale]);
 
   useEffect(() => {
@@ -311,7 +311,7 @@ export const QueueEditor = () => {
 
   const onTextEdit = (object: NormalizedQueueObjectType, text: string): void => {
     dispatch(
-      objectsSlice.actions.updateObject({
+      ObjectActions.updateObject({
         id: object.id,
         changes: {
           text: {
@@ -323,10 +323,10 @@ export const QueueEditor = () => {
     );
   };
 
-  const onObjectContextMenuOpenChange = (id: string, open: boolean): void => {
+  const onObjectContextMenuOpenChange = (id: EntityId, open: boolean): void => {
     if (open && !settings.selectedObjectIds.includes(id)) {
       dispatch(
-        documentSettingsSlice.actions.setSelection({
+        SettingsActions.setSelection({
           selectionMode: 'normal',
           ids: [id],
         }),
@@ -339,7 +339,7 @@ export const QueueEditor = () => {
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
         <QueueScrollArea.Root
           className={clsx(styles.ScrollAreaRoot)}
-          onMouseDown={() => dispatch(documentSettingsSlice.actions.resetSelection())}>
+          onMouseDown={() => dispatch(SettingsActions.resetSelection())}>
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
               scale={settings.scale}

@@ -1,4 +1,4 @@
-import { createSelector } from '@reduxjs/toolkit';
+import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { ObjectSelectors } from 'store/object/selectors';
 import { PageSelectors } from 'store/page/selectors';
@@ -15,15 +15,15 @@ const ids = selectors.selectIds;
 const byId = selectors.selectById;
 const entities = selectors.selectEntities;
 
-const byIds = createSelector([entities, (_: RootState, ids: string[]) => ids], (state, ids) => {
+const byIds = createSelector([entities, (_: RootState, ids: EntityId[]) => ids], (state, ids) => {
   return ids.map((id) => state[id]);
 });
 
-const byObjectId = createSelector([entities, (_: RootState, id: string) => id], (state, id) => {
+const byObjectId = createSelector([entities, (_: RootState, id: EntityId) => id], (state, id) => {
   return Object.values(state).filter(({ objectId }) => objectId === id);
 });
 
-const allOfObjectId = createSelector([all, (_: RootState, id: string) => id], (effects, id) => {
+const allOfObjectId = createSelector([all, (_: RootState, id: EntityId) => id], (effects, id) => {
   return effects.filter(({ objectId }) => objectId === id);
 });
 
@@ -32,7 +32,7 @@ const allByPageId = createSelector([all, ObjectSelectors.idSetOfPageId], (effect
 });
 
 const groupByObjectId = createSelector([all], (effects) => {
-  return effects.reduce<Record<string, NormalizedQueueEffect[]>>((result, effect) => {
+  return effects.reduce<Record<EntityId, NormalizedQueueEffect[]>>((result, effect) => {
     if (!result[effect.objectId]) {
       result[effect.objectId] = [];
     }

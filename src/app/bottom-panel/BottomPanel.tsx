@@ -9,12 +9,11 @@ import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { documentSettingsSlice } from 'store/settings/reducer';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
-import { pagesSlice } from 'store/page/reducer';
 import { PageSelectors } from 'store/page/selectors';
 import { DocumentSelectors } from 'store/document/selectors';
-import { SettingSelectors } from 'store/settings/selectors';
+import { PageActions } from '../../store/page';
+import { SettingsActions, SettingSelectors } from '../../store/settings';
 
 export const BottomPanel = () => {
   const dispatch = useAppDispatch();
@@ -26,9 +25,9 @@ export const BottomPanel = () => {
   const [editNamePageId, setEditNamePageId] = useState<EntityId>('');
   const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<EntityId>('');
 
-  const setQueuePageIndex = (id: string): void => {
+  const setQueuePageIndex = (id: EntityId): void => {
     dispatch(
-      documentSettingsSlice.actions.setSettings({
+      SettingsActions.setSettings({
         ...settings,
         pageId: id,
         queueIndex: 0,
@@ -46,7 +45,7 @@ export const BottomPanel = () => {
 
   const movePage = (from: EntityId, to: EntityId): void => {
     dispatch(
-      pagesSlice.actions.switchPageIndex({
+      PageActions.switchPageIndex({
         from: from,
         to: to,
       }),
@@ -57,7 +56,7 @@ export const BottomPanel = () => {
   const createPage = (index: number): void => {
     const newId = nanoid();
     dispatch(
-      pagesSlice.actions.addPage({
+      PageActions.addPage({
         documentId: document.id,
         id: newId,
         index,
@@ -69,7 +68,7 @@ export const BottomPanel = () => {
 
   const removePage = (id: EntityId): void => {
     const index = pages.findIndex((page) => page.id === id);
-    dispatch(pagesSlice.actions.removePage(id));
+    dispatch(PageActions.removePage(id));
     const sliced = pages.slice(0).filter((page) => page.id !== id);
     setQueuePageIndex(sliced[index]?.id || sliced[sliced.length - 1]?.id);
   };
@@ -95,7 +94,7 @@ export const BottomPanel = () => {
 
   const onPageNameEdit = (pageName: string, id: EntityId): void => {
     dispatch(
-      pagesSlice.actions.updatePage({
+      PageActions.updatePage({
         id: id,
         changes: {
           pageName: pageName.trim(),
@@ -108,7 +107,7 @@ export const BottomPanel = () => {
   const onPageCopy = (index: number): void => {
     const newId = nanoid();
     dispatch(
-      pagesSlice.actions.copyPage({
+      PageActions.copyPage({
         fromId: pages[index].id,
         index: index,
         newId: newId,
@@ -143,7 +142,7 @@ export const BottomPanel = () => {
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       onDoubleClick={(): void => setEditNamePageId(page.id)}>
-                      <QueueToggleGroup.Item value={page.id} size="small">
+                      <QueueToggleGroup.Item value={`${page.id}`} size="small">
                         {page.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>

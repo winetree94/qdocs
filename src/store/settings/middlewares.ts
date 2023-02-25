@@ -1,10 +1,9 @@
 import { createTypedListenerMiddleware } from 'middleware';
 import { EffectSelectors } from 'store/effect/selectors';
-import { objectsSlice } from 'store/object/reducer';
 import { PageSelectors } from 'store/page/selectors';
 import { SettingsActions } from './actions';
-import { documentSettingsSlice } from './reducer';
 import { SettingSelectors } from './selectors';
+import { ObjectActions } from '../object';
 
 export const settingsMiddleware = createTypedListenerMiddleware();
 
@@ -13,9 +12,9 @@ export const settingsMiddleware = createTypedListenerMiddleware();
  * 제거된 객체의 선택 상태를 해제
  */
 settingsMiddleware.startListening({
-  actionCreator: objectsSlice.actions.removeMany,
+  actionCreator: ObjectActions.removeMany,
   effect: (action, api) => {
-    api.dispatch(documentSettingsSlice.actions.removeSelection([...action.payload]));
+    api.dispatch(SettingsActions.removeSelection([...action.payload]));
   },
 });
 
@@ -48,11 +47,13 @@ settingsMiddleware.startListening({
     }
 
     api.dispatch(
-      documentSettingsSlice.actions.updateSettings({
-        pageId: targetPageId,
-        queueIndex: targetQueue,
-        queuePosition: 'forward',
-        queueStart: performance.now(),
+      SettingsActions.updateSettings({
+        changes: {
+          pageId: targetPageId,
+          queueIndex: targetQueue,
+          queuePosition: 'forward',
+          queueStart: performance.now(),
+        },
       }),
     );
   },
@@ -87,11 +88,13 @@ settingsMiddleware.startListening({
     }
 
     api.dispatch(
-      documentSettingsSlice.actions.updateSettings({
-        pageId: targetPageId,
-        queueIndex: targetQueue,
-        queuePosition: 'backward',
-        queueStart: performance.now(),
+      SettingsActions.updateSettings({
+        changes: {
+          pageId: targetPageId,
+          queueIndex: targetQueue,
+          queuePosition: 'backward',
+          queueStart: performance.now(),
+        },
       }),
     );
   },

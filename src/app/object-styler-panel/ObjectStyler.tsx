@@ -17,11 +17,12 @@ import {
   useState,
 } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { objectsSlice } from 'store/object/reducer';
 import classes from './ObjectStyler.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectSelectors } from 'store/object/selectors';
 import { NormalizedQueueObjectType } from '../../store/object/model';
+import { EntityId } from '@reduxjs/toolkit';
+import { ObjectActions } from '../../store/object';
 
 // context start
 interface ObjectStylerContextValue {
@@ -231,7 +232,7 @@ const ObjectStyleText = (): ReactElement => {
   const updateText = useCallback(
     (text: Partial<QueueText>): void => {
       dispatch(
-        objectsSlice.actions.updateObject({
+        ObjectActions.updateObject({
           id: firstObject.id,
           changes: {
             text: {
@@ -358,7 +359,7 @@ export const ObjectStylerPanel = (): ReactElement | null => {
 
   const handleStyleChange = (value: StyleChangeValue): void => {
     const updateModels = selectedObjects.map<{
-      id: string;
+      id: EntityId;
       changes: Partial<NormalizedQueueObjectType>;
     }>((object) => ({
       id: object.id,
@@ -397,7 +398,7 @@ export const ObjectStylerPanel = (): ReactElement | null => {
         }
       })(),
     }));
-    dispatch(objectsSlice.actions.updateObjects(updateModels));
+    dispatch(ObjectActions.updateObjects(updateModels));
   };
 
   return (

@@ -10,10 +10,9 @@ import { EffectControllerTimingFunction } from 'components/effect-controller/Eff
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
-import { effectSlice } from 'store/effect/reducer';
 import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import { NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -151,7 +150,7 @@ export const EffectControllerBox = (): ReactElement | null => {
       );
     });
 
-    dispatch(effectSlice.actions.upsertEffects(models));
+    dispatch(EffectActions.upsertEffects(models));
   };
 
   if (!hasSelectedObjects) {

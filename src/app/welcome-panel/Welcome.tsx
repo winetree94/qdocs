@@ -4,9 +4,9 @@ import { QueueButton } from 'components/button/Button';
 import { QueueH2 } from 'components/head/Head';
 import { QueueDocument } from 'model/document';
 import { useState } from 'react';
-import { loadDocument } from 'store/document/actions';
 import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
+import { DocumentActions } from '../../store/document';
 
 export const Welcome: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,7 @@ export const Welcome: React.FC = () => {
   const onNewDocumentClick = (): void => {
     setNewDocumentDialogProps({
       onSubmit: (document) => {
-        dispatch(loadDocument(document));
+        dispatch(DocumentActions.loadDocument(document));
       },
     });
   };
@@ -37,7 +37,7 @@ export const Welcome: React.FC = () => {
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
           const document = JSON.parse(result) as QueueDocument;
-          dispatch(loadDocument(document));
+          dispatch(DocumentActions.loadDocument(document));
         };
         fileReader.readAsText(file);
       } catch (e) {

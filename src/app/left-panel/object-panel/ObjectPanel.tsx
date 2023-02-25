@@ -18,7 +18,7 @@ import { QueueInput } from 'components/input/Input';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
-import { objectsSlice } from 'store/object/reducer';
+import { ObjectActions } from '../../../store/object';
 
 export interface QueueObject {
   key: string;
@@ -147,7 +147,7 @@ export const ObjectPanel: FunctionComponent = () => {
         };
         delete object.effects; // 불필요한 값 스토어에 들어가는 것 방지, create 함수들이 스토어 모델을 반환하도록 개선 필요
         dispatch(
-          objectsSlice.actions.addOne({
+          ObjectActions.addOne({
             queueIndex: settings.queueIndex,
             object: object,
           }),

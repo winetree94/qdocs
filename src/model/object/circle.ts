@@ -1,4 +1,4 @@
-import { nanoid } from '@reduxjs/toolkit';
+import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
@@ -13,7 +13,7 @@ export interface QueueCircle
     WithStroke,
     WithText {
   type: 'circle';
-  id: string;
+  id: EntityId;
 }
 
 export const createDefaultCircle = (documentRect: QueueDocumentRect, queueIndex: number): QueueCircle => {

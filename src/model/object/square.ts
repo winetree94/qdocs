@@ -1,7 +1,7 @@
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
-import { nanoid } from '@reduxjs/toolkit';
+import { EntityId, nanoid } from '@reduxjs/toolkit';
 
 export interface QueueSquare
   extends WithEffects,
@@ -13,7 +13,7 @@ export interface QueueSquare
     WithStroke,
     WithText {
   type: 'rect';
-  id: string;
+  id: EntityId;
 }
 
 export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex: number): QueueSquare => {

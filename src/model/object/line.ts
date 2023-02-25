@@ -1,4 +1,4 @@
-import { nanoid } from '@reduxjs/toolkit';
+import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
 import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
@@ -13,7 +13,7 @@ export interface QueueLine
     WithStroke,
     WithText {
   type: 'line';
-  id: string;
+  id: EntityId;
 }
 
 export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: number): QueueLine => {

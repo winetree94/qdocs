@@ -1,6 +1,7 @@
-import { createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
-import { loadDocument } from 'store/document/actions';
+import { createSlice, EntityId } from '@reduxjs/toolkit';
 import { QueueDocumentSettings } from './model';
+import { DocumentActions } from '../document';
+import { SettingsActions } from './actions';
 
 const initialState: QueueDocumentSettings = {
   documentId: '',
@@ -16,54 +17,61 @@ const initialState: QueueDocumentSettings = {
 
 export interface DetailSelectionAction {
   selectionMode: 'detail';
-  id: string;
+  id: EntityId;
 }
 
 export interface NormalSelectionAction {
   selectionMode: 'normal';
-  ids: string[];
+  ids: EntityId[];
 }
 
 export const documentSettingsSlice = createSlice({
   name: 'settings',
   initialState: initialState,
-  reducers: {
-    updateSettings: (state, action: PayloadAction<Partial<QueueDocumentSettings>>) => {
-      return { ...state, ...action.payload };
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    /**
+     * @description
+     * 새로운 문서 열람시 초기화
+     */
+    builder.addCase(DocumentActions.loadDocument, (state, action): QueueDocumentSettings => {
+      return {
+        ...initialState,
+        documentId: action.payload.id,
+        pageId: action.payload.pages[0].id,
+      };
+    });
 
-    setSettings: (state, action: PayloadAction<QueueDocumentSettings>) => {
-      return { ...state, ...action.payload };
-    },
+    builder.addCase(SettingsActions.updateSettings, (state, action): QueueDocumentSettings => {
+      return { ...state, ...action.payload.changes };
+    });
 
-    setScale: (state, action: PayloadAction<number>) => {
+    builder.addCase(SettingsActions.setSettings, (state, action): QueueDocumentSettings => {
+      return { ...state, ...action.payload };
+    });
+
+    builder.addCase(SettingsActions.setScale, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         scale: Math.max(action.payload, 0.25),
       };
-    },
+    });
 
-    increaseScale: (state) => {
+    builder.addCase(SettingsActions.increaseScale, (state): QueueDocumentSettings => {
       return {
         ...state,
         scale: Math.max(state.scale + 0.05, 0.25),
       };
-    },
+    });
 
-    decreaseScale: (state) => {
+    builder.addCase(SettingsActions.decreaseScale, (state): QueueDocumentSettings => {
       return {
         ...state,
         scale: Math.max(state.scale - 0.05, 0.25),
       };
-    },
+    });
 
-    movePage: (
-      state,
-      action: PayloadAction<{
-        pageIndex: string;
-        pageId: number;
-      }>,
-    ) => {
+    builder.addCase(SettingsActions.movePage, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         pageId: action.payload.pageIndex,
@@ -73,9 +81,9 @@ export const documentSettingsSlice = createSlice({
         selectedObjectIds: [],
         selectionMode: 'normal',
       };
-    },
+    });
 
-    setSelection: (state, action: PayloadAction<DetailSelectionAction | NormalSelectionAction>) => {
+    builder.addCase(SettingsActions.setSelection, (state, action): QueueDocumentSettings => {
       const pending: Partial<QueueDocumentSettings> = {};
 
       switch (action.payload.selectionMode) {
@@ -94,56 +102,42 @@ export const documentSettingsSlice = createSlice({
         ...state,
         ...pending,
       };
-    },
+    });
 
-    addSelection: (state, action: PayloadAction<string>) => {
+    builder.addCase(SettingsActions.addSelection, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         selectionMode: 'normal',
         selectedObjectIds: [...state.selectedObjectIds, action.payload],
       };
-    },
+    });
 
-    removeSelection: (state, action: PayloadAction<EntityId[]>) => {
+    builder.addCase(SettingsActions.removeSelection, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         selectionMode: 'normal',
         selectedObjectIds: state.selectedObjectIds.filter((id) => !action.payload.includes(id)),
       };
-    },
+    });
 
-    resetSelection: (state) => {
+    builder.addCase(SettingsActions.resetSelection, (state): QueueDocumentSettings => {
       return {
         ...state,
         selectionMode: 'normal',
         selectedObjectIds: [],
       };
-    },
+    });
 
-    setPresentationMode: (state, action: PayloadAction<boolean>): QueueDocumentSettings => {
+    builder.addCase(SettingsActions.setPresentationMode, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         presentationMode: action.payload,
         selectedObjectIds: [],
         selectionMode: 'normal',
       };
-    },
+    });
 
-    stopAnimation: (state) => {
-      return {
-        ...state,
-        queuePosition: 'pause',
-        queueStart: -1,
-      };
-    },
-
-    setQueueIndex: (
-      state,
-      action: PayloadAction<{
-        queueIndex: number;
-        play?: boolean;
-      }>,
-    ) => {
+    builder.addCase(SettingsActions.setQueueIndex, (state, action): QueueDocumentSettings => {
       return {
         ...state,
         queueIndex: Math.max(action.payload.queueIndex, 0),
@@ -155,20 +149,6 @@ export const documentSettingsSlice = createSlice({
         queueStart: action.payload.play ? performance.now() : -1,
         selectedObjectIds: [],
         selectionMode: 'normal',
-      };
-    },
-  },
-
-  extraReducers: (builder) => {
-    /**
-     * @description
-     * 새로운 문서 열람시 초기화
-     */
-    builder.addCase(loadDocument, (state, action): QueueDocumentSettings => {
-      return {
-        ...initialState,
-        documentId: action.payload.id,
-        pageId: action.payload.pages[0].id,
       };
     });
   },

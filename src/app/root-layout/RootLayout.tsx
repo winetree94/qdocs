@@ -8,13 +8,13 @@ import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
 import { useAppDispatch } from 'store/hooks';
-import { documentSettingsSlice } from 'store/settings/reducer';
 import { AppDispatch, RootState } from 'store';
 import { connect } from 'react-redux';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueDocumentSettings } from '../../store/settings/model';
 import { NormalizedQueueDocument } from '../../store/document';
+import { SettingsActions } from '../../store/settings';
 
 export interface BaseRootLayoutProps {
   docs: NormalizedQueueDocument;
@@ -28,7 +28,7 @@ export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
     const onKeydown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && settings.presentationMode) {
         dispatch(
-          documentSettingsSlice.actions.setSettings({
+          SettingsActions.setSettings({
             ...settings,
             presentationMode: false,
           }),

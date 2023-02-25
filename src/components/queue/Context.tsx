@@ -5,7 +5,8 @@ import { forwardRef } from 'react';
 import styles from './Context.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { objectsSlice } from 'store/object/reducer';
+import { EntityId } from '@reduxjs/toolkit';
+import { ObjectActions } from '../../store/object';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
@@ -13,7 +14,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
 
-  const changeObjectIndex = (fromIds: string[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
+  const changeObjectIndex = (fromIds: EntityId[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     // todo sorting 은 완전히 다시 짜야함
   };
 
@@ -29,8 +30,8 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * @description
    * 오브젝트를 영구히 제거
    */
-  const onCompletelyRemoveClick = (ids: string[]): void => {
-    dispatch(objectsSlice.actions.removeMany(ids));
+  const onCompletelyRemoveClick = (ids: EntityId[]): void => {
+    dispatch(ObjectActions.removeMany(ids));
   };
 
   return (

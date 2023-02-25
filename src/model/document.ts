@@ -1,3 +1,4 @@
+import { EntityId } from '@reduxjs/toolkit';
 import { QueueObjectType } from './object';
 
 export interface QueueDocumentRect {
@@ -7,13 +8,13 @@ export interface QueueDocumentRect {
 }
 
 export interface QueueDocumentPage {
-  id: string;
+  id: EntityId;
   pageName: string;
   objects: QueueObjectType[];
 }
 
 export interface QueueDocument {
-  id: string;
+  id: EntityId;
   documentName: string;
   documentRect: QueueDocumentRect;
   pages: QueueDocumentPage[];

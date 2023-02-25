@@ -1,6 +1,7 @@
-import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loadDocument } from 'store/document/actions';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { NormalizedQueueEffect } from './model';
+import { DocumentActions } from '../document';
+import { EffectActions } from './actions';
 
 export const getEffectEntityKey = (effect: Pick<NormalizedQueueEffect, 'index' | 'objectId' | 'type'>) =>
   `${effect.objectId}-${effect.index}-${effect.type}`;
@@ -12,22 +13,9 @@ export const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({
 export const effectSlice = createSlice({
   name: 'effects',
   initialState: effectEntityAdapter.getInitialState(),
-  reducers: {
-    addEffect: (state, action: PayloadAction<NormalizedQueueEffect>) => {
-      return effectEntityAdapter.addOne(state, action);
-    },
-    upsertEffect: (state, action: PayloadAction<NormalizedQueueEffect>) => {
-      return effectEntityAdapter.upsertOne(state, action);
-    },
-    upsertEffects: (state, action: PayloadAction<NormalizedQueueEffect[]>) => {
-      return effectEntityAdapter.upsertMany(state, action);
-    },
-    removeMany: (state, action: PayloadAction<string[]>) => {
-      return effectEntityAdapter.removeMany(state, action);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(loadDocument, (state, action) => {
+    builder.addCase(DocumentActions.loadDocument, (state, action) => {
       const normalized = action.payload.pages.reduce<NormalizedQueueEffect[]>((result, page) => {
         page.objects.forEach((object) => {
           object.effects.forEach((effect) => {
@@ -45,6 +33,22 @@ export const effectSlice = createSlice({
         return result;
       }, []);
       return effectEntityAdapter.setAll(state, normalized);
+    });
+
+    builder.addCase(EffectActions.addEffect, (state, action) => {
+      return effectEntityAdapter.addOne(state, action);
+    });
+
+    builder.addCase(EffectActions.upsertEffect, (state, action) => {
+      return effectEntityAdapter.upsertOne(state, action);
+    });
+
+    builder.addCase(EffectActions.upsertEffects, (state, action) => {
+      return effectEntityAdapter.upsertMany(state, action);
+    });
+
+    builder.addCase(EffectActions.removeMany, (state, action) => {
+      return effectEntityAdapter.removeMany(state, action);
     });
   },
 });

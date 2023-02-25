@@ -7,9 +7,9 @@ import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
 import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
-import { loadDocument } from 'store/document/actions';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
+import { DocumentActions } from '../../store/document';
 
 export interface ToolbarModel {
   key: string;
@@ -33,13 +33,13 @@ export const QueueToolbar = () => {
         description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
         onAction: () =>
           setNewDocumentDialogProps({
-            onSubmit: (document) => dispatch(loadDocument(document)),
+            onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
           }),
       });
       return;
     }
     setNewDocumentDialogProps({
-      onSubmit: (document) => dispatch(loadDocument(document)),
+      onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
     });
   };
 
@@ -60,7 +60,7 @@ export const QueueToolbar = () => {
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
           const document = JSON.parse(result) as QueueDocument;
-          dispatch(loadDocument(document));
+          dispatch(DocumentActions.loadDocument(document));
         };
         fileReader.readAsText(file);
       } catch (e) {
@@ -95,7 +95,7 @@ export const QueueToolbar = () => {
   };
 
   const clearDocument = (): void => {
-    dispatch(loadDocument(null));
+    dispatch(DocumentActions.loadDocument(null));
   };
 
   const onCloseDocumentClick = (): void => {
