@@ -55,7 +55,7 @@ export const documentSettingsSlice = createSlice({
     increaseScale: (state) => {
       return {
         ...state,
-        scale: Math.max(state.scale - 0.05, 0.25),
+        scale: Math.max(state.scale + 0.05, 0.25),
       };
     },
 
