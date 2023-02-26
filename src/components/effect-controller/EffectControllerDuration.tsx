@@ -27,7 +27,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
 
   const firstObjectEffect = effect;
   const convertedDuration = firstObjectEffect.duration / 1000;
-  const convertedDealy = firstObjectEffect.delay / 1000;
+  const convertedDelay = firstObjectEffect.delay / 1000;
 
   const handleDurationChange = (durationValue: number | number[] | string): void => {
     let duration = 1000;
@@ -121,7 +121,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
             className="w-full"
             type="number"
             step={0.1}
-            value={convertedDealy}
+            value={convertedDelay}
             onChange={(e): void => handleDelayChange(e.currentTarget.value)}
           />
         </div>
@@ -130,7 +130,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
             min={0}
             max={10}
             step={0.1}
-            value={[convertedDealy]}
+            value={[convertedDelay]}
             onValueChange={(duration): void => handleDelayChange(duration)}
           />
         </div>
