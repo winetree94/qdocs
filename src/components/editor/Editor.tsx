@@ -36,6 +36,9 @@ export const QueueEditor = () => {
   const pageId = useAppSelector(SettingSelectors.pageId);
   const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, pageId));
   const effects = useAppSelector(EffectSelectors.all);
+  const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
+
+  const [capturedObjectProps, setCapturedObjectProps] = useState<{ [key: string]: NormalizedQueueObjectType }>({});
 
   const effectsGroupByObjectId = effects.reduce<{
     [id: string]: NormalizedQueueEffect[];
@@ -71,9 +74,6 @@ export const QueueEditor = () => {
       return result;
     }, {});
 
-  const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
-  const [capturedObjectProps, setCapturedObjectProps] = useState<{ [key: string]: NormalizedQueueObjectType }>({});
-
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current!;
     const targetScale = Math.min(
@@ -91,6 +91,13 @@ export const QueueEditor = () => {
   useLayoutEffect(() => canvasSizeToFit(), []);
 
   useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
+
+  const onRootMousedown = () => {
+    if (settings.selectedObjectIds.length === 0) {
+      return;
+    }
+    dispatch(SettingsActions.resetSelection());
+  };
 
   const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
@@ -203,8 +210,8 @@ export const QueueEditor = () => {
     }
     const rect = canvasDiv.current.getBoundingClientRect();
     const absScale = 1 / settings.scale;
-    const x = (event.drawClientX - rect.x) * absScale;
-    const y = (event.drawClientY - rect.y) * absScale;
+    const x = (event.clientX - rect.x) * absScale;
+    const y = (event.clientY - rect.y) * absScale;
     const width = event.width * absScale;
     const height = event.height * absScale;
 
@@ -337,12 +344,9 @@ export const QueueEditor = () => {
   return (
     <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
-        <QueueScrollArea.Root
-          className={clsx(styles.ScrollAreaRoot)}
-          onMouseDown={() => dispatch(SettingsActions.resetSelection())}>
+        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)} onMouseDown={onRootMousedown}>
           <QueueScrollArea.Viewport className={clsx('flex')}>
             <Drawable
-              scale={settings.scale}
               onDrawEnd={onDrawEnd}
               className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>
               <Scaler
