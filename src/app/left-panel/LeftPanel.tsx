@@ -7,6 +7,7 @@ import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -25,8 +26,15 @@ export const LeftPanel: FunctionComponent = () => {
             <QueueTabs.Trigger value={PanelTabType.Styler}>Effects</QueueTabs.Trigger>
             <QueueTabs.Trigger value={PanelTabType.DefaultProp}>Default</QueueTabs.Trigger>
           </QueueTabs.List>
-          <QueueTabs.Content value={PanelTabType.Styler}>
-            <EffectControllerBox />
+          <QueueTabs.Content className="h-full overflow-hidden" value={PanelTabType.Styler}>
+            <QueueScrollArea.Root className="h-full">
+              <QueueScrollArea.Viewport>
+                <EffectControllerBox />
+              </QueueScrollArea.Viewport>
+              <QueueScrollArea.Scrollbar>
+                <QueueScrollArea.Thumb />
+              </QueueScrollArea.Scrollbar>
+            </QueueScrollArea.Root>
           </QueueTabs.Content>
           <QueueTabs.Content value={PanelTabType.DefaultProp}>
             <DefaultPropPanel />
