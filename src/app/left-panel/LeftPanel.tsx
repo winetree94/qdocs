@@ -36,7 +36,7 @@ export const LeftPanel: FunctionComponent = () => {
               </QueueScrollArea.Scrollbar>
             </QueueScrollArea.Root>
           </QueueTabs.Content>
-          <QueueTabs.Content value={PanelTabType.DefaultProp}>
+          <QueueTabs.Content className="h-full overflow-hidden" value={PanelTabType.DefaultProp}>
             <DefaultPropPanel />
           </QueueTabs.Content>
         </QueueTabs.Root>
