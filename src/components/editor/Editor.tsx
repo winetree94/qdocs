@@ -92,6 +92,10 @@ export const QueueEditor = () => {
 
   useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
 
+  /**
+   * @description
+   * 빈 공간을 클릭했을 때, 선택된 오브젝트 해제
+   */
   const onRootMousedown = () => {
     if (settings.selectedObjectIds.length === 0) {
       return;
@@ -113,7 +117,7 @@ export const QueueEditor = () => {
           ids: [object.id],
         }),
       );
-    } else {
+    } else if (!selected) {
       dispatch(SettingsActions.addSelection(object.id));
     }
   };
