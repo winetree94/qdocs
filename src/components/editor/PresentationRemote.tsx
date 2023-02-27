@@ -12,7 +12,7 @@ export const PresentationRemote: React.FC = () => {
         <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.rewind())}>
           <SvgRemixIcon width={30} height={30} icon={'ri-rewind-line'} className={styles.Icon} />
         </button>
-        <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.play())}>
+        <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.forward())}>
           <SvgRemixIcon width={30} height={30} icon={'ri-play-line'} className={styles.Icon} />
         </button>
       </div>

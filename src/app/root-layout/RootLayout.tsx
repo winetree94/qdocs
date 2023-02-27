@@ -7,22 +7,15 @@ import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
-import { useAppDispatch } from 'store/hooks';
-import { AppDispatch, RootState } from 'store';
-import { connect } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
-import { QueueDocumentSettings } from '../../store/settings/model';
-import { NormalizedQueueDocument } from '../../store/document';
 import { SettingsActions } from '../../store/settings';
 
-export interface BaseRootLayoutProps {
-  docs: NormalizedQueueDocument;
-  settings: QueueDocumentSettings;
-}
-
-export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
+export const RootLayout = () => {
   const dispatch = useAppDispatch();
+  const docs = useAppSelector(DocumentSelectors.document);
+  const settings = useAppSelector(SettingSelectors.settings);
 
   useEffect(() => {
     const onKeydown = (event: KeyboardEvent): void => {
@@ -47,6 +40,17 @@ export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
     window.onbeforeunload = (): string => 'beforeUnload';
     return cleaner;
   }, [settings, dispatch]);
+
+  useEffect(() => {
+    if (!settings.autoPlay) return;
+    const stop = () => {
+      dispatch(SettingsActions.pause());
+    };
+    document.addEventListener('mousedown', stop);
+    return () => {
+      document.removeEventListener('mousedown', stop);
+    };
+  }, [dispatch, settings.autoPlay]);
 
   return (
     <div className={styles.container}>
@@ -78,12 +82,3 @@ export const BaseRootLayout = ({ docs, settings }: BaseRootLayoutProps) => {
     </div>
   );
 };
-
-const mapStateToProps = (state: RootState) => ({
-  docs: DocumentSelectors.document(state),
-  settings: SettingSelectors.settings(state),
-});
-
-const mapDispatchToProps = (dispatch: AppDispatch) => ({});
-
-export const RootLayout = connect(mapStateToProps, mapDispatchToProps)(BaseRootLayout);

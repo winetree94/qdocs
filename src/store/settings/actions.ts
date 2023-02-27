@@ -4,7 +4,13 @@ import { DetailSelectionAction, NormalSelectionAction } from './reducer';
 
 const rewind = createAction('settings/rewind');
 
+const forward = createAction<{ repeat: boolean }>('settings/forward');
+
 const play = createAction('settings/play');
+
+const pause = createAction('settings/pause');
+
+const setRepeat = createAction<boolean>('settings/setRepeat');
 
 const updateSettings = createAction<{
   changes: Partial<QueueDocumentSettings>;
@@ -34,7 +40,10 @@ const setQueueIndex = createAction<{ queueIndex: number; play?: boolean }>('sett
 
 export const SettingsActions = {
   rewind,
+  forward,
   play,
+  pause,
+  setRepeat,
   updateSettings,
   setSettings,
   setScale,

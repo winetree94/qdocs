@@ -23,6 +23,16 @@ export interface QueueDocumentSettings {
   queueStart: number;
   /**
    * @description
+   * 자동 재생 여부
+   */
+  autoPlay: boolean;
+  /**
+   * @description
+   * 자동 재생 반복 여부
+   */
+  autoPlayRepeat: boolean;
+  /**
+   * @description
    * 애니메이션 재생의 방향 지정
    */
   queuePosition: 'forward' | 'backward' | 'pause';

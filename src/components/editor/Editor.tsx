@@ -63,17 +63,40 @@ export const QueueEditor = () => {
     return true;
   });
 
-  const queueEffectsGroupByObjectId = effects
-    .filter((effect) => effect.index === settings.queueIndex)
-    .reduce<{
-      [id: string]: NormalizedQueueEffect[];
-    }>((result, effect) => {
-      if (!result[effect.objectId]) {
-        result[effect.objectId] = [];
+  const currentQueueEffects = effects.filter((effect) => effect.index === settings.queueIndex);
+
+  const queueEffectsGroupByObjectId = currentQueueEffects.reduce<{
+    [id: string]: NormalizedQueueEffect[];
+  }>((result, effect) => {
+    if (!result[effect.objectId]) {
+      result[effect.objectId] = [];
+    }
+    result[effect.objectId].push(effect);
+    return result;
+  }, {});
+
+  const maxEffectTime = Math.max(...currentQueueEffects.map((effect) => effect.duration + effect.delay), 0);
+
+  const currentTick = useRef<number>(0);
+
+  const autoplay = useCallback(
+    (time: number) => {
+      if (time - settings.queueStart > maxEffectTime) {
+        dispatch(SettingsActions.forward({ repeat: settings.autoPlayRepeat }));
+        return;
       }
-      result[effect.objectId].push(effect);
-      return result;
-    }, {});
+      currentTick.current = requestAnimationFrame(autoplay);
+    },
+    [dispatch, maxEffectTime, settings.autoPlayRepeat, settings.queueStart],
+  );
+
+  useEffect(() => {
+    if (!settings.autoPlay) {
+      return;
+    }
+    currentTick.current = requestAnimationFrame(autoplay);
+    return () => cancelAnimationFrame(currentTick.current);
+  }, [settings.queueStart, maxEffectTime, autoplay, settings.autoPlay]);
 
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current!;

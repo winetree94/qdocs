@@ -23,8 +23,8 @@ settingsMiddleware.startListening({
  * play
  */
 settingsMiddleware.startListening({
-  actionCreator: SettingsActions.play,
-  effect: (_, api) => {
+  actionCreator: SettingsActions.forward,
+  effect: (action, api) => {
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
@@ -39,6 +39,9 @@ settingsMiddleware.startListening({
       targetQueue = queueIndex + 1;
     } else if (byEffects[pageIndex + 1]) {
       targetPageId = pages[pageIndex + 1].id;
+      targetQueue = 0;
+    } else if (action.payload?.repeat) {
+      targetPageId = pages[0].id;
       targetQueue = 0;
     }
 

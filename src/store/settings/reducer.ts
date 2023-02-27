@@ -7,7 +7,9 @@ const initialState: QueueDocumentSettings = {
   documentId: '',
   pageId: '',
   queueIndex: 0,
-  queueStart: 0,
+  queueStart: -1,
+  autoPlay: false,
+  autoPlayRepeat: false,
   queuePosition: 'forward',
   selectionMode: 'normal',
   selectedObjectIds: [],
@@ -135,6 +137,22 @@ export const documentSettingsSlice = createSlice({
         selectedObjectIds: [],
         selectionMode: 'normal',
       };
+    });
+
+    builder.addCase(SettingsActions.pause, (state) => {
+      state.autoPlay = false;
+      state.queueStart = -1;
+      state.queuePosition = 'pause';
+    });
+
+    builder.addCase(SettingsActions.play, (state) => {
+      state.autoPlay = true;
+      state.queueStart = performance.now();
+      state.queuePosition = 'forward';
+    });
+
+    builder.addCase(SettingsActions.setRepeat, (state, action) => {
+      state.autoPlayRepeat = action.payload;
     });
 
     builder.addCase(SettingsActions.setQueueIndex, (state, action): QueueDocumentSettings => {

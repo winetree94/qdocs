@@ -48,6 +48,7 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
   );
 
   useLayoutEffect(() => {
+    // requestAnimationFrame 이 렌더링 사이클보다 늦게 실행되기 때문에, 즉시 반영
     setProgresses(calculateProgress(performance.now()).map((progress) => (progress === 1 ? 1 : 0)));
     frameRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameRef.current);
