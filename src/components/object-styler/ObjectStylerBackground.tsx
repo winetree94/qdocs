@@ -18,21 +18,21 @@ export const ObjectStylerBackground = (): ReactElement => {
   const [firstObject] = selectedObjects;
 
   const updateObjectFill = (fill: Partial<QueueFill>) => {
-    const updateModels = selectedObjects.map<{ id: EntityId; changes: Partial<NormalizedQueueObjectType> }>(
-      (object) => {
-        return {
-          id: object.id,
-          changes: {
-            fill: {
-              ...object.fill,
-              ...fill,
+    dispatch(
+      ObjectActions.updateObjects(
+        selectedObjects.map<{ id: EntityId; changes: Partial<NormalizedQueueObjectType> }>((object) => {
+          return {
+            id: object.id,
+            changes: {
+              fill: {
+                ...object.fill,
+                ...fill,
+              },
             },
-          },
-        };
-      },
+          };
+        }),
+      ),
     );
-
-    dispatch(ObjectActions.updateObjects(updateModels));
   };
 
   const handleFillColorChange = (e: ChangeEvent<HTMLInputElement>) => {

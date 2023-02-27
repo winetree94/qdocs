@@ -1,3 +1,7 @@
+.StylerRoot {
+  @apply p-2 pr-5;
+}
+
 .root {
   @apply flex flex-col bg-white overflow-y-auto;
   width: 200px;
@@ -15,4 +19,20 @@
     @apply absolute top-0 left-0 w-full h-full;
     visibility: hidden;
   }
+}
+
+.SubItemContainer {
+  @apply mt-2.5;
+}
+
+.SubTitle {
+  @apply text-left;
+}
+
+.SubInputContainer {
+  @apply mt-1;
+}
+
+.Select {
+ @apply w-full;
 }

@@ -34,6 +34,7 @@ input {
   line-height: 1;
   color: var(--gray11);
   user-select: none;
+  outline: none;
 }
 
 .TabsTrigger:hover {
@@ -42,19 +43,13 @@ input {
 
 .TabsTrigger[data-state='active'] {
   color: var(--blue11);
-  box-shadow: inset 0 -1px 0 0 currentColor, 0 1px 0 0 currentColor;
 }
 
 .TabsTrigger:focus {
   position: relative;
-  box-shadow: 0 0 0 2px black;
 }
 
 .TabsContent {
   flex-grow: 1;
   background-color: white;
-}
-
-.TabsContent:focus {
-  box-shadow: 0 0 0 2px black;
 }
