@@ -1,18 +1,22 @@
 {
-  "documentName": "Untitled",
+  "id": "_5dHdQysOg0WbfbioeZ4q",
+  "documentName": "새 문서",
   "documentRect": {
+    "fill": "#ffffff",
     "width": 1920,
-    "height": 1080,
-    "fill": "#ffffff"
+    "height": 1080
   },
   "pages": [
     {
-      "pageName": "Page-1",
-      "uuid": "asdfklasjf3n",
+      "documentId": "_5dHdQysOg0WbfbioeZ4q",
+      "pageName": "새 페이지",
+      "index": 0,
+      "id": "1bdtArpTHJ25qzGD5VVjU",
       "objects": [
         {
+          "pageId": "1bdtArpTHJ25qzGD5VVjU",
           "type": "rect",
-          "uuid": "ed1337fb-3413-49f0-81ae-fe312011ee15",
+          "id": "ChV8J6iX_-_uBQ1Asj6iB",
           "rect": {
             "x": 810,
             "y": 390,
@@ -26,259 +30,6 @@
           },
           "fill": {
             "color": "#ffffff",
-            "opacity": 1
-          },
-          "rotate": {
-            "degree": 0
-          },
-          "scale": {
-            "scale": 1
-          },
-          "fade": {
-            "opacity": 1
-          },
-          "text": {
-            "text": "1번 큐에서 생성,<br>4번 큐에서 제거",
-            "fontSize": 24,
-            "fontColor": "#000000",
-            "fontFamily": "Arial",
-            "horizontalAlign": "center",
-            "verticalAlign": "middle"
-          },
-          "effects": [
-            {
-              "uuid": "1",
-              "type": "create",
-              "timing": "linear",
-              "duration": 0,
-              "index": 0
-            },
-            {
-              "uuid": "2",
-              "type": "rect",
-              "duration": 1000,
-              "index": 1,
-              "timing": "linear",
-              "rect": {
-                "x": 330,
-                "y": 180,
-                "width": 300,
-                "height": 300
-              }
-            },
-            {
-              "uuid": "3",
-              "type": "rect",
-              "duration": 1000,
-              "index": 2,
-              "timing": "linear",
-              "rect": {
-                "x": 1290,
-                "y": 390,
-                "width": 300,
-                "height": 300
-              }
-            },
-            {
-              "uuid": "4",
-              "type": "rect",
-              "duration": 1000,
-              "index": 3,
-              "timing": "linear",
-              "rect": {
-                "x": 540,
-                "y": 570,
-                "width": 300,
-                "height": 300
-              }
-            }
-          ]
-        },
-        {
-          "type": "circle",
-          "uuid": "25e1fc22-401e-48c4-9c54-e977941f4d22",
-          "rect": {
-            "x": 300,
-            "y": 150,
-            "width": 300,
-            "height": 300
-          },
-          "stroke": {
-            "width": 1,
-            "color": "#000000",
-            "dasharray": "solid"
-          },
-          "fill": {
-            "color": "#ffffff",
-            "opacity": 1
-          },
-          "rotate": {
-            "degree": 0
-          },
-          "scale": {
-            "scale": 1
-          },
-          "fade": {
-            "opacity": 1
-          },
-          "text": {
-            "text": "1번 큐에서 생성",
-            "fontSize": 24,
-            "fontColor": "#000000",
-            "fontFamily": "Arial",
-            "horizontalAlign": "center",
-            "verticalAlign": "middle"
-          },
-          "effects": [
-            {
-              "uuid": "5",
-              "type": "create",
-              "timing": "linear",
-              "duration": 0,
-              "index": 0
-            },
-            {
-              "uuid": "6",
-              "type": "rect",
-              "duration": 1000,
-              "index": 1,
-              "timing": "linear",
-              "rect": {
-                "x": 240,
-                "y": 600,
-                "width": 300,
-                "height": 300
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "pageName": "Page-2",
-      "uuid": "asdfklasjf3n2",
-      "objects": [
-        {
-          "type": "rect",
-          "uuid": "b1009b3a-e5ad-4367-8e93-38954dcb531d",
-          "rect": {
-            "x": 540,
-            "y": 360,
-            "width": 300,
-            "height": 300
-          },
-          "stroke": {
-            "width": 1,
-            "color": "#000000",
-            "dasharray": "solid"
-          },
-          "fill": {
-            "color": "#ffffff",
-            "opacity": 1
-          },
-          "rotate": {
-            "degree": 0
-          },
-          "scale": {
-            "scale": 1
-          },
-          "fade": {
-            "opacity": 1
-          },
-          "text": {
-            "text": "1번큐에서 생성<br>3번큐에서 제거<br>&nbsp;",
-            "fontSize": 24,
-            "fontColor": "#000000",
-            "fontFamily": "Arial",
-            "horizontalAlign": "center",
-            "verticalAlign": "middle"
-          },
-          "effects": [
-            {
-              "uuid": "7",
-              "type": "create",
-              "timing": "linear",
-              "duration": 0,
-              "index": 0
-            },
-            {
-              "uuid": "8",
-              "type": "remove",
-              "duration": 0,
-              "timing": "linear",
-              "index": 2
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "pageName": "Page-3",
-      "uuid": "asdfklasjf3nsdf",
-      "objects": [
-        {
-          "type": "rect",
-          "uuid": "0c6bddb2-48a3-4465-be2c-d47b2a57ebe3",
-          "rect": {
-            "x": 810,
-            "y": 390,
-            "width": 300,
-            "height": 300
-          },
-          "stroke": {
-            "width": 1,
-            "color": "#000000",
-            "dasharray": "solid"
-          },
-          "fill": {
-            "color": "#ffffff",
-            "opacity": 1
-          },
-          "rotate": {
-            "degree": 0
-          },
-          "scale": {
-            "scale": 1
-          },
-          "fade": {
-            "opacity": 1
-          },
-          "text": {
-            "text": "1번큐 생성",
-            "fontSize": 24,
-            "fontColor": "#000000",
-            "fontFamily": "Arial",
-            "horizontalAlign": "center",
-            "verticalAlign": "middle"
-          },
-          "effects": [
-            {
-              "uuid": "9",
-              "type": "create",
-              "timing": "linear",
-              "duration": 0,
-              "index": 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "pageName": "Page-4",
-      "uuid": "asdfklasjf3nasdfasdfsad",
-      "objects": [
-        {
-          "type": "icon",
-          "iconType": "ri-4k-fill",
-          "uuid": "d54c4039-3cad-4871-b62f-39a3762c6cc1",
-          "rect": {
-            "x": 810,
-            "y": 390,
-            "width": 300,
-            "height": 300
-          },
-          "fill": {
-            "color": "#000000",
             "opacity": 1
           },
           "rotate": {
@@ -298,18 +49,267 @@
             "horizontalAlign": "center",
             "verticalAlign": "middle"
           },
+          "effects": [
+            {
+              "id": "r7zE6-J63xdRqodbD48P5",
+              "type": "create",
+              "duration": 0,
+              "delay": 0,
+              "index": 0,
+              "timing": "linear",
+              "objectId": "ChV8J6iX_-_uBQ1Asj6iB"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 1,
+              "timing": "linear",
+              "prop": {
+                "x": 270,
+                "y": 120,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "ChV8J6iX_-_uBQ1Asj6iB"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 2,
+              "timing": "linear",
+              "prop": {
+                "x": 1410,
+                "y": 570,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "ChV8J6iX_-_uBQ1Asj6iB"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 3,
+              "timing": "linear",
+              "prop": {
+                "x": 1140,
+                "y": 90,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "ChV8J6iX_-_uBQ1Asj6iB"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 4,
+              "timing": "linear",
+              "prop": {
+                "x": 300,
+                "y": 630,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "ChV8J6iX_-_uBQ1Asj6iB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "documentId": "_5dHdQysOg0WbfbioeZ4q",
+      "id": "2w_AbpvsjhuxavW4wlxdJ",
+      "index": 1,
+      "pageName": "Page-2",
+      "objects": [
+        {
+          "pageId": "2w_AbpvsjhuxavW4wlxdJ",
+          "type": "rect",
+          "id": "k1LU6ZSgJnRTDA71hg7yb",
+          "rect": {
+            "x": 180,
+            "y": 120,
+            "width": 300,
+            "height": 300
+          },
           "stroke": {
+            "width": 1,
             "color": "#000000",
-            "dasharray": "",
-            "width": 0
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
           },
           "effects": [
             {
-              "uuid": "10",
+              "id": "bU3vLhzs9_1MVjDL1kSo5",
               "type": "create",
-              "timing": "linear",
               "duration": 0,
-              "index": 0
+              "delay": 0,
+              "index": 0,
+              "timing": "linear",
+              "objectId": "k1LU6ZSgJnRTDA71hg7yb"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 1,
+              "timing": "linear",
+              "prop": {
+                "x": 1440,
+                "y": 120,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "k1LU6ZSgJnRTDA71hg7yb"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 2,
+              "timing": "linear",
+              "prop": {
+                "x": 120,
+                "y": 690,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "k1LU6ZSgJnRTDA71hg7yb"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 3,
+              "timing": "linear",
+              "prop": {
+                "x": 1530,
+                "y": 660,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "k1LU6ZSgJnRTDA71hg7yb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "documentId": "_5dHdQysOg0WbfbioeZ4q",
+      "id": "Xn9LOBwx8EIu8thFxN6Ok",
+      "index": 2,
+      "pageName": "Page-3",
+      "objects": [
+        {
+          "pageId": "Xn9LOBwx8EIu8thFxN6Ok",
+          "type": "rect",
+          "id": "vG8TA9A0hOjFU1piBxwLL",
+          "rect": {
+            "x": 150,
+            "y": 90,
+            "width": 300,
+            "height": 300
+          },
+          "stroke": {
+            "width": 1,
+            "color": "#000000",
+            "dasharray": "solid"
+          },
+          "fill": {
+            "color": "#ffffff",
+            "opacity": 1
+          },
+          "rotate": {
+            "degree": 0
+          },
+          "scale": {
+            "scale": 1
+          },
+          "fade": {
+            "opacity": 1
+          },
+          "text": {
+            "text": "",
+            "fontSize": 24,
+            "fontColor": "#000000",
+            "fontFamily": "Arial",
+            "horizontalAlign": "center",
+            "verticalAlign": "middle"
+          },
+          "effects": [
+            {
+              "id": "HxBuElCfaRxNa9VYW8G6K",
+              "type": "create",
+              "duration": 0,
+              "delay": 0,
+              "index": 0,
+              "timing": "linear",
+              "objectId": "vG8TA9A0hOjFU1piBxwLL"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 1,
+              "timing": "linear",
+              "prop": {
+                "x": 90,
+                "y": 660,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "vG8TA9A0hOjFU1piBxwLL"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 2,
+              "timing": "linear",
+              "prop": {
+                "x": 300,
+                "y": 90,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "vG8TA9A0hOjFU1piBxwLL"
+            },
+            {
+              "type": "rect",
+              "duration": 1000,
+              "delay": 0,
+              "index": 3,
+              "timing": "linear",
+              "prop": {
+                "x": 360,
+                "y": 690,
+                "width": 300,
+                "height": 300
+              },
+              "objectId": "vG8TA9A0hOjFU1piBxwLL"
             }
           ]
         }
