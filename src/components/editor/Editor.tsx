@@ -24,6 +24,7 @@ import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
 import { ObjectActions } from '../../store/object';
+import { Draggable } from 'cdk/drag/Drag';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();
@@ -380,12 +381,12 @@ export const QueueEditor = () => {
                             queueIndex={settings.queueIndex}
                             queuePosition={settings.queuePosition}
                             queueStart={settings.queueStart}>
-                            <QueueObject.Drag
-                              onMousedown={(e) => onObjectMousedown(e, object)}
+                            <Draggable
+                              onMouseDown={(e) => onObjectMousedown(e, object)}
                               onDoubleClick={(e) => onObjectDoubleClick(e, object)}
-                              onDraggingStart={() => setCapturedObjectProps(props)}
-                              onDraggingMove={onObjectDragMove}
-                              onDraggingEnd={onObjectDragEnd}>
+                              onActualDragStart={() => setCapturedObjectProps(props)}
+                              onActualDragMove={onObjectDragMove}
+                              onActualDragEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
                               <QueueObject.Text onEdit={(e) => onTextEdit(object, e)} />
                               <QueueObject.Resizer
@@ -395,7 +396,7 @@ export const QueueEditor = () => {
                                 onRotateMove={(e) => updateObjectRotate(object.id, e.degree)}
                                 onRotateEnd={(e) => updateObjectRotate(object.id, e.degree)}
                               />
-                            </QueueObject.Drag>
+                            </Draggable>
                           </QueueObject.Animator>
                         </QueueObject.Container>
                       </QueueContextMenu.Trigger>
