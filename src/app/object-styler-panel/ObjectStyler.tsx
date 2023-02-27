@@ -1,26 +1,37 @@
 import { ReactElement } from 'react';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { ObjectStylerBackground } from 'components/object-styler/ObjectStylerBackground';
-import styles from './ObjectStyler.module.scss';
 import { ObjectStyleText } from './Text';
 import { ObjectStyleOpacity } from './Opacity';
 import { ObjectStyleStroke } from './Stroke';
+import { QueueSeparator } from 'components/separator/Separator';
+import { ObjectStyleBackground } from './Background';
+import styles from './ObjectStyler.module.scss';
+import { ObjectStyleRect } from './Rect';
+import { ObjectStyleScale } from './Scale';
+import { ObjectStyleRotate } from './Rotate';
 
 export const ObjectStylerPanel = (): ReactElement | null => {
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   return (
     <div className={styles.StylerRoot}>
-      <ObjectStylerBackground />
       <div className="flex flex-col gap-3">
-        <hr className="my-2" />
+        <ObjectStyleRect />
+        <QueueSeparator.Root />
+        <ObjectStyleBackground />
+        <QueueSeparator.Root />
+        <ObjectStyleScale />
+        <QueueSeparator.Root />
+        <ObjectStyleRotate />
+        <QueueSeparator.Root />
         {selectedObjects[0].type !== 'icon' && (
           <>
             <ObjectStyleStroke />
-            <hr className="my-2" />
+            <QueueSeparator.Root />
           </>
         )}
         <ObjectStyleOpacity />
+        <QueueSeparator.Root />
         <ObjectStyleText />
       </div>
     </div>

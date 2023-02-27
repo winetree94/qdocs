@@ -34,8 +34,8 @@ export const ObjectStyleText = () => {
   };
 
   return (
-    <div>
-      <QueueH6>텍스트 설정</QueueH6>
+    <div className={styles.ItemContainer}>
+      <QueueH6>텍스트</QueueH6>
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>글꼴</div>
         <div className={styles.SubInputContainer}>

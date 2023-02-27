@@ -1,3 +1,7 @@
+.ItemContainer {
+  @apply flex flex-col;
+}
+
 .SubItemContainer {
   @apply mt-2.5;
 }

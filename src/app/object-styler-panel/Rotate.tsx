@@ -1,27 +1,27 @@
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
-import { QueueFade } from 'model/property';
+import { QueueRotate } from 'model/property';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
-import styles from './Opacity.module.scss';
+import styles from './Rotate.module.scss';
 
-export const ObjectStyleOpacity = () => {
+export const ObjectStyleRotate = () => {
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const [firstObject] = selectedObjects;
 
-  const fade = firstObject.fade;
+  const rotate = firstObject.rotate;
 
-  const updateStroke = (fade: Partial<QueueFade>): void => {
+  const updateStroke = (rotate: Partial<QueueRotate>): void => {
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({
           id: object.id,
           changes: {
-            fade: {
-              ...object.fade,
-              ...fade,
+            rotate: {
+              ...object.rotate,
+              ...rotate,
             },
           },
         })),
@@ -31,18 +31,18 @@ export const ObjectStyleOpacity = () => {
 
   return (
     <div className={styles.ItemContainer}>
-      <QueueH6>투명도</QueueH6>
+      <QueueH6>회전</QueueH6>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>투명도</div>
+        <div className={styles.SubTitle}>각도</div>
         <div className={styles.SubInputContainer}>
           <Slider
             min={0}
-            max={1}
-            value={[fade.opacity]}
+            max={360}
+            value={[rotate.degree]}
             step={0.05}
             onValueChange={([e]) =>
               updateStroke({
-                opacity: e,
+                degree: e,
               })
             }
           />

@@ -1,69 +1,92 @@
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Slider } from 'components';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useAppSelector } from 'store/hooks';
+import { QueueH6 } from 'components/head/Head';
+import { QueueSelect } from 'components/select/Select';
+import { QueueStroke } from 'model/property';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
-import classes from './ObjectStyler.module.scss';
+import styles from './Stroke.module.scss';
 
 export const ObjectStyleStroke = () => {
-  const objects = useAppSelector(SettingSelectors.selectedObjects);
-  const [firstObject] = objects;
+  const dispatch = useAppDispatch();
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  const [firstObject] = selectedObjects;
 
-  const tempType = firstObject;
-  const [width, setWidth] = useState([tempType.stroke.width]);
+  const stroke = firstObject.stroke;
 
-  const handleWidthChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setWidth([parseInt(e.currentTarget.value, 10)]);
+  const updateStroke = (stroke: Partial<QueueStroke>): void => {
+    dispatch(
+      ObjectActions.updateObjects(
+        selectedObjects.map((object) => ({
+          id: object.id,
+          changes: {
+            stroke: {
+              ...object.stroke,
+              ...stroke,
+            },
+          },
+        })),
+      ),
+    );
   };
 
-  useEffect(() => {
-    setWidth([tempType.stroke.width]);
-  }, [tempType]);
-
-  if (firstObject.type === 'icon') {
-    return null;
-  }
-
   return (
-    <div>
-      <div className="mb-1">
-        <p className="font-medium">Border</p>
+    <div className={styles.ItemContainer}>
+      <QueueH6>테두리</QueueH6>
+      <div className={styles.SubItemContainer}>
+        <div className={styles.SubTitle}>굵기</div>
+        <div className={styles.SubInputContainer}>
+          <Slider
+            min={0}
+            max={50}
+            value={[stroke.width]}
+            onValueChange={([e]) =>
+              updateStroke({
+                width: e,
+              })
+            }
+          />
+        </div>
       </div>
-      <div className="flex flex-col gap-2">
-        <div>
-          <input type="text" name="strokeWidth" value={width[0]} readOnly hidden />
-          <p className="text-sm">width</p>
-          <div className="flex items-center gap-2">
-            <div className="w-1/3">
-              <input className="w-full" type="number" value={width[0]} onChange={handleWidthChange} />
-            </div>
-            <div className="flex items-center w-full">
-              <Slider min={0} max={100} value={width} onValueChange={setWidth} />
-            </div>
-          </div>
+      <div className={styles.SubItemContainer}>
+        <div className={styles.SubTitle}>색상</div>
+        <div className={styles.SubInputContainer}>
+          <input
+            type="color"
+            value={stroke.color}
+            onChange={(e) =>
+              updateStroke({
+                color: e.target.value,
+              })
+            }
+          />
         </div>
-        <div>
-          <p className="text-sm">color</p>
-          <div className="w-6 h-6">
-            <label className={classes['input-color']} style={{ backgroundColor: firstObject.stroke.color }}>
-              <input
-                type="color"
-                name="strokeColor"
-                id="strokeColor"
-                className={classes['input-color']}
-                defaultValue={firstObject.stroke.color}
-              />
-            </label>
-          </div>
-        </div>
-        <div>
-          <p className="text-sm">style</p>
-          <div>
-            <select defaultValue={firstObject.stroke.dasharray}>
-              <option value="solid">--------</option>
-              <option value="">- - - - -</option>
-              <option value="">-- -- --</option>
-            </select>
-          </div>
+      </div>
+      <div className={styles.SubItemContainer}>
+        <div className={styles.SubTitle}>스타일</div>
+        <div className={styles.SubInputContainer}>
+          <QueueSelect.Root
+            value={stroke.dasharray}
+            onValueChange={(value): void => updateStroke({ dasharray: value })}>
+            <QueueSelect.Trigger className={styles.Select}>
+              <QueueSelect.Value placeholder="글꼴" />
+              <QueueSelect.Icon className="SelectIcon">
+                <ChevronDownIcon />
+              </QueueSelect.Icon>
+            </QueueSelect.Trigger>
+            <QueueSelect.Portal>
+              <QueueSelect.Content>
+                <QueueSelect.Viewport>
+                  <QueueSelect.Group>
+                    <QueueSelect.Item value="solid">-------</QueueSelect.Item>
+                    <QueueSelect.Item value="Inter">- - - - -</QueueSelect.Item>
+                    <QueueSelect.Item value="Roboto">-- -- --</QueueSelect.Item>
+                  </QueueSelect.Group>
+                </QueueSelect.Viewport>
+              </QueueSelect.Content>
+            </QueueSelect.Portal>
+          </QueueSelect.Root>
         </div>
       </div>
     </div>
