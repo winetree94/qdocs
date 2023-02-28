@@ -49,6 +49,9 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       <QueueContextMenu.Item>
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
+      <QueueContextMenu.Item onClick={() => dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }))}>
+        복제 <div className={styles.RightSlot}>⌘+C</div>
+      </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
         맨 앞으로 가져오기

@@ -4,6 +4,8 @@ import { ObjectSelectors } from './selectors';
 import { NormalizedQueueObjectType } from './model';
 import { PageActions } from '../page';
 import { ObjectActions } from './actions';
+import { SettingsActions, SettingSelectors } from '../settings';
+import { EffectSelectors } from '../effect';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 
@@ -36,6 +38,36 @@ objectMiddleware.startListening({
     api.dispatch(
       ObjectActions.addMany({
         objects: newObjects,
+      }),
+    );
+  },
+});
+
+objectMiddleware.startListening({
+  actionCreator: ObjectActions.duplicate,
+  effect: (action, api) => {
+    const state = api.getState();
+    const settings = SettingSelectors.settings(state);
+    const effects = EffectSelectors.allEffectedObjectsMap(state);
+    const models = action.payload.ids.map<NormalizedQueueObjectType>((id) => ({
+      ...effects[id],
+      rect: {
+        ...effects[id].rect,
+        x: effects[id].rect.x + 10,
+        y: effects[id].rect.y + 10,
+      },
+      id: nanoid(),
+    }));
+    api.dispatch(
+      ObjectActions.addMany({
+        queueIndex: settings.queueIndex,
+        objects: models,
+      }),
+    );
+    api.dispatch(
+      SettingsActions.setSelection({
+        selectionMode: 'normal',
+        ids: models.map((model) => model.id),
       }),
     );
   },

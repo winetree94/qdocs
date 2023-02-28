@@ -16,6 +16,10 @@ const updateObject = createAction<{
   changes: Partial<NormalizedQueueObjectType>;
 }>('objects/updateObject');
 
+const duplicate = createAction<{
+  ids: EntityId[];
+}>('objects/duplicate');
+
 const updateObjects = createAction<
   {
     id: EntityId;
@@ -30,5 +34,6 @@ export const ObjectActions = {
   addMany,
   updateObject,
   updateObjects,
+  duplicate,
   removeMany,
 };
