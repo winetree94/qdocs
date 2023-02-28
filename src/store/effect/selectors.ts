@@ -7,7 +7,11 @@ import { effectEntityAdapter } from './reducer';
 import { NormalizedQueueObjectType } from '../object/model';
 import { NormalizedQueueEffect } from './model';
 
-const selectSelf = (state: RootState) => state.effects;
+const selectSelf = (state: RootState) =>
+  state.effects.present || {
+    entities: {},
+    ids: [],
+  };
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
 
 const all = selectors.selectAll;
@@ -69,7 +73,7 @@ const allEffectedObjects = createSelector(
       .filter((object) => object.pageId === pageId)
       .reduce<NormalizedQueueObjectType[]>((result, current) => {
         const object = { ...current };
-        effects[current.id]
+        (effects[current.id] || [])
           .filter(({ index }) => index <= settings.queueIndex)
           .filter((effect) => effect.type !== 'create' && effect.type !== 'remove')
           .forEach((effect) => {

@@ -2,7 +2,11 @@ import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { objectEntityAdapter } from './reducer';
 
-const selectSelf = (state: RootState) => state.objects;
+const selectSelf = (state: RootState) =>
+  state.objects.present || {
+    entities: {},
+    ids: [],
+  };
 const selectors = objectEntityAdapter.getSelectors(selectSelf);
 
 const all = selectors.selectAll;

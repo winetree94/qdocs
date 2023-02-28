@@ -1,6 +1,7 @@
 import { fitScreenSizeEvent } from 'app/events/event';
 import { useEventDispatch } from 'cdk/hooks/event-dispatcher';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
@@ -40,16 +41,36 @@ export const QueueSubtoolbar = () => {
     dispatch(SettingsActions.setPresentationMode(true));
   };
 
+  const undo = () => {
+    dispatch(
+      SettingsActions.setSelection({
+        selectionMode: 'normal',
+        ids: [],
+      }),
+    );
+    dispatch(UndoActionCreators.undo());
+  };
+
+  const redo = () => {
+    dispatch(
+      SettingsActions.setSelection({
+        selectionMode: 'normal',
+        ids: [],
+      }),
+    );
+    dispatch(UndoActionCreators.redo());
+  };
+
   return (
     <QueueScrollArea.Root className={styles.Container}>
       <QueueScrollArea.Viewport>
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
-            <QueueIconButton onClick={console.log}>
+            <QueueIconButton onClick={undo}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
             </QueueIconButton>
 
-            <QueueIconButton onClick={console.log}>
+            <QueueIconButton onClick={redo}>
               <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
             </QueueIconButton>
 

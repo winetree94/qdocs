@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { documentSlice } from 'store/document/reducer';
 import { effectMiddleware } from 'store/effect/middlewares';
 import { effectSlice } from 'store/effect/reducer';
@@ -9,17 +9,22 @@ import { pagesSlice } from 'store/page/reducer';
 import { settingsMiddleware } from 'store/settings/middlewares';
 import { documentSettingsSlice } from 'store/settings/reducer';
 import { storageSlice } from 'store/storage/reducer';
+import * as ReduxUndo from 'redux-undo';
+const undoable = ReduxUndo.default;
+console.log(undoable);
+
+const reducers = combineReducers({
+  [documentSettingsSlice.name]: documentSettingsSlice.reducer,
+  [documentSlice.name]: undoable(documentSlice.reducer),
+  [pagesSlice.name]: undoable(pagesSlice.reducer),
+  [objectsSlice.name]: undoable(objectsSlice.reducer),
+  [effectSlice.name]: undoable(effectSlice.reducer),
+  [storageSlice.name]: storageSlice.reducer,
+});
 
 export const store = configureStore({
   devTools: true,
-  reducer: {
-    [documentSettingsSlice.name]: documentSettingsSlice.reducer,
-    [documentSlice.name]: documentSlice.reducer,
-    [pagesSlice.name]: pagesSlice.reducer,
-    [objectsSlice.name]: objectsSlice.reducer,
-    [effectSlice.name]: effectSlice.reducer,
-    [storageSlice.name]: storageSlice.reducer,
-  },
+  reducer: reducers,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(
       settingsMiddleware.middleware,

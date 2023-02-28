@@ -4,7 +4,7 @@ import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
 import { RootState } from 'store';
 
-const selectSelf = (state: RootState) => state.document;
+const selectSelf = (state: RootState) => state.document.present;
 
 /**
  * @description
@@ -23,15 +23,15 @@ const serialized = createSelector(
       return null;
     }
     const legacyDocumentModel: QueueDocument = {
-      ...state.document,
-      pages: state.pages.ids.map((page) => ({
-        ...state.pages.entities[page],
-        objects: Object.values(state.objects.entities)
+      ...state.document.present,
+      pages: state.pages.present.ids.map((page) => ({
+        ...state.pages.present.entities[page],
+        objects: Object.values(state.objects.present.entities)
           .filter((object) => object.pageId === page)
           .map<QueueObjectType>((object) => {
             return {
               ...object,
-              effects: Object.values(state.effects.entities)
+              effects: Object.values(state.effects.present.entities)
                 .filter((effect) => effect.objectId === object.id)
                 .map<QueueEffectType>(({ objectId, ...effect }) => ({
                   ...effect,

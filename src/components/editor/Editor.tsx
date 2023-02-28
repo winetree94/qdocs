@@ -52,8 +52,11 @@ export const QueueEditor = () => {
   }, {});
 
   const queueObjects = objects.filter((object) => {
-    const createEffect = effectsGroupByObjectId[object.id].find((effect) => effect.type === 'create');
-    const removeEffect = effectsGroupByObjectId[object.id].find((effect) => effect.type === 'remove');
+    const createEffect = (effectsGroupByObjectId[object.id] || []).find((effect) => effect.type === 'create');
+    const removeEffect = (effectsGroupByObjectId[object.id] || []).find((effect) => effect.type === 'remove');
+    if (!createEffect) {
+      return false;
+    }
     if (settings.queueIndex < createEffect.index) {
       return false;
     }
