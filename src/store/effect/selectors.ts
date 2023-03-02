@@ -7,11 +7,7 @@ import { effectEntityAdapter } from './reducer';
 import { NormalizedQueueObjectType } from '../object/model';
 import { NormalizedQueueEffect } from './model';
 
-const selectSelf = (state: RootState) =>
-  state.effects.present || {
-    entities: {},
-    ids: [],
-  };
+const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
 
 const all = selectors.selectAll;

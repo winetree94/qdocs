@@ -2,11 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { pageEntityAdapter } from './reducer';
 
-const selectSelf = (state: RootState) =>
-  state.pages.present || {
-    entities: {},
-    ids: [],
-  };
+const selectSelf = (state: RootState) => state.pages;
 const selectors = pageEntityAdapter.getSelectors(selectSelf);
 
 const all = selectors.selectAll;

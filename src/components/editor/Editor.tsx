@@ -25,6 +25,8 @@ import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
 import { ObjectActions } from '../../store/object';
 import { Draggable } from 'cdk/drag/Drag';
+import { isEqual } from 'lodash';
+import { HistoryActions } from 'store/hooks/history';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();
@@ -223,6 +225,11 @@ export const QueueEditor = () => {
     }
   };
 
+  const onObjectDragStart = (): void => {
+    setCapturedObjectProps(props);
+    dispatch(HistoryActions.Capture());
+  };
+
   const onObjectDragMove = (initEvent: MouseEvent, event: MouseEvent): void => {
     onUpdateDrag(initEvent, event);
   };
@@ -251,6 +258,10 @@ export const QueueEditor = () => {
         return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
       })
       .map(([id]) => id);
+
+    if (isEqual(rangeObjectIds, settings.selectedObjectIds)) {
+      return;
+    }
 
     dispatch(
       SettingsActions.setSelection({
@@ -410,15 +421,19 @@ export const QueueEditor = () => {
                             <Draggable
                               onMouseDown={(e) => onObjectMousedown(e, object)}
                               onDoubleClick={(e) => onObjectDoubleClick(e, object)}
-                              onActualDragStart={() => setCapturedObjectProps(props)}
+                              onActualDragStart={() => onObjectDragStart()}
                               onActualDragMove={onObjectDragMove}
                               onActualDragEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
                               <QueueObject.Text onEdit={(e) => onTextEdit(object, e)} />
                               <QueueObject.Resizer
-                                onResizeStart={(e) => resizeObjectRect(object.id, e)}
+                                onResizeStart={(e) => {
+                                  dispatch(HistoryActions.Capture());
+                                  resizeObjectRect(object.id, e);
+                                }}
                                 onResizeMove={(e) => resizeObjectRect(object.id, e)}
                                 onResizeEnd={(e) => resizeObjectRect(object.id, e)}
+                                onRotateStart={(e) => dispatch(HistoryActions.Capture())}
                                 onRotateMove={(e) => updateObjectRotate(object.id, e.degree)}
                                 onRotateEnd={(e) => updateObjectRotate(object.id, e.degree)}
                               />

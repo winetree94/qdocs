@@ -46,7 +46,6 @@
     "react-scripts": "5.0.1",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.8",
-    "redux-undo": "^1.0.1",
     "remixicon": "^2.5.0",
     "typescript": "^4.8.4",
     "web-vitals": "^2.1.4"

@@ -1,7 +1,6 @@
 import { fitScreenSizeEvent } from 'app/events/event';
 import { useEventDispatch } from 'cdk/hooks/event-dispatcher';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { ActionCreators as UndoActionCreators } from 'redux-undo';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
@@ -12,6 +11,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { EffectSelectors } from 'store/effect/selectors';
 import { SettingsActions } from 'store/settings/actions';
+import { HistoryActions } from 'store/hooks/history';
 
 export const QueueSubtoolbar = () => {
   const dispatch = useAppDispatch();
@@ -42,23 +42,11 @@ export const QueueSubtoolbar = () => {
   };
 
   const undo = () => {
-    dispatch(
-      SettingsActions.setSelection({
-        selectionMode: 'normal',
-        ids: [],
-      }),
-    );
-    dispatch(UndoActionCreators.undo());
+    dispatch(HistoryActions.Undo());
   };
 
   const redo = () => {
-    dispatch(
-      SettingsActions.setSelection({
-        selectionMode: 'normal',
-        ids: [],
-      }),
-    );
-    dispatch(UndoActionCreators.redo());
+    dispatch(HistoryActions.Redo());
   };
 
   return (
