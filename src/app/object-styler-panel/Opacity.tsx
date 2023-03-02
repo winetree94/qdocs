@@ -1,6 +1,7 @@
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueFade } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -13,7 +14,8 @@ export const ObjectStyleOpacity = () => {
 
   const fade = firstObject.fade;
 
-  const updateStroke = (fade: Partial<QueueFade>): void => {
+  const updateFade = (fade: Partial<QueueFade>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({
@@ -41,7 +43,7 @@ export const ObjectStyleOpacity = () => {
             value={[fade.opacity]}
             step={0.05}
             onValueChange={([e]) =>
-              updateStroke({
+              updateFade({
                 opacity: e,
               })
             }

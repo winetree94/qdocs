@@ -1,4 +1,3 @@
-import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { forwardRef } from 'react';
@@ -55,22 +54,19 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         복제 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
+      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
         맨 앞으로 가져오기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'end')}>
+      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'end')}>
         맨 뒤로 보내기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'forward')}>
+      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'forward')}>
         앞으로 가져오기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'backward')}>
+      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'backward')}>
         뒤로 보내기
       </QueueContextMenu.Item>
-      <QueueContextMenu.Separator />
-      <QueueContextMenu.Item>그룹</QueueContextMenu.Item>
-      <QueueContextMenu.Item>그룹 해제</QueueContextMenu.Item>
-      <QueueContextMenu.Separator />
+      {/* <QueueContextMenu.Separator />
       <QueueContextMenu.Sub>
         <QueueContextMenu.SubTrigger>
           더보기
@@ -89,7 +85,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
             <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
           </QueueContextMenu.SubContent>
         </QueueContextMenu.Portal>
-      </QueueContextMenu.Sub>
+      </QueueContextMenu.Sub> */}
     </QueueContextMenu.Content>
   );
 });

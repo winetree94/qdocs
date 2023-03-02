@@ -5,6 +5,7 @@ import { QueueInput } from 'components/input/Input';
 import { QueueSelect } from 'components/select/Select';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueText } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -18,6 +19,7 @@ export const ObjectStyleText = () => {
   const text = firstObject.text;
 
   const updateText = (text: Partial<QueueText>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({

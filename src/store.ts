@@ -20,6 +20,8 @@ const reducers = combineReducers({
         ...current,
         ...history,
         scale: current.scale,
+        autoPlayRepeat: current.autoPlayRepeat,
+        queueStart: -1,
       };
     },
   }),

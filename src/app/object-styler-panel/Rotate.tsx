@@ -1,6 +1,7 @@
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueRotate } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -14,6 +15,7 @@ export const ObjectStyleRotate = () => {
   const rotate = firstObject.rotate;
 
   const updateStroke = (rotate: Partial<QueueRotate>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({

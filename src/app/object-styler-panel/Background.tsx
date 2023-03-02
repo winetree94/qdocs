@@ -2,6 +2,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueFill } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -15,6 +16,7 @@ export const ObjectStyleBackground = () => {
   const fill = firstObject.fill;
 
   const updateObjectFill = (fill: Partial<QueueFill>) => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map<{ id: EntityId; changes: Partial<NormalizedQueueObjectType> }>((object) => {

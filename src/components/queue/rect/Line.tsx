@@ -26,7 +26,7 @@ export const Line = ({ onRectMousedown }: RectProps) => {
         top: `${animation.rect.y}px`,
         left: `${animation.rect.x}px`,
         transformOrigin: 'center center',
-        transform: `rotate(${animation.rotate.degree}deg)`,
+        transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}
       viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
       opacity={animation.fade.opacity}>

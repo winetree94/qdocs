@@ -1,6 +1,7 @@
 import { QueueH6 } from 'components/head/Head';
 import { QueueInput } from 'components/input/Input';
 import { QueueRect } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -14,6 +15,7 @@ export const ObjectStyleRect = () => {
   const rect = firstObject.rect;
 
   const updateRect = (rect: Partial<QueueRect>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({

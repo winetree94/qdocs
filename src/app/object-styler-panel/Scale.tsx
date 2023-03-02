@@ -1,6 +1,7 @@
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueScale } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -14,6 +15,7 @@ export const ObjectStyleScale = () => {
   const scale = firstObject.scale;
 
   const updateStroke = (scale: Partial<QueueScale>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({

@@ -3,6 +3,7 @@ import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueSelect } from 'components/select/Select';
 import { QueueStroke } from 'model/property';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
@@ -16,6 +17,7 @@ export const ObjectStyleStroke = () => {
   const stroke = firstObject.stroke;
 
   const updateStroke = (stroke: Partial<QueueStroke>): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
         selectedObjects.map((object) => ({

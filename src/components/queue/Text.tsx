@@ -93,7 +93,7 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
         height: `${animation.rect.height}px`,
         textAlign: textAlign,
         transformOrigin: 'center center',
-        transform: `rotate(${animation.rotate.degree}deg)`,
+        transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
         opacity: `${animation.fade.opacity}`,
       }}
       spellCheck="false"
