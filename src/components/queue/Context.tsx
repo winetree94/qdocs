@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { EntityId } from '@reduxjs/toolkit';
 import { ObjectActions } from '../../store/object';
+import { HistoryActions } from 'store/history';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
@@ -31,12 +32,13 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 오브젝트를 영구히 제거
    */
   const onCompletelyRemoveClick = (ids: EntityId[]): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(ObjectActions.removeMany(ids));
   };
 
   return (
     <QueueContextMenu.Content onMouseDown={(e): void => e.stopPropagation()} ref={ref}>
-      <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
+      <QueueContextMenu.Item onClick={(): void => onRemoveObject()} disabled>
         현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectIds)}>

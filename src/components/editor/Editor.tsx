@@ -26,7 +26,7 @@ import { SettingsActions } from '../../store/settings';
 import { ObjectActions } from '../../store/object';
 import { Draggable } from 'cdk/drag/Drag';
 import { isEqual } from 'lodash';
-import { HistoryActions } from 'store/hooks/history';
+import { HistoryActions } from 'store/history';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();

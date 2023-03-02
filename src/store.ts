@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { documentMiddleware } from 'store/document/middleware';
 import { documentSlice } from 'store/document/reducer';
 import { effectMiddleware } from 'store/effect/middlewares';
 import { effectSlice } from 'store/effect/reducer';
-import { withHistory } from 'store/hooks/history';
+import { historySlice, withHistory } from 'store/history';
 import { objectMiddleware } from 'store/object/middlewares';
 import { objectsSlice } from 'store/object/reducer';
 import { pageMiddleware } from 'store/page/middlewares';
@@ -12,7 +13,16 @@ import { documentSettingsSlice } from 'store/settings/reducer';
 import { storageSlice } from 'store/storage/reducer';
 
 const reducers = combineReducers({
-  [documentSettingsSlice.name]: withHistory(documentSettingsSlice.reducer),
+  [historySlice.name]: historySlice.reducer,
+  [documentSettingsSlice.name]: withHistory(documentSettingsSlice.reducer, {
+    beforeHistoryApplied: (history, current) => {
+      return {
+        ...current,
+        ...history,
+        scale: current.scale,
+      };
+    },
+  }),
   [documentSlice.name]: withHistory(documentSlice.reducer),
   [pagesSlice.name]: withHistory(pagesSlice.reducer),
   [objectsSlice.name]: withHistory(objectsSlice.reducer),
@@ -26,6 +36,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(
       settingsMiddleware.middleware,
+      documentMiddleware.middleware,
       pageMiddleware.middleware,
       objectMiddleware.middleware,
       effectMiddleware.middleware,

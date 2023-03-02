@@ -11,12 +11,15 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { EffectSelectors } from 'store/effect/selectors';
 import { SettingsActions } from 'store/settings/actions';
-import { HistoryActions } from 'store/hooks/history';
+import { HistoryActions } from 'store/history';
+import { HistorySelectors } from 'store/history/selectors';
+import { ObjectActions } from 'store/object';
 
 export const QueueSubtoolbar = () => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
 
+  const history = useAppSelector(HistorySelectors.all);
   const settings = useAppSelector(SettingSelectors.settings);
   const byEffectIndex = useAppSelector((state) => EffectSelectors.allByPageAndEffectIndex(state, settings.pageId));
 
@@ -41,29 +44,41 @@ export const QueueSubtoolbar = () => {
     dispatch(SettingsActions.setPresentationMode(true));
   };
 
-  const undo = () => {
-    dispatch(HistoryActions.Undo());
-  };
-
-  const redo = () => {
-    dispatch(HistoryActions.Redo());
-  };
-
   return (
     <QueueScrollArea.Root className={styles.Container}>
       <QueueScrollArea.Viewport>
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
-            <QueueIconButton onClick={undo}>
-              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
+            <QueueIconButton onClick={() => dispatch(HistoryActions.Undo())} disabled={!history.previous.length}>
+              <SvgRemixIcon
+                width={15}
+                height={15}
+                icon={'ri-arrow-go-back-line'}
+                className={clsx(history.previous.length === 0 ? styles.Disabled : null)}
+              />
             </QueueIconButton>
 
-            <QueueIconButton onClick={redo}>
-              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
+            <QueueIconButton onClick={() => dispatch(HistoryActions.Redo())} disabled={!history.future.length}>
+              <SvgRemixIcon
+                width={15}
+                height={15}
+                icon={'ri-arrow-go-forward-line'}
+                className={clsx(history.future.length === 0 ? styles.Disabled : null)}
+              />
             </QueueIconButton>
 
-            <QueueIconButton>
-              <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
+            <QueueIconButton
+              onClick={() => {
+                dispatch(HistoryActions.Capture());
+                dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
+              }}
+              disabled={!settings.selectedObjectIds.length}>
+              <SvgRemixIcon
+                width={15}
+                height={15}
+                icon={'ri-file-copy-line'}
+                className={clsx(settings.selectedObjectIds.length === 0 ? styles.Disabled : null)}
+              />
             </QueueIconButton>
 
             <QueueIconButton>

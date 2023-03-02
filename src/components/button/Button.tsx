@@ -30,11 +30,12 @@ export interface QueueIconButtonProps extends BaseQueueButtonProps {}
 
 export const QueueIconButton: React.ForwardRefExoticComponent<
   QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({ children, round = false, size = 'medium', color = 'default', ...props }, ref) => {
+> = forwardRef(({ children, round = false, size = 'medium', color = 'default', disabled, ...props }, ref) => {
   return (
     <button
       ref={ref}
       {...props}
+      disabled={disabled}
       className={clsx(
         styles.QueueButtonBase,
         styles.QueueIconButton,
@@ -42,6 +43,7 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
         styles[size],
         styles[color],
         round ? styles.round : null,
+        disabled ? styles.Disabled : null,
       )}>
       {children}
     </button>
@@ -52,11 +54,12 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
 export interface QueueButtonProps extends BaseQueueButtonProps {}
 
 export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & React.RefAttributes<HTMLButtonElement>> =
-  forwardRef(({ children, round = false, size = 'medium', color = 'default', ...props }, ref) => {
+  forwardRef(({ children, round = false, size = 'medium', color = 'default', disabled, ...props }, ref) => {
     return (
       <button
         ref={ref}
         {...props}
+        disabled={disabled}
         className={clsx(
           styles.QueueButtonBase,
           styles.QueueButton,
@@ -64,6 +67,7 @@ export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & Rea
           styles[size],
           styles[color],
           round ? styles.round : null,
+          disabled ? styles.Disabled : null,
         )}>
         {children}
       </button>

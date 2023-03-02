@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectActions } from '../../../store/object';
+import { HistoryActions } from 'store/history';
 
 export interface QueueObject {
   key: string;
@@ -146,6 +147,7 @@ export const ObjectPanel: FunctionComponent = () => {
           ...figure,
         };
         delete object.effects; // 불필요한 값 스토어에 들어가는 것 방지, create 함수들이 스토어 모델을 반환하도록 개선 필요
+        dispatch(HistoryActions.Capture());
         dispatch(
           ObjectActions.addOne({
             queueIndex: settings.queueIndex,

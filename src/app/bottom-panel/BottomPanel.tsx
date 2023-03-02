@@ -14,6 +14,7 @@ import { PageSelectors } from 'store/page/selectors';
 import { DocumentSelectors } from 'store/document/selectors';
 import { PageActions } from '../../store/page';
 import { SettingsActions, SettingSelectors } from '../../store/settings';
+import { HistoryActions } from 'store/history';
 
 export const BottomPanel = () => {
   const dispatch = useAppDispatch();
@@ -44,16 +45,17 @@ export const BottomPanel = () => {
   };
 
   const movePage = (from: EntityId, to: EntityId): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       PageActions.switchPageIndex({
         from: from,
         to: to,
       }),
     );
-    // setQueuePageIndex(to);
   };
 
   const createPage = (index: number): void => {
+    dispatch(HistoryActions.Capture());
     const newId = nanoid();
     dispatch(
       PageActions.addPage({
@@ -67,6 +69,7 @@ export const BottomPanel = () => {
   };
 
   const removePage = (id: EntityId): void => {
+    dispatch(HistoryActions.Capture());
     const index = pages.findIndex((page) => page.id === id);
     dispatch(PageActions.removePage(id));
     const sliced = pages.slice(0).filter((page) => page.id !== id);
@@ -93,6 +96,7 @@ export const BottomPanel = () => {
   };
 
   const onPageNameEdit = (pageName: string, id: EntityId): void => {
+    dispatch(HistoryActions.Capture());
     dispatch(
       PageActions.updatePage({
         id: id,
@@ -105,6 +109,7 @@ export const BottomPanel = () => {
   };
 
   const onPageCopy = (index: number): void => {
+    dispatch(HistoryActions.Capture());
     const newId = nanoid();
     dispatch(
       PageActions.copyPage({

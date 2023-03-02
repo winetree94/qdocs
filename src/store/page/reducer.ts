@@ -13,6 +13,10 @@ export const pagesSlice = createSlice({
   initialState: pageEntityAdapter.getInitialState(),
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(PageActions.addPage, (state, action) => {
+      return pageEntityAdapter.addOne(state, action.payload);
+    });
+
     builder.addCase(PageActions.removePage, (state, action) => {
       return pageEntityAdapter.removeOne(state, action.payload);
     });
