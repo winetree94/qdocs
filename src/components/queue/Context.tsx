@@ -7,6 +7,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EntityId } from '@reduxjs/toolkit';
 import { ObjectActions } from '../../store/object';
 import { HistoryActions } from 'store/history';
+import { EffectActions } from 'store/effect';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
@@ -23,6 +24,12 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
    * 현재 큐에서 오브젝트를 제거, 생성된 큐에서 제거를 시도한 경우 영구히 제거한다.
    */
   const onRemoveObject = (): void => {
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.removeObjectOnQueue({
+        ids: settings.selectedObjectIds,
+      }),
+    );
     // todo
   };
 
@@ -37,17 +44,17 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
 
   return (
     <QueueContextMenu.Content onMouseDown={(e): void => e.stopPropagation()} ref={ref}>
-      <QueueContextMenu.Item onClick={(): void => onRemoveObject()} disabled>
+      <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
         현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectIds)}>
         오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
-      <QueueContextMenu.Item>
+      <QueueContextMenu.Item disabled>
         잘라내기 <div className={styles.RightSlot}>⌘+T</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item>
+      <QueueContextMenu.Item disabled>
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={() => dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }))}>
@@ -66,26 +73,6 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'backward')}>
         뒤로 보내기
       </QueueContextMenu.Item>
-      {/* <QueueContextMenu.Separator />
-      <QueueContextMenu.Sub>
-        <QueueContextMenu.SubTrigger>
-          더보기
-          <div className={styles.RightSlot}>
-            <ChevronRightIcon />
-          </div>
-        </QueueContextMenu.SubTrigger>
-        <QueueContextMenu.Portal>
-          <QueueContextMenu.SubContent sideOffset={2} alignOffset={-5}>
-            <QueueContextMenu.Item>
-              Save Page As… <div className={styles.RightSlot}>⌘+S</div>
-            </QueueContextMenu.Item>
-            <QueueContextMenu.Item>Create Shortcut…</QueueContextMenu.Item>
-            <QueueContextMenu.Item>Name Window…</QueueContextMenu.Item>
-            <QueueContextMenu.Separator />
-            <QueueContextMenu.Item>Developer Tools</QueueContextMenu.Item>
-          </QueueContextMenu.SubContent>
-        </QueueContextMenu.Portal>
-      </QueueContextMenu.Sub> */}
     </QueueContextMenu.Content>
   );
 });

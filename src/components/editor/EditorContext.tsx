@@ -20,10 +20,10 @@ export const EditorContext: React.ForwardRefExoticComponent<
         다시 실행 <div className={styles.RightSlot}>⌘+Shift+Z</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
-      <QueueContextMenu.Item>
+      <QueueContextMenu.Item disabled>
         붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item>
+      <QueueContextMenu.Item disabled>
         이 위치로 붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
       </QueueContextMenu.Item>
     </QueueContextMenu.Content>

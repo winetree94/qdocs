@@ -2,6 +2,7 @@
   @apply flex;
   border-bottom: 1px solid var(--gray5);
   background-color: var(--gray1);
+  height: 70px;
 }
 
 .LogoContainer {
@@ -14,5 +15,5 @@
 }
 
 .TitleContainer {
-  @apply m-2.5;
+  @apply mt-2.5 ml-2.5 h-full;
 }

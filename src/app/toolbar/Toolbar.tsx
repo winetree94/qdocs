@@ -3,13 +3,13 @@ import styles from './Toolbar.module.scss';
 import clsx from 'clsx';
 import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
-import { QueueInput } from 'components/input/Input';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
 import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { DocumentActions } from '../../store/document';
+import { QueueH6 } from 'components/head/Head';
 
 export interface ToolbarModel {
   key: string;
@@ -117,14 +117,7 @@ export const QueueToolbar = () => {
       </div>
       <div className={clsx(styles.ContentContainer)}>
         <div className={clsx(styles.TitleContainer)}>
-          <QueueInput
-            disabled={!docs}
-            type="text"
-            value={docs?.documentName}
-            onChange={(e) => {
-              dispatch(DocumentActions.changeName(e.target.value));
-            }}
-          />
+          <QueueH6>{docs?.documentName}</QueueH6>
         </div>
         <QueueMenubar.Root>
           <QueueMenubar.Menu>

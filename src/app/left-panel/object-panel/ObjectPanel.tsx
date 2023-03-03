@@ -20,6 +20,7 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectActions } from '../../../store/object';
 import { HistoryActions } from 'store/history';
+import { SettingsActions } from 'store/settings';
 
 export interface QueueObject {
   key: string;
@@ -152,6 +153,12 @@ export const ObjectPanel: FunctionComponent = () => {
           ObjectActions.addOne({
             queueIndex: settings.queueIndex,
             object: object,
+          }),
+        );
+        dispatch(
+          SettingsActions.setSelection({
+            selectionMode: 'normal',
+            ids: [object.id],
           }),
         );
       };

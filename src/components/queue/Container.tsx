@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { QueueObjectType } from 'model/object';
-import { createContext, FunctionComponent } from 'react';
+import { createContext } from 'react';
 import { NormalizedQueueObjectType } from '../../store/object/model';
 
 export interface QueueObjectContainerContextType<T extends QueueObjectType> {
@@ -15,21 +15,21 @@ export const QueueObjectContainerContext = createContext<QueueObjectContainerCon
   {} as QueueObjectContainerContextType<any>,
 );
 
-export interface QueueObjectContainerProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface QueueObjectContainerProps {
   documentScale: number;
   object: NormalizedQueueObjectType;
   detail: boolean;
   selected: boolean;
   children: React.ReactNode;
 }
-export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> = ({
+
+export const QueueObjectContainer = ({
   children,
   selected,
   detail,
   documentScale,
   object,
-  ...props
-}) => {
+}: QueueObjectContainerProps) => {
   return (
     <QueueObjectContainerContext.Provider
       value={{
@@ -38,7 +38,7 @@ export const QueueObjectContainer: FunctionComponent<QueueObjectContainerProps> 
         detail,
         documentScale,
       }}>
-      <div {...props}>{children}</div>
+      {children}
     </QueueObjectContainerContext.Provider>
   );
 };
