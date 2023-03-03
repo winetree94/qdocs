@@ -69,6 +69,10 @@ export const pagesSlice = createSlice({
     });
 
     builder.addCase(DocumentActions.loadDocument, (state, action) => {
+      if (!action.payload) {
+        return pagesSlice.getInitialState();
+      }
+
       return pageEntityAdapter.setAll(state, {
         ...action.payload.pages.map((page, index) => ({
           documentId: action.payload.id,

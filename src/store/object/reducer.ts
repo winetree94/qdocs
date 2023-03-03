@@ -13,6 +13,9 @@ export const objectsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(DocumentActions.loadDocument, (state, action) => {
+      if (!action.payload) {
+        return objectsSlice.getInitialState();
+      }
       const normalized = action.payload.pages.reduce<NormalizedQueueObjectType[]>((result, page) => {
         page.objects.forEach((object) => {
           const normalizedObject = {

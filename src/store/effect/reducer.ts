@@ -16,6 +16,9 @@ export const effectSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(DocumentActions.loadDocument, (state, action) => {
+      if (!action.payload) {
+        return effectSlice.getInitialState();
+      }
       const normalized = action.payload.pages.reduce<NormalizedQueueEffect[]>((result, page) => {
         page.objects.forEach((object) => {
           object.effects.forEach((effect) => {

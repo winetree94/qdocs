@@ -37,6 +37,9 @@ export const documentSettingsSlice = createSlice({
      * 새로운 문서 열람시 초기화
      */
     builder.addCase(DocumentActions.loadDocument, (state, action): QueueDocumentSettings => {
+      if (!action.payload) {
+        return { ...initialState };
+      }
       return {
         ...initialState,
         documentId: action.payload.id,

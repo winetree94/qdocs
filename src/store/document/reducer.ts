@@ -8,6 +8,9 @@ export const documentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(DocumentActions.loadDocument, (state, action): NormalizedQueueDocument => {
+      if (!action.payload) {
+        return null;
+      }
       return {
         id: action.payload.id,
         documentName: action.payload.documentName,
