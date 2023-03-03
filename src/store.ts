@@ -25,7 +25,15 @@ const reducers = combineReducers({
       };
     },
   }),
-  [documentSlice.name]: withHistory(documentSlice.reducer),
+  [documentSlice.name]: withHistory(documentSlice.reducer, {
+    beforeHistoryApplied: (history, current) => {
+      return {
+        ...current,
+        ...history,
+        documentName: current.documentName,
+      };
+    },
+  }),
   [pagesSlice.name]: withHistory(pagesSlice.reducer),
   [objectsSlice.name]: withHistory(objectsSlice.reducer),
   [effectSlice.name]: withHistory(effectSlice.reducer),

@@ -14,7 +14,10 @@ const loadDocument = createAction<QueueDocument | null>('Document/setDocument');
  */
 const closeDocument = createAction('Document/closeDocument');
 
+const changeName = createAction<string>('Document/changeName');
+
 export const DocumentActions = {
   loadDocument,
   closeDocument,
+  changeName,
 };

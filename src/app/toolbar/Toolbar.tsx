@@ -117,7 +117,14 @@ export const QueueToolbar = () => {
       </div>
       <div className={clsx(styles.ContentContainer)}>
         <div className={clsx(styles.TitleContainer)}>
-          <QueueInput disabled={!docs} type="text" />
+          <QueueInput
+            disabled={!docs}
+            type="text"
+            value={docs?.documentName}
+            onChange={(e) => {
+              dispatch(DocumentActions.changeName(e.target.value));
+            }}
+          />
         </div>
         <QueueMenubar.Root>
           <QueueMenubar.Menu>

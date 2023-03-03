@@ -18,5 +18,9 @@ export const documentSlice = createSlice({
         },
       };
     });
+
+    builder.addCase(DocumentActions.changeName, (state, action) => {
+      state.documentName = action.payload;
+    });
   },
 });
