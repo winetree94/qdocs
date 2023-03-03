@@ -161,10 +161,10 @@ export const BottomPanel = () => {
                           페이지를 오른쪽으로 이동
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index, 0))}>
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index - 1))}>
                           왼쪽에 페이지 추가
                         </QueueContextMenu.Item>
-                        <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index + 1, self.length))}>
+                        <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index, self.length))}>
                           오른쪽에 페이지 추가
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
