@@ -30,24 +30,28 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         ids: settings.selectedObjectIds,
       }),
     );
-    // todo
   };
 
   /**
    * @description
    * 오브젝트를 영구히 제거
    */
-  const onCompletelyRemoveClick = (ids: EntityId[]): void => {
+  const onCompletelyRemoveClick = (): void => {
     dispatch(HistoryActions.Capture());
-    dispatch(ObjectActions.removeMany(ids));
+    dispatch(ObjectActions.removeMany(settings.selectedObjectIds));
+  };
+
+  const duplicate = (): void => {
+    dispatch(HistoryActions.Capture());
+    dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
   };
 
   return (
     <QueueContextMenu.Content onMouseDown={(e): void => e.stopPropagation()} ref={ref}>
-      <QueueContextMenu.Item onClick={(): void => onRemoveObject()}>
+      <QueueContextMenu.Item onClick={onRemoveObject}>
         현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={(): void => onCompletelyRemoveClick(settings.selectedObjectIds)}>
+      <QueueContextMenu.Item onClick={onCompletelyRemoveClick}>
         오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
@@ -57,7 +61,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
       <QueueContextMenu.Item disabled>
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={() => dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }))}>
+      <QueueContextMenu.Item onClick={duplicate}>
         복제 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
