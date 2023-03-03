@@ -10,6 +10,9 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { DocumentActions } from '../../store/document';
 import { QueueH6 } from 'components/head/Head';
+import { HistorySelectors } from 'store/history/selectors';
+import { HistoryActions } from 'store/history';
+import { SettingsActions } from 'store/settings';
 
 export interface ToolbarModel {
   key: string;
@@ -19,6 +22,7 @@ export interface ToolbarModel {
 }
 
 export const QueueToolbar = () => {
+  const history = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
@@ -142,13 +146,21 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>수정</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled={!docs}>실행 취소</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!docs}>다시 실행</QueueMenubar.Item>
+                <QueueMenubar.Item
+                  disabled={!docs || history.previous.length === 0}
+                  onClick={() => dispatch(HistoryActions.Undo())}>
+                  실행 취소
+                </QueueMenubar.Item>
+                <QueueMenubar.Item
+                  disabled={!docs || history.future.length === 0}
+                  onClick={() => dispatch(HistoryActions.Redo())}>
+                  다시 실행
+                </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs}>붙여넣기</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>붙여넣기</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs}>제목 수정</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!docs}>페이지 설정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>제목 수정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>페이지 설정</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -157,9 +169,11 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>보기</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled={!docs}>프레젠테이션 모드 시작</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs} onClick={() => dispatch(SettingsActions.setPresentationMode(true))}>
+                  프레젠테이션 모드 시작
+                </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>전체 화면</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>전체 화면</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -168,12 +182,12 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>도움말</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item>키보드 단축키</QueueMenubar.Item>
-                <QueueMenubar.Item>웹 사이트</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>키보드 단축키</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>웹 사이트</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>업데이트 확인</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>업데이트 확인</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item>정보</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>정보</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
