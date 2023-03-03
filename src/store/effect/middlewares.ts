@@ -90,7 +90,7 @@ effectMiddleware.startListening({
     }, {});
     const pendingInsert: NormalizedQueueEffect[] = [];
     const pendingRemove: NormalizedQueueEffect[] = [];
-    action.payload.ids.map((id) => {
+    action.payload.ids.forEach((id) => {
       const objectEffects = effects[id];
       objectEffects.forEach((effect) => {
         if (effect.index > settings.queueIndex) {
