@@ -165,6 +165,17 @@ export const RootLayout = () => {
         },
       },
       {
+        keys: ['Escape'],
+        callback: (e) => {
+          dispatch(
+            SettingsActions.setSelection({
+              selectionMode: 'normal',
+              ids: [],
+            }),
+          );
+        },
+      },
+      {
         keys: ['Delete', 'Backspace'],
         meta: false,
         callback: (e) => {

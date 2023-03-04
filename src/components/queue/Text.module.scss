@@ -1,0 +1,11 @@
+.Container {
+  @apply absolute flex;
+}
+
+.Editor {
+  @apply relative inline-block text-center w-full outline-none break-all;
+}
+
+.Enable {
+  @apply cursor-text;
+}
