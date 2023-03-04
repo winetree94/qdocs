@@ -7,13 +7,16 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EntityId } from '@reduxjs/toolkit';
 import { ObjectActions } from '../../store/object';
 import { HistoryActions } from 'store/history';
-import { EffectActions } from 'store/effect';
+import { EffectActions, EffectSelectors } from 'store/effect';
+import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
   const changeObjectIndex = (fromIds: EntityId[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
     // todo sorting 은 완전히 다시 짜야함
@@ -41,9 +44,31 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
     dispatch(ObjectActions.removeMany(settings.selectedObjectIds));
   };
 
+  /**
+   * @description
+   * 오브젝트를 복제
+   */
   const duplicate = (): void => {
     dispatch(HistoryActions.Capture());
     dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
+  };
+
+  /**
+   * @description
+   * 오브젝트를 클립보드에 복사
+   */
+  const copyToClipboard = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+    const models = selectedObjects.map((object) => ({
+      object: object,
+      effects: effects[object.id],
+    }));
+    navigator.clipboard.writeText(
+      JSON.stringify({
+        identity: QUEUE_CLIPBOARD_UNIQUE_ID,
+        type: 'objects',
+        data: models,
+      }),
+    );
   };
 
   return (
@@ -55,15 +80,10 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
-      <QueueContextMenu.Item disabled>
-        잘라내기 <div className={styles.RightSlot}>⌘+T</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item disabled>
+      <QueueContextMenu.Item onClick={copyToClipboard}>
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={duplicate}>
-        복제 <div className={styles.RightSlot}>⌘+C</div>
-      </QueueContextMenu.Item>
+      <QueueContextMenu.Item onClick={duplicate}>복제</QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
         맨 앞으로 가져오기

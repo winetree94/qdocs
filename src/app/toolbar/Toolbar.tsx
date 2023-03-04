@@ -157,8 +157,6 @@ export const QueueToolbar = () => {
                   다시 실행
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs || true}>붙여넣기</QueueMenubar.Item>
-                <QueueMenubar.Separator />
                 <QueueMenubar.Item disabled={!docs || true}>제목 수정</QueueMenubar.Item>
                 <QueueMenubar.Item disabled={!docs || true}>페이지 설정</QueueMenubar.Item>
               </QueueMenubar.Content>

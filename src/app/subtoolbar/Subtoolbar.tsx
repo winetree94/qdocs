@@ -81,10 +81,6 @@ export const QueueSubtoolbar = () => {
               />
             </QueueIconButton>
 
-            <QueueIconButton disabled>
-              <SvgRemixIcon width={15} height={15} icon={'ri-clipboard-line'} className={clsx(styles.Disabled)} />
-            </QueueIconButton>
-
             <QueueIconButton onClick={onPresentationStartClick}>
               <SvgRemixIcon width={15} height={15} icon={'ri-slideshow-3-line'} />
             </QueueIconButton>
