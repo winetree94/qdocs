@@ -1,6 +1,7 @@
 import { QueueDocument } from 'model/document';
 import animatedTextUrl from 'assets/templates/animated-text.que';
 import playUrl from 'assets/templates/play.que';
+import colorSampleUrl from 'assets/templates/color-sample.que';
 import { nanoid } from '@reduxjs/toolkit';
 
 export interface TemplateMeta {
@@ -40,5 +41,10 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Play',
     preview: '',
     getTemplate: () => fetch(playUrl).then((r) => r.json()),
+  },
+  {
+    name: 'Color Sample',
+    preview: '',
+    getTemplate: () => fetch(colorSampleUrl).then((r) => r.json()),
   },
 ];

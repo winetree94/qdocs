@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { convertHex } from 'components/queue/color/convertHex';
+import { convertHexWithOpacity } from 'components/queue/color/convertHex';
 import { useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
@@ -10,9 +10,9 @@ export const Square = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   const strokeClipPathID = `stroke-alignment-inner-for-rect-${containerContext.object.id}`;
-  const fill = convertHex(
-    containerContext.object.fill.color,
-    containerContext.object.fill.opacity * animation.fade.opacity,
+  const fill = convertHexWithOpacity(
+    animation.fill.color,
+    containerContext.object.fill.opacity * animation.fade.opacity * animation.fill.opacity,
   );
 
   return (
@@ -35,7 +35,6 @@ export const Square = ({ onRectMousedown }: RectProps) => {
             ry={0}
             width={animation.rect.width}
             height={animation.rect.height}
-            fill={fill}
             stroke={containerContext.object.stroke.color}
             strokeWidth={containerContext.object.stroke.width * 2}
           />

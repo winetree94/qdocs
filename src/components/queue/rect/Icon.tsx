@@ -5,10 +5,16 @@ import { QueueObjectContainerContext, QueueObjectContainerContextType } from '..
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
 import symbolPath from 'assets/remixicon.symbol.svg';
+import { convertHexWithOpacity } from 'components/queue/color/convertHex';
 
 export const Icon = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext<QueueObjectContainerContextType<QueueIcon>>(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
+  const fill = convertHexWithOpacity(
+    animation.fill.color,
+    containerContext.object.fill.opacity * animation.fade.opacity * animation.fill.opacity,
+  );
+
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
@@ -21,10 +27,7 @@ export const Icon = ({ onRectMousedown }: RectProps) => {
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}
       opacity={animation.fade.opacity}>
-      <use
-        onMouseDown={onRectMousedown}
-        href={`${symbolPath}#${containerContext.object.iconType}`}
-        fill={containerContext.object.fill.color}></use>
+      <use onMouseDown={onRectMousedown} href={`${symbolPath}#${containerContext.object.iconType}`} fill={fill}></use>
     </svg>
   );
 };

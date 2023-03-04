@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { convertHex } from 'components/queue/color/convertHex';
+import { convertHexWithOpacity } from 'components/queue/color/convertHex';
 import { useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
@@ -13,7 +13,10 @@ export const Circle = ({ onRectMousedown }: RectProps) => {
   const rx = animation.rect.width / 2;
   const ry = animation.rect.height / 2;
   const strokeClipPathID = `stroke-alignment-inner-for-circle-${containerContext.object.id}`;
-  const fill = convertHex(containerContext.object.fill.color, containerContext.object.fill.opacity);
+  const fill = convertHexWithOpacity(
+    animation.fill.color,
+    containerContext.object.fill.opacity * animation.fade.opacity * animation.fill.opacity,
+  );
 
   return (
     <svg
