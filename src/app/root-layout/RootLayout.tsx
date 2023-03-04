@@ -198,7 +198,7 @@ export const RootLayout = () => {
    * 문서가 열려있으면, 페이지 이동하기 전에 경고를 띄워준다.
    */
   useEffect(() => {
-    if (!settings.documentId) return;
+    if (!docs) return;
     window.onbeforeunload = (): string => 'beforeUnload';
     return () => {
       window.onbeforeunload = undefined;
