@@ -25,6 +25,7 @@ export const RootLayout = () => {
   const history = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
   const settings = useAppSelector(SettingSelectors.settings);
+  const pageObjects = useAppSelector(SettingSelectors.pageObjects);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
@@ -127,6 +128,19 @@ export const RootLayout = () => {
           } catch (error) {
             console.warn('not supported clipboard data');
           }
+        },
+      },
+      {
+        keys: ['a'],
+        meta: true,
+        callback: (e) => {
+          if (settings.selectionMode === 'detail') return;
+          dispatch(
+            SettingsActions.setSelection({
+              selectionMode: 'normal',
+              ids: pageObjects.map((object) => object.id),
+            }),
+          );
         },
       },
       {

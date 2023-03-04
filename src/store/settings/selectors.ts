@@ -13,6 +13,10 @@ const pageId = createSelector(selectSelf, (settings) => settings.pageId);
 
 const queueIndex = createSelector(selectSelf, (state) => state.queueIndex);
 
+const pageObjects = createSelector([selectSelf, ObjectSelectors.all], (settings, objects) =>
+  objects.filter((object) => object.pageId === settings.pageId),
+);
+
 const selectedObjects = createSelector([selectSelf, ObjectSelectors.entities], (settings, objectEntities) =>
   settings.selectedObjectIds.map((id) => objectEntities[id]),
 );
@@ -22,5 +26,6 @@ export const SettingSelectors = {
   documentId,
   pageId,
   queueIndex,
+  pageObjects,
   selectedObjects,
 };
