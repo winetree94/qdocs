@@ -59,23 +59,25 @@ const createEffect = (
   };
 
   switch (effectType) {
-    case 'fade': {
-      const initialFade = effects.find((effect) => effect.index === queueIndex - 1 && effect.type === 'fade');
+    case OBJECT_EFFECT_META.FADE: {
+      const initialFade = effects.find(
+        (effect) => effect.index === queueIndex - 1 && effect.type === OBJECT_EFFECT_META.FADE,
+      );
 
       return {
         ...baseQueueEffect,
-        type: 'fade',
-        prop: initialFade?.type === 'fade' ? initialFade.prop : queueObject.fade,
+        type: OBJECT_EFFECT_META.FADE,
+        prop: initialFade?.type === OBJECT_EFFECT_META.FADE ? initialFade.prop : queueObject.fade,
       };
     }
-    case 'rect': {
+    case OBJECT_EFFECT_META.RECT: {
       const initialRect = effects.reduce(
         (rect, effect) => {
           if (effect.index > queueIndex) {
             return rect;
           }
 
-          if (effect.type === 'rect') {
+          if (effect.type === OBJECT_EFFECT_META.RECT) {
             return {
               width: rect.width + effect.prop.width,
               height: rect.height + effect.prop.height,
@@ -92,17 +94,17 @@ const createEffect = (
       );
       return {
         ...baseQueueEffect,
-        type: 'rect',
+        type: OBJECT_EFFECT_META.RECT,
         prop: initialRect,
       };
     }
-    case 'rotate': {
+    case OBJECT_EFFECT_META.ROTATE: {
       const initialDegree = effects.reduce((degree, effect) => {
         if (effect.index > queueIndex) {
           return degree;
         }
 
-        if (effect.type === 'rotate') {
+        if (effect.type === OBJECT_EFFECT_META.ROTATE) {
           return degree + effect.prop.degree;
         }
 
@@ -111,9 +113,30 @@ const createEffect = (
 
       return {
         ...baseQueueEffect,
-        type: 'rotate',
+        type: OBJECT_EFFECT_META.ROTATE,
         prop: {
           degree: initialDegree,
+        },
+      };
+    }
+    case OBJECT_EFFECT_META.SCALE: {
+      const initialScale = effects.reduce((scale, effect) => {
+        if (effect.index > queueIndex) {
+          return scale;
+        }
+
+        if (effect.type === OBJECT_EFFECT_META.SCALE) {
+          return scale + effect.prop.scale;
+        }
+
+        return scale;
+      }, 1);
+
+      return {
+        ...baseQueueEffect,
+        type: OBJECT_EFFECT_META.SCALE,
+        prop: {
+          scale: initialScale,
         },
       };
     }
