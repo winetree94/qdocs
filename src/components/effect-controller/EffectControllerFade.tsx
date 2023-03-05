@@ -59,16 +59,14 @@ export const EffectControllerFade = (): ReactElement => {
 
   return (
     <div>
-      <input type="number" value={firstObjectRotateEffect.prop.opacity} hidden readOnly />
       <p className="text-sm">fade</p>
       <div className="flex items-center gap-2">
         <div className="w-5/12">
           <input
             className="w-full"
             type="number"
-            name="fadeEffectOpacity"
-            value={firstObjectRotateEffect.prop.opacity}
             step={0.1}
+            value={firstObjectRotateEffect.prop.opacity}
             onChange={(e): void => {
               handleCurrentOpacityChange(e.target.value);
             }}
