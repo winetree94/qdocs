@@ -1,4 +1,5 @@
 import { EffectControllerFade } from 'components/effect-controller/EffectControllerFade';
+import { EffectControllerFill } from 'components/effect-controller/EffectControllerFill';
 import { EffectControllerRect } from 'components/effect-controller/EffectControllerRect';
 import { EffectControllerRotate } from 'components/effect-controller/EffectControllerRotate';
 import { EffectControllerScale } from 'components/effect-controller/EffectControllerScale';
@@ -14,6 +15,8 @@ export const EffectControllerIndex = ({ effectType }: EffectControllerIndexProps
   switch (effectType) {
     case OBJECT_PROPERTY_META.FADE:
       return <EffectControllerFade />;
+    case OBJECT_PROPERTY_META.FILL:
+      return <EffectControllerFill />;
     case OBJECT_PROPERTY_META.RECT:
       return <EffectControllerRect />;
     case OBJECT_PROPERTY_META.ROTATE:
