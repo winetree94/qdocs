@@ -70,6 +70,17 @@ const createEffect = (
         prop: initialFade?.type === OBJECT_EFFECT_META.FADE ? initialFade.prop : queueObject.fade,
       };
     }
+    case OBJECT_EFFECT_META.FILL: {
+      const initialFill = effects.find(
+        (effect) => effect.index === queueIndex - 1 && effect.type === OBJECT_EFFECT_META.FILL,
+      );
+
+      return {
+        ...baseQueueEffect,
+        type: OBJECT_EFFECT_META.FILL,
+        prop: initialFill?.type === OBJECT_EFFECT_META.FILL ? initialFill.prop : queueObject.fill,
+      };
+    }
     case OBJECT_EFFECT_META.RECT: {
       const initialRect = effects.reduce(
         (rect, effect) => {
