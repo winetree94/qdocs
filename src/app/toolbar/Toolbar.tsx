@@ -13,6 +13,11 @@ import { QueueH6 } from 'components/head/Head';
 import { HistorySelectors } from 'store/history/selectors';
 import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';
+import { useTranslation } from 'react-i18next';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { PreferencesSelectors } from 'store/preferences/selectors';
+import { PreferencesActions } from 'store/preferences/actions';
+import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 
 export interface ToolbarModel {
   key: string;
@@ -22,9 +27,11 @@ export interface ToolbarModel {
 }
 
 export const QueueToolbar = () => {
+  const { t, i18n } = useTranslation();
   const history = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
+  const preferences = useAppSelector(PreferencesSelectors.all);
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
 
   const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
@@ -33,8 +40,8 @@ export const QueueToolbar = () => {
   const onNewDocumentClick = (): void => {
     if (docs) {
       setAlertDialog({
-        title: '현재 열려있는 문서가 있습니다.',
-        description: '기존 문서의 모든 변경사항이 초기화됩니다. 계속하시겠습니까?',
+        title: t('global.data-loss-warning-title'),
+        description: t('global.data-loss-warning'),
         onAction: () =>
           setNewDocumentDialogProps({
             onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
@@ -77,8 +84,8 @@ export const QueueToolbar = () => {
   const onOpenDcoumentClick = (): void => {
     if (docs) {
       setAlertDialog({
-        title: '현재 열려있는 문서가 있습니다.',
-        description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
+        title: t('global.data-loss-warning-title'),
+        description: t('global.data-loss-warning'),
         onAction: startFileChooser,
       });
       return;
@@ -105,8 +112,8 @@ export const QueueToolbar = () => {
   const onCloseDocumentClick = (): void => {
     if (docs) {
       setAlertDialog({
-        title: '현재 열려있는 문서가 있습니다.',
-        description: '저장되지 않은 데이터가 삭제됩니다. 계속하시겠습니까?',
+        title: t('global.data-loss-warning-title'),
+        description: t('global.data-loss-warning'),
         onAction: clearDocument,
       });
       return;
@@ -125,67 +132,107 @@ export const QueueToolbar = () => {
         </div>
         <QueueMenubar.Root>
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>파일</QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>{t('toolbar.file')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item onClick={onNewDocumentClick}>새 문서</QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onNewDocumentClick}>{t('toolbar.file.new-document')}</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onOpenDcoumentClick}>문서 열기</QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onOpenDcoumentClick}>{t('toolbar.file.open-document')}</QueueMenubar.Item>
                 <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!docs}>
-                  문서 저장
+                  {t('toolbar.file.save-document')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
                 <QueueMenubar.Item onClick={onCloseDocumentClick} disabled={!docs}>
-                  문서 닫기
+                  {t('toolbar.file.close-document')}
                 </QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>수정</QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>{t('toolbar.edit')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
                 <QueueMenubar.Item
                   disabled={!docs || history.previous.length === 0}
                   onClick={() => dispatch(HistoryActions.Undo())}>
-                  실행 취소
+                  {t('global.undo')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Item
                   disabled={!docs || history.future.length === 0}
                   onClick={() => dispatch(HistoryActions.Redo())}>
-                  다시 실행
+                  {t('global.redo')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs || true}>제목 수정</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!docs || true}>페이지 설정</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>{t('toolbar.edit.edit-title')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>{t('toolbar.edit.page-settings')}</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>보기</QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>{t('toolbar.view')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
                 <QueueMenubar.Item disabled={!docs} onClick={() => dispatch(SettingsActions.setPresentationMode(true))}>
-                  프레젠테이션 모드 시작
+                  {t('toolbar.view.start-presentation-mode')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>전체 화면</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>{t('toolbar.view.fullscreen')}</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
 
           <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>도움말</QueueMenubar.Trigger>
+            <QueueMenubar.Trigger>{t('toolbar.extra')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled>키보드 단축키</QueueMenubar.Item>
-                <QueueMenubar.Item disabled>웹 사이트</QueueMenubar.Item>
+                <QueueMenubar.Sub>
+                  <QueueMenubar.SubTrigger>
+                    {t('toolbar.extra.language')}
+                    <div className="RightSlot">
+                      <ChevronRightIcon />
+                    </div>
+                  </QueueMenubar.SubTrigger>
+                  <QueueMenubar.Portal>
+                    <QueueMenubar.SubContent alignOffset={-5}>
+                      <QueueMenubar.RadioGroup
+                        value={preferences.language}
+                        onValueChange={(rawValue) => {
+                          const value = rawValue as SUPPORTED_LANGUAGES;
+                          i18n.changeLanguage(value !== 'auto' ? value : null);
+                          dispatch(PreferencesActions.changeLanguage({ language: value }));
+                        }}>
+                        <QueueMenubar.RadioItem value="auto">
+                          {t('toolbar.extra.language-auth')}
+                          <QueueMenubar.ItemIndicator />
+                        </QueueMenubar.RadioItem>
+                        <QueueMenubar.RadioItem value="ko">
+                          한국어
+                          <QueueMenubar.ItemIndicator />
+                        </QueueMenubar.RadioItem>
+                        <QueueMenubar.RadioItem value="en">
+                          English
+                          <QueueMenubar.ItemIndicator />
+                        </QueueMenubar.RadioItem>
+                      </QueueMenubar.RadioGroup>
+                    </QueueMenubar.SubContent>
+                  </QueueMenubar.Portal>
+                </QueueMenubar.Sub>
+              </QueueMenubar.Content>
+            </QueueMenubar.Portal>
+          </QueueMenubar.Menu>
+
+          <QueueMenubar.Menu>
+            <QueueMenubar.Trigger>{t('toolbar.help')}</QueueMenubar.Trigger>
+            <QueueMenubar.Portal>
+              <QueueMenubar.Content align="start">
+                <QueueMenubar.Item disabled>{t('toolbar.help.keyboard-shortcut')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>{t('toolbar.help.web-site')}</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>업데이트 확인</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>{t('toolbar.help.check-update')}</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>정보</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>{t('toolbar.help.about')}</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>

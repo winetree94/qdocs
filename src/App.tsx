@@ -1,13 +1,12 @@
-import { FunctionComponent } from 'react';
 import { RootLayout } from './app/root-layout/RootLayout';
 import { Provider } from 'react-redux';
-
-import 'tailwindcss/tailwind.css';
-import './App.scss';
 import { store } from 'store';
 import { EventDispatcherProvider } from 'cdk/hooks/event-dispatcher';
+import './i18n';
+import './App.scss';
+import 'tailwindcss/tailwind.css';
 
-const App: FunctionComponent = () => {
+const App = () => {
   return (
     <Provider store={store}>
       <EventDispatcherProvider>

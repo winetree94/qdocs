@@ -49,3 +49,12 @@
 .MenubarSeparator {
   @include list-separator;
 }
+
+.MenubarItemIndicator {
+  position: absolute;
+  left: 0;
+  width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

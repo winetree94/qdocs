@@ -15,8 +15,10 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { PageActions } from '../../store/page';
 import { SettingsActions, SettingSelectors } from '../../store/settings';
 import { HistoryActions } from 'store/history';
+import { useTranslation } from 'react-i18next';
 
 export const BottomPanel = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
@@ -154,25 +156,25 @@ export const BottomPanel = () => {
                     <QueueContextMenu.Portal>
                       <QueueContextMenu.Content>
                         <QueueContextMenu.Item onClick={(): void => movePage(page.id, self[Math.max(index - 1, 0)].id)}>
-                          페이지를 왼쪽으로 이동
+                          {t('bottom-panel.move-page-to-left')}
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item
                           onClick={(): void => movePage(page.id, self[Math.min(index + 1, self.length - 1)].id)}>
-                          페이지를 오른쪽으로 이동
+                          {t('bottom-panel.move-page-to-right')}
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
                         <QueueContextMenu.Item onClick={(): void => createPage(Math.max(index - 1))}>
-                          왼쪽에 페이지 추가
+                          {t('bottom-panel.add-page-to-left')}
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item onClick={(): void => createPage(Math.min(index, self.length))}>
-                          오른쪽에 페이지 추가
+                          {t('bottom-panel.add-page-to-right')}
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Separator />
                         <QueueContextMenu.Item onClick={(): void => onPageCopy(index)}>
-                          페이지 복제
+                          {t('global.duplicate')}
                         </QueueContextMenu.Item>
                         <QueueContextMenu.Item onClick={(): void => setEditNamePageId(page.id)}>
-                          페이지 이름 변경
+                          {t('global.rename')}
                         </QueueContextMenu.Item>
                         {pages.length >= 2 && (
                           <>
@@ -180,7 +182,7 @@ export const BottomPanel = () => {
                             <QueueContextMenu.Item
                               className={styles.Remove}
                               onClick={(): void => setDeleteConfirmPageId(page.id)}>
-                              페이지 삭제
+                              {t('global.delete')}
                             </QueueContextMenu.Item>
                           </>
                         )}

@@ -8,10 +8,12 @@ import { ObjectActions } from '../../store/object';
 import { HistoryActions } from 'store/history';
 import { EffectActions, EffectSelectors } from 'store/effect';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
+import { useTranslation } from 'react-i18next';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -69,16 +71,16 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   return (
     <QueueContextMenu.Content onMouseDown={(e): void => e.stopPropagation()} ref={ref}>
       <QueueContextMenu.Item onClick={onRemoveObject}>
-        현재 큐에서 삭제 <div className={styles.RightSlot}>Backspace</div>
+        {t('object-context.delete-from-current-queue')} <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={onCompletelyRemoveClick}>
-        오브젝트 삭제 <div className={styles.RightSlot}>⌘+Backspace</div>
+        {t('object-context.delete-permanently')} <div className={styles.RightSlot}>⌘+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={copyToClipboard}>
-        복사 <div className={styles.RightSlot}>⌘+C</div>
+        {t('global.copy')} <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={duplicate}>복제</QueueContextMenu.Item>
+      <QueueContextMenu.Item onClick={duplicate}>{t('global.duplicate')}</QueueContextMenu.Item>
       {settings.selectedObjectIds.length === 1 && (
         <>
           <QueueContextMenu.Separator />
@@ -91,7 +93,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
                 }),
               );
             }}>
-            맨 앞으로 가져오기
+            {t('object-context.to-front')}
           </QueueContextMenu.Item>
           <QueueContextMenu.Item
             onClick={() => {
@@ -102,7 +104,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
                 }),
               );
             }}>
-            맨 뒤로 보내기
+            {t('object-context.to-back')}
           </QueueContextMenu.Item>
           <QueueContextMenu.Item
             onClick={() => {
@@ -113,7 +115,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
                 }),
               );
             }}>
-            앞으로 가져오기
+            {t('object-context.bring-forward')}
           </QueueContextMenu.Item>
           <QueueContextMenu.Item
             onClick={() => {
@@ -124,7 +126,7 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
                 }),
               );
             }}>
-            뒤로 보내기
+            {t('object-context.send-backward')}
           </QueueContextMenu.Item>
         </>
       )}

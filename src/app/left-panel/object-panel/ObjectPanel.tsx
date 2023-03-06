@@ -21,6 +21,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectActions } from '../../../store/object';
 import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';
+import { useTranslation } from 'react-i18next';
 
 export interface QueueObject {
   key: string;
@@ -120,6 +121,7 @@ const createItemData = memoize(
 );
 
 export const ObjectPanel: FunctionComponent = () => {
+  const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const dispatch = useAppDispatch();
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
@@ -287,7 +289,7 @@ export const ObjectPanel: FunctionComponent = () => {
     <>
       <div className={clsx(styles.inputContainer)}>
         <QueueInput
-          placeholder="Search Shape"
+          placeholder={t('object-panel.search-shape')}
           className={clsx(styles.input)}
           value={searchKeyword}
           onChange={(e): void => setSearchKeyword(e.target.value)}></QueueInput>

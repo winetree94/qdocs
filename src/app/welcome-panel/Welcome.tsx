@@ -7,9 +7,11 @@ import { useState } from 'react';
 import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
 import { DocumentActions } from '../../store/document';
+import { useTranslation } from 'react-i18next';
 
 export const Welcome: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
   const onNewDocumentClick = (): void => {
@@ -52,10 +54,10 @@ export const Welcome: React.FC = () => {
       <QueueH2 className={clsx(styles.Header)}>The Queue</QueueH2>
       <div className={styles.ButtonGroup}>
         <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={onNewDocumentClick}>
-          새 문서
+          {t('welcome.new-document')}
         </QueueButton>
         <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={startFileChooser}>
-          문서 열기
+          {t('welcome.open-document')}
         </QueueButton>
       </div>
 

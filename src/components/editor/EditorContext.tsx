@@ -3,6 +3,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { EffectActions, NormalizedQueueEffect } from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
@@ -14,6 +15,7 @@ import styles from './EditorContext.module.scss';
 export const EditorContext: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
 > = forwardRef((_, ref) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const history = useAppSelector(HistorySelectors.all);
@@ -74,14 +76,14 @@ export const EditorContext: React.ForwardRefExoticComponent<
   return (
     <QueueContextMenu.Content ref={ref}>
       <QueueContextMenu.Item disabled={!history.previous.length} onClick={() => dispatch(HistoryActions.Undo())}>
-        실행 취소 <div className={styles.RightSlot}>⌘+Z</div>
+        {t('global.undo')} <div className={styles.RightSlot}>⌘+Z</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item disabled={!history.future.length} onClick={() => dispatch(HistoryActions.Redo())}>
-        다시 실행 <div className={styles.RightSlot}>⌘+Shift+Z</div>
+        {t('global.redo')} <div className={styles.RightSlot}>⌘+Shift+Z</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={() => paste()}>
-        붙여넣기 <div className={styles.RightSlot}>⌘+V</div>
+        {t('global.paste')} <div className={styles.RightSlot}>⌘+V</div>
       </QueueContextMenu.Item>
     </QueueContextMenu.Content>
   );

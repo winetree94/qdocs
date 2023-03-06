@@ -9,12 +9,14 @@ import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
 import { QueueDocument } from 'model/document';
+import { useTranslation } from 'react-i18next';
 
 export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
   onSubmit?: (document: QueueDocument) => void;
 }
 
 export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, ...props }) => {
+  const { t } = useTranslation();
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
   const [documentTemplate, setDocumentTemplate] = React.useState<string>('Empty');
 
@@ -60,7 +62,7 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, 
       <QueueDialog.Portal>
         <QueueDialog.Overlay />
         <QueueDialog.Content>
-          <QueueDialog.Title>새 문서 양식 설정</QueueDialog.Title>
+          <QueueDialog.Title>{t('new-document.set-up-new-document-template')}</QueueDialog.Title>
           <div className={styles.Container}>
             <div className={styles.RatioContainer} style={{ display: 'none' }}>
               <h6>문서 크기 비율</h6>
@@ -104,10 +106,10 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, 
           </div>
           <QueueDialog.Footer>
             <QueueButton type="button" size="small" color="red" onClick={(): void => props.onOpenChange?.(false)}>
-              취소
+              {t('global.cancel')}
             </QueueButton>
             <QueueButton type="button" size="small" color="blue" onClick={onSubmitClick}>
-              확인
+              {t('global.create')}
             </QueueButton>
           </QueueDialog.Footer>
         </QueueDialog.Content>

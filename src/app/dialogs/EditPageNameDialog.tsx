@@ -2,6 +2,7 @@ import { QueueButton } from 'components/button/Button';
 import { QueueDialog } from 'components/dialog/Dialog';
 import { QueueInput } from 'components/input/Input';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface EditPageNameProps {
   pageName: string;
@@ -11,6 +12,7 @@ export interface EditPageNameProps {
 }
 
 export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSubmit, open, onOpenChange }) => {
+  const { t } = useTranslation();
   const [currentPageName, setCurrentPageName] = useState(pageName);
 
   return (
@@ -18,7 +20,7 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSu
       <QueueDialog.Portal>
         <QueueDialog.Overlay />
         <QueueDialog.Content>
-          <QueueDialog.Title>페이지 이름 수정</QueueDialog.Title>
+          <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
           <form onSubmit={(): void => onSubmit(currentPageName)}>
             <QueueDialog.Description>
               <QueueInput
@@ -30,10 +32,10 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSu
             </QueueDialog.Description>
             <QueueDialog.Footer>
               <QueueButton type="button" size="small" color="red" onClick={(): void => onOpenChange(false)}>
-                취소
+                {t('global.cancel')}
               </QueueButton>
               <QueueButton type="submit" size="small" color="blue">
-                확인
+                {t('global.confirm')}
               </QueueButton>
             </QueueDialog.Footer>
           </form>

@@ -17,7 +17,7 @@ export const TEMPLATES: TemplateMeta[] = [
     getTemplate: () =>
       Promise.resolve({
         id: nanoid(),
-        documentName: '새 문서',
+        documentName: 'Untitled Document',
         documentRect: {
           width: 1920,
           height: 1080,
@@ -26,7 +26,7 @@ export const TEMPLATES: TemplateMeta[] = [
         pages: [
           {
             id: nanoid(),
-            pageName: '새 페이지',
+            pageName: 'Page-1',
             objects: [],
           },
         ],

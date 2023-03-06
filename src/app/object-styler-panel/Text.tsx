@@ -5,6 +5,7 @@ import { QueueInput } from 'components/input/Input';
 import { QueueSelect } from 'components/select/Select';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueText } from 'model/property';
+import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -12,6 +13,7 @@ import { SettingSelectors } from 'store/settings';
 import styles from './Text.module.scss';
 
 export const ObjectStyleText = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const [firstObject] = selectedObjects;
@@ -37,13 +39,13 @@ export const ObjectStyleText = () => {
 
   return (
     <div className={styles.ItemContainer}>
-      <QueueH6>텍스트</QueueH6>
+      <QueueH6>{t('global.text')}</QueueH6>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>글꼴</div>
+        <div className={styles.SubTitle}>{t('global.font-familly')}</div>
         <div className={styles.SubInputContainer}>
           <QueueSelect.Root value={text.fontFamily} onValueChange={(value): void => updateText({ fontFamily: value })}>
             <QueueSelect.Trigger className={styles.Select}>
-              <QueueSelect.Value placeholder="글꼴" />
+              <QueueSelect.Value />
               <QueueSelect.Icon className="SelectIcon">
                 <ChevronDownIcon />
               </QueueSelect.Icon>
@@ -63,7 +65,7 @@ export const ObjectStyleText = () => {
         </div>
       </div>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>글꼴 크기</div>
+        <div className={styles.SubTitle}>{t('global.font-size')}</div>
         <div className={styles.SubInputContainer}>
           <QueueInput
             value={text.fontSize}
@@ -73,7 +75,7 @@ export const ObjectStyleText = () => {
         </div>
       </div>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>가로 정렬</div>
+        <div className={styles.SubTitle}>{t('global.horizontal-align')}</div>
         <div className={styles.SubInputContainer}>
           <QueueToggleGroup.Root
             type="single"
@@ -96,7 +98,7 @@ export const ObjectStyleText = () => {
         </div>
       </div>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>세로 정렬</div>
+        <div className={styles.SubTitle}>{t('global.vertical-align')}</div>
         <div className={styles.SubInputContainer}>
           <QueueToggleGroup.Root
             type="single"
@@ -119,7 +121,7 @@ export const ObjectStyleText = () => {
         </div>
       </div>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>색상</div>
+        <div className={styles.SubTitle}>{t('global.color')}</div>
         <div className={styles.SubInputContainer}>
           <input
             id="text-color"

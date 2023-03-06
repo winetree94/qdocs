@@ -1,6 +1,7 @@
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
 import { QueueScale } from 'model/property';
+import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -8,6 +9,7 @@ import { SettingSelectors } from 'store/settings';
 import styles from './Scale.module.scss';
 
 export const ObjectStyleScale = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const [firstObject] = selectedObjects;
@@ -33,9 +35,9 @@ export const ObjectStyleScale = () => {
 
   return (
     <div className={styles.ItemContainer}>
-      <QueueH6>확대</QueueH6>
+      <QueueH6>{t('global.scale')}</QueueH6>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>배율</div>
+        <div className={styles.SubTitle}>{t('global.magnification')}</div>
         <div className={styles.SubInputContainer}>
           <Slider
             min={0}

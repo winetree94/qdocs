@@ -1,3 +1,4 @@
+import { CheckIcon } from '@radix-ui/react-icons';
 import * as Menubar from '@radix-ui/react-menubar';
 import clsx from 'clsx';
 import { QueueButtonProps } from 'components/button/Button';
@@ -90,6 +91,7 @@ export const ItemIndicator: React.ForwardRefExoticComponent<
 > = React.forwardRef(({ children, className, ...props }, ref) => {
   return (
     <Menubar.ItemIndicator ref={ref} {...props} className={clsx(styles.MenubarItemIndicator, className)}>
+      <CheckIcon />
       {children}
     </Menubar.ItemIndicator>
   );
