@@ -2,6 +2,7 @@ import { Slider } from 'components/slider';
 import { FillEffect, OBJECT_EFFECT_META } from 'model/effect';
 import { ChangeEvent, ReactElement } from 'react';
 import { EffectActions, EffectSelectors, getEffectEntityKey } from 'store/effect';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
 
@@ -30,6 +31,7 @@ export const EffectControllerFill = (): ReactElement => {
         },
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

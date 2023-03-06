@@ -1,4 +1,4 @@
-import { MoveEffect } from 'model/effect';
+import { MoveEffect, OBJECT_EFFECT_META } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -6,6 +6,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 export const EffectControllerRect = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ export const EffectControllerRect = (): ReactElement => {
       getEffectEntityKey({
         index: settings.queueIndex,
         objectId: settings.selectedObjectIds[0],
-        type: 'rect',
+        type: OBJECT_EFFECT_META.RECT,
       }),
     ),
   ) as MoveEffect;
@@ -33,6 +34,7 @@ export const EffectControllerRect = (): ReactElement => {
         },
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

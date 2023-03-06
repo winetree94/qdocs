@@ -1,4 +1,4 @@
-import { RotateEffect } from 'model/effect';
+import { OBJECT_EFFECT_META, RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -6,6 +6,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ export const EffectControllerRotate = (): ReactElement => {
       getEffectEntityKey({
         index: settings.queueIndex,
         objectId: settings.selectedObjectIds[0],
-        type: 'rotate',
+        type: OBJECT_EFFECT_META.ROTATE,
       }),
     ),
   ) as RotateEffect;
@@ -33,6 +34,7 @@ export const EffectControllerRotate = (): ReactElement => {
         },
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

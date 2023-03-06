@@ -6,6 +6,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -50,6 +51,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
         duration: duration * 1000,
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,
@@ -81,6 +83,7 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
         delay: delay * 1000,
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

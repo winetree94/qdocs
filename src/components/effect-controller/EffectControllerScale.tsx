@@ -2,6 +2,7 @@ import { Slider } from 'components/slider';
 import { OBJECT_EFFECT_META, ScaleEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import { EffectActions, EffectSelectors, getEffectEntityKey } from 'store/effect';
+import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
 
@@ -44,6 +45,7 @@ export const EffectControllerScale = (): ReactElement => {
         },
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

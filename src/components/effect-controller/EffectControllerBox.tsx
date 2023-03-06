@@ -13,6 +13,7 @@ import { EffectSelectors } from 'store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
 import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -184,6 +185,7 @@ export const EffectControllerBox = (): ReactElement | null => {
       );
     });
 
+    dispatch(HistoryActions.Capture());
     dispatch(EffectActions.upsertEffects(models));
   };
 

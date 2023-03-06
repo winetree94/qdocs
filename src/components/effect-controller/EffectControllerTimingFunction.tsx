@@ -8,6 +8,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -34,6 +35,7 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
         timing: timingFunction as AnimatorTimingFunctionType,
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,

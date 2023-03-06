@@ -1,11 +1,12 @@
 import { ReactElement } from 'react';
-import { FadeEffect } from 'model/effect';
+import { FadeEffect, OBJECT_EFFECT_META } from 'model/effect';
 import { Slider } from 'components/slider';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
+import { HistoryActions } from 'store/history';
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ export const EffectControllerFade = (): ReactElement => {
       getEffectEntityKey({
         index: settings.queueIndex,
         objectId: settings.selectedObjectIds[0],
-        type: 'fade',
+        type: OBJECT_EFFECT_META.FADE,
       }),
     ),
   ) as FadeEffect;
@@ -46,6 +47,7 @@ export const EffectControllerFade = (): ReactElement => {
         },
       };
 
+      dispatch(HistoryActions.Capture());
       dispatch(
         EffectActions.upsertEffect({
           ...nextEffect,
