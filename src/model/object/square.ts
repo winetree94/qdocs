@@ -13,6 +13,7 @@ export interface QueueSquare
     WithStroke,
     WithText {
   type: 'rect';
+  index: number;
   id: EntityId;
 }
 
@@ -23,6 +24,7 @@ export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex:
   return {
     type: 'rect',
     id: objectId,
+    index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

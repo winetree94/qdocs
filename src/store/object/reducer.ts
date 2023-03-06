@@ -5,6 +5,7 @@ import { ObjectActions } from './actions';
 
 export const objectEntityAdapter = createEntityAdapter<NormalizedQueueObjectType>({
   selectId: (object) => object.id,
+  sortComparer: (a, b) => a.index - b.index,
 });
 
 export const objectsSlice = createSlice({
@@ -17,36 +18,190 @@ export const objectsSlice = createSlice({
         return objectsSlice.getInitialState();
       }
       const normalized = action.payload.pages.reduce<NormalizedQueueObjectType[]>((result, page) => {
-        page.objects.forEach((object) => {
-          const normalizedObject = {
-            pageId: page.id,
-            ...object,
-          };
-          delete normalizedObject.effects; // 레거시 셀렉터에 의해서 값이 들어가는 것을 방지
-          result.push(normalizedObject);
-        });
+        page.objects
+          .sort((a, b) => a.index - b.index)
+          .forEach((object) => {
+            const normalizedObject = {
+              pageId: page.id,
+              ...object,
+            };
+            delete normalizedObject.effects; // 레거시 셀렉터에 의해서 값이 들어가는 것을 방지
+            result.push(normalizedObject);
+          });
         return result;
       }, []);
       return objectEntityAdapter.setAll(state, normalized);
     });
 
+    /**
+     * @description
+     * 오브젝트 추가
+     */
     builder.addCase(ObjectActions.addOne, (state, action) => {
-      return objectEntityAdapter.addOne(state, action.payload.object);
+      const index = state.ids.filter((id) => state.entities[id].pageId === action.payload.object.pageId).length;
+      return objectEntityAdapter.addOne(state, {
+        ...action.payload.object,
+        index: index,
+      });
     });
 
+    /**
+     * @description
+     * 오브젝트 다중 추가
+     */
     builder.addCase(ObjectActions.addMany, (state, action) => {
-      return objectEntityAdapter.addMany(state, action.payload.objects);
+      const objects = action.payload.objects.map<NormalizedQueueObjectType>((object, index, self) => {
+        const previous = self.slice(0, index).filter((o) => o.pageId === object.pageId);
+        const newIndex = state.ids.filter((id) => state.entities[id].pageId === object.pageId).length;
+        return {
+          ...object,
+          index: newIndex + previous.length,
+        };
+      });
+      return objectEntityAdapter.addMany(state, objects);
     });
 
+    /**
+     * @description
+     * 오브젝트 업데이트
+     */
     builder.addCase(ObjectActions.updateObject, (state, action) => {
       return objectEntityAdapter.updateOne(state, action.payload);
     });
 
+    /**
+     * @description
+     * 오브젝트 다중 업데이트
+     */
     builder.addCase(ObjectActions.updateObjects, (state, action) => {
       return objectEntityAdapter.updateMany(state, action.payload);
     });
 
+    /**
+     * @description
+     * 오브젝트를 최우선 순위로 변경
+     */
+    builder.addCase(ObjectActions.toFront, (state, action) => {
+      const object = state.entities[action.payload.id];
+      const objects = state.ids.filter((id) => state.entities[id].pageId === object.pageId);
+      const index = objects.indexOf(action.payload.id);
+      const previousObjects = objects.slice(index);
+      previousObjects.forEach((id) => {
+        objectEntityAdapter.updateOne(state, {
+          id,
+          changes: {
+            index: state.entities[id].index - 1,
+          },
+        });
+      });
+      return objectEntityAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          index: objects.length - 1,
+        },
+      });
+    });
+
+    /**
+     * @description
+     * 오브젝트를 최하위 순위로 변경
+     */
+    builder.addCase(ObjectActions.toBack, (state, action) => {
+      const object = state.entities[action.payload.id];
+      const objects = state.ids.filter((id) => state.entities[id].pageId === object.pageId);
+      const index = objects.indexOf(action.payload.id);
+      const nextObjects = objects.slice(0, index);
+      nextObjects.forEach((id) => {
+        objectEntityAdapter.updateOne(state, {
+          id,
+          changes: {
+            index: state.entities[id].index + 1,
+          },
+        });
+      });
+      return objectEntityAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          index: 0,
+        },
+      });
+    });
+
+    /**
+     * @description
+     * 오브젝트를 앞으로 이동
+     */
+    builder.addCase(ObjectActions.BringForward, (state, action) => {
+      const object = state.entities[action.payload.id];
+      const pageObjectIds = state.ids.filter((id) => state.entities[id].pageId === object.pageId);
+      const currentIndex = pageObjectIds.indexOf(action.payload.id);
+      const nextObjectId = pageObjectIds[currentIndex + 1];
+      if (!nextObjectId) {
+        return;
+      }
+      objectEntityAdapter.updateMany(state, [
+        {
+          id: action.payload.id,
+          changes: {
+            index: state.entities[nextObjectId].index,
+          },
+        },
+        {
+          id: nextObjectId,
+          changes: {
+            index: state.entities[action.payload.id].index,
+          },
+        },
+      ]);
+    });
+
+    /**
+     * @description
+     * 오브젝트를 뒤로 이동
+     */
+    builder.addCase(ObjectActions.SendBackward, (state, action) => {
+      const object = state.entities[action.payload.id];
+      const pageObjectIds = state.ids.filter((id) => state.entities[id].pageId === object.pageId);
+      const currentIndex = pageObjectIds.indexOf(action.payload.id);
+      const previousObjectId = pageObjectIds[currentIndex - 1];
+      if (!previousObjectId) {
+        return;
+      }
+      objectEntityAdapter.updateMany(state, [
+        {
+          id: action.payload.id,
+          changes: {
+            index: state.entities[previousObjectId].index,
+          },
+        },
+        {
+          id: previousObjectId,
+          changes: {
+            index: state.entities[action.payload.id].index,
+          },
+        },
+      ]);
+    });
+
+    /**
+     * @description
+     * 오브젝트 다중 삭제
+     */
     builder.addCase(ObjectActions.removeMany, (state, action) => {
+      action.payload.forEach((id) => {
+        const object = state.entities[id];
+        const objects = state.ids.filter((id) => state.entities[id].pageId === object.pageId);
+        const index = objects.indexOf(id);
+        const nextObjects = objects.slice(index + 1);
+        nextObjects.forEach((id) => {
+          objectEntityAdapter.updateOne(state, {
+            id,
+            changes: {
+              index: state.entities[id].index - 1,
+            },
+          });
+        });
+      });
       return objectEntityAdapter.removeMany(state, action.payload);
     });
   },

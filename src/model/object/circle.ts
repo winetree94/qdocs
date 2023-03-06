@@ -13,6 +13,7 @@ export interface QueueCircle
     WithStroke,
     WithText {
   type: 'circle';
+  index: number;
   id: EntityId;
 }
 
@@ -23,6 +24,7 @@ export const createDefaultCircle = (documentRect: QueueDocumentRect, queueIndex:
   return {
     type: 'circle',
     id: objectId,
+    index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

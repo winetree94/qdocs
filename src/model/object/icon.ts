@@ -14,6 +14,7 @@ export interface QueueIcon
     WithText {
   type: 'icon';
   iconType: string;
+  index: number;
   id: EntityId;
 }
 
@@ -25,6 +26,7 @@ export const createDefaultIcon = (documentRect: QueueDocumentRect, queueIndex: n
     type: 'icon',
     iconType: iconType,
     id: objectId,
+    index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

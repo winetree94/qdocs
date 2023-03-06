@@ -13,6 +13,7 @@ export interface QueueLine
     WithStroke,
     WithText {
   type: 'line';
+  index: number;
   id: EntityId;
 }
 
@@ -23,6 +24,7 @@ export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: n
   return {
     type: 'line',
     id: objectId,
+    index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

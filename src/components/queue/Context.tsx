@@ -4,7 +4,6 @@ import { forwardRef } from 'react';
 import styles from './Context.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
-import { EntityId } from '@reduxjs/toolkit';
 import { ObjectActions } from '../../store/object';
 import { HistoryActions } from 'store/history';
 import { EffectActions, EffectSelectors } from 'store/effect';
@@ -17,10 +16,6 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   const settings = useAppSelector(SettingSelectors.settings);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
-
-  const changeObjectIndex = (fromIds: EntityId[], to: 'start' | 'end' | 'forward' | 'backward'): void => {
-    // todo sorting 은 완전히 다시 짜야함
-  };
 
   /**
    * @description
@@ -84,19 +79,55 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         복사 <div className={styles.RightSlot}>⌘+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={duplicate}>복제</QueueContextMenu.Item>
-      <QueueContextMenu.Separator />
-      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'start')}>
-        맨 앞으로 가져오기
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'end')}>
-        맨 뒤로 보내기
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'forward')}>
-        앞으로 가져오기
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item disabled onClick={(): void => changeObjectIndex(settings.selectedObjectIds, 'backward')}>
-        뒤로 보내기
-      </QueueContextMenu.Item>
+      {settings.selectedObjectIds.length === 1 && (
+        <>
+          <QueueContextMenu.Separator />
+          <QueueContextMenu.Item
+            onClick={() => {
+              dispatch(HistoryActions.Capture());
+              dispatch(
+                ObjectActions.toFront({
+                  id: settings.selectedObjectIds[0],
+                }),
+              );
+            }}>
+            맨 앞으로 가져오기
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Item
+            onClick={() => {
+              dispatch(HistoryActions.Capture());
+              dispatch(
+                ObjectActions.toBack({
+                  id: settings.selectedObjectIds[0],
+                }),
+              );
+            }}>
+            맨 뒤로 보내기
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Item
+            onClick={() => {
+              dispatch(HistoryActions.Capture());
+              dispatch(
+                ObjectActions.BringForward({
+                  id: settings.selectedObjectIds[0],
+                }),
+              );
+            }}>
+            앞으로 가져오기
+          </QueueContextMenu.Item>
+          <QueueContextMenu.Item
+            onClick={() => {
+              dispatch(HistoryActions.Capture());
+              dispatch(
+                ObjectActions.SendBackward({
+                  id: settings.selectedObjectIds[0],
+                }),
+              );
+            }}>
+            뒤로 보내기
+          </QueueContextMenu.Item>
+        </>
+      )}
     </QueueContextMenu.Content>
   );
 });
