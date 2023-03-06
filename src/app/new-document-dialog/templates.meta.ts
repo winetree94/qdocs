@@ -2,6 +2,7 @@ import { QueueDocument } from 'model/document';
 import animatedTextUrl from 'assets/templates/animated-text.que';
 import playUrl from 'assets/templates/play.que';
 import colorSampleUrl from 'assets/templates/color-sample.que';
+import uxFlowUrl from 'assets/templates/ux-flow.que';
 import { nanoid } from '@reduxjs/toolkit';
 
 export interface TemplateMeta {
@@ -31,6 +32,11 @@ export const TEMPLATES: TemplateMeta[] = [
           },
         ],
       }),
+  },
+  {
+    name: 'UX Flow',
+    preview: '',
+    getTemplate: () => fetch(uxFlowUrl).then((r) => r.json()),
   },
   {
     name: 'Animated Text',
