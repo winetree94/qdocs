@@ -14,6 +14,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
 import { EffectActions, getEffectEntityKey, NormalizedQueueEffect } from '../../store/effect';
 import { HistoryActions } from 'store/history';
+import { useTranslation } from 'react-i18next';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -176,6 +177,7 @@ const createEffect = (
 };
 
 export const EffectControllerBox = (): ReactElement | null => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -216,7 +218,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   return (
     <div className="flex flex-col gap-2 p-2">
       <div>
-        <p className="font-medium">Object effects</p>
+        <p className="font-medium">{t('effect-panel.all-effects')}</p>
         <ul>
           {effects.map((effect, index) => (
             <li key={`effect-${index}`}>
@@ -228,7 +230,7 @@ export const EffectControllerBox = (): ReactElement | null => {
       </div>
       <div>
         <div className="flex justify-between">
-          <p className="font-medium">Queue effects</p>
+          <p className="font-medium">{t('effect-panel.current-effects')}</p>
           <Dropdown>
             <Dropdown.Trigger
               className="flex items-center disabled:cursor-not-allowed"

@@ -63,5 +63,12 @@
   "global.font-size": "Font Size",
   "global.horizontal-align": "Horizontal Align",
   "global.vertical-align": "Vertical Align",
-  "global.text": "Text"
+  "global.text": "Text",
+  "global.shape": "Shape",
+  "global.rectangle": "Rectangle",
+  "global.circle": "Circle",
+  "global.line": "Line",
+  "global.icon": "Icon",
+  "effect-panel.all-effects": "All Effects",
+  "effect-panel.current-effects": "Current Effects"
 }

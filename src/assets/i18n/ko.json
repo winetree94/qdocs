@@ -63,5 +63,12 @@
   "global.font-size": "글꼴 크기",
   "global.horizontal-align": "가로 정렬",
   "global.vertical-align": "세로 정렬",
-  "global.text": "텍스트"
+  "global.text": "텍스트",
+  "global.shape": "도형",
+  "global.rectangle": "사각형",
+  "global.circle": "원",
+  "global.line": "선",
+  "global.icon": "아이콘",
+  "effect-panel.all-effects": "전체 이펙트",
+  "effect-panel.current-effects": "현재 이펙트"
 }

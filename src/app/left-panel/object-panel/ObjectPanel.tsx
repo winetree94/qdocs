@@ -26,6 +26,7 @@ import { useTranslation } from 'react-i18next';
 export interface QueueObject {
   key: string;
   keyword: string[];
+  tooltip?: string;
   factory: () => void;
   preview: React.ReactNode;
 }
@@ -92,7 +93,7 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({ style, ind
             </Tooltip.Trigger>
             <Tooltip.Portal>
               <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
-                {object.key}
+                {object.tooltip || object.key}
                 <Tooltip.Arrow className={styles.TooltipArrow} />
               </Tooltip.Content>
             </Tooltip.Portal>
@@ -177,12 +178,13 @@ export const ObjectPanel: FunctionComponent = () => {
     () => [
       {
         key: 'Shape',
-        title: 'Shape',
+        title: t('global.shape'),
         children: [
           {
             key: 'Rectangle',
             factory: () => createSquare(),
-            keyword: ['Rectangle'],
+            keyword: [t('global.rectangle')],
+            tooltip: t('global.rectangle'),
             preview: (
               <svg className={styles.canvas}>
                 <g>
@@ -193,8 +195,9 @@ export const ObjectPanel: FunctionComponent = () => {
           },
           {
             key: 'Circle',
-            keyword: ['Circle'],
             factory: () => createCircle(),
+            keyword: [t('global.circle')],
+            tooltip: t('global.circle'),
             preview: (
               <svg className={styles.canvas}>
                 <g>
@@ -205,8 +208,9 @@ export const ObjectPanel: FunctionComponent = () => {
           },
           {
             key: 'Line',
-            keyword: ['Line'],
             factory: () => createLine(),
+            keyword: [t('global.line')],
+            tooltip: t('global.line'),
             preview: (
               <svg className={styles.canvas}>
                 <g>
@@ -219,7 +223,7 @@ export const ObjectPanel: FunctionComponent = () => {
       },
       {
         key: 'Remix Icon',
-        title: 'Remix Icon',
+        title: t('global.icon'),
         children: RemixIconClasses.map((iconClassName) => ({
           key: iconClassName,
           factory: () => createIcon(iconClassName),
@@ -228,7 +232,7 @@ export const ObjectPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [createSquare, createCircle, createLine, createIcon],
+    [t, createSquare, createCircle, createLine, createIcon],
   );
 
   const filteredGroups = useMemo(() => {
