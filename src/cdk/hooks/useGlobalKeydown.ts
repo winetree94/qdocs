@@ -15,7 +15,11 @@ export const useGlobalKeydown = ({ keys = [] }: UseGlobalKeydownProps) => {
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       keys.forEach((key) => {
-        if (key.keys.includes(event.key) && !!event[metaKey] === !!key.meta && !!event.shiftKey === !!key.shift) {
+        if (
+          key.keys.includes(event.key.toLowerCase()) &&
+          !!event[metaKey] === !!key.meta &&
+          !!event.shiftKey === !!key.shift
+        ) {
           key.callback(event);
         }
       });
