@@ -1,10 +1,10 @@
-import { PlusIcon } from '@radix-ui/react-icons';
+import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
 import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
-import { QueueButton } from 'components/button/Button';
+import { QueueButton, QueueIconButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -12,7 +12,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions, getEffectEntityKey, NormalizedQueueEffect } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 
 type EffectControllerProps = {
@@ -22,15 +22,35 @@ type EffectControllerProps = {
 export const EffectController = ({ effectType }: EffectControllerProps): ReactElement => {
   const [open, setOpen] = useState(false);
 
+  const dispatch = useAppDispatch();
+  const settings = useAppSelector(SettingSelectors.settings);
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+
+  const existingEffectIdsOfSelectedObjects = selectedObjects.map((object) =>
+    getEffectEntityKey({ objectId: object.id, type: effectType, index: settings.queueIndex }),
+  );
+
+  const handleDeleteEffectButton = () => {
+    dispatch(EffectActions.removeMany(existingEffectIdsOfSelectedObjects));
+  };
+
   return (
     <div className="flex flex-col">
-      <QueueButton
-        type="button"
-        size="small"
-        onClick={(): void => setOpen((prev) => !prev)}
-        disabled={effectType === OBJECT_EFFECT_META.CREATE}>
-        <span>{effectType}</span>
-      </QueueButton>
+      <div className="flex relative">
+        <QueueButton
+          className="flex-1"
+          type="button"
+          size="small"
+          onClick={(): void => setOpen((prev) => !prev)}
+          disabled={effectType === OBJECT_EFFECT_META.CREATE}>
+          <span>{effectType}</span>
+        </QueueButton>
+        {effectType !== OBJECT_EFFECT_META.CREATE && (
+          <QueueIconButton className="absolute right-0" onClick={handleDeleteEffectButton}>
+            <TrashIcon />
+          </QueueIconButton>
+        )}
+      </div>
       {open && (
         <div className="flex flex-col gap-2 p-1 bg-gray-100">
           <EffectControllerDuration effectType={effectType} />
