@@ -9,6 +9,7 @@ import { HistoryActions } from 'store/history';
 import { EffectActions, EffectSelectors } from 'store/effect';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
+import { deviceMetaKey } from 'cdk/device/meta';
 
 export const QueueObjectContextContent: React.ForwardRefExoticComponent<
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
@@ -74,11 +75,11 @@ export const QueueObjectContextContent: React.ForwardRefExoticComponent<
         {t('object-context.delete-from-current-queue')} <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={onCompletelyRemoveClick}>
-        {t('object-context.delete-permanently')} <div className={styles.RightSlot}>⌘+Backspace</div>
+        {t('object-context.delete-permanently')} <div className={styles.RightSlot}>{deviceMetaKey}+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={copyToClipboard}>
-        {t('global.copy')} <div className={styles.RightSlot}>⌘+C</div>
+        {t('global.copy')} <div className={styles.RightSlot}>{deviceMetaKey}+C</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={duplicate}>{t('global.duplicate')}</QueueContextMenu.Item>
       {settings.selectedObjectIds.length === 1 && (

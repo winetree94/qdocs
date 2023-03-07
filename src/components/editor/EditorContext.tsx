@@ -1,5 +1,6 @@
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { nanoid } from '@reduxjs/toolkit';
+import { deviceMetaKey } from 'cdk/device/meta';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { forwardRef } from 'react';
@@ -76,14 +77,14 @@ export const EditorContext: React.ForwardRefExoticComponent<
   return (
     <QueueContextMenu.Content ref={ref}>
       <QueueContextMenu.Item disabled={!history.previous.length} onClick={() => dispatch(HistoryActions.Undo())}>
-        {t('global.undo')} <div className={styles.RightSlot}>⌘+Z</div>
+        {t('global.undo')} <div className={styles.RightSlot}>{deviceMetaKey}+Z</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item disabled={!history.future.length} onClick={() => dispatch(HistoryActions.Redo())}>
-        {t('global.redo')} <div className={styles.RightSlot}>⌘+Shift+Z</div>
+        {t('global.redo')} <div className={styles.RightSlot}>{deviceMetaKey}+Shift+Z</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={() => paste()}>
-        {t('global.paste')} <div className={styles.RightSlot}>⌘+V</div>
+        {t('global.paste')} <div className={styles.RightSlot}>{deviceMetaKey}+V</div>
       </QueueContextMenu.Item>
     </QueueContextMenu.Content>
   );
