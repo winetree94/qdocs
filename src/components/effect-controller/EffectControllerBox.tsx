@@ -32,6 +32,7 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
   );
 
   const handleDeleteEffectButton = () => {
+    dispatch(HistoryActions.Capture());
     dispatch(EffectActions.removeMany(existingEffectIdsOfSelectedObjects));
   };
 
