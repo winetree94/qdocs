@@ -9,17 +9,22 @@ import { SettingSelectors } from 'store/settings';
 export const EffectControllerScale = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-
-  const firstObjectScaleEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  // need remove type assertion (?)
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: OBJECT_EFFECT_META.SCALE,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: OBJECT_EFFECT_META.SCALE,
+        }),
+      ),
     ),
-  ) as ScaleEffect;
+  ) as ScaleEffect[];
+
+  const [firstScaleEffect] = effectsOfSelectedObjects;
 
   const handleCurrentScaleChange = (scaleValue: number | number[] | string): void => {
     let scale = 1;
@@ -36,37 +41,30 @@ export const EffectControllerScale = (): ReactElement => {
       scale = parseFloat(scaleValue);
     }
 
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect = {
-        ...firstObjectScaleEffect,
-        prop: {
-          ...firstObjectScaleEffect.prop,
-          scale,
-        },
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-          type: OBJECT_EFFECT_META.SCALE,
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          prop: {
+            ...effect.prop,
+            scale,
+          },
+        })),
+      ),
+    );
   };
 
   return (
     <div>
-      <input type="number" value={firstObjectScaleEffect.prop.scale} hidden readOnly />
+      <input type="number" value={firstScaleEffect.prop.scale} hidden readOnly />
       <p className="text-sm">scale</p>
       <div className="flex items-center gap-2">
         <div className="w-5/12">
           <input
             className="w-full"
             type="number"
-            value={firstObjectScaleEffect.prop.scale}
+            value={firstScaleEffect.prop.scale}
             step={0.1}
             onChange={(e): void => {
               handleCurrentScaleChange(e.target.value);
@@ -78,7 +76,7 @@ export const EffectControllerScale = (): ReactElement => {
             min={0.1}
             max={10}
             step={0.1}
-            value={[firstObjectScaleEffect.prop.scale]}
+            value={[firstScaleEffect.prop.scale]}
             onValueChange={(value): void => {
               handleCurrentScaleChange(value);
             }}

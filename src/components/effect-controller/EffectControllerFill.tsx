@@ -9,38 +9,36 @@ import { SettingSelectors } from 'store/settings';
 export const EffectControllerFill = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-
-  const firstObjectFillEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  // need remove type assertion (?)
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: OBJECT_EFFECT_META.FILL,
-      }),
-    ),
-  ) as FillEffect;
-
-  const updateSelectedObjectsEffect = (nextFillEffectProp: Partial<FillEffect['prop']>): void => {
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect = {
-        ...firstObjectFillEffect,
-        prop: {
-          ...firstObjectFillEffect.prop,
-          ...nextFillEffectProp,
-        },
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId,
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
           index: settings.queueIndex,
+          objectId: object.id,
           type: OBJECT_EFFECT_META.FILL,
         }),
-      );
-    });
+      ),
+    ),
+  ) as FillEffect[];
+
+  const [firstFillEffect] = effectsOfSelectedObjects;
+
+  const updateSelectedObjectsEffect = (nextFillEffectProp: Partial<FillEffect['prop']>): void => {
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          prop: {
+            ...effect.prop,
+            ...nextFillEffectProp,
+          },
+        })),
+      ),
+    );
   };
 
   const handleCurrentColorChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -71,7 +69,7 @@ export const EffectControllerFill = (): ReactElement => {
     <div>
       <p className="text-sm">color</p>
       <div>
-        <input type="color" value={firstObjectFillEffect.prop.color} onChange={handleCurrentColorChange} />
+        <input type="color" value={firstFillEffect.prop.color} onChange={handleCurrentColorChange} />
       </div>
       <p className="text-sm">opacity</p>
       <div className="flex items-center gap-2">
@@ -80,7 +78,7 @@ export const EffectControllerFill = (): ReactElement => {
             className="w-full"
             type="number"
             step={0.1}
-            value={firstObjectFillEffect.prop.opacity}
+            value={firstFillEffect.prop.opacity}
             onChange={(e): void => {
               handleCurrentOpacityChange(e.target.value);
             }}
@@ -91,7 +89,7 @@ export const EffectControllerFill = (): ReactElement => {
             min={0}
             max={1}
             step={0.1}
-            value={[firstObjectFillEffect.prop.opacity]}
+            value={[firstFillEffect.prop.opacity]}
             onValueChange={(value): void => {
               handleCurrentOpacityChange(value);
             }}

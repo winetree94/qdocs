@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
-import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 
 export type EffectControllerDurationProps = {
@@ -15,18 +15,21 @@ export type EffectControllerDurationProps = {
 export const EffectControllerDuration = ({ effectType }: EffectControllerDurationProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: effectType,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: effectType,
+        }),
+      ),
     ),
   );
 
-  const firstObjectEffect = effect;
+  const [firstObjectEffect] = effectsOfSelectedObjects;
   const convertedDuration = firstObjectEffect.duration / 1000;
   const convertedDelay = firstObjectEffect.delay / 1000;
 
@@ -45,21 +48,15 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       duration = parseFloat(durationValue);
     }
 
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect: NormalizedQueueEffect = {
-        ...effect,
-        duration: duration * 1000,
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          duration: duration * 1000,
+        })),
+      ),
+    );
   };
 
   const handleDelayChange = (delayValue: number | number[] | string): void => {
@@ -77,21 +74,15 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
       delay = parseFloat(delayValue);
     }
 
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect: NormalizedQueueEffect = {
-        ...effect,
-        delay: delay * 1000,
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          delay: delay * 1000,
+        })),
+      ),
+    );
   };
 
   return (

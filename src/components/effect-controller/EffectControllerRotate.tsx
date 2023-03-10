@@ -11,38 +11,36 @@ import { HistoryActions } from 'store/history';
 export const EffectControllerRotate = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-
-  const firstObjectRotateEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  // need remove type assertion (?)
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: OBJECT_EFFECT_META.ROTATE,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: OBJECT_EFFECT_META.ROTATE,
+        }),
+      ),
     ),
-  ) as RotateEffect;
+  ) as RotateEffect[];
+
+  const [firstRotateEffect] = effectsOfSelectedObjects;
 
   const handleCurrentRotateChange = (rotate: QueueRotate): void => {
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect: RotateEffect = {
-        ...firstObjectRotateEffect,
-        index: settings.queueIndex,
-        prop: {
-          ...firstObjectRotateEffect,
-          ...rotate,
-        },
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          prop: {
+            ...effect.prop,
+            ...rotate,
+          },
+        })),
+      ),
+    );
   };
 
   return (
@@ -53,7 +51,7 @@ export const EffectControllerRotate = (): ReactElement => {
           className="w-full"
           type="number"
           step={5}
-          value={firstObjectRotateEffect.prop.degree}
+          value={firstRotateEffect.prop.degree}
           onChange={(e): void => {
             handleCurrentRotateChange({ degree: parseInt(e.target.value) });
           }}

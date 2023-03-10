@@ -11,17 +11,22 @@ import { HistoryActions } from 'store/history';
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-
-  const firstObjectRotateEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  // need remove type assertion (?)
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: OBJECT_EFFECT_META.FADE,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: OBJECT_EFFECT_META.FADE,
+        }),
+      ),
     ),
-  ) as FadeEffect;
+  ) as FadeEffect[];
+
+  const [firstFadeEffect] = effectsOfSelectedObjects;
 
   const handleCurrentOpacityChange = (opacityValue: number | number[] | string): void => {
     let opacity = 1;
@@ -38,25 +43,18 @@ export const EffectControllerFade = (): ReactElement => {
       opacity = parseFloat(opacityValue);
     }
 
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect = {
-        ...firstObjectRotateEffect,
-        prop: {
-          ...firstObjectRotateEffect.prop,
-          opacity,
-        },
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-          type: 'fade',
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          prop: {
+            ...effect.prop,
+            opacity,
+          },
+        })),
+      ),
+    );
   };
 
   return (
@@ -68,7 +66,7 @@ export const EffectControllerFade = (): ReactElement => {
             className="w-full"
             type="number"
             step={0.1}
-            value={firstObjectRotateEffect.prop.opacity}
+            value={firstFadeEffect.prop.opacity}
             onChange={(e): void => {
               handleCurrentOpacityChange(e.target.value);
             }}
@@ -79,7 +77,7 @@ export const EffectControllerFade = (): ReactElement => {
             min={0}
             max={1}
             step={0.1}
-            value={[firstObjectRotateEffect.prop.opacity]}
+            value={[firstFadeEffect.prop.opacity]}
             onValueChange={(value): void => {
               handleCurrentOpacityChange(value);
             }}

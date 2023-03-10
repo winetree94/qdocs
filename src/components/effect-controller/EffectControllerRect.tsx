@@ -11,38 +11,36 @@ import { HistoryActions } from 'store/history';
 export const EffectControllerRect = (): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-
-  const firstObjectRectEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  // need remove type assertion (?)
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: OBJECT_EFFECT_META.RECT,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: OBJECT_EFFECT_META.RECT,
+        }),
+      ),
     ),
-  ) as MoveEffect;
+  ) as MoveEffect[];
+
+  const [firstMoveEffect] = effectsOfSelectedObjects;
 
   const handleCurrentRectChange = (rect: Partial<QueueRect>): void => {
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect: MoveEffect = {
-        ...firstObjectRectEffect,
-        index: settings.queueIndex,
-        prop: {
-          ...firstObjectRectEffect.prop,
-          ...rect,
-        },
-      };
-
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-        }),
-      );
-    });
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          prop: {
+            ...effect.prop,
+            ...rect,
+          },
+        })),
+      ),
+    );
   };
 
   return (
@@ -52,7 +50,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.prop.width}
+          value={firstMoveEffect.prop.width}
           onChange={(e): void => handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -61,7 +59,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.prop.height}
+          value={firstMoveEffect.prop.height}
           onChange={(e): void => handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -70,7 +68,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.prop.x}
+          value={firstMoveEffect.prop.x}
           onChange={(e): void => handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })}
         />
       </div>
@@ -79,7 +77,7 @@ export const EffectControllerRect = (): ReactElement => {
         <input
           className="w-full"
           type="number"
-          value={firstObjectRectEffect.prop.y}
+          value={firstMoveEffect.prop.y}
           onChange={(e): void => handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })}
         />
       </div>

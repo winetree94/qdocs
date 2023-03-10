@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
-import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 
 export type EffectControllerTimingFunctionProps = {
@@ -17,33 +17,32 @@ export type EffectControllerTimingFunctionProps = {
 export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const firstObjectEffect = useAppSelector((state) =>
-    EffectSelectors.byId(
+  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  const effectsOfSelectedObjects = useAppSelector((state) =>
+    EffectSelectors.byIds(
       state,
-      getEffectEntityKey({
-        index: settings.queueIndex,
-        objectId: settings.selectedObjectIds[0],
-        type: effectType,
-      }),
+      selectedObjects.map((object) =>
+        getEffectEntityKey({
+          index: settings.queueIndex,
+          objectId: object.id,
+          type: effectType,
+        }),
+      ),
     ),
   );
 
-  const handleTimingFunctionChange = (timingFunction: string): void => {
-    settings.selectedObjectIds.forEach((objectId) => {
-      const nextEffect: NormalizedQueueEffect = {
-        ...firstObjectEffect,
-        timing: timingFunction as AnimatorTimingFunctionType,
-      };
+  const [firstObjectEffect] = effectsOfSelectedObjects;
 
-      dispatch(HistoryActions.Capture());
-      dispatch(
-        EffectActions.upsertEffect({
-          ...nextEffect,
-          objectId: objectId,
-          index: settings.queueIndex,
-        }),
-      );
-    });
+  const handleTimingFunctionChange = (timingFunction: string): void => {
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      EffectActions.upsertEffects(
+        effectsOfSelectedObjects.map((effect) => ({
+          ...effect,
+          timing: timingFunction as AnimatorTimingFunctionType,
+        })),
+      ),
+    );
   };
 
   return (
