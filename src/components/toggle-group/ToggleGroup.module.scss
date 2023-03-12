@@ -8,15 +8,18 @@
 }
 
 .ToggleGroupItem {
+  // base
   @include queue-button-base;
-  @include queue-button;
-  @apply px-2 whitespace-nowrap;
-}
 
-.ToggleGroupItem:hover {
-  background: var(--gray3);
-}
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
 
-.ToggleGroupItem[data-state='on'] {
-  background: var(--gray3);
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-button-color-default;
+  @include queue-button-color-blue;
+  @include queue-button-color-red;
 }

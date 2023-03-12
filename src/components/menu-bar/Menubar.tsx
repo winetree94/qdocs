@@ -20,7 +20,7 @@ export const Menu: React.FC<Menubar.ScopedProps<Menubar.MenubarMenuProps>> = ({ 
 
 export const Trigger: React.ForwardRefExoticComponent<
   QueueButtonProps & Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, size = 'small', color = 'default', className, ...props }, ref) => {
+> = React.forwardRef(({ children, size = 'medium', color = 'default', className, ...props }, ref) => {
   return (
     <Menubar.Trigger
       ref={ref}

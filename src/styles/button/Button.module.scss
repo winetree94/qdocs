@@ -3,6 +3,68 @@
 @import '@radix-ui/colors/red.css';
 @import '@radix-ui/colors/yellow.css';
 @import '@radix-ui/colors/whiteA.css';
+@import '../ui/UI.module.scss';
+@import '../ui/Color.module.scss';
+
+@mixin queue-button-color-default {
+  &.default {
+    background: $ui-default-background-color;
+    color: $ui-default-color;
+    &:hover {
+      background: $ui-default-background-color-hover;
+      color: $ui-default-color-hover;
+    }
+    &[data-state='on'],
+    &:active {
+      background: $ui-default-background-color-active;
+      color: $ui-default-color-active;
+    }
+    &:disabled {
+      background: $ui-default-background-color-disabled;
+      color: $ui-default-color-disabled;
+    }
+  }
+}
+
+@mixin queue-button-color-blue {
+  &.blue {
+    background: $ui-blue-background-color;
+    color: $ui-blue-color;
+    &:hover {
+      background: $ui-blue-background-color-hover;
+      color: $ui-blue-color-hover;
+    }
+    &[data-state='on'],
+    &:active {
+      background: $ui-blue-background-color-active;
+      color: $ui-blue-color-active;
+    }
+    &:disabled {
+      background: $ui-blue-background-color-disabled;
+      color: $ui-blue-color-disabled;
+    }
+  }
+}
+
+@mixin queue-button-color-red {
+  &.red {
+    background: $ui-red-background-color;
+    color: $ui-red-color;
+    &:hover {
+      background: $ui-red-background-color-hover;
+      color: $ui-red-color-hover;
+    }
+    &[data-state='on'],
+    &:active {
+      background: $ui-red-background-color-active;
+      color: $ui-red-color-active;
+    }
+    &:disabled {
+      background: $ui-red-background-color-disabled;
+      color: $ui-red-color-disabled;
+    }
+  }
+}
 
 @mixin queue-button-base {
   @apply flex
@@ -10,130 +72,6 @@
     justify-center
     border-0
     transition-colors
-    outline-none;
-
-  &.round {
-    @apply rounded;
-  }
-
-  &.xsmall {
-    @apply h-4 text-xs;
-  }
-  &.small {
-    @apply h-6 text-xs;
-  }
-  &.medium {
-    @apply h-8 text-xs;
-  }
-  &.large {
-    @apply h-10 text-lg;
-  }
-  &.xlarge {
-    @apply h-12 text-xl;
-  }
-
-  &.default {
-    background: var(--whiteA1);
-    &:hover {
-      background: var(--gray3);
-    }
-    &[data-state='on'],
-    &:active {
-      background: var(--gray5);
-    }
-  }
-
-  &.blue {
-    color: var(--gray1);
-    background: var(--blue9);
-    &:hover {
-      background: var(--blue10);
-    }
-    &[data-state='on'],
-    &:active {
-      background: var(--blue11);
-    }
-  }
-
-  &.red {
-    color: var(--gray1);
-    background: var(--red9);
-    &:hover {
-      background: var(--red10);
-    }
-    &[data-state='on'],
-    &:active {
-      background: var(--red11);
-    }
-  }
-
-  &.yellow {
-    background: var(--yellowA1);
-    &:hover {
-      background: var(--yellowA3);
-    }
-    &[data-state='on'],
-    &:active {
-      background: var(--yellowA5);
-    }
-  }
-
-  &.transparent {
-    background: var(--whiteA1);
-    &:hover {
-      background: var(--whiteA3);
-    }
-    &[data-state='on'],
-    &:active {
-      background: var(--whiteA5);
-    }
-  }
-}
-
-@mixin queue-button {
-  &.xsmall {
-    @apply py-1 px-2;
-  }
-  &.small {
-    @apply py-1 px-2;
-  }
-  &.medium {
-    @apply py-1 px-2;
-  }
-  &.large {
-    @apply py-1 px-2;
-  }
-  &.xlarge {
-    @apply py-1 px-2;
-  }
-}
-
-@mixin queue-icon-button {
-  &.xsmall {
-    @apply w-4;
-  }
-  &.small {
-    @apply w-6;
-  }
-  &.medium {
-    @apply w-8;
-  }
-  &.large {
-    @apply w-10;
-  }
-  &.large {
-    @apply w-12;
-  }
-}
-
-.QueueButtonBase {
-  @include queue-button-base;
-}
-
-.QueueIconButton {
-  @include queue-icon-button;
-}
-
-.QueueButton {
-  @include queue-button;
+    outline-none
+    whitespace-nowrap;
 }

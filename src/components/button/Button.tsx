@@ -37,7 +37,6 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
       {...props}
       disabled={disabled}
       className={clsx(
-        styles.QueueButtonBase,
         styles.QueueIconButton,
         props.className,
         styles[size],
@@ -61,7 +60,6 @@ export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & Rea
         {...props}
         disabled={disabled}
         className={clsx(
-          styles.QueueButtonBase,
           styles.QueueButton,
           props.className,
           styles[size],

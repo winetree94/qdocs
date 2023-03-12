@@ -12,7 +12,7 @@ export const QueueToogleGroupRoot: React.ForwardRefExoticComponent<
   QueueToggleGroupProps &
     (ToggleGroup.ToggleGroupSingleProps | ToggleGroup.ToggleGroupMultipleProps) &
     React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, size, ...props }, ref) => {
+> = forwardRef(({ children, className, size = 'medium', ...props }, ref) => {
   return (
     <ToggleGroup.Root ref={ref} {...props} className={clsx(styles.ToggleGroup, className, styles[size])}>
       {children}

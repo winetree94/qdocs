@@ -1,0 +1,99 @@
+$ui-size-xsmall: theme('height.4');
+$ui-size-small: theme('height.6');
+$ui-size-medium: theme('height.8');
+$ui-size-large: theme('height.10');
+$ui-size-xlarge: theme('height.12');
+
+$ui-padding-xsmall: theme('padding.2');
+$ui-padding-small: theme('padding.2');
+$ui-padding-medium: theme('padding.2');
+$ui-padding-large: theme('padding.2');
+$ui-padding-xlarge: theme('padding.2');
+
+$ui-font-size-xsmall: theme('fontSize.xs');
+$ui-font-size-small: theme('fontSize.xs');
+$ui-font-size-medium: theme('fontSize.xs');
+$ui-font-size-large: theme('fontSize.lg');
+$ui-font-size-xlarge: theme('fontSize.xl');
+
+@mixin queue-ui-fixed-height {
+  height: $ui-size-medium;
+  &.xsmall {
+    height: $ui-size-xsmall;
+  }
+  &.small {
+    height: $ui-size-small;
+  }
+  &.medium {
+    height: $ui-size-medium;
+  }
+  &.large {
+    height: $ui-size-large;
+  }
+  &.xlarge {
+    height: $ui-size-xlarge;
+  }
+}
+
+@mixin queue-ui-fixed-width {
+  width: $ui-size-medium;
+  &.xsmall {
+    width: $ui-size-xsmall;
+  }
+  &.small {
+    width: $ui-size-small;
+  }
+  &.medium {
+    width: $ui-size-medium;
+  }
+  &.large {
+    width: $ui-size-large;
+  }
+  &.large {
+    width: $ui-size-xlarge;
+  }
+}
+
+@mixin queue-ui-x-padding {
+  padding-left: $ui-padding-medium;
+  padding-right: $ui-padding-medium;
+  &.xsmall {
+    padding-left: $ui-padding-xsmall;
+    padding-right: $ui-padding-xsmall;
+  }
+  &.small {
+    padding-left: $ui-padding-small;
+    padding-right: $ui-padding-small;
+  }
+  &.medium {
+    padding-left: $ui-padding-medium;
+    padding-right: $ui-padding-medium;
+  }
+  &.large {
+    padding-left: $ui-padding-large;
+    padding-right: $ui-padding-large;
+  }
+  &.xlarge {
+    padding-left: $ui-padding-xlarge;
+    padding-right: $ui-padding-xlarge;
+  }
+}
+
+@mixin queue-ui-fixed-font-size {
+  font-size: $ui-font-size-medium;
+  &.xsmall {
+    font-size: $ui-font-size-xsmall;
+  }
+  &.small {
+    font-size: $ui-font-size-small;
+  }
+  &.medium {
+    font-size: $ui-font-size-medium;
+  }
+  &.large {
+    font-size: $ui-font-size-large;
+  }
+  &.xlarge {
+    font-size: $ui-font-size-xlarge;
+  }
+}

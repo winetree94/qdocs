@@ -50,21 +50,11 @@ export const QueueSubtoolbar = () => {
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
             <QueueIconButton onClick={() => dispatch(HistoryActions.Undo())} disabled={!history.previous.length}>
-              <SvgRemixIcon
-                width={15}
-                height={15}
-                icon={'ri-arrow-go-back-line'}
-                className={clsx(history.previous.length === 0 ? styles.Disabled : null)}
-              />
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-back-line'} />
             </QueueIconButton>
 
             <QueueIconButton onClick={() => dispatch(HistoryActions.Redo())} disabled={!history.future.length}>
-              <SvgRemixIcon
-                width={15}
-                height={15}
-                icon={'ri-arrow-go-forward-line'}
-                className={clsx(history.future.length === 0 ? styles.Disabled : null)}
-              />
+              <SvgRemixIcon width={15} height={15} icon={'ri-arrow-go-forward-line'} />
             </QueueIconButton>
 
             <QueueIconButton
@@ -73,12 +63,7 @@ export const QueueSubtoolbar = () => {
                 dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
               }}
               disabled={!settings.selectedObjectIds.length}>
-              <SvgRemixIcon
-                width={15}
-                height={15}
-                icon={'ri-file-copy-line'}
-                className={clsx(settings.selectedObjectIds.length === 0 ? styles.Disabled : null)}
-              />
+              <SvgRemixIcon width={15} height={15} icon={'ri-file-copy-line'} />
             </QueueIconButton>
 
             <QueueIconButton onClick={onPresentationStartClick}>

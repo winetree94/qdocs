@@ -4,9 +4,20 @@
 @import 'components/button/Button.module.scss';
 
 .Toggle {
+  // base
   @include queue-button-base;
-  @include queue-button;
-  @apply px-2 whitespace-nowrap outline-none;
+
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-button-color-default;
+  @include queue-button-color-blue;
+  @include queue-button-color-red;
 }
 
 .Toggle:hover {
@@ -15,7 +26,4 @@
 
 .Toggle[data-state='on'] {
   background: var(--gray3);
-}
-
-.Toggle:focus {
 }

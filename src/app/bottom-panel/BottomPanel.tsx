@@ -149,7 +149,7 @@ export const BottomPanel = () => {
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       onDoubleClick={(): void => setEditNamePageId(page.id)}>
-                      <QueueToggleGroup.Item value={`${page.id}`} size="small">
+                      <QueueToggleGroup.Item value={`${page.id}`} size="medium">
                         {page.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>
