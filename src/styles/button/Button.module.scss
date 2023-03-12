@@ -1,0 +1,139 @@
+@import '@radix-ui/colors/gray.css';
+@import '@radix-ui/colors/blue.css';
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/yellow.css';
+@import '@radix-ui/colors/whiteA.css';
+
+@mixin queue-button-base {
+  @apply flex
+    items-center
+    justify-center
+    border-0
+    transition-colors
+    outline-none;
+
+  &.round {
+    @apply rounded;
+  }
+
+  &.xsmall {
+    @apply h-4 text-xs;
+  }
+  &.small {
+    @apply h-6 text-xs;
+  }
+  &.medium {
+    @apply h-8 text-xs;
+  }
+  &.large {
+    @apply h-10 text-lg;
+  }
+  &.xlarge {
+    @apply h-12 text-xl;
+  }
+
+  &.default {
+    background: var(--whiteA1);
+    &:hover {
+      background: var(--gray3);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--gray5);
+    }
+  }
+
+  &.blue {
+    color: var(--gray1);
+    background: var(--blue9);
+    &:hover {
+      background: var(--blue10);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--blue11);
+    }
+  }
+
+  &.red {
+    color: var(--gray1);
+    background: var(--red9);
+    &:hover {
+      background: var(--red10);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--red11);
+    }
+  }
+
+  &.yellow {
+    background: var(--yellowA1);
+    &:hover {
+      background: var(--yellowA3);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--yellowA5);
+    }
+  }
+
+  &.transparent {
+    background: var(--whiteA1);
+    &:hover {
+      background: var(--whiteA3);
+    }
+    &[data-state='on'],
+    &:active {
+      background: var(--whiteA5);
+    }
+  }
+}
+
+@mixin queue-button {
+  &.xsmall {
+    @apply py-1 px-2;
+  }
+  &.small {
+    @apply py-1 px-2;
+  }
+  &.medium {
+    @apply py-1 px-2;
+  }
+  &.large {
+    @apply py-1 px-2;
+  }
+  &.xlarge {
+    @apply py-1 px-2;
+  }
+}
+
+@mixin queue-icon-button {
+  &.xsmall {
+    @apply w-4;
+  }
+  &.small {
+    @apply w-6;
+  }
+  &.medium {
+    @apply w-8;
+  }
+  &.large {
+    @apply w-10;
+  }
+  &.large {
+    @apply w-12;
+  }
+}
+
+.QueueButtonBase {
+  @include queue-button-base;
+}
+
+.QueueIconButton {
+  @include queue-icon-button;
+}
+
+.QueueButton {
+  @include queue-button;
+}
