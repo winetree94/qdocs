@@ -70,3 +70,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.RightSlot {
+  @include list-item-right-slot;
+}

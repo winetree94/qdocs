@@ -121,6 +121,16 @@ export const Sub: React.FC<Menubar.MenubarSubProps> = ({ children, ...props }) =
   return <Menubar.Sub {...props}>{children}</Menubar.Sub>;
 };
 
+const RightSlot = React.forwardRef<HTMLDivElement, React.BaseHTMLAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <div ref={ref} className={clsx(styles.RightSlot, className)}>
+        {children}
+      </div>
+    );
+  },
+);
+
 export const SubTrigger: React.ForwardRefExoticComponent<
   Menubar.MenubarSubTriggerProps & React.RefAttributes<HTMLDivElement>
 > = React.forwardRef(({ children, className, ...props }, ref) => {
@@ -168,6 +178,7 @@ export const QueueMenubar = {
   Content,
   Label,
   Item,
+  RightSlot,
   Group,
   CheckboxItem,
   ItemIndicator,

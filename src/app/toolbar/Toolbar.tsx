@@ -190,9 +190,9 @@ export const QueueToolbar = () => {
                 <QueueMenubar.Sub>
                   <QueueMenubar.SubTrigger>
                     {t('toolbar.extra.language')}
-                    <div className="RightSlot">
+                    <QueueMenubar.RightSlot>
                       <ChevronRightIcon />
-                    </div>
+                    </QueueMenubar.RightSlot>
                   </QueueMenubar.SubTrigger>
                   <QueueMenubar.Portal>
                     <QueueMenubar.SubContent alignOffset={-5}>

@@ -28,3 +28,23 @@
   background-color: var(--gray5);
   margin: 5px;
 }
+
+
+@mixin list-item-right-slot {
+  margin-left: auto;
+  padding-left: 20px;
+
+  [data-highlighted] > .RightSlot {
+    background-color: var(--blue10);
+    color: var(--blue1);
+    margin-left: auto;
+    padding-left: 20px;
+  }
+  
+  [data-disabled] > .RightSlot {
+    background-color: var(--blue10);
+    color: var(--blue1);
+    margin-left: auto;
+    padding-left: 20px;
+  }
+}
