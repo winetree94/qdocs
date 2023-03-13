@@ -15,9 +15,10 @@
 }
 
 .TemplateGroup {
-  @apply grid grid-cols-4 h-60 border;
+  @apply grid grid-cols-4 border overflow-y-auto h-60;
   border-color: var(--gray5);
+  grid-auto-rows: theme('height.20');
   .TemplateItem {
-    @apply h-20;
+    @apply h-full;
   }
 }
