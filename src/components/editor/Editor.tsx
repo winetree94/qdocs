@@ -226,7 +226,6 @@ export const QueueEditor = () => {
   };
 
   const onObjectDragStart = (): void => {
-    console.log('capture');
     setCapturedObjectProps(props);
     dispatch(HistoryActions.Capture());
   };
