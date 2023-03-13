@@ -32,6 +32,8 @@ export const QueueSubtoolbar = () => {
     ranges.push(i);
   }
 
+  console.log(byEffectIndex);
+
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
     dispatch(
       SettingsActions.setQueueIndex({

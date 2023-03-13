@@ -8,20 +8,19 @@
 
 .ItemGroup {
   @apply flex h-full items-center;
+  .QueueIndicator {
+    color: var(--gray7);
+  
+    &.Current {
+      color: var(--red11);
+    }
+  }
+  
+  .HasEffect {
+    color: var(--gray11);
+  }
 }
 
 .Separator {
   margin: 0 1rem;
-}
-
-.QueueIndicator {
-  color: var(--gray7);
-
-  &.Current {
-    color: var(--red11);
-  }
-}
-
-.HasEffect {
-  color: var(--gray11);
 }
