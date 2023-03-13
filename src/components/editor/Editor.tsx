@@ -117,7 +117,7 @@ export const QueueEditor = () => {
 
   // 최초 렌더링 시 스케일 계산
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => canvasSizeToFit(), []);
+  useLayoutEffect(() => canvasSizeToFit(), [settings.documentId]);
 
   useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
 
