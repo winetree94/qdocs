@@ -154,7 +154,7 @@ export const RootLayout = () => {
         },
       },
       {
-        keys: ['z'],
+        keys: ['z', 'Z'],
         meta: true,
         shift: true,
         callback: (e) => {
