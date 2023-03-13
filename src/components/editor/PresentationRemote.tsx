@@ -6,6 +6,7 @@ import { QueueIconButton } from 'components/button/Button';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export const PresentationRemote: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +21,10 @@ export const PresentationRemote: React.FC = () => {
         <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.forward())}>
           <SvgRemixIcon icon={'ri-speed-line'} />
         </QueueIconButton>
-        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.pause())}>
+        <QueueIconButton
+          size={QUEUE_UI_SIZE.MEDIUM}
+          color={QUEUE_UI_COLOR.DEFAULT}
+          onClick={() => dispatch(SettingsActions.pause())}>
           <SvgRemixIcon icon={'ri-pause-line'} />
         </QueueIconButton>
         <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.play())}>
