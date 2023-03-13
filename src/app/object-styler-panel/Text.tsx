@@ -10,6 +10,7 @@ import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import styles from './Text.module.scss';
 
 export const ObjectStyleText = () => {
@@ -85,14 +86,14 @@ export const ObjectStyleText = () => {
                 horizontalAlign: value || text.horizontalAlign,
               })
             }>
-            <QueueToggleGroup.Item value="left" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-left'} />
+            <QueueToggleGroup.Item value="left" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-left'} />
             </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="center" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-center'} />
+            <QueueToggleGroup.Item value="center" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-center'} />
             </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="right" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-right'} />
+            <QueueToggleGroup.Item value="right" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-right'} />
             </QueueToggleGroup.Item>
           </QueueToggleGroup.Root>
         </div>
@@ -108,14 +109,14 @@ export const ObjectStyleText = () => {
                 verticalAlign: value || text.verticalAlign,
               })
             }>
-            <QueueToggleGroup.Item value="top" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-top'} />
+            <QueueToggleGroup.Item value="top" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-top'} />
             </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="middle" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-vertically'} />
+            <QueueToggleGroup.Item value="middle" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-vertically'} />
             </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="bottom" size="small">
-              <SvgRemixIcon width={15} height={15} icon={'ri-align-bottom'} />
+            <QueueToggleGroup.Item value="bottom" size={QUEUE_UI_SIZE.SMALL}>
+              <SvgRemixIcon icon={'ri-align-bottom'} />
             </QueueToggleGroup.Item>
           </QueueToggleGroup.Root>
         </div>

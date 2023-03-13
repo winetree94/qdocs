@@ -18,6 +18,7 @@ import { ChevronRightIcon } from '@radix-ui/react-icons';
 import { PreferencesSelectors } from 'store/preferences/selectors';
 import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export interface ToolbarModel {
   key: string;
@@ -124,7 +125,7 @@ export const QueueToolbar = () => {
   return (
     <div className={clsx(styles.Container)}>
       <div className={clsx(styles.LogoContainer)}>
-        <SvgRemixIcon icon="ri-file-ppt-line" width={40} height={40} />
+        <SvgRemixIcon icon="ri-file-ppt-line" size={QUEUE_UI_SIZE.XLARGE} />
       </div>
       <div className={clsx(styles.ContentContainer)}>
         <div className={clsx(styles.TitleContainer)}>

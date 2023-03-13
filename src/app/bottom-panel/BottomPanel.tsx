@@ -16,6 +16,7 @@ import { PageActions } from '../../store/page';
 import { SettingsActions, SettingSelectors } from '../../store/settings';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export const BottomPanel = () => {
   const { t } = useTranslation();
@@ -149,7 +150,7 @@ export const BottomPanel = () => {
                       onDragOver={onDragOver}
                       onDrop={onDrop}
                       onDoubleClick={(): void => setEditNamePageId(page.id)}>
-                      <QueueToggleGroup.Item value={`${page.id}`} size="medium">
+                      <QueueToggleGroup.Item value={`${page.id}`} size={QUEUE_UI_SIZE.MEDIUM}>
                         {page.pageName}
                       </QueueToggleGroup.Item>
                     </QueueContextMenu.Trigger>
@@ -214,11 +215,11 @@ export const BottomPanel = () => {
             <QueueAlertDialog.Title>페이지 삭제</QueueAlertDialog.Title>
             <QueueAlertDialog.Description>페이지를 삭제하시겠습니까?</QueueAlertDialog.Description>
             <QueueAlertDialog.Footer>
-              <QueueAlertDialog.Cancel size="small" color="red">
+              <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.SMALL} color="red">
                 취소
               </QueueAlertDialog.Cancel>
               <QueueAlertDialog.Action
-                size="small"
+                size={QUEUE_UI_SIZE.SMALL}
                 color="blue"
                 onClick={(): void => onPageDeleteSubmit(deleteConfirmPageId)}>
                 확인

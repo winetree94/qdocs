@@ -3,6 +3,8 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
 import { QueueButtonProps } from 'components/button/Button';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export const QueueAlertDialogRoot: React.FC<AlertDialog.AlertDialogProps> = ({ children, ...props }) => {
   return <AlertDialog.Root {...props}>{children}</AlertDialog.Root>;
@@ -44,29 +46,33 @@ export const QueueAlertDialogContent: React.ForwardRefExoticComponent<
 
 export const QueueAlertDialogAction: React.ForwardRefExoticComponent<
   QueueButtonProps & AlertDialog.AlertDialogActionProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, className, round = false, size = 'medium', color = 'default', ...props }, ref) => {
-  return (
-    <AlertDialog.Action
-      ref={ref}
-      {...props}
-      className={clsx(styles.AlertDialogAction, className, styles[size], styles[color], round ? styles.round : null)}>
-      {children}
-    </AlertDialog.Action>
-  );
-});
+> = React.forwardRef(
+  ({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
+    return (
+      <AlertDialog.Action
+        ref={ref}
+        {...props}
+        className={clsx(styles.AlertDialogAction, className, styles[size], styles[color])}>
+        {children}
+      </AlertDialog.Action>
+    );
+  },
+);
 
 export const QueueAlertDialogCancel: React.ForwardRefExoticComponent<
   QueueButtonProps & AlertDialog.AlertDialogCancelProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, className, round = false, size = 'medium', color = 'default', ...props }, ref) => {
-  return (
-    <AlertDialog.Cancel
-      ref={ref}
-      {...props}
-      className={clsx(styles.AlertDialogCancel, className, styles[size], styles[color], round ? styles.round : null)}>
-      {children}
-    </AlertDialog.Cancel>
-  );
-});
+> = React.forwardRef(
+  ({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
+    return (
+      <AlertDialog.Cancel
+        ref={ref}
+        {...props}
+        className={clsx(styles.AlertDialogCancel, className, styles[size], styles[color])}>
+        {children}
+      </AlertDialog.Cancel>
+    );
+  },
+);
 
 export const QueueAlertDialogTitle: React.ForwardRefExoticComponent<
   AlertDialog.AlertDialogTitleProps & React.RefAttributes<HTMLHeadingElement>
@@ -126,10 +132,10 @@ export const QueueSimpleAlertDialog: React.FC<QueueSimpleAlertDialogProps> = ({
         <QueueAlertDialog.Title>{title}</QueueAlertDialog.Title>
         <QueueAlertDialog.Description>{description}</QueueAlertDialog.Description>
         <QueueAlertDialog.Footer>
-          <QueueAlertDialog.Cancel size="small" color="red">
+          <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.SMALL} color="red">
             취소
           </QueueAlertDialog.Cancel>
-          <QueueAlertDialog.Action size="small" color="blue" onClick={onAction}>
+          <QueueAlertDialog.Action size={QUEUE_UI_SIZE.SMALL} color="blue" onClick={onAction}>
             확인
           </QueueAlertDialog.Action>
         </QueueAlertDialog.Footer>

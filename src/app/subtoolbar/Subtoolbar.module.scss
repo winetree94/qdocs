@@ -17,11 +17,11 @@
 .QueueIndicator {
   color: var(--gray7);
 
-  &.HasEffect {
-    color: var(--gray11);
-  }
-
   &.Current {
     color: var(--red11);
   }
+}
+
+.HasEffect {
+  color: var(--gray11);
 }

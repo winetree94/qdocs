@@ -22,6 +22,7 @@ import { ObjectActions } from '../../../store/object';
 import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export interface QueueObject {
   key: string;
@@ -72,8 +73,6 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({ style, ind
         className={clsx(styles.objectGroupTitle)}>
         <SvgRemixIcon
           className={styles.objectGroupArrow}
-          width={15}
-          height={15}
           icon={data.closedObjectGroupKey[flattenData.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'}
         />
         {flattenData.title}
@@ -228,7 +227,7 @@ export const ObjectPanel: FunctionComponent = () => {
           key: iconClassName,
           factory: () => createIcon(iconClassName),
           keyword: [iconClassName],
-          preview: <SvgRemixIcon width={30} height={30} icon={iconClassName} />,
+          preview: <SvgRemixIcon icon={iconClassName} size={QUEUE_UI_SIZE.XLARGE} />,
         })),
       },
     ],

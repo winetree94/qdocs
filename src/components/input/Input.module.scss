@@ -1,5 +1,9 @@
+@import '../../styles/ui/Size.module.scss';
+@import '../../styles/ui/UI.module.scss';
+
 .input {
+  @apply border-none outline-none;
   background-color: transparent;
-  border: none;
-  outline: none;
+
+  @include queue-ui-fixed-height;
 }

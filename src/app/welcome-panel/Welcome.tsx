@@ -8,6 +8,7 @@ import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export const Welcome: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -53,10 +54,10 @@ export const Welcome: React.FC = () => {
     <div className={clsx(styles.Container)}>
       <QueueH2 className={clsx(styles.Header)}>The Queue</QueueH2>
       <div className={styles.ButtonGroup}>
-        <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={onNewDocumentClick}>
+        <QueueButton className={clsx(styles.ActionButton)} size={QUEUE_UI_SIZE.LARGE} onClick={onNewDocumentClick}>
           {t('welcome.new-document')}
         </QueueButton>
-        <QueueButton className={clsx(styles.ActionButton)} size="large" onClick={startFileChooser}>
+        <QueueButton className={clsx(styles.ActionButton)} size={QUEUE_UI_SIZE.LARGE} onClick={startFileChooser}>
           {t('welcome.open-document')}
         </QueueButton>
       </div>

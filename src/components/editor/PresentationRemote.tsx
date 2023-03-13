@@ -10,10 +10,10 @@ export const PresentationRemote: React.FC = () => {
     <div className={styles.Container}>
       <div className={styles.ButtonGroup}>
         <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.rewind())}>
-          <SvgRemixIcon width={30} height={30} icon={'ri-rewind-line'} className={styles.Icon} />
+          <SvgRemixIcon icon={'ri-rewind-line'} className={styles.Icon} />
         </button>
         <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.forward())}>
-          <SvgRemixIcon width={30} height={30} icon={'ri-play-line'} className={styles.Icon} />
+          <SvgRemixIcon icon={'ri-play-line'} className={styles.Icon} />
         </button>
       </div>
     </div>

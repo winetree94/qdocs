@@ -15,6 +15,7 @@ import { NormalizedQueueObjectType } from '../../store/object/model';
 import { EffectActions, getEffectEntityKey, NormalizedQueueEffect } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -42,7 +43,7 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
         <QueueButton
           className="flex-1"
           type="button"
-          size="small"
+          size={QUEUE_UI_SIZE.SMALL}
           onClick={(): void => setOpen((prev) => !prev)}
           disabled={effectType === OBJECT_EFFECT_META.CREATE}>
           <span>{effectType}</span>

@@ -1,3 +1,5 @@
+@import './Size.module.scss';
+
 $ui-size-xsmall: theme('height.4');
 $ui-size-small: theme('height.6');
 $ui-size-medium: theme('height.8');
@@ -16,40 +18,46 @@ $ui-font-size-medium: theme('fontSize.xs');
 $ui-font-size-large: theme('fontSize.lg');
 $ui-font-size-xlarge: theme('fontSize.xl');
 
+$ui-icon-size-xsmall: theme('width.2');
+$ui-icon-size-small: theme('width.2');
+$ui-icon-size-medium: theme('width.2');
+$ui-icon-size-large: theme('width.2');
+$ui-icon-size-xlarge: theme('width.2');
+
 @mixin queue-ui-fixed-height {
   height: $ui-size-medium;
-  &.xsmall {
+  @include queue-ui-size-xsmall {
     height: $ui-size-xsmall;
   }
-  &.small {
+  @include queue-ui-size-small {
     height: $ui-size-small;
   }
-  &.medium {
+  @include queue-ui-size-medium {
     height: $ui-size-medium;
   }
-  &.large {
+  @include queue-ui-size-large {
     height: $ui-size-large;
   }
-  &.xlarge {
+  @include queue-ui-size-xlarge {
     height: $ui-size-xlarge;
   }
 }
 
 @mixin queue-ui-fixed-width {
   width: $ui-size-medium;
-  &.xsmall {
+  @include queue-ui-size-xsmall {
     width: $ui-size-xsmall;
   }
-  &.small {
+  @include queue-ui-size-small {
     width: $ui-size-small;
   }
-  &.medium {
+  @include queue-ui-size-medium {
     width: $ui-size-medium;
   }
-  &.large {
+  @include queue-ui-size-large {
     width: $ui-size-large;
   }
-  &.large {
+  @include queue-ui-size-xlarge {
     width: $ui-size-xlarge;
   }
 }
@@ -57,23 +65,23 @@ $ui-font-size-xlarge: theme('fontSize.xl');
 @mixin queue-ui-x-padding {
   padding-left: $ui-padding-medium;
   padding-right: $ui-padding-medium;
-  &.xsmall {
+  @include queue-ui-size-xsmall {
     padding-left: $ui-padding-xsmall;
     padding-right: $ui-padding-xsmall;
   }
-  &.small {
+  @include queue-ui-size-small {
     padding-left: $ui-padding-small;
     padding-right: $ui-padding-small;
   }
-  &.medium {
+  @include queue-ui-size-medium {
     padding-left: $ui-padding-medium;
     padding-right: $ui-padding-medium;
   }
-  &.large {
+  @include queue-ui-size-large {
     padding-left: $ui-padding-large;
     padding-right: $ui-padding-large;
   }
-  &.xlarge {
+  @include queue-ui-size-xlarge {
     padding-left: $ui-padding-xlarge;
     padding-right: $ui-padding-xlarge;
   }
@@ -81,19 +89,19 @@ $ui-font-size-xlarge: theme('fontSize.xl');
 
 @mixin queue-ui-fixed-font-size {
   font-size: $ui-font-size-medium;
-  &.xsmall {
+  @include queue-ui-size-xsmall {
     font-size: $ui-font-size-xsmall;
   }
-  &.small {
+  @include queue-ui-size-small {
     font-size: $ui-font-size-small;
   }
-  &.medium {
+  @include queue-ui-size-medium {
     font-size: $ui-font-size-medium;
   }
-  &.large {
+  @include queue-ui-size-large {
     font-size: $ui-font-size-large;
   }
-  &.xlarge {
+  @include queue-ui-size-xlarge {
     font-size: $ui-font-size-xlarge;
   }
 }

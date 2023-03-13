@@ -1,27 +1,12 @@
 import clsx from 'clsx';
 import { forwardRef } from 'react';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import styles from './Button.module.scss';
 
-export const QueueButtonSize = {
-  XSMALL: 'xsmall',
-  SMALL: 'small',
-  MEDIUM: 'medium',
-  LARGE: 'large',
-  XLARGE: 'xlarge',
-} as const;
-
-export const QueueButtonColor = {
-  DEFAULT: 'default',
-  BLUE: 'blue',
-  RED: 'red',
-  YELLOW: 'yellow',
-  TRANSPARENT: 'transparent',
-} as const;
-
 export interface BaseQueueButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  size?: typeof QueueButtonSize[keyof typeof QueueButtonSize];
-  color?: typeof QueueButtonColor[keyof typeof QueueButtonColor];
-  round?: boolean;
+  size?: QUEUE_UI_SIZES;
+  color?: QUEUE_UI_COLORS;
   children?: React.ReactNode;
 }
 
@@ -30,20 +15,13 @@ export interface QueueIconButtonProps extends BaseQueueButtonProps {}
 
 export const QueueIconButton: React.ForwardRefExoticComponent<
   QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({ children, round = false, size = 'medium', color = 'default', disabled, ...props }, ref) => {
+> = forwardRef(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
   return (
     <button
       ref={ref}
       {...props}
       disabled={disabled}
-      className={clsx(
-        styles.QueueIconButton,
-        props.className,
-        styles[size],
-        styles[color],
-        round ? styles.round : null,
-        disabled ? styles.Disabled : null,
-      )}>
+      className={clsx(styles.QueueIconButton, props.className, styles[size], styles[color])}>
       {children}
     </button>
   );
@@ -53,20 +31,13 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
 export interface QueueButtonProps extends BaseQueueButtonProps {}
 
 export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & React.RefAttributes<HTMLButtonElement>> =
-  forwardRef(({ children, round = false, size = 'medium', color = 'default', disabled, ...props }, ref) => {
+  forwardRef(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
     return (
       <button
         ref={ref}
         {...props}
         disabled={disabled}
-        className={clsx(
-          styles.QueueButton,
-          props.className,
-          styles[size],
-          styles[color],
-          round ? styles.round : null,
-          disabled ? styles.Disabled : null,
-        )}>
+        className={clsx(styles.QueueButton, props.className, styles[size], styles[color])}>
         {children}
       </button>
     );
