@@ -1,3 +1,4 @@
+import { disableGlobalKeyDownElement } from 'cdk/functions/disableGlobalKeyDownElement';
 import { useCallback, useEffect } from 'react';
 
 export interface UseGlobalKeydownProps {
@@ -14,6 +15,10 @@ export const useGlobalKeydown = ({ keys = [] }: UseGlobalKeydownProps) => {
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
+      if (disableGlobalKeyDownElement(document.activeElement)) {
+        return;
+      }
+
       keys.forEach((key) => {
         if (key.keys.includes(event.key) && !!event[metaKey] === !!key.meta && !!event.shiftKey === !!key.shift) {
           key.callback(event);

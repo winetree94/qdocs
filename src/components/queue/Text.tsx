@@ -80,7 +80,8 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
         opacity: `${animation.fade.opacity}`,
-      }}>
+      }}
+      data-enables-text-edit={detail}>
       <div
         ref={ref}
         className={clsx(styles.Editor, detail ? styles.Enable : '')}
