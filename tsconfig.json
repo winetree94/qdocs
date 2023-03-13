@@ -17,6 +17,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
+    "paths": {
+      "~styles/*": ["styles/*"]
+    },
     "strictNullChecks": false,
     "plugins": [
       {
