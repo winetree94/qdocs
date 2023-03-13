@@ -1,20 +1,36 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { useAppDispatch } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import styles from './PresentationRemote.module.scss';
 import { SettingsActions } from 'store/settings/actions';
+import { QueueIconButton } from 'components/button/Button';
+import { QueueToggle } from 'components/toggle/Toggle';
+import { SettingSelectors } from 'store/settings';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export const PresentationRemote: React.FC = () => {
   const dispatch = useAppDispatch();
+  const settings = useAppSelector(SettingSelectors.settings);
 
   return (
     <div className={styles.Container}>
       <div className={styles.ButtonGroup}>
-        <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.rewind())}>
-          <SvgRemixIcon icon={'ri-rewind-line'} className={styles.Icon} />
-        </button>
-        <button className={styles.ActionButton} onClick={() => dispatch(SettingsActions.forward())}>
-          <SvgRemixIcon icon={'ri-play-line'} className={styles.Icon} />
-        </button>
+        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.rewind())}>
+          <SvgRemixIcon icon={'ri-rewind-line'} />
+        </QueueIconButton>
+        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.forward())}>
+          <SvgRemixIcon icon={'ri-speed-line'} />
+        </QueueIconButton>
+        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.pause())}>
+          <SvgRemixIcon icon={'ri-pause-line'} />
+        </QueueIconButton>
+        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.play())}>
+          <SvgRemixIcon icon={'ri-play-line'} />
+        </QueueIconButton>
+        <QueueToggle.Root
+          pressed={settings.autoPlayRepeat}
+          onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
+          <SvgRemixIcon icon={'ri-repeat-line'} />
+        </QueueToggle.Root>
       </div>
     </div>
   );
