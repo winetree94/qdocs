@@ -132,10 +132,10 @@ export const QueueSimpleAlertDialog: React.FC<QueueSimpleAlertDialogProps> = ({
         <QueueAlertDialog.Title>{title}</QueueAlertDialog.Title>
         <QueueAlertDialog.Description>{description}</QueueAlertDialog.Description>
         <QueueAlertDialog.Footer>
-          <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.SMALL} color="red">
+          <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.RED}>
             취소
           </QueueAlertDialog.Cancel>
-          <QueueAlertDialog.Action size={QUEUE_UI_SIZE.SMALL} color="blue" onClick={onAction}>
+          <QueueAlertDialog.Action size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE} onClick={onAction}>
             확인
           </QueueAlertDialog.Action>
         </QueueAlertDialog.Footer>

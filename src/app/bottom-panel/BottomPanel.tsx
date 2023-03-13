@@ -17,6 +17,7 @@ import { SettingsActions, SettingSelectors } from '../../store/settings';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export const BottomPanel = () => {
   const { t } = useTranslation();
@@ -215,12 +216,12 @@ export const BottomPanel = () => {
             <QueueAlertDialog.Title>페이지 삭제</QueueAlertDialog.Title>
             <QueueAlertDialog.Description>페이지를 삭제하시겠습니까?</QueueAlertDialog.Description>
             <QueueAlertDialog.Footer>
-              <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.SMALL} color="red">
+              <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.RED}>
                 취소
               </QueueAlertDialog.Cancel>
               <QueueAlertDialog.Action
-                size={QUEUE_UI_SIZE.SMALL}
-                color="blue"
+                size={QUEUE_UI_SIZE.MEDIUM}
+                color={QUEUE_UI_COLOR.BLUE}
                 onClick={(): void => onPageDeleteSubmit(deleteConfirmPageId)}>
                 확인
               </QueueAlertDialog.Action>

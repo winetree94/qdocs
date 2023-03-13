@@ -11,6 +11,7 @@ import { TEMPLATES } from './templates.meta';
 import { QueueDocument } from 'model/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
   onSubmit?: (document: QueueDocument) => void;
@@ -108,12 +109,12 @@ export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, 
           <QueueDialog.Footer>
             <QueueButton
               type="button"
-              size={QUEUE_UI_SIZE.SMALL}
-              color="red"
+              size={QUEUE_UI_SIZE.MEDIUM}
+              color={QUEUE_UI_COLOR.RED}
               onClick={(): void => props.onOpenChange?.(false)}>
               {t('global.cancel')}
             </QueueButton>
-            <QueueButton type="button" size={QUEUE_UI_SIZE.SMALL} color="blue" onClick={onSubmitClick}>
+            <QueueButton type="button" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE} onClick={onSubmitClick}>
               {t('global.create')}
             </QueueButton>
           </QueueDialog.Footer>

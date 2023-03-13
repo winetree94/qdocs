@@ -3,6 +3,7 @@ import { QueueDialog } from 'components/dialog/Dialog';
 import { QueueInput } from 'components/input/Input';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export interface EditPageNameProps {
@@ -34,12 +35,12 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSu
             <QueueDialog.Footer>
               <QueueButton
                 type="button"
-                size={QUEUE_UI_SIZE.SMALL}
-                color="red"
+                size={QUEUE_UI_SIZE.MEDIUM}
+                color={QUEUE_UI_COLOR.RED}
                 onClick={(): void => onOpenChange(false)}>
                 {t('global.cancel')}
               </QueueButton>
-              <QueueButton type="submit" size={QUEUE_UI_SIZE.SMALL} color="blue">
+              <QueueButton type="submit" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE}>
                 {t('global.confirm')}
               </QueueButton>
             </QueueDialog.Footer>
