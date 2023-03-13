@@ -1,4 +1,3 @@
-import { PlusIcon, TrashIcon } from '@radix-ui/react-icons';
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
@@ -16,6 +15,7 @@ import { EffectActions, getEffectEntityKey, NormalizedQueueEffect } from '../../
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -49,8 +49,8 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
           <span>{effectType}</span>
         </QueueButton>
         {effectType !== OBJECT_EFFECT_META.CREATE && (
-          <QueueIconButton className="absolute right-0" onClick={handleDeleteEffectButton}>
-            <TrashIcon />
+          <QueueIconButton className="absolute right-0" onClick={handleDeleteEffectButton} size={QUEUE_UI_SIZE.SMALL}>
+            <SvgRemixIcon icon="ri-delete-bin-5-line" size={QUEUE_UI_SIZE.SMALL} />
           </QueueIconButton>
         )}
       </div>
@@ -237,7 +237,7 @@ export const EffectControllerBox = (): ReactElement | null => {
             <Dropdown.Trigger
               className="flex items-center disabled:cursor-not-allowed"
               disabled={createEffectIndex === settings.queueIndex}>
-              <PlusIcon />
+              <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
             </Dropdown.Trigger>
             <Dropdown.Content side="right">
               {addableEffectTypes.map((effectType) => {
