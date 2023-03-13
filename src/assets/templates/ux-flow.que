@@ -42,7 +42,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "T",
@@ -121,7 +121,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "h",
@@ -200,7 +200,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "e",
@@ -279,7 +279,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "Q",
@@ -358,7 +358,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "u",
@@ -437,7 +437,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "e",
@@ -516,7 +516,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "u",
@@ -595,7 +595,7 @@
             "scale": 1
           },
           "fade": {
-            "opacity": 0.05
+            "opacity": 0
           },
           "text": {
             "text": "e",

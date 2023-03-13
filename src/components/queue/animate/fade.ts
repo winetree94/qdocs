@@ -57,13 +57,18 @@ export const getFadeAnimation = (
   };
 };
 
-export const getAnimatableFade = (progress: number, targetFade: QueueFade, fromFade?: QueueFade): QueueFade => {
+export const getAnimatableFade = (
+  progress: number,
+  targetFade: QueueFade,
+  fromFade: QueueFade,
+  min: number,
+): QueueFade => {
   if (progress < 0 || !fromFade) {
     return {
-      opacity: Math.max(targetFade.opacity, 0.1),
+      opacity: Math.max(targetFade.opacity, min),
     };
   }
   return {
-    opacity: Math.max(fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress, 0.1),
+    opacity: Math.max(fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress, min),
   };
 };

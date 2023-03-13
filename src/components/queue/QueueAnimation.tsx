@@ -4,6 +4,7 @@ import { QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale } from 'model/
 import { createContext, useContext } from 'react';
 import { EffectSelectors } from 'store/effect/selectors';
 import { useAppSelector } from 'store/hooks';
+import { SettingSelectors } from 'store/settings';
 import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
 import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
 import { getAnimatableRotate, getCurrentRotate, getRotateAnimation } from './animate/rotate';
@@ -50,6 +51,7 @@ export interface ObjectAnimatableProps {
 export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart }: ObjectAnimatableProps) => {
   const { object } = useContext(QueueObjectContainerContext);
   const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, object.id));
+  const presentationMode = useAppSelector(SettingSelectors.settings).presentationMode;
   const currentFade = getCurrentFade(object, effects, queueIndex);
   const animatableFade = queueStart > 0 ? getFadeAnimation(object, effects, queueIndex, queuePosition) : undefined;
   const currentRect = getCurrentRect(object, effects, queueIndex);
@@ -96,7 +98,7 @@ export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart
           <QueueAnimatableContext.Provider
             value={{
               rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
-              fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade),
+              fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade, presentationMode ? 0 : 0.1),
               rotate: getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate),
               scale: getAnimatableScale(scaleProgress, currentScale, animatableScale?.fromScale),
               fill: getAnimatableFill(fillProgress, currentFill, animatableFill?.fromFill),
