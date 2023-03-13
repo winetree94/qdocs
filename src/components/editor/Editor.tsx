@@ -398,7 +398,7 @@ export const QueueEditor = () => {
                 className={clsx(settings.presentationMode ? styles.scaleFull : '')}>
                 <div
                   ref={canvasDiv}
-                  className={clsx(styles.canvas)}
+                  className={clsx(styles.canvas, settings.presentationMode ? styles.fullscreen : '')}
                   style={{
                     width: queueDocument!.documentRect.width,
                     height: queueDocument!.documentRect.height,

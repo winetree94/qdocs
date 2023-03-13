@@ -24,8 +24,11 @@
 }
 
 .canvas {
-  @apply relative box-border;
-  border: 1px solid var(--gray5);
+  @apply relative box-border overflow-hidden;
+  &:not(.fullscreen) {
+    @apply overflow-visible;
+    border: 1px solid var(--gray5);
+  }
 }
 
 .RightSlot {
