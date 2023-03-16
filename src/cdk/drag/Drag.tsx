@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { forwardRef, useEffect, useLayoutEffect, useState } from 'react';
 
 interface DragThrosholdDetectorProps {
@@ -31,7 +32,7 @@ const GlobalDragThresholdDetector = ({ initEvent, threshold, onThreshold, onMous
       document.removeEventListener('mousemove', moveListener);
       document.removeEventListener('mouseup', upListener);
     };
-  }, [initEvent, threshold, onThreshold, onMouseup]);
+  }, [initEvent.clientX, initEvent.clientY, onMouseup, onThreshold, threshold]);
   return <></>;
 };
 
@@ -57,6 +58,46 @@ const GlobalDragDetector = ({ onMousemove, onMouseup }: DrawDetectorProps) => {
       document.removeEventListener('mouseup', upListener);
     };
   }, [onMousemove, onMouseup]);
+  return <></>;
+};
+
+export interface DocumentEventListenerProps {
+  onMousedown?: (event: MouseEvent) => void;
+  onMousemove?: (event: MouseEvent) => void;
+  onMouseup?: (event: MouseEvent) => void;
+}
+
+export const DocumentEventLitener = ({ onMousedown, onMousemove, onMouseup }: DocumentEventListenerProps) => {
+  useEffect(() => {
+    if (!onMousedown) {
+      return;
+    }
+    document.addEventListener('mousedown', onMousedown);
+    return () => {
+      document.removeEventListener('mousedown', onMousedown);
+    };
+  }, [onMousedown]);
+
+  useEffect(() => {
+    if (!onMousemove) {
+      return;
+    }
+    document.addEventListener('mousemove', onMousemove);
+    return () => {
+      document.removeEventListener('mousemove', onMousemove);
+    };
+  }, [onMousemove]);
+
+  useEffect(() => {
+    if (!onMouseup) {
+      return;
+    }
+    document.addEventListener('mouseup', onMouseup);
+    return () => {
+      document.removeEventListener('mouseup', onMouseup);
+    };
+  }, [onMouseup]);
+
   return <></>;
 };
 
@@ -86,47 +127,67 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
     ref,
   ) => {
     const [initMouseEvent, setInitMouseEvent] = useState<MouseEvent>(null);
-    const [detectMouseEvent, setDetectMouseEvent] = useState<MouseEvent>(null);
+    const [moveMouseEvent, setMoveMouseEvent] = useState<MouseEvent>(null);
+    const [thresholdReached, setThresholdReached] = useState(false);
 
     const onMousedown = (event: React.MouseEvent<HTMLDivElement>) => {
       setInitMouseEvent(event.nativeEvent);
-      onMouseDown?.(event);
     };
 
-    const init = (initialEvent: MouseEvent, currentEvent: MouseEvent) => {
-      onActualDragStart?.(initialEvent, currentEvent);
+    const globalMouseMove = (event: MouseEvent) => {
+      setMoveMouseEvent(event);
     };
 
-    const move = (currentEvent: MouseEvent) => {
-      onActualDragMove?.(detectMouseEvent, currentEvent);
+    const globalMouseUp = (event: MouseEvent) => {
+      setInitMouseEvent(null);
+      setMoveMouseEvent(null);
     };
 
-    const end = (currentEvent: MouseEvent) => {
-      onActualDragEnd?.(detectMouseEvent, currentEvent);
-      setDetectMouseEvent(null);
-    };
+    useEffect(() => {
+      if (!initMouseEvent || !moveMouseEvent) {
+        setThresholdReached(false);
+        return;
+      }
+      const startX = initMouseEvent.clientX;
+      const startY = initMouseEvent.clientY;
+      const targetX = moveMouseEvent.clientX;
+      const targetY = moveMouseEvent.clientY;
+      const isChanged = Math.abs(startX - targetX) > threshold || Math.abs(startY - targetY) > threshold;
+      if (!isChanged) {
+        return;
+      }
+      setThresholdReached(true);
+    }, [initMouseEvent, moveMouseEvent, threshold]);
+
+    useEffect(() => {
+      console.log('dragstart: ', thresholdReached);
+    }, [thresholdReached]);
 
     return (
       <>
         <div ref={ref} {...props} onMouseDown={onMousedown}>
           {children}
         </div>
-        {initMouseEvent && (
+        <DocumentEventLitener
+          onMousemove={initMouseEvent ? globalMouseMove : null}
+          onMouseup={initMouseEvent ? globalMouseUp : null}
+        />
+        {/* {initMouseEvent && (
           <GlobalDragThresholdDetector
             initEvent={initMouseEvent}
             threshold={threshold}
             onThreshold={(event) => {
-              init(initMouseEvent, event);
-              setDetectMouseEvent(initMouseEvent);
               setInitMouseEvent(null);
+              setDetectMouseEvent(initMouseEvent);
+              init(initMouseEvent, event);
             }}
             onMouseup={() => {
               setDetectMouseEvent(null);
               setInitMouseEvent(null);
             }}
           />
-        )}
-        {detectMouseEvent && <GlobalDragDetector onMousemove={move} onMouseup={end} />}
+        )} */}
+        {/* {detectMouseEvent && <GlobalDragDetector onMousemove={move} onMouseup={end} />} */}
       </>
     );
   },
