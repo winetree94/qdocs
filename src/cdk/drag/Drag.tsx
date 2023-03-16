@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useLayoutEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 
 interface DragThrosholdDetectorProps {
   initEvent: MouseEvent;
@@ -8,30 +8,41 @@ interface DragThrosholdDetectorProps {
 }
 
 const GlobalDragThresholdDetector = ({ initEvent, threshold, onThreshold, onMouseup }: DragThrosholdDetectorProps) => {
-  useLayoutEffect(() => {
-    const moveListener = (event: MouseEvent) => {
+  const hasThresholdReachedRef = useRef(false);
+
+  const moveListener = useCallback(
+    (event: MouseEvent) => {
       const startX = initEvent.clientX;
       const startY = initEvent.clientY;
       const targetX = event.clientX;
       const targetY = event.clientY;
       const isChanged = Math.abs(startX - targetX) > threshold || Math.abs(startY - targetY) > threshold;
-      if (!isChanged) {
+      if (!isChanged || hasThresholdReachedRef.current) {
         return;
       }
+      hasThresholdReachedRef.current = true;
       onThreshold(event);
-    };
-    const upListener = (event: MouseEvent) => {
+    },
+    [initEvent, threshold, onThreshold],
+  );
+
+  const upListener = useCallback(
+    (event: MouseEvent) => {
       document.removeEventListener('mousemove', moveListener);
       document.removeEventListener('mouseup', upListener);
       onMouseup(event);
-    };
+    },
+    [moveListener, onMouseup],
+  );
+
+  useEffect(() => {
     document.addEventListener('mousemove', moveListener);
     document.addEventListener('mouseup', upListener);
     return () => {
       document.removeEventListener('mousemove', moveListener);
       document.removeEventListener('mouseup', upListener);
     };
-  }, [initEvent, threshold, onThreshold, onMouseup]);
+  }, [initEvent, threshold, onThreshold, moveListener, onMouseup, upListener]);
   return <></>;
 };
 
