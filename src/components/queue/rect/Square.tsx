@@ -18,23 +18,23 @@ export const Square = ({ onRectMousedown }: RectProps) => {
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width}
-      height={animation.rect.height}
+      width={Math.abs(animation.rect.width)}
+      height={Math.abs(animation.rect.height)}
       style={{
-        top: `${animation.rect.y}px`,
-        left: `${animation.rect.x}px`,
+        top: `${animation.rect.height > 0 ? animation.rect.y : animation.rect.y + animation.rect.height}px`,
+        left: `${animation.rect.width > 0 ? animation.rect.x : animation.rect.x + animation.rect.width}px`,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}
-      viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
+      viewBox={`0 0 ${Math.abs(animation.rect.width)} ${Math.abs(animation.rect.height)}`}
       opacity={animation.fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <rect
             rx={0}
             ry={0}
-            width={animation.rect.width}
-            height={animation.rect.height}
+            width={Math.abs(animation.rect.width)}
+            height={Math.abs(animation.rect.height)}
             stroke={containerContext.object.stroke.color}
             strokeWidth={containerContext.object.stroke.width * 2}
           />
@@ -44,8 +44,8 @@ export const Square = ({ onRectMousedown }: RectProps) => {
         <rect
           className={clsx(styles.rect)}
           onMouseDown={onRectMousedown}
-          width={animation.rect.width}
-          height={animation.rect.height}
+          width={Math.abs(animation.rect.width)}
+          height={Math.abs(animation.rect.height)}
           fill={fill}
           stroke={containerContext.object.stroke.color}
           strokeWidth={containerContext.object.stroke.width * 2}

@@ -18,11 +18,11 @@ export const Icon = ({ onRectMousedown }: RectProps) => {
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width}
-      height={animation.rect.height}
+      width={Math.abs(animation.rect.width)}
+      height={Math.abs(animation.rect.height)}
       style={{
-        top: `${animation.rect.y}px`,
-        left: `${animation.rect.x}px`,
+        top: `${animation.rect.height > 0 ? animation.rect.y : animation.rect.y + animation.rect.height}px`,
+        left: `${animation.rect.width > 0 ? animation.rect.x : animation.rect.x + animation.rect.width}px`,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}

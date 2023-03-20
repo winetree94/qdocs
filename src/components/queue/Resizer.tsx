@@ -66,8 +66,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
   const distance = strokeWidth / 2;
   const margin = 100;
 
-  const actualWidth = rect.width + margin * 2;
-  const actualHeight = rect.height + margin * 2;
+  const actualWidth = Math.abs(rect.width) + margin * 2;
+  const actualHeight = Math.abs(rect.height) + margin * 2;
 
   const [rotatingDegree, setRotatingDegree] = React.useState<number | null>(null);
 
@@ -374,8 +374,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         ref={svgRef}
         className={styles.canvas}
         style={{
-          left: rect.x - margin,
-          top: rect.y - margin,
+          left: rect.width > 0 ? rect.x - margin : rect.x + rect.width - margin,
+          top: rect.height > 0 ? rect.y - margin : rect.y + rect.height - margin,
           transformOrigin: 'center center',
           transform: `rotate(${rotate}deg) scale(${scale})`,
         }}
@@ -384,8 +384,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         {/* top left */}
         <rect
           className={clsx(styles.resizer, styles.topLeft)}
-          x={margin - distance}
-          y={margin - distance}
+          x={rect.width > 0 ? margin - distance : actualWidth - margin - (strokeWidth - distance)}
+          y={rect.height > 0 ? margin - distance : actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}></rect>
@@ -393,22 +393,22 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         <rect
           className={clsx(styles.resizer, styles.topMiddle)}
           x={actualWidth / 2 - strokeWidth / 2}
-          y={margin - distance}
+          y={rect.height > 0 ? margin - distance : actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}></rect>
         {/* top right */}
         <rect
           className={clsx(styles.resizer, styles.topRight)}
-          x={actualWidth - margin - (strokeWidth - distance)}
-          y={margin - distance}
+          x={rect.width > 0 ? actualWidth - margin - (strokeWidth - distance) : margin - distance}
+          y={rect.height > 0 ? margin - distance : actualHeight - margin - (strokeWidth - distance)}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}></rect>
         {/* middle right */}
         <rect
           className={clsx(styles.resizer, styles.middleRight)}
-          x={actualWidth - margin - (strokeWidth - distance)}
+          x={rect.width > 0 ? actualWidth - margin - (strokeWidth - distance) : margin - distance}
           y={actualHeight / 2 - strokeWidth / 2}
           width={strokeWidth}
           height={strokeWidth}
@@ -416,8 +416,8 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         {/* bottom right */}
         <rect
           className={clsx(styles.resizer, styles.bottomRight)}
-          x={actualWidth - margin - (strokeWidth - distance)}
-          y={actualHeight - margin - (strokeWidth - distance)}
+          x={rect.width > 0 ? actualWidth - margin - (strokeWidth - distance) : margin - distance}
+          y={rect.height > 0 ? actualHeight - margin - (strokeWidth - distance) : margin - distance}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'bottom-right')}></rect>
@@ -425,22 +425,22 @@ export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
         <rect
           className={clsx(styles.resizer, styles.bottomMiddle)}
           x={actualWidth / 2 - strokeWidth / 2}
-          y={actualHeight - margin - (strokeWidth - distance)}
+          y={rect.height > 0 ? actualHeight - margin - (strokeWidth - distance) : margin - distance}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'bottom-middle')}></rect>
         {/* bottom left */}
         <rect
           className={clsx(styles.resizer, styles.bottomLeft)}
-          x={margin - distance}
-          y={actualHeight - margin - (strokeWidth - distance)}
+          x={rect.width > 0 ? margin - distance : actualWidth - margin - (strokeWidth - distance)}
+          y={rect.height > 0 ? actualHeight - margin - (strokeWidth - distance) : margin - distance}
           width={strokeWidth}
           height={strokeWidth}
           onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}></rect>
         {/* middle left */}
         <rect
           className={clsx(styles.resizer, styles.middleLeft)}
-          x={margin - distance}
+          x={rect.width > 0 ? margin - distance : actualWidth - margin - (strokeWidth - distance)}
           y={actualHeight / 2 - strokeWidth / 2}
           width={strokeWidth}
           height={strokeWidth}

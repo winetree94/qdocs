@@ -23,23 +23,23 @@ export const Line = ({ onRectMousedown }: RectProps) => {
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
-      width={animation.rect.width}
-      height={animation.rect.height}
+      width={Math.abs(animation.rect.width)}
+      height={Math.abs(animation.rect.height)}
       style={{
-        top: `${animation.rect.y}px`,
-        left: `${animation.rect.x}px`,
+        top: `${animation.rect.height > 0 ? animation.rect.y : animation.rect.y + animation.rect.height}px`,
+        left: `${animation.rect.width > 0 ? animation.rect.x : animation.rect.x + animation.rect.width}px`,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}
-      viewBox={`0 0 ${animation.rect.width} ${animation.rect.height}`}
+      viewBox={`0 0 ${Math.abs(animation.rect.width)} ${Math.abs(animation.rect.height)}`}
       opacity={animation.fade.opacity}>
       <line
         className={clsx(styles.rect)}
         onMouseDown={onRectMousedown}
-        x1={x1}
-        x2={x2}
-        y1={y1}
-        y2={y2}
+        x1={animation.rect.width > 0 ? x1 : x1 - animation.rect.width}
+        x2={animation.rect.width > 0 ? x2 : 0}
+        y1={animation.rect.height > 0 ? y1 : y1 - animation.rect.height}
+        y2={animation.rect.height > 0 ? y2 : 0}
         fill={fill}
         opacity={containerContext.object.opacity}
         stroke={containerContext.object.stroke.color}
