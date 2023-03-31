@@ -1,3 +1,3 @@
 export const easeOut = (timeFraction: number): number => {
-  return timeFraction;
+  return timeFraction * (2 - timeFraction);
 };

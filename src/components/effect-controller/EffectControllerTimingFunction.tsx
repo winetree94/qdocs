@@ -1,5 +1,4 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
 import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
@@ -9,10 +8,13 @@ import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
+import { AnimatorTimingFunctionType, TIMING_FUNCTION_META } from 'cdk/animation/timing/meta';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
 };
+
+const timingFunctions = Object.values(TIMING_FUNCTION_META);
 
 export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
@@ -58,9 +60,11 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
         <QueueSelect.Portal>
           <QueueSelect.Content>
             <QueueSelect.Viewport>
-              <QueueSelect.Item value="linear">linear</QueueSelect.Item>
-              <QueueSelect.Item value="ease">ease</QueueSelect.Item>
-              <QueueSelect.Item value="ease-in">ease-in</QueueSelect.Item>
+              {timingFunctions.map((timingFunction) => (
+                <QueueSelect.Item value={timingFunction} key={timingFunction}>
+                  {timingFunction}
+                </QueueSelect.Item>
+              ))}
             </QueueSelect.Viewport>
           </QueueSelect.Content>
         </QueueSelect.Portal>

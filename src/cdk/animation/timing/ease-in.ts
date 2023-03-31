@@ -1,3 +1,3 @@
 export const easeIn = (timeFraction: number): number => {
-  return timeFraction;
+  return timeFraction * timeFraction;
 };

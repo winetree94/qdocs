@@ -1,5 +1,5 @@
 import { EntityId } from '@reduxjs/toolkit';
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing';
+import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
 import { QueueObjectType } from 'model/object';
 
 export interface BaseQueueEffect<T> {

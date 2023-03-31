@@ -1,6 +1,7 @@
+import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
 import { isEqual } from 'lodash';
 import { createContext, useCallback, useLayoutEffect, useReducer, useRef } from 'react';
-import { AnimatorTimingFunctionType, getTimingFunction } from './timing';
+import { getTimingFunction } from './timing';
 
 const AnimatorsContext = createContext<number[]>([]);
 
