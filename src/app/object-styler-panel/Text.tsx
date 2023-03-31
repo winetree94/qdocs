@@ -42,7 +42,7 @@ export const ObjectStyleText = () => {
     <div className={styles.ItemContainer}>
       <QueueH6>{t('global.text')}</QueueH6>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.font-familly')}</div>
+        <div className={styles.SubTitle}>{t('global.font-family')}</div>
         <div className={styles.SubInputContainer}>
           <QueueSelect.Root value={text.fontFamily} onValueChange={(value): void => updateText({ fontFamily: value })}>
             <QueueSelect.Trigger className={styles.Select}>

@@ -179,7 +179,7 @@ export const QueueToolbar = () => {
                   {t('toolbar.view.start-presentation-mode')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>{t('toolbar.view.fullscreen')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>{t('toolbar.view.full-screen')}</QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>

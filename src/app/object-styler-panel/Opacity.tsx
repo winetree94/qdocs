@@ -35,9 +35,9 @@ export const ObjectStyleOpacity = () => {
 
   return (
     <div className={styles.ItemContainer}>
-      <QueueH6>{t('global.tranparency')}</QueueH6>
+      <QueueH6>{t('global.transparency')}</QueueH6>
       <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.tranparency')}</div>
+        <div className={styles.SubTitle}>{t('global.transparency')}</div>
         <div className={styles.SubInputContainer}>
           <Slider
             min={0}
