@@ -7,10 +7,35 @@ const AnimatorsContext = createContext<number[]>([]);
 
 export interface AnimatorsProps {
   children?: (values: number[]) => React.ReactNode;
+
+  /**
+   * @description
+   * 애니메이션의 시작 시간
+   * 일반적으로 performance.now() 를 사용
+   */
   start?: number;
+
+  /**
+   * @description
+   * 애니메이션 정보
+   */
   animations: {
+    /**
+     * @description
+     * 애니메이션의 시작 시간 이후 지연시킬 시간 (ms)
+     */
     delay?: number;
+
+    /**
+     * @description
+     * 애니메이션 시작 시간으로부터 진행 시간에 따른 진행률을 지정할 함수 종류
+     */
     timing?: AnimatorTimingFunctionType;
+
+    /**
+     * @description
+     * 애니메이션의 시작 시간부터 지속시킬 시간 (ms)
+     */
     duration?: number;
   }[];
 }
