@@ -31,8 +31,6 @@ npm run start
 
 # Contributors
 
-- winetree94
-- duchangkim
-- wook95
-- woochul-hyun
-- hyundonmoon
+<a href="https://github.com/winetree94/TheQueue/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=winetree94/TheQueue" />
+</a>
