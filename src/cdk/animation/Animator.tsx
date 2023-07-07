@@ -44,6 +44,13 @@ const reducer = (previous: number[], current: number[]) => {
   return isEqual(previous, current) ? previous : current;
 };
 
+/**
+ * 애니메이션을 표현하기 위해 사용하는 컴포넌트
+ * 선언된 애니메이션은 start(현재 시간)의 시점에 따라 0 ~ 1 의 진행률로 전달됩니다.
+ *
+ * @link
+ * https://javascript.info/js-animation
+ */
 export const Animators = ({ start, animations, children }: AnimatorsProps) => {
   const frameRef = useRef<number>(-1);
   const [progresses, setProgresses] = useReducer(reducer, []);
