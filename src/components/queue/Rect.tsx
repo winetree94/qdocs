@@ -4,6 +4,7 @@ import { Circle } from './rect/Circle';
 import { Icon } from './rect/Icon';
 import { Line } from './rect/Line';
 import { Square } from './rect/Square';
+import { Image } from './rect/Image';
 
 export interface RectProps {
   onRectMousedown?(): void;
@@ -11,6 +12,7 @@ export interface RectProps {
 
 export const Rect = (props: RectProps) => {
   const containerContext = useContext(QueueObjectContainerContext);
+
   switch (containerContext.object.type) {
     case 'circle':
       return <Circle {...props}></Circle>;
@@ -20,6 +22,8 @@ export const Rect = (props: RectProps) => {
       return <Line {...props}></Line>;
     case 'icon':
       return <Icon {...props}></Icon>;
+    case 'image':
+      return <Image {...props}></Image>;
     default:
       return <></>;
   }

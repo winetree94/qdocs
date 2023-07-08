@@ -19,7 +19,6 @@ import { PreferencesSelectors } from 'store/preferences/selectors';
 import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { parseTheQueueFile } from 'cdk/functions/documentParser';
 
 export interface ToolbarModel {
   key: string;
@@ -69,7 +68,7 @@ export const QueueToolbar = () => {
         if (!file) {
           return;
         }
-        parseTheQueueFile(file);
+        // parseTheQueueFile(file);
         const fileReader = new FileReader();
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;

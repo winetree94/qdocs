@@ -13,6 +13,7 @@ export const OBJECT_PROPERTY_META = {
   SCALE: 'scale',
   STROKE: 'stroke',
   TEXT: 'text',
+  IMAGE: 'image',
 } as const;
 
 export type OBJECT_PROPERTIES = typeof OBJECT_PROPERTY_META[keyof typeof OBJECT_PROPERTY_META];
