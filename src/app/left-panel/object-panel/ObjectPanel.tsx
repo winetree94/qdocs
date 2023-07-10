@@ -23,6 +23,7 @@ import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { createDefaultImage } from 'model/object/image';
 
 export interface QueueObject {
   key: string;
@@ -172,6 +173,7 @@ export const ObjectPanel: FunctionComponent = () => {
   const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
+  const createImage = createFigure(createDefaultImage);
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [
@@ -221,6 +223,19 @@ export const ObjectPanel: FunctionComponent = () => {
         ],
       },
       {
+        key: 'Asset',
+        title: 'Asset',
+        children: [
+          {
+            key: 'Image',
+            factory: () => createImage(),
+            tooltip: 'image',
+            keyword: ['image'],
+            preview: <SvgRemixIcon icon="ri-image-add-line" size={QUEUE_UI_SIZE.XLARGE} />,
+          },
+        ],
+      },
+      {
         key: 'Remix Icon',
         title: t('global.icon'),
         children: RemixIconClasses.map((iconClassName) => ({
@@ -231,7 +246,7 @@ export const ObjectPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [t, createSquare, createCircle, createLine, createIcon],
+    [t, createSquare, createCircle, createLine, createIcon, createImage],
   );
 
   const filteredGroups = useMemo(() => {

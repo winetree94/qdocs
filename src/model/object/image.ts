@@ -22,7 +22,7 @@ export interface QueueImage
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
   queueIndex: number,
-  assetId: string,
+  // assetId: string,
 ): QueueImage => {
   const width = 300;
   const height = 300;
@@ -52,7 +52,7 @@ export const createDefaultImage = (
       opacity: 1,
     },
     text: {
-      text: '',
+      text: '미완🫡',
       fontSize: 24,
       fontColor: '#000000',
       fontFamily: 'Arial',
@@ -65,7 +65,7 @@ export const createDefaultImage = (
       width: 0,
     },
     image: {
-      assetId,
+      assetId: '',
       src: '',
       alt: '',
     },
