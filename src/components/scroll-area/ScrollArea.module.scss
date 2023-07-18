@@ -19,12 +19,12 @@
   /* disable browser handling of all panning and zooming gestures on touch devices */
   touch-action: none;
   padding: 2px;
-  background: var(--blackA6);
+  background: var(--black-a6);
   transition: background 160ms ease-out;
 }
 
 .ScrollAreaScrollbar:hover {
-  background: var(--blackA8);
+  background: var(--black-a8);
 }
 
 .ScrollAreaScrollbar[data-orientation='vertical'] {
@@ -38,7 +38,7 @@
 
 .ScrollAreaThumb {
   flex: 1;
-  background: var(--mauve10);
+  background: var(--mauve-10);
   border-radius: var(--scrollbar-size);
   position: relative;
 }
@@ -57,21 +57,21 @@
 }
 
 .ScrollAreaCorner {
-  background: var(--blackA8);
+  background: var(--black-a8);
 }
 
 .Text {
-  color: var(--violet11);
+  color: var(--violet-11);
   font-size: 15px;
   line-height: 18px;
   font-weight: 500;
 }
 
 .Tag {
-  color: var(--mauve12);
+  color: var(--mauve-12);
   font-size: 13px;
   line-height: 18px;
   margin-top: 10px;
-  border-top: 1px solid var(--mauve6);
+  border-top: 1px solid var(--mauve-6);
   padding-top: 10px;
 }

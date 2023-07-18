@@ -11,7 +11,7 @@
 .TabsList {
   flex-shrink: 0;
   display: flex;
-  border-bottom: 1px solid var(--gray5);
+  border-bottom: 1px solid var(--gray-5);
 }
 
 .TabsTrigger {
@@ -24,17 +24,17 @@
   justify-content: center;
   font-size: 15px;
   line-height: 1;
-  color: var(--gray11);
+  color: var(--gray-11);
   user-select: none;
   outline: none;
 }
 
 .TabsTrigger:hover {
-  color: var(--blue11);
+  color: var(--blue-11);
 }
 
 .TabsTrigger[data-state='active'] {
-  color: var(--blue11);
+  color: var(--blue-11);
 }
 
 .TabsTrigger:focus {

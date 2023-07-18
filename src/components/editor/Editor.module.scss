@@ -3,7 +3,7 @@
 
 .ScrollAreaRoot {
   @apply w-full h-full;
-  background: var(--gray3);
+  background: var(--gray-3);
 }
 
 .Drawable {
@@ -27,18 +27,18 @@
   @apply relative box-border overflow-hidden;
   &:not(.fullscreen) {
     @apply overflow-visible;
-    border: 1px solid var(--gray5);
+    border: 1px solid var(--gray-5);
   }
 }
 
 .RightSlot {
   margin-left: auto;
   padding-left: 20px;
-  color: var(--mauve11);
+  color: var(--mauve-11);
 }
 [data-highlighted] > .RightSlot {
   color: white;
 }
 [data-disabled] .RightSlot {
-  color: var(--mauve8);
+  color: var(--mauve-8);
 }

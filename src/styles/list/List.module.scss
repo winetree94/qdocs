@@ -1,7 +1,7 @@
 @mixin list-item {
   font-size: 13px;
   line-height: 1;
-  color: var(--gray12);
+  color: var(--gray-12);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -14,18 +14,18 @@
 }
 
 @mixin list-item-disabled {
-  color: var(--gray8);
+  color: var(--gray-8);
   pointer-events: 'none';
 }
 
 @mixin list-item-hover {
-  background-color: var(--blue10);
-  color: var(--blue1);
+  background-color: var(--blue-10);
+  color: var(--blue-1);
 }
 
 @mixin list-separator {
   height: 1px;
-  background-color: var(--gray5);
+  background-color: var(--gray-5);
   margin: 5px;
 }
 
@@ -35,15 +35,15 @@
   padding-left: 20px;
 
   [data-highlighted] > .RightSlot {
-    background-color: var(--blue10);
-    color: var(--blue1);
+    background-color: var(--blue-10);
+    color: var(--blue-1);
     margin-left: auto;
     padding-left: 20px;
   }
   
   [data-disabled] > .RightSlot {
-    background-color: var(--blue10);
-    color: var(--blue1);
+    background-color: var(--blue-10);
+    color: var(--blue-1);
     margin-left: auto;
     padding-left: 20px;
   }

@@ -1,10 +1,10 @@
 .container {
-  border-right: 1px solid var(--gray5);
+  border-right: 1px solid var(--gray-5);
   height: 100%;
 }
 
 .inputContainer {
-  border-bottom: 1px solid var(--gray5);
+  border-bottom: 1px solid var(--gray-5);
 }
 
 .input {
@@ -91,7 +91,7 @@ button {
   padding: 10px 15px;
   font-size: 15px;
   line-height: 1;
-  color: var(--violet11);
+  color: var(--violet-11);
   background-color: white;
   box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
@@ -125,12 +125,12 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--violet11);
+  color: var(--violet-11);
   background-color: white;
-  box-shadow: 0 2px 10px var(--blackA7);
+  box-shadow: 0 2px 10px var(--black-a7);
 }
 .IconButton:hover {
-  background-color: var(--violet3);
+  background-color: var(--violet-3);
 }
 .IconButton:focus {
   box-shadow: 0 0 0 2px black;

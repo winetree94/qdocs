@@ -1,5 +1,5 @@
 .Container {
-  border-bottom: 1px solid var(--gray5);
+  border-bottom: 1px solid var(--gray-5);
 }
 
 .ItemRoot {
@@ -9,15 +9,15 @@
 .ItemGroup {
   @apply flex h-full items-center;
   .QueueIndicator {
-    color: var(--gray7);
+    color: var(--gray-7);
   
     &.Current {
-      color: var(--red11);
+      color: var(--red-11);
     }
   }
   
   .HasEffect {
-    color: var(--gray11);
+    color: var(--gray-11);
   }
 }
 

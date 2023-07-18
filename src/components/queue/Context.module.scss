@@ -1,7 +1,7 @@
 .RightSlot {
   margin-left: auto;
   padding-left: 20px;
-  color: var(--mauve11);
+  color: var(--mauve-11);
 }
 
 [data-highlighted] > .RightSlot {
@@ -9,5 +9,5 @@
 }
 
 [data-disabled] .RightSlot {
-  color: var(--mauve8);
+  color: var(--mauve-8);
 }
