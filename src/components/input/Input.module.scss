@@ -2,8 +2,9 @@
 @import '../../styles/ui/UI.module.scss';
 
 .input {
-  @apply border-none outline-none;
+  @apply rounded-md w-full outline-none;
   background-color: transparent;
 
+  @include queue-ui-x-padding;
   @include queue-ui-fixed-height;
 }

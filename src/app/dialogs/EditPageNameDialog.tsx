@@ -28,6 +28,7 @@ export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSu
               <QueueInput
                 required
                 id="pagename"
+                className="border-solid	border-2 border-gray-200 focus:border-gray-400"
                 value={currentPageName}
                 onChange={(e): void => setCurrentPageName(e.target.value)}
               />

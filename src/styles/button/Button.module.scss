@@ -18,6 +18,7 @@
     &:active {
       background: $ui-default-background-color-active;
       color: $ui-default-color-active;
+      font-weight: bold;
     }
     &:disabled {
       background: $ui-default-background-color-disabled;
