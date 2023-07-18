@@ -10,4 +10,4 @@ export const OBJECT_EFFECT_META = {
   TEXT: 'text',
 } as const;
 
-export type OBJECT_EFFECTS = typeof OBJECT_EFFECT_META[keyof typeof OBJECT_EFFECT_META];
+export type OBJECT_EFFECTS = (typeof OBJECT_EFFECT_META)[keyof typeof OBJECT_EFFECT_META];

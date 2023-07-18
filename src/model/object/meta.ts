@@ -149,4 +149,4 @@ export const OBJECT_ADDABLE_EFFECTS: {
   ],
 } as const;
 
-export type OBJECT_TYPES = typeof OBJECT_META[keyof typeof OBJECT_META];
+export type OBJECT_TYPES = (typeof OBJECT_META)[keyof typeof OBJECT_META];

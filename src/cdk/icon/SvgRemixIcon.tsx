@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 
 export interface SvgRemixIconProps extends Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
-  icon: typeof RemixIconClasses[number];
+  icon: (typeof RemixIconClasses)[number];
   size?: QUEUE_UI_SIZES;
 }
 

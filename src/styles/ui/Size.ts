@@ -6,4 +6,4 @@ export const QUEUE_UI_SIZE = {
   XLARGE: 'xlarge',
 } as const;
 
-export type QUEUE_UI_SIZES = typeof QUEUE_UI_SIZE[keyof typeof QUEUE_UI_SIZE];
+export type QUEUE_UI_SIZES = (typeof QUEUE_UI_SIZE)[keyof typeof QUEUE_UI_SIZE];

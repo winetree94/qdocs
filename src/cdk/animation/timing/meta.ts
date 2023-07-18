@@ -7,4 +7,4 @@ export const TIMING_FUNCTION_META = {
   BOUNCE: 'bounce',
 } as const;
 
-export type AnimatorTimingFunctionType = typeof TIMING_FUNCTION_META[keyof typeof TIMING_FUNCTION_META];
+export type AnimatorTimingFunctionType = (typeof TIMING_FUNCTION_META)[keyof typeof TIMING_FUNCTION_META];
