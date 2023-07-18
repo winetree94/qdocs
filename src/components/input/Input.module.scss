@@ -2,7 +2,7 @@
 @import '../../styles/ui/UI.module.scss';
 
 .input {
-  @apply outline outline-2 outline-gray-800 rounded-md w-full;
+  @apply rounded-md w-full outline-none;
   background-color: transparent;
 
   @include queue-ui-x-padding;
