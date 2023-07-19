@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://the-queue.io",
+  "engines" : { 
+    "npm" : ">=9.0.0",
+    "node" : ">=18.0.0"
+  },
   "dependencies": {
     "@radix-ui/colors": "^1.0.0",
     "@radix-ui/react-accordion": "^1.1.2",
