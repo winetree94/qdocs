@@ -8,5 +8,6 @@ export * from './circle';
 export * from './icon';
 export * from './square';
 export * from './meta';
+export * from './image';
 
 export type QueueObjectType = QueueSquare | QueueCircle | QueueIcon | QueueLine | QueueImage;

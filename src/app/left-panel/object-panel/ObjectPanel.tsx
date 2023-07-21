@@ -24,6 +24,8 @@ import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { createDefaultImage } from 'model/object/image';
+import { nanoid } from '@reduxjs/toolkit';
+import { ImageEncodingMessage, IMAGE_ENCODING_STATUS } from 'workers/imageEncoder';
 
 export interface QueueObject {
   key: string;
@@ -173,7 +175,60 @@ export const ObjectPanel: FunctionComponent = () => {
   const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
-  const createImage = createFigure(createDefaultImage);
+  const createImage = createFigure((documentRect: QueueDocumentRect, queueIndex: number) => {
+    const objectId = nanoid();
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.multiple = false;
+
+    fileInput.addEventListener('change', () => {
+      // 파일 선택 취소했을 경우 오브젝트 삭제되도록 작업 필요(아래 코드는 동작하지 않음)
+      if (fileInput.files.length <= 0) {
+        dispatch(ObjectActions.removeMany([objectId]));
+
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const worker = new Worker(
+        /* webpackChunkName: "image-encoding-worker" */ new URL('../../../workers/imageEncoder.ts', import.meta.url),
+      );
+
+      worker.addEventListener('message', (event: MessageEvent<ImageEncodingMessage>) => {
+        const { status, base64DataURL, fileName } = event.data;
+
+        switch (status) {
+          case IMAGE_ENCODING_STATUS.ENCODED:
+            dispatch(
+              ObjectActions.updateImageObject({
+                id: objectId,
+                changes: {
+                  image: {
+                    src: base64DataURL,
+                    alt: fileName,
+                    assetId: nanoid(),
+                  },
+                },
+              }),
+            );
+            break;
+          case IMAGE_ENCODING_STATUS.ERROR:
+            // 오브젝트 삭제?
+            dispatch(ObjectActions.removeMany([objectId]));
+            break;
+        }
+      });
+
+      worker.postMessage(file);
+    });
+
+    fileInput.click();
+
+    // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
+    // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
+    return createDefaultImage(documentRect, queueIndex, objectId);
+  });
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [

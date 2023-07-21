@@ -22,11 +22,11 @@ export interface QueueImage
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
   queueIndex: number,
+  objectId: string,
   // assetId: string,
 ): QueueImage => {
   const width = 300;
   const height = 300;
-  const objectId = nanoid();
 
   return {
     type: 'image',
@@ -52,7 +52,7 @@ export const createDefaultImage = (
       opacity: 1,
     },
     text: {
-      text: '미완🫡',
+      text: '',
       fontSize: 24,
       fontColor: '#000000',
       fontFamily: 'Arial',

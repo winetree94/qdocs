@@ -1,5 +1,5 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import { NormalizedQueueObjectType } from './model';
+import { NormalizedQueueImageObjectType, NormalizedQueueObjectType } from './model';
 
 const addOne = createAction<{
   queueIndex?: number;
@@ -14,6 +14,15 @@ const addMany = createAction<{
 const updateObject = createAction<{
   id: EntityId;
   changes: Partial<Omit<NormalizedQueueObjectType, 'index'>>;
+}>('objects/updateObject');
+
+/**
+ * @description reducer에서 수행하는 작업은 동일하기 때문에 objects/updateObject 그대로 사용 <br>
+ * 타입 추론이 어렵기 때문에 타입만 새로 만들어서 작업함..
+ */
+const updateImageObject = createAction<{
+  id: EntityId;
+  changes: Partial<Omit<NormalizedQueueImageObjectType, 'index'>>;
 }>('objects/updateObject');
 
 const duplicate = createAction<{
@@ -69,6 +78,7 @@ export const ObjectActions = {
   addOne,
   addMany,
   updateObject,
+  updateImageObject,
   updateObjects,
   duplicate,
   removeMany,

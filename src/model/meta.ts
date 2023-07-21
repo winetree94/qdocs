@@ -3,6 +3,7 @@ export const OBJECT_META = {
   CIRCLE: 'circle',
   ICON: 'icon',
   LINE: 'line',
+  IMAGE: 'image',
 } as const;
 
 export const OBJECT_PROPERTY_META = {
