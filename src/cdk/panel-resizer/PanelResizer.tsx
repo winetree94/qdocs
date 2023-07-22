@@ -68,6 +68,14 @@ const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerP
     };
 
     const onKeydown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+      if (horizontal) {
+        context.setHeight(initEvent.initPosition);
+      } else {
+        context.setWidth(initEvent.initPosition);
+      }
       setInitEvent(null);
     };
 
