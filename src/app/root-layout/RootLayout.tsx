@@ -270,6 +270,11 @@ export const RootLayout = () => {
               </PanelResizer.Panel>
             )}
           </div>
+          <PanelResizer.Panel width={200} minWidth={50}>
+            <PanelResizer.Pane panePosition="left">
+              <div>우측 패널</div>
+            </PanelResizer.Pane>
+          </PanelResizer.Panel>
         </div>
       )}
 
