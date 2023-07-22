@@ -56,4 +56,16 @@ export interface QueueDocumentSettings {
    * 프레젠테이션 모드 여부
    */
   presentationMode: boolean;
+
+  /**
+   * @description
+   * 좌측 패널 열림 여부
+   */
+  leftPanelOpened: boolean;
+
+  /**
+   * @description
+   * 하단 패널 열림 여부
+   */
+  bottomPanelOpened: boolean;
 }

@@ -19,6 +19,7 @@ import { nanoid } from '@reduxjs/toolkit';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
+import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -249,16 +250,25 @@ export const RootLayout = () => {
           {docs && <QueueSubtoolbar />}
         </>
       ) : null}
+
       {docs && (
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
-            <div className={clsx(styles.Left)}>
+            // <div className={clsx(styles.Left)}>
+            <PanelResizer.Panel className="h-full" width={200} minWidth={30}>
+              <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
               <LeftPanel />
-            </div>
+            </PanelResizer.Panel>
+            // </div>
           )}
           <div className={clsx(styles.Right)}>
             <QueueEditor />
-            {!settings.presentationMode && <BottomPanel />}
+            {!settings.presentationMode && (
+              <PanelResizer.Panel className="w-full" height={200} minHeight={30}>
+                <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
+                <BottomPanel />
+              </PanelResizer.Panel>
+            )}
           </div>
         </div>
       )}

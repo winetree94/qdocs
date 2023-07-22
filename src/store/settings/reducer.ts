@@ -15,6 +15,8 @@ const initialState: QueueDocumentSettings = {
   selectedObjectIds: [],
   scale: 0.25,
   presentationMode: false,
+  bottomPanelOpened: true,
+  leftPanelOpened: true,
 };
 
 export interface DetailSelectionAction {
