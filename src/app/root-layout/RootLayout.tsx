@@ -20,6 +20,7 @@ import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
+import { RightPanel } from 'app/right-panel/RightPanel';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -271,9 +272,8 @@ export const RootLayout = () => {
             )}
           </div>
           <PanelResizer.Panel width={200} minWidth={50}>
-            <PanelResizer.Pane panePosition="left">
-              <div>우측 패널</div>
-            </PanelResizer.Pane>
+            <PanelResizer.Pane panePosition="left"></PanelResizer.Pane>
+            <RightPanel className="h-full"></RightPanel>
           </PanelResizer.Panel>
         </div>
       )}
