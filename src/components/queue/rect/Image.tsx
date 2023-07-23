@@ -9,6 +9,12 @@ export const Image = ({ onRectMousedown }: RectProps) => {
   const animation = useContext(QueueAnimatableContext);
   const strokeClipPathID = `stroke-alignment-inner-for-image-${containerContext.object.id}`;
 
+  const handleImageLoad = () => {
+    // 메모리 해제를 위해서 revokeObjectURL을 사용한다.
+    // 단, 메모리 해제 후에는 해당 URL을 다시 사용할 수 없는 문제가 있음(객체 복붙 했을 때 엑박..) -> 해결 필요
+    URL.revokeObjectURL(containerContext.object.image.src);
+  };
+
   return (
     <svg
       className={clsx('object-rect', 'absolute')}
@@ -36,6 +42,7 @@ export const Image = ({ onRectMousedown }: RectProps) => {
       </defs>
       <g>
         <image
+          onLoad={handleImageLoad}
           onMouseDown={onRectMousedown}
           href={containerContext.object.image.src}
           width={Math.abs(animation.rect.width)}

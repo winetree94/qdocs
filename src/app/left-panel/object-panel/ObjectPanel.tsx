@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { createDefaultImage } from 'model/object/image';
 import { nanoid } from '@reduxjs/toolkit';
-import { ImageEncodingMessage, IMAGE_ENCODING_STATUS } from 'workers/imageEncoder';
+import { BlobURLGenerateMessage, BLOB_URL_GENERATE_STATUS } from 'workers/blobURLGenerator.worker';
 
 export interface QueueObject {
   key: string;
@@ -183,38 +183,34 @@ export const ObjectPanel: FunctionComponent = () => {
     fileInput.multiple = false;
 
     fileInput.addEventListener('change', () => {
-      // 파일 선택 취소했을 경우 오브젝트 삭제되도록 작업 필요(아래 코드는 동작하지 않음)
-      if (fileInput.files.length <= 0) {
-        dispatch(ObjectActions.removeMany([objectId]));
-
-        return;
-      }
-
       const file = fileInput.files[0];
       const worker = new Worker(
-        /* webpackChunkName: "image-encoding-worker" */ new URL('../../../workers/imageEncoder.ts', import.meta.url),
+        /* webpackChunkName: "image-encoding-worker" */ new URL(
+          '../../../workers/blobURLGenerator.worker.ts',
+          import.meta.url,
+        ),
       );
 
-      worker.addEventListener('message', (event: MessageEvent<ImageEncodingMessage>) => {
-        const { status, base64DataURL, fileName } = event.data;
+      worker.addEventListener('message', (event: MessageEvent<BlobURLGenerateMessage>) => {
+        const { status, data } = event.data;
 
         switch (status) {
-          case IMAGE_ENCODING_STATUS.ENCODED:
+          case BLOB_URL_GENERATE_STATUS.GENERATED:
             dispatch(
               ObjectActions.updateImageObject({
                 id: objectId,
                 changes: {
                   image: {
-                    src: base64DataURL,
-                    alt: fileName,
+                    src: data.blobURL,
+                    alt: data.fileName,
                     assetId: nanoid(),
                   },
                 },
               }),
             );
+
             break;
-          case IMAGE_ENCODING_STATUS.ERROR:
-            // 오브젝트 삭제?
+          case BLOB_URL_GENERATE_STATUS.ERROR:
             dispatch(ObjectActions.removeMany([objectId]));
             break;
         }
