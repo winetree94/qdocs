@@ -83,7 +83,7 @@ export const QueueToolbar = () => {
     input.addEventListener('change', onFileSelected, { once: true });
   };
 
-  const onOpenDcoumentClick = (): void => {
+  const onOpenDocumentClick = (): void => {
     if (docs) {
       setAlertDialog({
         title: t('global.data-loss-warning-title'),
@@ -139,7 +139,7 @@ export const QueueToolbar = () => {
               <QueueMenubar.Content align="start">
                 <QueueMenubar.Item onClick={onNewDocumentClick}>{t('toolbar.file.new-document')}</QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onOpenDcoumentClick}>{t('toolbar.file.open-document')}</QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onOpenDocumentClick}>{t('toolbar.file.open-document')}</QueueMenubar.Item>
                 <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!docs}>
                   {t('toolbar.file.save-document')}
                 </QueueMenubar.Item>
