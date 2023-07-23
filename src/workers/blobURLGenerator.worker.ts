@@ -1,5 +1,11 @@
 /* eslint-disable no-restricted-globals */
 
+/**
+ * Blob URL 몇가지 문제가 있어서 사용하지 않음
+ * 1. 메모리 누수 방지를 위해 revoke 하는데 페이지 이동 시 image 로드할 수 없음
+ * 2. 파일 export할 때도 마찬가지로 URL을 읽을 수 없음(revoke 되었기 때문)
+ */
+
 // 상수 적절한 위치로 이동 필요
 export const BLOB_URL_GENERATE_STATUS = {
   GENERATING: 'GENERATING',
@@ -12,7 +18,7 @@ export type BlobURLGenerateStatusType = (typeof BLOB_URL_GENERATE_STATUS)[keyof 
 export interface BlobURLGenerateMessage {
   status: BlobURLGenerateStatusType;
   data?: {
-    blobURL: string;
+    url: string;
     fileName?: string;
   };
 }
@@ -29,7 +35,7 @@ const postGeneratedMessage = (blobURL: string, fileName?: string) => {
   self.postMessage({
     status: BLOB_URL_GENERATE_STATUS.GENERATED,
     data: {
-      blobURL,
+      url: blobURL,
       fileName,
     },
   });

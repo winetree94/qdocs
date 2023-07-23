@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { createDefaultImage } from 'model/object/image';
 import { nanoid } from '@reduxjs/toolkit';
-import { BlobURLGenerateMessage, BLOB_URL_GENERATE_STATUS } from 'workers/blobURLGenerator.worker';
+import { ImageEncodingMessage, IMAGE_ENCODING_STATUS } from 'workers/imageConversionWorker';
 
 export interface QueueObject {
   key: string;
@@ -186,23 +186,23 @@ export const ObjectPanel: FunctionComponent = () => {
       const file = fileInput.files[0];
       const worker = new Worker(
         /* webpackChunkName: "image-encoding-worker" */ new URL(
-          '../../../workers/blobURLGenerator.worker.ts',
+          '../../../workers/imageConversionWorker.ts',
           import.meta.url,
         ),
       );
 
-      worker.addEventListener('message', (event: MessageEvent<BlobURLGenerateMessage>) => {
-        const { status, data } = event.data;
+      worker.addEventListener('message', (event: MessageEvent<ImageEncodingMessage>) => {
+        const { status, imageData } = event.data;
 
         switch (status) {
-          case BLOB_URL_GENERATE_STATUS.GENERATED:
+          case IMAGE_ENCODING_STATUS.ENCODED:
             dispatch(
               ObjectActions.updateImageObject({
                 id: objectId,
                 changes: {
                   image: {
-                    src: data.blobURL,
-                    alt: data.fileName,
+                    src: imageData.src,
+                    alt: imageData.fileName,
                     assetId: nanoid(),
                   },
                 },
@@ -210,7 +210,7 @@ export const ObjectPanel: FunctionComponent = () => {
             );
 
             break;
-          case BLOB_URL_GENERATE_STATUS.ERROR:
+          case IMAGE_ENCODING_STATUS.ERROR:
             dispatch(ObjectActions.removeMany([objectId]));
             break;
         }
