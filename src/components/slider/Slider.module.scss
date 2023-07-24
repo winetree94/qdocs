@@ -19,7 +19,7 @@
 }
 
 .slider-track {
-  @apply bg-neutral-200;
+  @apply tw-bg-neutral-200;
   position: relative;
   flex-grow: 1;
   border-radius: 9999px;
@@ -34,7 +34,7 @@
 }
 
 .slider-range {
-  @apply bg-neutral-700;
+  @apply tw-bg-neutral-700;
   position: absolute;
   border-radius: 9999px;
 
@@ -48,14 +48,14 @@
 }
 
 .slider-thumb {
-  @apply bg-neutral-600;
+  @apply tw-bg-neutral-600;
   display: block;
   width: 16px;
   height: 16px;
   border-radius: 10px;
 
   &:hover {
-    @apply bg-neutral-500;
+    @apply tw-bg-neutral-500;
   }
 
   &:focus {

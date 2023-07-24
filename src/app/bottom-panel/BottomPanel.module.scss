@@ -1,19 +1,19 @@
 .container {
-  @apply flex;
-  @apply flex-shrink-0;
+  @apply tw-flex;
+  @apply tw-flex-shrink-0;
   border-top: 1px solid var(--gray-5);
 }
 
 .pageHolder {
-  @apply flex 
-    flex-grow 
-    flex-shrink 
-    flex-col 
-    min-w-0;
+  @apply tw-flex 
+    tw-flex-grow 
+    tw-flex-shrink 
+    tw-flex-col 
+    tw-min-w-0;
 }
 
 .Pages {
-  @apply flex;
+  @apply tw-flex;
 }
 
 .dragOver {

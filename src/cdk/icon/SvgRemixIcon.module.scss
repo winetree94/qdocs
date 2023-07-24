@@ -1,21 +1,21 @@
 @import '../../styles/ui/Size.module.scss';
 
 .SvgRemixIcon {
-  @apply fill-current w-4 h-4;
+  @apply tw-fill-current tw-w-4 tw-h-4;
 
   @include queue-ui-size-xsmall {
-    @apply w-2 h-2;
+    @apply tw-w-2 tw-h-2;
   }
   @include queue-ui-size-small {
-    @apply w-3 h-3;
+    @apply tw-w-3 tw-h-3;
   }
   @include queue-ui-size-medium {
-    @apply w-4 h-4;
+    @apply tw-w-4 tw-h-4;
   }
   @include queue-ui-size-large {
-    @apply w-6 h-6;
+    @apply tw-w-6 tw-h-6;
   }
   @include queue-ui-size-xlarge {
-    @apply w-8 h-8;
+    @apply tw-w-8 tw-h-8;
   }
 }

@@ -126,7 +126,7 @@ export const ObjectStyleText = () => {
         <div className={styles.SubInputContainer}>
           <input
             id="text-color"
-            className="input-color"
+            className="tw-input-color"
             type="color"
             value={text.fontColor}
             onChange={(e): void => updateText({ fontColor: e.target.value })}

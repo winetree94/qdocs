@@ -4,7 +4,7 @@
 @import 'components/button/Button.module.scss';
 
 .ToggleGroup {
-  @apply inline-flex;
+  @apply tw-inline-flex;
 }
 
 .ToggleGroupItem {

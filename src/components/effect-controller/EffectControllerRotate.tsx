@@ -45,10 +45,10 @@ export const EffectControllerRotate = (): ReactElement => {
 
   return (
     <div>
-      <p className="text-sm">rotation</p>
-      <div className="flex items-center gap-2">
+      <p className="tw-text-sm">rotation</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
         <input
-          className="w-full"
+          className="tw-w-full"
           type="number"
           step={5}
           value={firstRotateEffect.prop.degree}

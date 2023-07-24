@@ -58,11 +58,11 @@ export const EffectControllerScale = (): ReactElement => {
   return (
     <div>
       <input type="number" value={firstScaleEffect.prop.scale} hidden readOnly />
-      <p className="text-sm">scale</p>
-      <div className="flex items-center gap-2">
-        <div className="w-5/12">
+      <p className="tw-text-sm">scale</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-w-5/12">
           <input
-            className="w-full"
+            className="tw-w-full"
             type="number"
             value={firstScaleEffect.prop.scale}
             step={0.1}
@@ -71,7 +71,7 @@ export const EffectControllerScale = (): ReactElement => {
             }}
           />
         </div>
-        <div className="flex items-center w-full">
+        <div className="tw-flex tw-items-center tw-w-full">
           <Slider
             min={0.1}
             max={10}

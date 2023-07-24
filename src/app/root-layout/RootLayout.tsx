@@ -256,7 +256,7 @@ export const RootLayout = () => {
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
             // <div className={clsx(styles.Left)}>
-            <PanelResizer.Panel className="h-full" width={200} minWidth={30}>
+            <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
               <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
               <LeftPanel />
             </PanelResizer.Panel>
@@ -265,7 +265,7 @@ export const RootLayout = () => {
           <div className={clsx(styles.Right)}>
             <QueueEditor />
             {!settings.presentationMode && (
-              <PanelResizer.Panel className="w-full" height={200} minHeight={30}>
+              <PanelResizer.Panel className="tw-w-full" height={200} minHeight={30}>
                 <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
                 <BottomPanel />
               </PanelResizer.Panel>
@@ -273,7 +273,7 @@ export const RootLayout = () => {
           </div>
           <PanelResizer.Panel width={200} minWidth={50}>
             <PanelResizer.Pane panePosition="left"></PanelResizer.Pane>
-            <RightPanel className="h-full"></RightPanel>
+            <RightPanel className="tw-h-full"></RightPanel>
           </PanelResizer.Panel>
         </div>
       )}

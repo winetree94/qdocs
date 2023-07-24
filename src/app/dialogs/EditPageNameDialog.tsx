@@ -28,7 +28,7 @@ export const EditPageNameDialog = ({ pageName, onSubmit, open, onOpenChange }: E
               <QueueInput
                 required
                 id="pagename"
-                className="border-solid	border-2 border-gray-200 focus:border-gray-400"
+                className="tw-border-solid tw-border-2 tw-border-gray-200 focus:tw-border-gray-400"
                 value={currentPageName}
                 onChange={(e): void => setCurrentPageName(e.target.value)}
               />

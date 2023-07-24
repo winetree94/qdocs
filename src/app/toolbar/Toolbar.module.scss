@@ -1,19 +1,19 @@
 .Container {
-  @apply flex;
+  @apply tw-flex;
   border-bottom: 1px solid var(--gray-5);
   background-color: var(--gray-1);
   height: 70px;
 }
 
 .LogoContainer {
-  @apply flex justify-center items-center;
+  @apply tw-flex tw-justify-center tw-items-center;
   width: 74px;
 }
 
 .ContentContainer {
-  @apply flex flex-col flex-auto;
+  @apply tw-flex tw-flex-col tw-flex-auto;
 }
 
 .TitleContainer {
-  @apply mt-2.5 ml-2.5 h-full;
+  @apply tw-mt-2.5 tw-ml-2.5 tw-h-full;
 }

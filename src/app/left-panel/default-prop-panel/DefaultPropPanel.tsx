@@ -3,7 +3,7 @@ import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
 export const DefaultPropPanel = () => {
   return (
-    <QueueScrollArea.Root className="h-full">
+    <QueueScrollArea.Root className="tw-h-full">
       <QueueScrollArea.Viewport>
         <ObjectStylerPanel />
       </QueueScrollArea.Viewport>

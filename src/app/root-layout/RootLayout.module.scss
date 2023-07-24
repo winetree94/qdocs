@@ -6,7 +6,7 @@
 }
 
 .Content {
-  @apply flex flex-1 min-h-0;
+  @apply tw-flex tw-flex-1 tw-min-h-0;
 }
 
 .Left {
@@ -14,5 +14,5 @@
 }
 
 .Right {
-  @apply flex flex-1 flex-col min-w-0;
+  @apply tw-flex tw-flex-1 tw-flex-col tw-min-w-0;
 }

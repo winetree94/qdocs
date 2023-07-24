@@ -387,7 +387,7 @@ export const QueueEditor = () => {
     <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
         <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)} onMouseDown={onRootMousedown}>
-          <QueueScrollArea.Viewport className={clsx('flex')}>
+          <QueueScrollArea.Viewport className={clsx('tw-flex')}>
             <Drawable
               onDrawEnd={onDrawEnd}
               className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>

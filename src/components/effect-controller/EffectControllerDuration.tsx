@@ -87,18 +87,18 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
 
   return (
     <div>
-      <p className="text-sm">duration</p>
-      <div className="flex items-center gap-2">
-        <div className="w-5/12">
+      <p className="tw-text-sm">duration</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-w-5/12">
           <input
-            className="w-full"
+            className="tw-w-full"
             type="number"
             step={0.1}
             value={convertedDuration}
             onChange={(e): void => handleDurationChange(e.currentTarget.value)}
           />
         </div>
-        <div className="flex items-center w-full">
+        <div className="tw-flex tw-items-center tw-w-full">
           <Slider
             min={0}
             max={10}
@@ -108,18 +108,18 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
           />
         </div>
       </div>
-      <p className="text-sm">delay</p>
-      <div className="flex items-center gap-2">
-        <div className="w-5/12">
+      <p className="tw-text-sm">delay</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-w-5/12">
           <input
-            className="w-full"
+            className="tw-w-full"
             type="number"
             step={0.1}
             value={convertedDelay}
             onChange={(e): void => handleDelayChange(e.currentTarget.value)}
           />
         </div>
-        <div className="flex items-center w-full">
+        <div className="tw-flex tw-items-center tw-w-full">
           <Slider
             min={0}
             max={10}

@@ -1,19 +1,19 @@
 .ItemContainer {
-  @apply flex flex-col;
+  @apply tw-flex tw-flex-col;
 }
 
 .SubItemContainer {
-  @apply mt-2.5;
+  @apply tw-mt-2.5;
 }
 
 .SubTitle {
-  @apply text-left;
+  @apply tw-text-left;
 }
 
 .SubInputContainer {
-  @apply mt-1;
+  @apply tw-mt-1;
 }
 
 .Select {
- @apply w-full;
+ @apply tw-w-full;
 }

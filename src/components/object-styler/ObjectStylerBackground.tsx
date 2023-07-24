@@ -59,30 +59,30 @@ export const ObjectStylerBackground = (): ReactElement => {
 
   return (
     <div>
-      <div className="mb-1">
-        <p className="font-medium">Background</p>
+      <div className="tw-mb-1">
+        <p className="tw-font-medium">Background</p>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="tw-flex tw-flex-col tw-gap-2">
         <div>
-          <p className="text-sm">color</p>
-          <div className="w-6 h-6">
+          <p className="tw-text-sm">color</p>
+          <div className="tw-w-6 tw-h-6">
             <Color displayColor={firstObject.fill.color} onChange={handleFillColorChange} />
           </div>
         </div>
         <div>
           <input type="text" name="backgroundOpacity" value={firstObject.fill.opacity} readOnly hidden />
-          <p className="text-sm">opacity</p>
-          <div className="flex items-center gap-2">
-            <div className="w-1/3">
+          <p className="tw-text-sm">opacity</p>
+          <div className="tw-flex tw-items-center tw-gap-2">
+            <div className="tw-w-1/3">
               <input
-                className="w-full"
+                className="tw-w-full"
                 type="number"
                 step={0.1}
                 value={firstObject.fill.opacity}
                 onChange={(e) => handleOpacityChange(e.target.value)}
               />
             </div>
-            <div className="flex items-center w-full">
+            <div className="tw-flex tw-items-center tw-w-full">
               <Slider
                 min={0}
                 max={1}

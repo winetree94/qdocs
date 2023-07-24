@@ -59,11 +59,11 @@ export const EffectControllerFade = (): ReactElement => {
 
   return (
     <div>
-      <p className="text-sm">fade</p>
-      <div className="flex items-center gap-2">
-        <div className="w-5/12">
+      <p className="tw-text-sm">fade</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-w-5/12">
           <input
-            className="w-full"
+            className="tw-w-full"
             type="number"
             step={0.1}
             value={firstFadeEffect.prop.opacity}
@@ -72,7 +72,7 @@ export const EffectControllerFade = (): ReactElement => {
             }}
           />
         </div>
-        <div className="flex items-center w-full">
+        <div className="tw-flex tw-items-center tw-w-full">
           <Slider
             min={0}
             max={1}

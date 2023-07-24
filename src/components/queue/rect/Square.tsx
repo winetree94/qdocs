@@ -17,7 +17,7 @@ export const Square = ({ onRectMousedown }: RectProps) => {
 
   return (
     <svg
-      className={clsx('object-rect', 'absolute')}
+      className={clsx('object-rect', 'tw-absolute')}
       width={Math.abs(animation.rect.width)}
       height={Math.abs(animation.rect.height)}
       style={{

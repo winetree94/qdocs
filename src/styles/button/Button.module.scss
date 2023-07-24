@@ -68,11 +68,11 @@
 }
 
 @mixin queue-button-base {
-  @apply flex
-    items-center
-    justify-center
-    border-0
-    transition-colors
-    outline-none
-    whitespace-nowrap;
+  @apply tw-flex
+    tw-items-center
+    tw-justify-center
+    tw-border-0
+    tw-transition-colors
+    tw-outline-none
+    tw-whitespace-nowrap;
 }

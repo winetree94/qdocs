@@ -49,7 +49,7 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
 
   return (
     <div>
-      <p className="text-sm">timing function</p>
+      <p className="tw-text-sm">timing function</p>
       <QueueSelect.Root defaultValue={firstObjectEffect.timing} onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Trigger>
           <QueueSelect.Value />

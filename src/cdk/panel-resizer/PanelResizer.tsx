@@ -95,10 +95,10 @@ const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerP
     <div
       {...props}
       className={clsx(
-        'absolute',
+        'tw-absolute',
         `${panePosition}-0`,
-        horizontal ? 'cursor-row-resize' : 'cursor-col-resize',
-        horizontal ? 'w-full' : 'h-full',
+        horizontal ? 'tw-cursor-row-resize' : 'tw-cursor-col-resize',
+        horizontal ? 'tw-w-full' : 'tw-h-full',
       )}
       style={{
         [horizontal ? 'height' : 'width']: paneWidth,
@@ -170,7 +170,7 @@ const Panel = ({ children, width, minWidth, height, minHeight, ...props }: Panel
       }}>
       <div
         {...props}
-        className={clsx('relative', props.className)}
+        className={clsx('tw-relative', props.className)}
         style={{
           ...props.style,
           width: state.width ? Math.max(state.width, state.minWidth) : undefined,

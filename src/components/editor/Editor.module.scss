@@ -2,31 +2,31 @@
 @import '@radix-ui/colors/mauve.css';
 
 .ScrollAreaRoot {
-  @apply w-full h-full;
+  @apply tw-w-full tw-h-full;
   background: var(--gray-3);
 }
 
 .Drawable {
-  @apply flex-1 flex-col table-cell align-middle;
+  @apply tw-flex-1 tw-flex-col tw-table-cell tw-align-middle;
 }
 
 .Root {
-  @apply flex flex-1 flex-col overflow-hidden min-w-0;
+  @apply tw-flex tw-flex-1 tw-flex-col tw-overflow-hidden tw-min-w-0;
 }
 
 .fullscreen {
-  @apply pointer-events-none;
+  @apply tw-pointer-events-none;
   background: black;
 }
 
 .scaleFull {
-  @apply p-0;
+  @apply tw-p-0;
 }
 
 .canvas {
-  @apply relative box-border overflow-hidden;
+  @apply tw-relative tw-box-border tw-overflow-hidden;
   &:not(.fullscreen) {
-    @apply overflow-visible;
+    @apply tw-overflow-visible;
     border: 1px solid var(--gray-5);
   }
 }

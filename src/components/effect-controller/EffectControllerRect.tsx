@@ -45,37 +45,37 @@ export const EffectControllerRect = (): ReactElement => {
 
   return (
     <div>
-      <p className="text-sm">width</p>
-      <div className="flex items-center gap-2">
+      <p className="tw-text-sm">width</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
         <input
-          className="w-full"
+          className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.width}
           onChange={(e): void => handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })}
         />
       </div>
-      <p className="text-sm">height</p>
-      <div className="flex items-center gap-2">
+      <p className="tw-text-sm">height</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
         <input
-          className="w-full"
+          className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.height}
           onChange={(e): void => handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })}
         />
       </div>
-      <p className="text-sm">x</p>
-      <div className="flex items-center gap-2">
+      <p className="tw-text-sm">x</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
         <input
-          className="w-full"
+          className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.x}
           onChange={(e): void => handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })}
         />
       </div>
-      <p className="text-sm">y</p>
-      <div className="flex items-center gap-2">
+      <p className="tw-text-sm">y</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
         <input
-          className="w-full"
+          className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.y}
           onChange={(e): void => handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })}

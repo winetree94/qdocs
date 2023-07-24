@@ -20,7 +20,7 @@ export const Circle = ({ onRectMousedown }: RectProps) => {
 
   return (
     <svg
-      className={clsx('object-circle', 'absolute')}
+      className={clsx('object-circle', 'tw-absolute')}
       width={Math.abs(animation.rect.width)}
       height={Math.abs(animation.rect.height)}
       style={{

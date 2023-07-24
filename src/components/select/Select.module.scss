@@ -20,7 +20,7 @@
   @include queue-button-color-default;
   @include queue-button-color-blue;
   @include queue-button-color-red;
-  @apply justify-between;
+  @apply tw-justify-between;
 }
 
 .SelectTrigger:hover {

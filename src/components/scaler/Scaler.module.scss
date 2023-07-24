@@ -1,11 +1,11 @@
 .Root {
-  @apply p-2.5;
+  @apply tw-p-2.5;
 }
 
 .ActualSizedContent {
-  @apply m-auto;
+  @apply tw-m-auto;
 }
 
 .ScaledContent {
-  @apply origin-top-left;
+  @apply tw-origin-top-left;
 }

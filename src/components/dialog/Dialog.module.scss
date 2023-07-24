@@ -12,7 +12,7 @@
 }
 
 @mixin queue-dialog-content {
-  @apply p-5 rounded-sm;
+  @apply tw-p-5 tw-rounded-sm;
   background: var(--gray-1);
   box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
@@ -31,15 +31,15 @@
 }
 
 @mixin queue-dialog-title {
-  @apply text-xl font-medium m-0;
+  @apply tw-text-xl tw-font-medium tw-m-0;
 }
 
 @mixin queue-dialog-description {
-  @apply mt-5;
+  @apply tw-mt-5;
 }
 
 @mixin queue-dialog-footer {
-  @apply mt-5 flex justify-end gap-2;
+  @apply tw-mt-5 tw-flex tw-justify-end tw-gap-2;
 }
 
 .DialogOverlay {

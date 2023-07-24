@@ -1,11 +1,11 @@
 .Container {
-  @apply absolute flex;
+  @apply tw-absolute tw-flex;
 }
 
 .Editor {
-  @apply relative inline-block text-center w-full outline-none break-all;
+  @apply tw-relative tw-inline-block tw-text-center tw-w-full tw-outline-none tw-break-all;
 }
 
 .Enable {
-  @apply cursor-text;
+  @apply tw-cursor-text;
 }

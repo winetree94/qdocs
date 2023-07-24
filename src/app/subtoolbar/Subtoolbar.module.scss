@@ -3,11 +3,11 @@
 }
 
 .ItemRoot {
-  @apply flex justify-between items-center h-8;
+  @apply tw-flex tw-justify-between tw-items-center tw-h-8;
 }
 
 .ItemGroup {
-  @apply flex h-full items-center;
+  @apply tw-flex tw-h-full tw-items-center;
   .QueueIndicator {
     color: var(--gray-7);
   

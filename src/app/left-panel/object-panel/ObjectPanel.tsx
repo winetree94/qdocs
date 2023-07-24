@@ -84,7 +84,7 @@ export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({ style, ind
   }
 
   return (
-    <div className={clsx('flex')} style={style}>
+    <div className={clsx('tw-flex')} style={style}>
       {flattenData.objects.map((object) => (
         <Tooltip.Provider key={object.key}>
           <Tooltip.Root>

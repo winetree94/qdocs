@@ -71,11 +71,11 @@ export const EffectControllerFill = (): ReactElement => {
       <div>
         <input type="color" value={firstFillEffect.prop.color} onChange={handleCurrentColorChange} />
       </div>
-      <p className="text-sm">opacity</p>
-      <div className="flex items-center gap-2">
-        <div className="w-5/12">
+      <p className="tw-text-sm">opacity</p>
+      <div className="tw-flex tw-items-center tw-gap-2">
+        <div className="tw-w-5/12">
           <input
-            className="w-full"
+            className="tw-w-full"
             type="number"
             step={0.1}
             value={firstFillEffect.prop.opacity}
@@ -84,7 +84,7 @@ export const EffectControllerFill = (): ReactElement => {
             }}
           />
         </div>
-        <div className="flex items-center w-full">
+        <div className="tw-flex tw-items-center tw-w-full">
           <Slider
             min={0}
             max={1}

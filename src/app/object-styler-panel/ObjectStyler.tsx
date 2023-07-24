@@ -15,7 +15,7 @@ export const ObjectStylerPanel = (): ReactElement | null => {
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   return (
     <div className={styles.StylerRoot}>
-      <div className="flex flex-col gap-3">
+      <div className="tw-flex tw-flex-col tw-gap-3">
         <ObjectStyleRect />
         <QueueSeparator.Root />
         <ObjectStyleBackground />

@@ -92,7 +92,7 @@ export const Drawable = ({ threshold = 30, onDrawStart, onDrawMove, onDrawEnd, c
             width: selectorPosition.width,
             height: selectorPosition.height,
           }}>
-          <div className={clsx(styles.Preview, 'w-full', 'h-full')}></div>
+          <div className={clsx(styles.Preview, 'tw-w-full', 'tw-h-full')}></div>
         </div>
       )}
     </Draggable>

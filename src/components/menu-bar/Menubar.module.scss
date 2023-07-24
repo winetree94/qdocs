@@ -6,7 +6,7 @@
 @import 'styles/list/List.module.scss';
 
 .MenubarRoot {
-  @apply flex;
+  @apply tw-flex;
 }
 
 .MenubarTrigger {

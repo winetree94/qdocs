@@ -38,10 +38,10 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex relative">
+    <div className="tw-flex tw-flex-col">
+      <div className="tw-flex tw-relative">
         <QueueButton
-          className="flex-1"
+          className="tw-flex-1"
           type="button"
           size={QUEUE_UI_SIZE.SMALL}
           onClick={(): void => setOpen((prev) => !prev)}
@@ -49,13 +49,16 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
           <span>{effectType}</span>
         </QueueButton>
         {effectType !== OBJECT_EFFECT_META.CREATE && (
-          <QueueIconButton className="absolute right-0" onClick={handleDeleteEffectButton} size={QUEUE_UI_SIZE.SMALL}>
+          <QueueIconButton
+            className="tw-absolute tw-right-0"
+            onClick={handleDeleteEffectButton}
+            size={QUEUE_UI_SIZE.SMALL}>
             <SvgRemixIcon icon="ri-delete-bin-5-line" size={QUEUE_UI_SIZE.SMALL} />
           </QueueIconButton>
         )}
       </div>
       {open && (
-        <div className="flex flex-col gap-2 p-1 bg-gray-100">
+        <div className="tw-flex tw-flex-col tw-gap-2 tw-p-1 tw-bg-gray-100">
           <EffectControllerDuration effectType={effectType} />
           <EffectControllerTimingFunction effectType={effectType} />
           <EffectControllerIndex effectType={effectType} />
@@ -218,9 +221,9 @@ export const EffectControllerBox = (): ReactElement | null => {
   }
 
   return (
-    <div className="flex flex-col gap-2 p-2">
+    <div className="tw-flex tw-flex-col tw-gap-2 tw-p-2">
       <div>
-        <p className="font-medium">{t('effect-panel.all-effects')}</p>
+        <p className="tw-font-medium">{t('effect-panel.all-effects')}</p>
         <ul>
           {effects.map((effect, index) => (
             <li key={`effect-${index}`}>
@@ -231,11 +234,11 @@ export const EffectControllerBox = (): ReactElement | null => {
         </ul>
       </div>
       <div>
-        <div className="flex justify-between">
-          <p className="font-medium">{t('effect-panel.current-effects')}</p>
+        <div className="tw-flex tw-justify-between">
+          <p className="tw-font-medium">{t('effect-panel.current-effects')}</p>
           <QueueDropdown.Root>
             <QueueDropdown.Trigger
-              className="flex items-center disabled:cursor-not-allowed"
+              className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
               disabled={createEffectIndex === settings.queueIndex}>
               <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
             </QueueDropdown.Trigger>
@@ -254,7 +257,7 @@ export const EffectControllerBox = (): ReactElement | null => {
             </QueueDropdown.Content>
           </QueueDropdown.Root>
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="tw-flex tw-flex-col tw-gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
             <EffectController key={`ec-${currentQueueObjectEffect.type}`} effectType={currentQueueObjectEffect.type} />
           ))}
