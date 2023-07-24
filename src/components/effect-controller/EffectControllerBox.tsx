@@ -1,7 +1,6 @@
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
-import { Dropdown } from 'components/dropdown';
 import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
 import { QueueButton, QueueIconButton } from 'components/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
@@ -16,6 +15,7 @@ import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QueueDropdown } from 'components/dropdown';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -233,26 +233,26 @@ export const EffectControllerBox = (): ReactElement | null => {
       <div>
         <div className="flex justify-between">
           <p className="font-medium">{t('effect-panel.current-effects')}</p>
-          <Dropdown>
-            <Dropdown.Trigger
+          <QueueDropdown.Root>
+            <QueueDropdown.Trigger
               className="flex items-center disabled:cursor-not-allowed"
               disabled={createEffectIndex === settings.queueIndex}>
               <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
-            </Dropdown.Trigger>
-            <Dropdown.Content side="right">
+            </QueueDropdown.Trigger>
+            <QueueDropdown.Content side="right">
               {addableEffectTypes.map((effectType) => {
                 if (currentQueueObjectEffectTypes.includes(effectType)) {
                   return null;
                 }
 
                 return (
-                  <Dropdown.Item key={effectType} onClick={(): void => handleAddEffectItemClick(effectType)}>
+                  <QueueDropdown.Item key={effectType} onClick={(): void => handleAddEffectItemClick(effectType)}>
                     {effectType}
-                  </Dropdown.Item>
+                  </QueueDropdown.Item>
                 );
               })}
-            </Dropdown.Content>
-          </Dropdown>
+            </QueueDropdown.Content>
+          </QueueDropdown.Root>
         </div>
         <div className="flex flex-col gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (

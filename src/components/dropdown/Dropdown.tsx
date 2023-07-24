@@ -4,7 +4,10 @@ import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
 import classes from './Dropdown.module.scss';
 import clsx from 'clsx';
 
-export const Dropdown = ({ children, ...dropdownMenuProps }: DropdownMenuPrimitive.DropdownMenuProps): ReactElement => {
+export const DropdownRoot = ({
+  children,
+  ...dropdownMenuProps
+}: DropdownMenuPrimitive.DropdownMenuProps): ReactElement => {
   return <DropdownMenuPrimitive.Root {...dropdownMenuProps}>{children}</DropdownMenuPrimitive.Root>;
 };
 
@@ -104,12 +107,13 @@ const DropdownTrigger = ({
   );
 };
 
-Dropdown.Content = DropdownContent;
-Dropdown.Group = DropdownMenuPrimitive.Group;
-Dropdown.RadioGroup = DropdownMenuPrimitive.RadioGroup;
-Dropdown.Item = DropdownItem;
-Dropdown.RadioItem = DropdownRadioItem;
-Dropdown.CheckboxItem = DropdownCheckboxItem;
-Dropdown.Label = DropdownLabel;
-Dropdown.Separator = DropdownSeparator;
-Dropdown.Trigger = DropdownTrigger;
+export const QueueDropdown = {
+  Root: DropdownRoot,
+  Content: DropdownContent,
+  Item: DropdownItem,
+  CheckboxItem: DropdownCheckboxItem,
+  RadioItem: DropdownRadioItem,
+  Label: DropdownLabel,
+  Separator: DropdownSeparator,
+  Trigger: DropdownTrigger,
+};
