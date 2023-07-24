@@ -10,11 +10,12 @@ export interface QueueToggleGroupProps {
   size?: QUEUE_UI_SIZES;
 }
 
-export const QueueToogleGroupRoot: React.ForwardRefExoticComponent<
+export const QueueToogleGroupRoot = forwardRef<
+  HTMLDivElement,
   QueueToggleGroupProps &
     (ToggleGroup.ToggleGroupSingleProps | ToggleGroup.ToggleGroupMultipleProps) &
     React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, size = 'medium', ...props }, ref) => {
+>(({ children, className, size = 'medium', ...props }, ref) => {
   return (
     <ToggleGroup.Root ref={ref} {...props} className={clsx(styles.ToggleGroup, className, styles[size])}>
       {children}
@@ -22,20 +23,19 @@ export const QueueToogleGroupRoot: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueToggleGroupItem: React.ForwardRefExoticComponent<
+export const QueueToggleGroupItem = forwardRef<
+  HTMLButtonElement,
   QueueButtonProps & ToggleGroup.ToggleGroupItemProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(
-  ({ children, className, color = QUEUE_UI_COLOR.DEFAULT, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
-    return (
-      <ToggleGroup.Item
-        ref={ref}
-        {...props}
-        className={clsx(styles.ToggleGroupItem, className, styles[color], styles[size])}>
-        {children}
-      </ToggleGroup.Item>
-    );
-  },
-);
+>(({ children, className, color = QUEUE_UI_COLOR.DEFAULT, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
+  return (
+    <ToggleGroup.Item
+      ref={ref}
+      {...props}
+      className={clsx(styles.ToggleGroupItem, className, styles[color], styles[size])}>
+      {children}
+    </ToggleGroup.Item>
+  );
+});
 
 export const QueueToggleGroup = {
   Root: QueueToogleGroupRoot,

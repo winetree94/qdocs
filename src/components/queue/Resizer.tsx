@@ -43,14 +43,14 @@ export type ResizerPosition =
   | 'bottom-middle'
   | 'bottom-right';
 
-export const ObjectResizer: React.FunctionComponent<ResizerProps> = ({
+export const ObjectResizer = ({
   onResizeStart,
   onResizeMove,
   onResizeEnd,
   onRotateStart,
   onRotateMove,
   onRotateEnd,
-}) => {
+}: ResizerProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
   // shorthands

@@ -10,7 +10,7 @@ import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
-export const Welcome: React.FC = () => {
+export const Welcome = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);

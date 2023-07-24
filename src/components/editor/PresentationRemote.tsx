@@ -8,7 +8,7 @@ import { SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
-export const PresentationRemote: React.FC = () => {
+export const PresentationRemote = () => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
 

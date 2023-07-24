@@ -17,7 +17,7 @@ export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'childr
   onSubmit?: (document: QueueDocument) => void;
 }
 
-export const NewDocumentDialog: React.FC<NewDocumentDialogProps> = ({ onSubmit, ...props }) => {
+export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps) => {
   const { t } = useTranslation();
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
   const [documentTemplate, setDocumentTemplate] = React.useState<string>('Empty');

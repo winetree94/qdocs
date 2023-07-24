@@ -13,7 +13,7 @@ export type EventDispatcherProviderProps = {
   children: React.ReactNode;
 };
 
-export const EventDispatcherProvider: React.FC<EventDispatcherProviderProps> = ({ children }) => {
+export const EventDispatcherProvider = ({ children }: EventDispatcherProviderProps) => {
   const listeners = useRef<Record<string, EventCallback<never>[]>>({});
 
   const subscribe = <P = void,>(eventName: string, emitter: EventCallback<P>): void => {

@@ -13,7 +13,7 @@ export interface EditPageNameProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const EditPageNameDialog: React.FC<EditPageNameProps> = ({ pageName, onSubmit, open, onOpenChange }) => {
+export const EditPageNameDialog = ({ pageName, onSubmit, open, onOpenChange }: EditPageNameProps) => {
   const { t } = useTranslation();
   const [currentPageName, setCurrentPageName] = useState(pageName);
 

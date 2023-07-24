@@ -1,7 +1,7 @@
 import { ObjectStylerPanel } from 'app/object-styler-panel/ObjectStyler';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 
-export const DefaultPropPanel: React.FC = () => {
+export const DefaultPropPanel = () => {
   return (
     <QueueScrollArea.Root className="h-full">
       <QueueScrollArea.Viewport>

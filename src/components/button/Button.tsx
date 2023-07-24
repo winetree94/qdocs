@@ -13,9 +13,10 @@ export interface BaseQueueButtonProps extends React.ButtonHTMLAttributes<HTMLBut
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface QueueIconButtonProps extends BaseQueueButtonProps {}
 
-export const QueueIconButton: React.ForwardRefExoticComponent<
+export const QueueIconButton = forwardRef<
+  HTMLButtonElement,
   QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
+>(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
   return (
     <button
       ref={ref}
@@ -30,8 +31,8 @@ export const QueueIconButton: React.ForwardRefExoticComponent<
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface QueueButtonProps extends BaseQueueButtonProps {}
 
-export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & React.RefAttributes<HTMLButtonElement>> =
-  forwardRef(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
+export const QueueButton = forwardRef<HTMLButtonElement, QueueButtonProps & React.RefAttributes<HTMLButtonElement>>(
+  ({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
     return (
       <button
         ref={ref}
@@ -41,4 +42,5 @@ export const QueueButton: React.ForwardRefExoticComponent<QueueButtonProps & Rea
         {children}
       </button>
     );
-  });
+  },
+);

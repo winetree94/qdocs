@@ -3,13 +3,14 @@ import * as Dialog from '@radix-ui/react-dialog';
 import styles from './Dialog.module.scss';
 import clsx from 'clsx';
 
-export const QueueDialogRoot: React.FC<Dialog.DialogProps> = ({ children, ...props }) => {
+export const QueueDialogRoot = ({ children, ...props }: Dialog.DialogProps) => {
   return <Dialog.Root {...props}>{children}</Dialog.Root>;
 };
 
-export const QueueDialogTrigger: React.ForwardRefExoticComponent<
+export const QueueDialogTrigger = forwardRef<
+  HTMLButtonElement,
   Dialog.DialogTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({ children, ...props }, ref) => {
+>(({ children, ...props }, ref) => {
   return (
     <Dialog.Trigger ref={ref} {...props}>
       {children}
@@ -17,13 +18,14 @@ export const QueueDialogTrigger: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueDialogPortal: React.FC<Dialog.DialogPortalProps> = ({ children, ...props }) => {
+export const QueueDialogPortal = ({ children, ...props }: Dialog.DialogPortalProps) => {
   return <Dialog.Portal {...props}>{children}</Dialog.Portal>;
 };
 
-export const QueueDialogOverlay: React.ForwardRefExoticComponent<
+export const QueueDialogOverlay = forwardRef<
+  HTMLDivElement,
   Dialog.DialogOverlayProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Dialog.Overlay ref={ref} {...props} className={clsx(styles.DialogOverlay, className)}>
       {children}
@@ -31,9 +33,10 @@ export const QueueDialogOverlay: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueDialogContent: React.ForwardRefExoticComponent<
+export const QueueDialogContent = forwardRef<
+  HTMLDivElement,
   Dialog.DialogContentProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Dialog.Content ref={ref} {...props} className={clsx(styles.DialogContent, className)}>
       {children}
@@ -41,9 +44,10 @@ export const QueueDialogContent: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueDialogTitle: React.ForwardRefExoticComponent<
+export const QueueDialogTitle = forwardRef<
+  HTMLHeadingElement,
   Dialog.DialogTitleProps & React.RefAttributes<HTMLHeadingElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Dialog.Title ref={ref} {...props} className={clsx(styles.DialogTitle, className)}>
       {children}
@@ -51,9 +55,10 @@ export const QueueDialogTitle: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueDialogDescription: React.ForwardRefExoticComponent<
+export const QueueDialogDescription = forwardRef<
+  HTMLParagraphElement,
   Dialog.DialogDescriptionProps & React.RefAttributes<HTMLParagraphElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Dialog.Description ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
       {children}
@@ -65,9 +70,10 @@ export interface QueueDialogFooterProps extends React.BaseHTMLAttributes<HTMLDiv
   children?: React.ReactNode;
 }
 
-export const QueueDialogFooter: React.ForwardRefExoticComponent<
+export const QueueDialogFooter = forwardRef<
+  HTMLDivElement,
   QueueDialogFooterProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <div ref={ref} {...props} className={clsx(styles.DialogFooter, className)}>
       {children}
@@ -75,9 +81,10 @@ export const QueueDialogFooter: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueDialogClose: React.ForwardRefExoticComponent<
+export const QueueDialogClose = forwardRef<
+  HTMLButtonElement,
   Dialog.DialogCloseProps & React.RefAttributes<HTMLButtonElement>
-> = forwardRef(({ children, ...props }, ref) => {
+>(({ children, ...props }, ref) => {
   return (
     <Dialog.Close ref={ref} {...props}>
       {children}

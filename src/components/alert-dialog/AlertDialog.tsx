@@ -6,13 +6,14 @@ import { QueueButtonProps } from 'components/button/Button';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
-export const QueueAlertDialogRoot: React.FC<AlertDialog.AlertDialogProps> = ({ children, ...props }) => {
+export const QueueAlertDialogRoot = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
   return <AlertDialog.Root {...props}>{children}</AlertDialog.Root>;
 };
 
-export const QueueAlertDialogTrigger: React.ForwardRefExoticComponent<
+export const QueueAlertDialogTrigger = React.forwardRef<
+  HTMLButtonElement,
   AlertDialog.AlertDialogTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <AlertDialog.Trigger ref={ref} {...props} className={clsx(className)}>
       {children}
@@ -20,13 +21,14 @@ export const QueueAlertDialogTrigger: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueAlertDialogPortal: React.FC<AlertDialog.AlertDialogPortalProps> = ({ children, ...props }) => {
+export const QueueAlertDialogPortal = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
   return <AlertDialog.Portal {...props}>{children}</AlertDialog.Portal>;
 };
 
-export const QueueAlertDialogOverlay: React.ForwardRefExoticComponent<
+export const QueueAlertDialogOverlay = React.forwardRef<
+  HTMLDivElement,
   AlertDialog.AlertDialogOverlayProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <AlertDialog.Overlay ref={ref} {...props} className={clsx(styles.AlertDialogOverlay, className)}>
       {children}
@@ -34,9 +36,10 @@ export const QueueAlertDialogOverlay: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueAlertDialogContent: React.ForwardRefExoticComponent<
+export const QueueAlertDialogContent = React.forwardRef<
+  HTMLDivElement,
   AlertDialog.AlertDialogContentProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <AlertDialog.Content ref={ref} {...props} className={clsx(styles.AlertDialogContent, className)}>
       {children}
@@ -44,39 +47,38 @@ export const QueueAlertDialogContent: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueAlertDialogAction: React.ForwardRefExoticComponent<
+export const QueueAlertDialogAction = React.forwardRef<
+  HTMLButtonElement,
   QueueButtonProps & AlertDialog.AlertDialogActionProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(
-  ({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
-    return (
-      <AlertDialog.Action
-        ref={ref}
-        {...props}
-        className={clsx(styles.AlertDialogAction, className, styles[size], styles[color])}>
-        {children}
-      </AlertDialog.Action>
-    );
-  },
-);
+>(({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
+  return (
+    <AlertDialog.Action
+      ref={ref}
+      {...props}
+      className={clsx(styles.AlertDialogAction, className, styles[size], styles[color])}>
+      {children}
+    </AlertDialog.Action>
+  );
+});
 
-export const QueueAlertDialogCancel: React.ForwardRefExoticComponent<
+export const QueueAlertDialogCancel = React.forwardRef<
+  HTMLButtonElement,
   QueueButtonProps & AlertDialog.AlertDialogCancelProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(
-  ({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
-    return (
-      <AlertDialog.Cancel
-        ref={ref}
-        {...props}
-        className={clsx(styles.AlertDialogCancel, className, styles[size], styles[color])}>
-        {children}
-      </AlertDialog.Cancel>
-    );
-  },
-);
+>(({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
+  return (
+    <AlertDialog.Cancel
+      ref={ref}
+      {...props}
+      className={clsx(styles.AlertDialogCancel, className, styles[size], styles[color])}>
+      {children}
+    </AlertDialog.Cancel>
+  );
+});
 
-export const QueueAlertDialogTitle: React.ForwardRefExoticComponent<
+export const QueueAlertDialogTitle = React.forwardRef<
+  HTMLHeadingElement,
   AlertDialog.AlertDialogTitleProps & React.RefAttributes<HTMLHeadingElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <AlertDialog.Title ref={ref} {...props} className={clsx(styles.AlertDialogTitle, className)}>
       {children}
@@ -84,9 +86,10 @@ export const QueueAlertDialogTitle: React.ForwardRefExoticComponent<
   );
 });
 
-export const QueueAlertDialogDescription: React.ForwardRefExoticComponent<
+export const QueueAlertDialogDescription = React.forwardRef<
+  HTMLParagraphElement,
   AlertDialog.AlertDialogDescriptionProps & React.RefAttributes<HTMLParagraphElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <AlertDialog.Description ref={ref} {...props} className={clsx(styles.AlertDialogDescription, className)}>
       {children}
@@ -98,9 +101,10 @@ export interface QueueAlertDialogFooterProps extends React.BaseHTMLAttributes<HT
   children?: React.ReactNode;
 }
 
-export const QueueAlertDialogFooter: React.ForwardRefExoticComponent<
+export const QueueAlertDialogFooter = forwardRef<
+  HTMLDivElement,
   QueueAlertDialogFooterProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <div ref={ref} {...props} className={clsx(styles.AlertDialogFooter, className)}>
       {children}
@@ -117,14 +121,14 @@ export interface QueueSimpleAlertDialogProps {
   onAction?: () => void;
 }
 
-export const QueueSimpleAlertDialog: React.FC<QueueSimpleAlertDialogProps> = ({
+export const QueueSimpleAlertDialog = ({
   title,
   description,
   opened = false,
   defaultOpen = false,
   onOpenChange,
   onAction,
-}) => {
+}: QueueSimpleAlertDialogProps) => {
   return (
     <QueueAlertDialog.Root open={opened} onOpenChange={onOpenChange} defaultOpen={defaultOpen}>
       <QueueAlertDialog.Overlay />

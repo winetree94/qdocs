@@ -3,18 +3,20 @@ import * as ScrollArea from '@radix-ui/react-scroll-area';
 import styles from './ScrollArea.module.scss';
 import clsx from 'clsx';
 
-export const Root: React.ForwardRefExoticComponent<ScrollArea.ScrollAreaProps & React.RefAttributes<HTMLDivElement>> =
-  React.forwardRef(({ className, children, ...props }, ref) => {
+export const Root = React.forwardRef<HTMLDivElement, ScrollArea.ScrollAreaProps & React.RefAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => {
     return (
       <ScrollArea.Root {...props} ref={ref} className={clsx(className, styles.ScrollAreaRoot)}>
         {children}
       </ScrollArea.Root>
     );
-  });
+  },
+);
 
-export const Viewport: React.ForwardRefExoticComponent<
+export const Viewport = React.forwardRef<
+  HTMLDivElement,
   ScrollArea.ScrollAreaViewportProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Viewport {...props} ref={ref} className={clsx(className, styles.ScrollAreaViewport)}>
       {children}
@@ -22,9 +24,10 @@ export const Viewport: React.ForwardRefExoticComponent<
   );
 });
 
-export const Scrollbar: React.ForwardRefExoticComponent<
+export const Scrollbar = React.forwardRef<
+  HTMLDivElement,
   ScrollArea.ScrollAreaScrollbarProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Scrollbar {...props} ref={ref} className={clsx(className, styles.ScrollAreaScrollbar)}>
       {children}
@@ -32,9 +35,10 @@ export const Scrollbar: React.ForwardRefExoticComponent<
   );
 });
 
-export const Thumb: React.ForwardRefExoticComponent<
+export const Thumb = React.forwardRef<
+  HTMLDivElement,
   ScrollArea.ScrollAreaThumbProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Thumb {...props} ref={ref} className={clsx(className, styles.ScrollAreaThumb)}>
       {children}
@@ -42,9 +46,10 @@ export const Thumb: React.ForwardRefExoticComponent<
   );
 });
 
-export const Corner: React.ForwardRefExoticComponent<
+export const Corner = React.forwardRef<
+  HTMLDivElement,
   ScrollArea.ScrollAreaCornerProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ className, children, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Corner {...props} ref={ref} className={clsx(className, styles.ScrollAreaCorner)}>
       {children}

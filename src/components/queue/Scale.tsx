@@ -4,6 +4,6 @@ export interface ScaleProps extends React.BaseHTMLAttributes<HTMLDivElement> {
   scale?: number;
 }
 
-export const Scale: React.FunctionComponent<ScaleProps> = ({ scale, ...props }) => {
+export const Scale = ({ scale, ...props }: ScaleProps) => {
   return <div {...props}></div>;
 };

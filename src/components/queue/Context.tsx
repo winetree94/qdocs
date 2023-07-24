@@ -11,9 +11,10 @@ import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
 import { deviceMetaKey } from 'cdk/device/meta';
 
-export const QueueObjectContextContent: React.ForwardRefExoticComponent<
+export const QueueObjectContextContent = forwardRef<
+  HTMLDivElement,
   ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
-> = forwardRef((_, ref) => {
+>((_, ref) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);

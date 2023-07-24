@@ -5,22 +5,24 @@ import { QueueButtonProps } from 'components/button/Button';
 import React from 'react';
 import styles from './Menubar.module.scss';
 
-export const Root: React.ForwardRefExoticComponent<Menubar.MenubarProps & React.RefAttributes<HTMLDivElement>> =
-  React.forwardRef(({ children, className, ...props }, ref) => {
+export const Root = React.forwardRef<HTMLDivElement, Menubar.MenubarProps & React.RefAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Root ref={ref} {...props} className={clsx(styles.MenubarRoot, className)}>
         {children}
       </Menubar.Root>
     );
-  });
+  },
+);
 
-export const Menu: React.FC<Menubar.ScopedProps<Menubar.MenubarMenuProps>> = ({ children, ...props }) => {
+export const Menu = ({ children, ...props }: Menubar.ScopedProps<Menubar.MenubarMenuProps>) => {
   return <Menubar.Menu {...props}>{children}</Menubar.Menu>;
 };
 
-export const Trigger: React.ForwardRefExoticComponent<
+export const Trigger = React.forwardRef<
+  HTMLButtonElement,
   QueueButtonProps & Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ children, size = 'medium', color = 'default', className, ...props }, ref) => {
+>(({ children, size = 'medium', color = 'default', className, ...props }, ref) => {
   return (
     <Menubar.Trigger
       ref={ref}
@@ -31,7 +33,7 @@ export const Trigger: React.ForwardRefExoticComponent<
   );
 });
 
-export const Portal: React.FC<Menubar.MenubarPortalProps> = ({ children, className, ...props }) => {
+export const Portal = ({ children, className, ...props }: Menubar.MenubarPortalProps) => {
   return (
     <Menubar.Portal {...props} className={clsx(styles.MenubarPortal, className)}>
       {children}
@@ -39,9 +41,10 @@ export const Portal: React.FC<Menubar.MenubarPortalProps> = ({ children, classNa
   );
 };
 
-export const Content: React.ForwardRefExoticComponent<
+export const Content = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarContentProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.Content ref={ref} {...props} className={clsx(styles.MenubarContent, className)}>
       {children}
@@ -49,36 +52,40 @@ export const Content: React.ForwardRefExoticComponent<
   );
 });
 
-export const Label: React.ForwardRefExoticComponent<Menubar.MenubarLabelProps & React.RefAttributes<HTMLDivElement>> =
-  React.forwardRef(({ children, className, ...props }, ref) => {
+export const Label = React.forwardRef<HTMLDivElement, Menubar.MenubarLabelProps & React.RefAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Label ref={ref} {...props} className={clsx(styles.MenubarLabel, className)}>
         {children}
       </Menubar.Label>
     );
-  });
+  },
+);
 
-export const Item: React.ForwardRefExoticComponent<Menubar.MenubarItemProps & React.RefAttributes<HTMLDivElement>> =
-  React.forwardRef(({ children, className, ...props }, ref) => {
+export const Item = React.forwardRef<HTMLDivElement, Menubar.MenubarItemProps & React.RefAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Item ref={ref} {...props} className={clsx(styles.MenubarItem, className)}>
         {children}
       </Menubar.Item>
     );
-  });
+  },
+);
 
-export const Group: React.ForwardRefExoticComponent<Menubar.MenubarGroupProps & React.RefAttributes<HTMLDivElement>> =
-  React.forwardRef(({ children, className, ...props }, ref) => {
+export const Group = React.forwardRef<HTMLDivElement, Menubar.MenubarGroupProps & React.RefAttributes<HTMLDivElement>>(
+  ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Group ref={ref} {...props} className={clsx(styles.MenubarGroup, className)}>
         {children}
       </Menubar.Group>
     );
-  });
+  },
+);
 
-export const CheckboxItem: React.ForwardRefExoticComponent<
+export const CheckboxItem = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarCheckboxItemProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.CheckboxItem ref={ref} {...props} className={clsx(styles.MenubarCheckboxItem, className)}>
       {children}
@@ -86,9 +93,10 @@ export const CheckboxItem: React.ForwardRefExoticComponent<
   );
 });
 
-export const ItemIndicator: React.ForwardRefExoticComponent<
+export const ItemIndicator = React.forwardRef<
+  HTMLSpanElement,
   Menubar.MenubarItemIndicatorProps & React.RefAttributes<HTMLSpanElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.ItemIndicator ref={ref} {...props} className={clsx(styles.MenubarItemIndicator, className)}>
       <CheckIcon />
@@ -97,9 +105,10 @@ export const ItemIndicator: React.ForwardRefExoticComponent<
   );
 });
 
-export const RadioGroup: React.ForwardRefExoticComponent<
+export const RadioGroup = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarRadioGroupProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.RadioGroup ref={ref} {...props} className={clsx(styles.MenubarRadioGroup, className)}>
       {children}
@@ -107,9 +116,10 @@ export const RadioGroup: React.ForwardRefExoticComponent<
   );
 });
 
-export const RadioItem: React.ForwardRefExoticComponent<
+export const RadioItem = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarRadioItemProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.RadioItem ref={ref} {...props} className={clsx(styles.MenubarRadioItem, className)}>
       {children}
@@ -117,7 +127,7 @@ export const RadioItem: React.ForwardRefExoticComponent<
   );
 });
 
-export const Sub: React.FC<Menubar.MenubarSubProps> = ({ children, ...props }) => {
+export const Sub = ({ children, ...props }: Menubar.MenubarSubProps & React.RefAttributes<HTMLDivElement>) => {
   return <Menubar.Sub {...props}>{children}</Menubar.Sub>;
 };
 
@@ -131,9 +141,10 @@ const RightSlot = React.forwardRef<HTMLDivElement, React.BaseHTMLAttributes<HTML
   },
 );
 
-export const SubTrigger: React.ForwardRefExoticComponent<
+export const SubTrigger = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarSubTriggerProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.SubTrigger ref={ref} {...props} className={clsx(styles.MenubarSubTrigger, className)}>
       {children}
@@ -141,9 +152,10 @@ export const SubTrigger: React.ForwardRefExoticComponent<
   );
 });
 
-export const SubContent: React.ForwardRefExoticComponent<
+export const SubContent = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarSubContentProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.SubContent ref={ref} {...props} className={clsx(styles.MenubarSubContent, className)}>
       {children}
@@ -151,9 +163,10 @@ export const SubContent: React.ForwardRefExoticComponent<
   );
 });
 
-export const Separator: React.ForwardRefExoticComponent<
+export const Separator = React.forwardRef<
+  HTMLDivElement,
   Menubar.MenubarSeparatorProps & React.RefAttributes<HTMLDivElement>
-> = React.forwardRef(({ children, className, ...props }, ref) => {
+>(({ children, className, ...props }, ref) => {
   return (
     <Menubar.Separator ref={ref} {...props} className={clsx(styles.MenubarSeparator, className)}>
       {children}
@@ -161,14 +174,15 @@ export const Separator: React.ForwardRefExoticComponent<
   );
 });
 
-export const Arrow: React.ForwardRefExoticComponent<Menubar.MenubarArrowProps & React.RefAttributes<SVGSVGElement>> =
-  React.forwardRef(({ children, className, ...props }, ref) => {
+export const Arrow = React.forwardRef<SVGSVGElement, Menubar.MenubarArrowProps & React.RefAttributes<SVGSVGElement>>(
+  ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Arrow ref={ref} {...props} className={clsx(styles.MenubarArrow, className)}>
         {children}
       </Menubar.Arrow>
     );
-  });
+  },
+);
 
 export const QueueMenubar = {
   Root,
