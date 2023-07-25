@@ -265,7 +265,7 @@ export const RootLayout = () => {
           <div className={clsx(styles.Right)}>
             <QueueEditor />
             {!settings.presentationMode && (
-              <PanelResizer.Panel className="tw-w-full" height={200} minHeight={30}>
+              <PanelResizer.Panel className="tw-w-full tw-bg-gray-100 tw-px-[10px]" height={200} minHeight={30}>
                 <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
                 <BottomPanel />
               </PanelResizer.Panel>
