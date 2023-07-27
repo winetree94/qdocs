@@ -40,8 +40,10 @@ self.onmessage = (event: MessageEvent<File>) => {
 
     self.postMessage({
       status: IMAGE_ENCODING_STATUS.ENCODED,
-      base64DataURL: `data:${imageType};base64,${base64Data}`,
-      fileName,
+      imageData: {
+        src: `data:${imageType};base64,${base64Data}`,
+        fileName,
+      },
     });
   });
 
