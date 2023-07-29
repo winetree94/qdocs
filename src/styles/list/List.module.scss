@@ -1,4 +1,5 @@
 @mixin list-item {
+  box-sizing: border-box;
   font-size: 13px;
   line-height: 1;
   color: var(--gray-12);
@@ -6,9 +7,8 @@
   display: flex;
   align-items: center;
   height: 25px;
-  padding: 0 5px;
+  padding: 5px 25px;
   position: relative;
-  padding-left: 25px;
   user-select: none;
   outline: none;
 }
@@ -29,7 +29,6 @@
   margin: 5px;
 }
 
-
 @mixin list-item-right-slot {
   margin-left: auto;
   padding-left: 20px;
@@ -47,4 +46,31 @@
     margin-left: auto;
     padding-left: 20px;
   }
+}
+
+@mixin list-item-indicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin list-group-label {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  font-size: 12px;
+  box-sizing: border-box;
+  padding: 5px 25px;
+  color: var(--gray-10);
+}
+
+@mixin list-scroll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  cursor: default;
 }

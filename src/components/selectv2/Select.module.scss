@@ -1,0 +1,77 @@
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/violet.css';
+@import 'styles/popover/Popover.module.scss';
+@import 'styles/list/List.module.scss';
+@import 'components/button/Button.module.scss';
+
+button {
+  all: unset;
+}
+
+.SelectTrigger {
+  // base
+  @include queue-button-base;
+
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-button-color-default;
+  @include queue-button-color-blue;
+  @include queue-button-color-red;
+  @apply tw-justify-between;
+  gap: 4px;
+}
+
+.SelectTrigger:hover {
+  background-color: var(--mauve-3);
+}
+
+.SelectTrigger:focus {
+  box-shadow: 0 0 0 2px var(--mauve-12);
+}
+
+.SelectTrigger[data-placeholder] {
+  color: var(--mauve-9);
+}
+
+.SelectIcon {
+  color: var(--mauve-12);
+}
+
+.SelectContent {
+  @include popover;
+}
+
+.SelectGroupLabel {
+  @include list-group-label;
+}
+
+.SelectItem {
+  @include list-item;
+}
+
+.SelectItem[data-disabled] {
+  @include list-item-disabled;
+}
+
+.SelectItem[data-highlighted] {
+  @include list-item-hover;
+}
+
+.SelectItemIndicator {
+  @include list-item-indicator;
+}
+
+.SelectSeparator {
+  @include list-separator;
+}
+
+.SelectScrollButton {
+  @include list-scroll-button;
+}
