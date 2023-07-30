@@ -13,7 +13,7 @@ import { deviceMetaKey } from 'cdk/device/meta';
 
 export const QueueObjectContextContent = forwardRef<
   HTMLDivElement,
-  ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
+  ContextMenuContentProps
 >((_, ref) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();

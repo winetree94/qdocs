@@ -10,7 +10,7 @@ export const Root = ({ children, ...props }: Select.SelectProps) => {
 
 export const Trigger = React.forwardRef<
   HTMLButtonElement,
-  Select.SelectTriggerProps & React.RefAttributes<HTMLButtonElement>
+  Select.SelectTriggerProps
 >(({ children, className, ...props }, forwardedRef) => {
   return (
     <Select.Trigger {...props} ref={forwardedRef} className={clsx(className, styles.SelectTrigger)}>
@@ -19,7 +19,7 @@ export const Trigger = React.forwardRef<
   );
 });
 
-export const Value = React.forwardRef<HTMLDivElement, Select.SelectValueProps & React.RefAttributes<HTMLButtonElement>>(
+export const Value = React.forwardRef<HTMLDivElement, Select.SelectValueProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Value {...props} ref={forwardedRef} className={clsx(className, styles.SelectValue)}>
@@ -29,7 +29,7 @@ export const Value = React.forwardRef<HTMLDivElement, Select.SelectValueProps & 
   },
 );
 
-export const Icon = React.forwardRef<HTMLDivElement, Select.SelectIconProps & React.RefAttributes<HTMLDivElement>>(
+export const Icon = React.forwardRef<HTMLDivElement, Select.SelectIconProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Icon {...props} ref={forwardedRef} className={clsx(className, styles.SelectIcon)}>
@@ -39,13 +39,13 @@ export const Icon = React.forwardRef<HTMLDivElement, Select.SelectIconProps & Re
   },
 );
 
-export const Portal = ({ children, ...props }: Select.SelectPortalProps & React.RefAttributes<HTMLDivElement>) => {
+export const Portal = ({ children, ...props }: Select.SelectPortalProps) => {
   return <Select.Portal {...props}>{children}</Select.Portal>;
 };
 
 export const Content = React.forwardRef<
   HTMLDivElement,
-  Select.SelectContentProps & React.RefAttributes<HTMLDivElement>
+  Select.SelectContentProps
 >(({ children, className, ...props }, forwardedRef) => {
   return (
     <Select.Content {...props} ref={forwardedRef} className={clsx(className, styles.SelectContent)}>
@@ -56,7 +56,7 @@ export const Content = React.forwardRef<
 
 export const ScrollUpButton = React.forwardRef<
   HTMLDivElement,
-  Select.SelectScrollUpButtonProps & React.RefAttributes<HTMLDivElement>
+  Select.SelectScrollUpButtonProps
 >(({ children, className, ...props }, forwardedRef) => {
   return (
     <Select.ScrollUpButton {...props} ref={forwardedRef} className={clsx(className, styles.SelectScrollButton)}>
@@ -67,7 +67,7 @@ export const ScrollUpButton = React.forwardRef<
 
 export const ScrollDownButton = React.forwardRef<
   HTMLDivElement,
-  Select.SelectScrollDownButtonProps & React.RefAttributes<HTMLDivElement>
+  Select.SelectScrollDownButtonProps
 >(({ children, className, ...props }, forwardedRef) => {
   return (
     <Select.ScrollDownButton {...props} ref={forwardedRef} className={clsx(className, styles.SelectScrollButton)}>
@@ -78,7 +78,7 @@ export const ScrollDownButton = React.forwardRef<
 
 export const Viewport = React.forwardRef<
   HTMLDivElement,
-  Select.SelectViewportProps & React.RefAttributes<HTMLDivElement>
+  Select.SelectViewportProps
 >(({ children, className, ...props }, forwardedRef) => {
   return (
     <Select.Viewport {...props} ref={forwardedRef} className={clsx(className, styles.SelectViewport)}>
@@ -87,7 +87,7 @@ export const Viewport = React.forwardRef<
   );
 });
 
-export const Group = React.forwardRef<HTMLDivElement, Select.SelectGroupProps & React.RefAttributes<HTMLDivElement>>(
+export const Group = React.forwardRef<HTMLDivElement, Select.SelectGroupProps>(
   ({ children, ...props }, forwardedRef) => {
     return (
       <Select.Group {...props} ref={forwardedRef}>
@@ -97,7 +97,7 @@ export const Group = React.forwardRef<HTMLDivElement, Select.SelectGroupProps & 
   },
 );
 
-export const Label = React.forwardRef<HTMLDivElement, Select.SelectLabelProps & React.RefAttributes<HTMLDivElement>>(
+export const Label = React.forwardRef<HTMLDivElement, Select.SelectLabelProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Label {...props} ref={forwardedRef} className={clsx(className, styles.SelectLabel)}>
@@ -107,7 +107,7 @@ export const Label = React.forwardRef<HTMLDivElement, Select.SelectLabelProps & 
   },
 );
 
-export const Item = React.forwardRef<HTMLDivElement, Select.SelectItemProps & React.RefAttributes<HTMLDivElement>>(
+export const Item = React.forwardRef<HTMLDivElement, Select.SelectItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Item className={clsx(className, styles.SelectItem)} {...props} ref={forwardedRef}>
@@ -120,7 +120,7 @@ export const Item = React.forwardRef<HTMLDivElement, Select.SelectItemProps & Re
   },
 );
 
-export const Separator = React.forwardRef<HTMLDivElement, Select.SelectItemProps & React.RefAttributes<HTMLDivElement>>(
+export const Separator = React.forwardRef<HTMLDivElement, Select.SelectItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Separator {...props} ref={forwardedRef} className={clsx(className, styles.SelectSeparator)}>

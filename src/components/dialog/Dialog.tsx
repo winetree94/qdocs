@@ -1,68 +1,68 @@
 import React, { forwardRef } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
+import * as RadixDialog from '@radix-ui/react-dialog';
 import styles from './Dialog.module.scss';
 import clsx from 'clsx';
 
-export const QueueDialogRoot = ({ children, ...props }: Dialog.DialogProps) => {
-  return <Dialog.Root {...props}>{children}</Dialog.Root>;
+export const QueueDialogRoot = ({ children, ...props }: RadixDialog.DialogProps) => {
+  return <RadixDialog.Root {...props}>{children}</RadixDialog.Root>;
 };
 
 export const QueueDialogTrigger = forwardRef<
   HTMLButtonElement,
-  Dialog.DialogTriggerProps & React.RefAttributes<HTMLButtonElement>
+  RadixDialog.DialogTriggerProps
 >(({ children, ...props }, ref) => {
   return (
-    <Dialog.Trigger ref={ref} {...props}>
+    <RadixDialog.Trigger ref={ref} {...props}>
       {children}
-    </Dialog.Trigger>
+    </RadixDialog.Trigger>
   );
 });
 
-export const QueueDialogPortal = ({ children, ...props }: Dialog.DialogPortalProps) => {
-  return <Dialog.Portal {...props}>{children}</Dialog.Portal>;
+export const QueueDialogPortal = ({ children, ...props }: RadixDialog.DialogPortalProps) => {
+  return <RadixDialog.Portal {...props}>{children}</RadixDialog.Portal>;
 };
 
 export const QueueDialogOverlay = forwardRef<
   HTMLDivElement,
-  Dialog.DialogOverlayProps & React.RefAttributes<HTMLDivElement>
+  RadixDialog.DialogOverlayProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Overlay ref={ref} {...props} className={clsx(styles.DialogOverlay, className)}>
+    <RadixDialog.Overlay ref={ref} {...props} className={clsx(styles.DialogOverlay, className)}>
       {children}
-    </Dialog.Overlay>
+    </RadixDialog.Overlay>
   );
 });
 
 export const QueueDialogContent = forwardRef<
   HTMLDivElement,
-  Dialog.DialogContentProps & React.RefAttributes<HTMLDivElement>
+  RadixDialog.DialogContentProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Content ref={ref} {...props} className={clsx(styles.DialogContent, className)}>
+    <RadixDialog.Content ref={ref} {...props} className={clsx(styles.DialogContent, className)}>
       {children}
-    </Dialog.Content>
+    </RadixDialog.Content>
   );
 });
 
 export const QueueDialogTitle = forwardRef<
   HTMLHeadingElement,
-  Dialog.DialogTitleProps & React.RefAttributes<HTMLHeadingElement>
+  RadixDialog.DialogTitleProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Title ref={ref} {...props} className={clsx(styles.DialogTitle, className)}>
+    <RadixDialog.Title ref={ref} {...props} className={clsx(styles.DialogTitle, className)}>
       {children}
-    </Dialog.Title>
+    </RadixDialog.Title>
   );
 });
 
 export const QueueDialogDescription = forwardRef<
   HTMLParagraphElement,
-  Dialog.DialogDescriptionProps & React.RefAttributes<HTMLParagraphElement>
+  RadixDialog.DialogDescriptionProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Description ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
+    <RadixDialog.Description ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
       {children}
-    </Dialog.Description>
+    </RadixDialog.Description>
   );
 });
 
@@ -72,7 +72,7 @@ export interface QueueDialogFooterProps extends React.BaseHTMLAttributes<HTMLDiv
 
 export const QueueDialogFooter = forwardRef<
   HTMLDivElement,
-  QueueDialogFooterProps & React.RefAttributes<HTMLDivElement>
+  QueueDialogFooterProps
 >(({ children, className, ...props }, ref) => {
   return (
     <div ref={ref} {...props} className={clsx(styles.DialogFooter, className)}>
@@ -83,12 +83,12 @@ export const QueueDialogFooter = forwardRef<
 
 export const QueueDialogClose = forwardRef<
   HTMLButtonElement,
-  Dialog.DialogCloseProps & React.RefAttributes<HTMLButtonElement>
+  RadixDialog.DialogCloseProps
 >(({ children, ...props }, ref) => {
   return (
-    <Dialog.Close ref={ref} {...props}>
+    <RadixDialog.Close ref={ref} {...props}>
       {children}
-    </Dialog.Close>
+    </RadixDialog.Close>
   );
 });
 

@@ -13,7 +13,7 @@ import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
 import { SettingsActions, SettingSelectors } from 'store/settings';
 import styles from './EditorContext.module.scss';
 
-export const EditorContext = forwardRef<HTMLDivElement, ContextMenuContentProps & React.RefAttributes<HTMLDivElement>>(
+export const EditorContext = forwardRef<HTMLDivElement, ContextMenuContentProps> (
   (_, ref) => {
     const { t } = useTranslation();
     const dispatch = useAppDispatch();

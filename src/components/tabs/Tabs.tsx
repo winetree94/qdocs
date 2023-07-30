@@ -3,7 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import styles from './Tabs.module.scss';
 import clsx from 'clsx';
 
-export const Root = forwardRef<HTMLDivElement, Tabs.TabsProps & React.RefAttributes<HTMLDivElement>>(
+export const Root = forwardRef<HTMLDivElement, Tabs.TabsProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <Tabs.Root ref={ref} {...props} className={clsx(styles.TabsRoot, className)}>
@@ -13,7 +13,7 @@ export const Root = forwardRef<HTMLDivElement, Tabs.TabsProps & React.RefAttribu
   },
 );
 
-export const List = forwardRef<HTMLDivElement, Tabs.TabsListProps & React.RefAttributes<HTMLDivElement>>(
+export const List = forwardRef<HTMLDivElement, Tabs.TabsListProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <Tabs.List ref={ref} {...props} className={clsx(styles.TabsList, className)}>
@@ -23,7 +23,7 @@ export const List = forwardRef<HTMLDivElement, Tabs.TabsListProps & React.RefAtt
   },
 );
 
-export const Trigger = forwardRef<HTMLButtonElement, Tabs.TabsTriggerProps & React.RefAttributes<HTMLButtonElement>>(
+export const Trigger = forwardRef<HTMLButtonElement, Tabs.TabsTriggerProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <Tabs.Trigger ref={ref} {...props} className={clsx(styles.TabsTrigger, className)}>
@@ -33,7 +33,7 @@ export const Trigger = forwardRef<HTMLButtonElement, Tabs.TabsTriggerProps & Rea
   },
 );
 
-export const Content = forwardRef<HTMLDivElement, Tabs.TabsContentProps & React.RefAttributes<HTMLDivElement>>(
+export const Content = forwardRef<HTMLDivElement, Tabs.TabsContentProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <Tabs.Content ref={ref} {...props} className={clsx(styles.TabsContent, className)}>

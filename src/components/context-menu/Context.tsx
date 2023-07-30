@@ -9,7 +9,7 @@ export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({ children
 
 export const Trigger = forwardRef<
   HTMLSpanElement,
-  ContextMenu.ContextMenuTriggerProps & React.RefAttributes<HTMLSpanElement>
+  ContextMenu.ContextMenuTriggerProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Trigger {...props} ref={ref}>
@@ -24,7 +24,7 @@ export const Portal = ({ children, ...props }: ContextMenu.ContextMenuPortalProp
 
 export const Content = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuContentProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuContentProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Content {...props} className={clsx(styles.ContextMenuContent, props.className)} ref={ref}>
@@ -33,7 +33,7 @@ export const Content = forwardRef<
   );
 });
 
-export const Item = forwardRef<HTMLDivElement, ContextMenu.ContextMenuItemProps & React.RefAttributes<HTMLDivElement>>(
+export const Item = forwardRef<HTMLDivElement, ContextMenu.ContextMenuItemProps>(
   ({ children, ...props }, ref) => {
     return (
       <ContextMenu.Item {...props} className={clsx(styles.ContextMenuItem, props.className)} ref={ref}>
@@ -45,7 +45,7 @@ export const Item = forwardRef<HTMLDivElement, ContextMenu.ContextMenuItemProps 
 
 export const CheckboxItem = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuCheckboxItemProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuCheckboxItemProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.CheckboxItem {...props} className={clsx(styles.ContextMenuCheckboxItem, props.className)} ref={ref}>
@@ -56,7 +56,7 @@ export const CheckboxItem = forwardRef<
 
 export const RadioGroup = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuRadioGroupProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuRadioGroupProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.RadioGroup {...props} ref={ref}>
@@ -67,7 +67,7 @@ export const RadioGroup = forwardRef<
 
 export const RadioItem = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuRadioItemProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuRadioItemProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.RadioItem {...props} className={clsx(styles.ContextMenuRadioItem, props.className)} ref={ref}>
@@ -78,7 +78,7 @@ export const RadioItem = forwardRef<
 
 export const Separator = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuSeparatorProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuSeparatorProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.Separator {...props} className={clsx(styles.ContextMenuSeparator, props.className)} ref={ref}>
@@ -93,7 +93,7 @@ export const MenuSub = ({ children, ...props }: ContextMenu.ContextMenuSubProps)
 
 export const SubTrigger = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuSubTriggerProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuSubTriggerProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.SubTrigger {...props} className={clsx(styles.ContextMenuSubTrigger, props.className)} ref={ref}>
@@ -104,7 +104,7 @@ export const SubTrigger = forwardRef<
 
 export const SubContent = forwardRef<
   HTMLDivElement,
-  ContextMenu.ContextMenuSubContentProps & React.RefAttributes<HTMLDivElement>
+  ContextMenu.ContextMenuSubContentProps
 >(({ children, ...props }, ref) => {
   return (
     <ContextMenu.SubContent {...props} className={clsx(styles.ContextMenuSubContent, props.className)} ref={ref}>

@@ -8,7 +8,7 @@ import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
 export const QueueToggleRoot = forwardRef<
   HTMLButtonElement,
-  QueueButtonProps & Toggle.ToggleProps & React.RefAttributes<HTMLButtonElement>
+  QueueButtonProps & Toggle.ToggleProps
 >(({ children, className, color = QUEUE_UI_COLOR.DEFAULT, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
   return (
     <Toggle.Root ref={ref} {...props} className={clsx(styles.Toggle, className, styles[color], styles[size])}>

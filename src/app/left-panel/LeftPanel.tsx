@@ -26,7 +26,7 @@ export const LeftPanel: FunctionComponent = () => {
             <QueueTabs.Trigger value={PanelTabType.Styler}>Effects</QueueTabs.Trigger>
             <QueueTabs.Trigger value={PanelTabType.DefaultProp}>Default</QueueTabs.Trigger>
           </QueueTabs.List>
-          <QueueTabs.Content className="tw-h-full overflow-hidden" value={PanelTabType.Styler}>
+          <QueueTabs.Content className="tw-h-full tw-overflow-hidden" value={PanelTabType.Styler}>
             <QueueScrollArea.Root className="tw-h-full">
               <QueueScrollArea.Viewport>
                 <EffectControllerBox />

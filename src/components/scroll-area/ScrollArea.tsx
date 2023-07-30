@@ -3,7 +3,7 @@ import * as ScrollArea from '@radix-ui/react-scroll-area';
 import styles from './ScrollArea.module.scss';
 import clsx from 'clsx';
 
-export const Root = React.forwardRef<HTMLDivElement, ScrollArea.ScrollAreaProps & React.RefAttributes<HTMLDivElement>>(
+export const Root = React.forwardRef<HTMLDivElement, ScrollArea.ScrollAreaProps>(
   ({ className, children, ...props }, ref) => {
     return (
       <ScrollArea.Root {...props} ref={ref} className={clsx(className, styles.ScrollAreaRoot)}>
@@ -15,7 +15,7 @@ export const Root = React.forwardRef<HTMLDivElement, ScrollArea.ScrollAreaProps 
 
 export const Viewport = React.forwardRef<
   HTMLDivElement,
-  ScrollArea.ScrollAreaViewportProps & React.RefAttributes<HTMLDivElement>
+  ScrollArea.ScrollAreaViewportProps
 >(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Viewport {...props} ref={ref} className={clsx(className, styles.ScrollAreaViewport)}>
@@ -26,7 +26,7 @@ export const Viewport = React.forwardRef<
 
 export const Scrollbar = React.forwardRef<
   HTMLDivElement,
-  ScrollArea.ScrollAreaScrollbarProps & React.RefAttributes<HTMLDivElement>
+  ScrollArea.ScrollAreaScrollbarProps
 >(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Scrollbar {...props} ref={ref} className={clsx(className, styles.ScrollAreaScrollbar)}>
@@ -37,7 +37,7 @@ export const Scrollbar = React.forwardRef<
 
 export const Thumb = React.forwardRef<
   HTMLDivElement,
-  ScrollArea.ScrollAreaThumbProps & React.RefAttributes<HTMLDivElement>
+  ScrollArea.ScrollAreaThumbProps
 >(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Thumb {...props} ref={ref} className={clsx(className, styles.ScrollAreaThumb)}>
@@ -48,7 +48,7 @@ export const Thumb = React.forwardRef<
 
 export const Corner = React.forwardRef<
   HTMLDivElement,
-  ScrollArea.ScrollAreaCornerProps & React.RefAttributes<HTMLDivElement>
+  ScrollArea.ScrollAreaCornerProps
 >(({ className, children, ...props }, ref) => {
   return (
     <ScrollArea.Corner {...props} ref={ref} className={clsx(className, styles.ScrollAreaCorner)}>

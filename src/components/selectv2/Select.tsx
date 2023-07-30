@@ -88,7 +88,7 @@ const Root = ({ children, size = QUEUE_UI_SIZE.MEDIUM, placeholder, ...props }: 
 /**
  * Group === Group & Label
  */
-const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps & React.RefAttributes<HTMLDivElement>>(
+const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps>(
   ({ children, label, ...props }, forwardedRef) => {
     return (
       <Select.Group {...props} ref={forwardedRef}>
@@ -102,7 +102,7 @@ const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps & React.RefAttrib
 /**
  * Option === Item & ItemIndicator & ItemText
  */
-const Option = forwardRef<HTMLDivElement, Select.SelectItemProps & React.RefAttributes<HTMLDivElement>>(
+const Option = forwardRef<HTMLDivElement, Select.SelectItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Select.Item className={clsx(styles.SelectItem, className)} {...props} ref={forwardedRef}>
@@ -115,7 +115,7 @@ const Option = forwardRef<HTMLDivElement, Select.SelectItemProps & React.RefAttr
   },
 );
 
-const Separator = forwardRef<HTMLDivElement, Select.SelectSeparatorProps & React.RefAttributes<HTMLDivElement>>(
+const Separator = forwardRef<HTMLDivElement, Select.SelectSeparatorProps>(
   ({ className, ...props }) => {
     return <Select.Separator className={clsx(styles.SelectSeparator, className)} {...props} />;
   },

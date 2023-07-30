@@ -15,7 +15,7 @@ export interface QueueIconButtonProps extends BaseQueueButtonProps {}
 
 export const QueueIconButton = forwardRef<
   HTMLButtonElement,
-  QueueIconButtonProps & React.RefAttributes<HTMLButtonElement>
+  QueueIconButtonProps
 >(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
   return (
     <button
@@ -31,7 +31,7 @@ export const QueueIconButton = forwardRef<
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface QueueButtonProps extends BaseQueueButtonProps {}
 
-export const QueueButton = forwardRef<HTMLButtonElement, QueueButtonProps & React.RefAttributes<HTMLButtonElement>>(
+export const QueueButton = forwardRef<HTMLButtonElement, QueueButtonProps>(
   ({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, disabled, ...props }, ref) => {
     return (
       <button

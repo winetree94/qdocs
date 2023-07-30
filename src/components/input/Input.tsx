@@ -8,7 +8,7 @@ export interface QueueInputProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   type?: 'text' | 'password' | 'email' | 'number';
 }
 
-export const QueueInput = forwardRef<HTMLInputElement, QueueInputProps & React.RefAttributes<HTMLInputElement>>(
+export const QueueInput = forwardRef<HTMLInputElement, QueueInputProps> (
   ({ className, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
     return <input ref={ref} {...props} className={clsx(styles.input, styles[size], className)} />;
   },

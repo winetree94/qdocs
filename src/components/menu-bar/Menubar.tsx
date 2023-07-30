@@ -3,9 +3,11 @@ import * as Menubar from '@radix-ui/react-menubar';
 import clsx from 'clsx';
 import { QueueButtonProps } from 'components/button/Button';
 import React from 'react';
+import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import styles from './Menubar.module.scss';
 
-export const Root = React.forwardRef<HTMLDivElement, Menubar.MenubarProps & React.RefAttributes<HTMLDivElement>>(
+export const Root = React.forwardRef<HTMLDivElement, Menubar.MenubarProps> (
   ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Root ref={ref} {...props} className={clsx(styles.MenubarRoot, className)}>
@@ -21,8 +23,8 @@ export const Menu = ({ children, ...props }: Menubar.ScopedProps<Menubar.Menubar
 
 export const Trigger = React.forwardRef<
   HTMLButtonElement,
-  QueueButtonProps & Menubar.MenubarTriggerProps & React.RefAttributes<HTMLButtonElement>
->(({ children, size = 'medium', color = 'default', className, ...props }, ref) => {
+  QueueButtonProps & Menubar.MenubarTriggerProps
+>(({ children, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, className, ...props }, ref) => {
   return (
     <Menubar.Trigger
       ref={ref}
@@ -35,7 +37,7 @@ export const Trigger = React.forwardRef<
 
 export const Portal = ({ children, className, ...props }: Menubar.MenubarPortalProps) => {
   return (
-    <Menubar.Portal {...props} className={clsx(styles.MenubarPortal, className)}>
+    <Menubar.Portal {...props} className={clsx(className)}>
       {children}
     </Menubar.Portal>
   );
@@ -43,7 +45,7 @@ export const Portal = ({ children, className, ...props }: Menubar.MenubarPortalP
 
 export const Content = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarContentProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarContentProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.Content ref={ref} {...props} className={clsx(styles.MenubarContent, className)}>
@@ -52,17 +54,17 @@ export const Content = React.forwardRef<
   );
 });
 
-export const Label = React.forwardRef<HTMLDivElement, Menubar.MenubarLabelProps & React.RefAttributes<HTMLDivElement>>(
+export const Label = React.forwardRef<HTMLDivElement, Menubar.MenubarLabelProps> (
   ({ children, className, ...props }, ref) => {
     return (
-      <Menubar.Label ref={ref} {...props} className={clsx(styles.MenubarLabel, className)}>
+      <Menubar.Label ref={ref} {...props} className={clsx(className)}>
         {children}
       </Menubar.Label>
     );
   },
 );
 
-export const Item = React.forwardRef<HTMLDivElement, Menubar.MenubarItemProps & React.RefAttributes<HTMLDivElement>>(
+export const Item = React.forwardRef<HTMLDivElement, Menubar.MenubarItemProps> (
   ({ children, className, ...props }, ref) => {
     return (
       <Menubar.Item ref={ref} {...props} className={clsx(styles.MenubarItem, className)}>
@@ -72,10 +74,10 @@ export const Item = React.forwardRef<HTMLDivElement, Menubar.MenubarItemProps & 
   },
 );
 
-export const Group = React.forwardRef<HTMLDivElement, Menubar.MenubarGroupProps & React.RefAttributes<HTMLDivElement>>(
+export const Group = React.forwardRef<HTMLDivElement, Menubar.MenubarGroupProps> (
   ({ children, className, ...props }, ref) => {
     return (
-      <Menubar.Group ref={ref} {...props} className={clsx(styles.MenubarGroup, className)}>
+      <Menubar.Group ref={ref} {...props} className={clsx(className)}>
         {children}
       </Menubar.Group>
     );
@@ -84,7 +86,7 @@ export const Group = React.forwardRef<HTMLDivElement, Menubar.MenubarGroupProps 
 
 export const CheckboxItem = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarCheckboxItemProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarCheckboxItemProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.CheckboxItem ref={ref} {...props} className={clsx(styles.MenubarCheckboxItem, className)}>
@@ -95,7 +97,7 @@ export const CheckboxItem = React.forwardRef<
 
 export const ItemIndicator = React.forwardRef<
   HTMLSpanElement,
-  Menubar.MenubarItemIndicatorProps & React.RefAttributes<HTMLSpanElement>
+  Menubar.MenubarItemIndicatorProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.ItemIndicator ref={ref} {...props} className={clsx(styles.MenubarItemIndicator, className)}>
@@ -107,10 +109,10 @@ export const ItemIndicator = React.forwardRef<
 
 export const RadioGroup = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarRadioGroupProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarRadioGroupProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Menubar.RadioGroup ref={ref} {...props} className={clsx(styles.MenubarRadioGroup, className)}>
+    <Menubar.RadioGroup ref={ref} {...props} className={clsx(className)}>
       {children}
     </Menubar.RadioGroup>
   );
@@ -118,7 +120,7 @@ export const RadioGroup = React.forwardRef<
 
 export const RadioItem = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarRadioItemProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarRadioItemProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.RadioItem ref={ref} {...props} className={clsx(styles.MenubarRadioItem, className)}>
@@ -127,7 +129,7 @@ export const RadioItem = React.forwardRef<
   );
 });
 
-export const Sub = ({ children, ...props }: Menubar.MenubarSubProps & React.RefAttributes<HTMLDivElement>) => {
+export const Sub = ({ children, ...props }: Menubar.MenubarSubProps) => {
   return <Menubar.Sub {...props}>{children}</Menubar.Sub>;
 };
 
@@ -143,7 +145,7 @@ const RightSlot = React.forwardRef<HTMLDivElement, React.BaseHTMLAttributes<HTML
 
 export const SubTrigger = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarSubTriggerProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarSubTriggerProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.SubTrigger ref={ref} {...props} className={clsx(styles.MenubarSubTrigger, className)}>
@@ -154,7 +156,7 @@ export const SubTrigger = React.forwardRef<
 
 export const SubContent = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarSubContentProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarSubContentProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.SubContent ref={ref} {...props} className={clsx(styles.MenubarSubContent, className)}>
@@ -165,7 +167,7 @@ export const SubContent = React.forwardRef<
 
 export const Separator = React.forwardRef<
   HTMLDivElement,
-  Menubar.MenubarSeparatorProps & React.RefAttributes<HTMLDivElement>
+  Menubar.MenubarSeparatorProps
 >(({ children, className, ...props }, ref) => {
   return (
     <Menubar.Separator ref={ref} {...props} className={clsx(styles.MenubarSeparator, className)}>
@@ -174,10 +176,10 @@ export const Separator = React.forwardRef<
   );
 });
 
-export const Arrow = React.forwardRef<SVGSVGElement, Menubar.MenubarArrowProps & React.RefAttributes<SVGSVGElement>>(
+export const Arrow = React.forwardRef<SVGSVGElement, Menubar.MenubarArrowProps> (
   ({ children, className, ...props }, ref) => {
     return (
-      <Menubar.Arrow ref={ref} {...props} className={clsx(styles.MenubarArrow, className)}>
+      <Menubar.Arrow ref={ref} {...props} className={clsx(className)}>
         {children}
       </Menubar.Arrow>
     );

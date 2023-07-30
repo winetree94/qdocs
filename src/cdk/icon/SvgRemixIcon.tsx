@@ -10,7 +10,7 @@ export interface SvgRemixIconProps extends Omit<React.SVGProps<SVGSVGElement>, '
   size?: QUEUE_UI_SIZES;
 }
 
-export const SvgRemixIcon = forwardRef<SVGSVGElement, SvgRemixIconProps & React.RefAttributes<SVGSVGElement>>(
+export const SvgRemixIcon = forwardRef<SVGSVGElement, SvgRemixIconProps>(
   ({ icon, className, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
     return (
       <svg ref={ref} {...props} className={clsx(styles.SvgRemixIcon, styles[size], className)}>

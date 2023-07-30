@@ -25,7 +25,7 @@ export const QueueToogleGroupRoot = forwardRef<
 
 export const QueueToggleGroupItem = forwardRef<
   HTMLButtonElement,
-  QueueButtonProps & ToggleGroup.ToggleGroupItemProps & React.RefAttributes<HTMLButtonElement>
+  QueueButtonProps & ToggleGroup.ToggleGroupItemProps
 >(({ children, className, color = QUEUE_UI_COLOR.DEFAULT, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
   return (
     <ToggleGroup.Item
