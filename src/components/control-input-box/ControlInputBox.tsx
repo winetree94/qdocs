@@ -27,10 +27,10 @@ export interface QueueControlInputBoxAllProps {
   unit?: QueueControlInputBoxUnitType;
 }
 
-const setInitValue = (props: QueueControlInputBoxAllProps) => {
-  const init = {...props};
-  console.log(init);
-};
+// const setInitValue = (props: QueueControlInputBoxAllProps) => {
+//   const init = {...props};
+//   console.log(init);
+// };
 
 const getUnitSymbol = (unit: QueueControlInputBoxUnitType): string => {
   if (unit === 'percent') {
@@ -51,9 +51,9 @@ const isValidateValue = (value: string): boolean => {
 };
 
 const Root = ({ children, color, variant, margin, padding, ...props }: QueueControlInputBoxRootProps & QueueControlInputBoxAllProps) => {
-  const initProps = setInitValue(props); // not yet...
+  // const initProps = setInitValue(props); // not yet...
   margin = '4px';
-  console.log('initProps: ', initProps);
+  // console.log('initProps: ', initProps);
   return <div className={clsx(styles.TextInputRoot, styles[color], styles[variant])} {...props}
   style={{
     margin: margin ?? '8px',
@@ -94,8 +94,6 @@ const InputBox = ({placeholder, color, variant, unit='percent', valueChanges, ..
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           const isValid = isValidateValue(text);
-          console.log('isValid: ', isValid);
-
 
           if (isValid) {
             valueChanges(text);
