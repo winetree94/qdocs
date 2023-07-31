@@ -3,8 +3,10 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
 import { QueueButtonProps } from 'components/button/Button';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { useTranslation } from 'react-i18next';
+import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
 export const QueueAlertDialogRoot = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
   return <AlertDialog.Root {...props}>{children}</AlertDialog.Root>;
@@ -113,11 +115,43 @@ export const QueueAlertDialogFooter = forwardRef<
 });
 
 export interface QueueSimpleAlertDialogProps {
-  title: string;
-  description: string;
+  /**
+   * @description
+   * Modal 의 헤더에 들어가는 내용
+   */
+  title: JSX.Element | string;
+
+  /**
+   * @description
+   * Modal 의 본문에 들어가는 내용
+   */
+  description: JSX.Element | string;
+
+  /**
+   * @description
+   * Modal 의 열림 여부
+   */
   opened?: boolean;
+
+  /**
+   * @description
+   * Modal 의 기본 열림 여부
+   */
   defaultOpen?: boolean;
+
+  /**
+   * @description
+   * Modal 의 열림 여부가 변경될 때 호출되는 콜백 함수
+   */
   onOpenChange?: (opened: boolean) => void;
+
+  buttons?: {
+    label: string | JSX.Element;
+    size?: QUEUE_UI_SIZES;
+    color?: QUEUE_UI_COLORS;
+    onClick?: () => void;
+  }[];
+
   onAction?: () => void;
 }
 
@@ -126,26 +160,47 @@ export const QueueSimpleAlertDialog = ({
   description,
   opened = false,
   defaultOpen = false,
+  buttons,
   onOpenChange,
   onAction,
 }: QueueSimpleAlertDialogProps) => {
+  const { t } = useTranslation();
   return (
     <QueueAlertDialog.Root open={opened} onOpenChange={onOpenChange} defaultOpen={defaultOpen}>
       <QueueAlertDialog.Overlay />
       <QueueAlertDialog.Content asChild={false}>
-        <QueueAlertDialog.Title>{title}</QueueAlertDialog.Title>
-        <QueueAlertDialog.Description>{description}</QueueAlertDialog.Description>
+        {title && <QueueAlertDialog.Title>{title}</QueueAlertDialog.Title>}
+        {description && <QueueAlertDialog.Description>{description}</QueueAlertDialog.Description>}
         <QueueAlertDialog.Footer>
           <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.RED}>
-            취소
+            {t('global.cancel')}
           </QueueAlertDialog.Cancel>
           <QueueAlertDialog.Action size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE} onClick={onAction}>
-            확인
+            {t('global.confirm')}
           </QueueAlertDialog.Action>
+
+          {buttons?.map((button, index) => (
+            <QueueAlertDialog.Action
+              key={index}
+              size={button.size || QUEUE_UI_SIZE.MEDIUM}
+              color={button.color || QUEUE_UI_COLOR.BLUE}
+              onClick={button.onClick}>
+              {button.label}
+            </QueueAlertDialog.Action>
+          ))}
         </QueueAlertDialog.Footer>
       </QueueAlertDialog.Content>
     </QueueAlertDialog.Root>
   );
+};
+
+export const useAlertDialog = () => {
+  const rootRenderer = useRootRenderer();
+  return {
+    open: (params: QueueSimpleAlertDialogProps) => {
+      rootRenderer.render(<QueueSimpleAlertDialog {...params} />);
+    },
+  };
 };
 
 export const QueueAlertDialog = {

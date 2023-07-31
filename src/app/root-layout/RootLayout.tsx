@@ -255,12 +255,10 @@ export const RootLayout = () => {
       {docs && (
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
-            // <div className={clsx(styles.Left)}>
             <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
               <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
               <LeftPanel />
             </PanelResizer.Panel>
-            // </div>
           )}
           <div className={clsx(styles.Right)}>
             <QueueEditor />
@@ -283,6 +281,7 @@ export const RootLayout = () => {
           <Welcome></Welcome>
         </div>
       )}
+
     </div>
   );
 };

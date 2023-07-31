@@ -19,6 +19,7 @@ import { PreferencesSelectors } from 'store/preferences/selectors';
 import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export interface ToolbarModel {
   key: string;
@@ -89,6 +90,14 @@ export const QueueToolbar = () => {
         title: t('global.data-loss-warning-title'),
         description: t('global.data-loss-warning'),
         onAction: startFileChooser,
+        buttons: [
+          {
+            label: t('global.cancel'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.RED,
+            onClick: () => setAlertDialog(null),
+          }
+        ]
       });
       return;
     }
@@ -240,12 +249,14 @@ export const QueueToolbar = () => {
           </QueueMenubar.Menu>
         </QueueMenubar.Root>
       </div>
+
       {alertDialog && (
         <QueueAlertDialog.SimpleAlert
           title={alertDialog.title}
           description={alertDialog.description}
           onAction={alertDialog.onAction}
           opened={!!alertDialog}
+          buttons={alertDialog.buttons}
           onOpenChange={(opened): void => !opened && setAlertDialog(null)}
         />
       )}
