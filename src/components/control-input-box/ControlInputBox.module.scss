@@ -51,6 +51,7 @@ $theme-border-colors: (
 
 .Icon {
     box-sizing: border-box;
+    flex-shrink: 0;
 
     img {
         width: 18px;
@@ -59,10 +60,18 @@ $theme-border-colors: (
 }
 
 .InputBox {
-    padding: 4px;
-    outline: none;
-    background-color: transparent;
-    width: 100%;
+    @apply tw-text-xs;
+    display: flex;
+    align-items: center;
+
+
+    input {
+        width: 100%;
+        min-width: 0;
+        padding: 4px;
+        outline: none;
+        background-color: transparent;
+    }
 }
 
 
