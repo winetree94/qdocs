@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { QueueAlertDialog, QueueSimpleAlertDialogProps } from 'components/alert-dialog/AlertDialog';
+import { useAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
@@ -19,6 +19,7 @@ import { PreferencesSelectors } from 'store/preferences/selectors';
 import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export interface ToolbarModel {
   key: string;
@@ -32,21 +33,33 @@ export const QueueToolbar = () => {
   const history = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
+  const alertDialog = useAlertDialog();
   const preferences = useAppSelector(PreferencesSelectors.all);
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
-
-  const [alertDialog, setAlertDialog] = useState<QueueSimpleAlertDialogProps>(null);
   const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
   const onNewDocumentClick = (): void => {
     if (docs) {
-      setAlertDialog({
+      alertDialog.open({
         title: t('global.data-loss-warning-title'),
         description: t('global.data-loss-warning'),
-        onAction: () =>
-          setNewDocumentDialogProps({
-            onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
-          }),
+        buttons: [
+          {
+            label: t('global.cancel'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.RED,
+          },
+          {
+            label: t('global.confirm'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.BLUE,
+            onClick: () => {
+              setNewDocumentDialogProps({
+                onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
+              });
+            }
+          }
+        ],
       });
       return;
     }
@@ -85,10 +98,22 @@ export const QueueToolbar = () => {
 
   const onOpenDocumentClick = (): void => {
     if (docs) {
-      setAlertDialog({
+      alertDialog.open({
         title: t('global.data-loss-warning-title'),
         description: t('global.data-loss-warning'),
-        onAction: startFileChooser,
+        buttons: [
+          {
+            label: t('global.cancel'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.RED,
+          },
+          {
+            label: t('global.confirm'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.BLUE,
+            onClick: startFileChooser,
+          }
+        ]
       });
       return;
     }
@@ -113,10 +138,22 @@ export const QueueToolbar = () => {
 
   const onCloseDocumentClick = (): void => {
     if (docs) {
-      setAlertDialog({
+      alertDialog.open({
         title: t('global.data-loss-warning-title'),
         description: t('global.data-loss-warning'),
-        onAction: clearDocument,
+        buttons: [
+          {
+            label: t('global.cancel'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.RED,
+          },
+          {
+            label: t('global.confirm'),
+            size: QUEUE_UI_SIZE.MEDIUM,
+            color: QUEUE_UI_COLOR.BLUE,
+            onClick: clearDocument,
+          }
+        ],
       });
       return;
     }
@@ -240,15 +277,6 @@ export const QueueToolbar = () => {
           </QueueMenubar.Menu>
         </QueueMenubar.Root>
       </div>
-      {alertDialog && (
-        <QueueAlertDialog.SimpleAlert
-          title={alertDialog.title}
-          description={alertDialog.description}
-          onAction={alertDialog.onAction}
-          opened={!!alertDialog}
-          onOpenChange={(opened): void => !opened && setAlertDialog(null)}
-        />
-      )}
 
       {newDocumentDialogProps && (
         <NewDocumentDialog
