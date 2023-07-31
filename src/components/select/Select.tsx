@@ -1,147 +1,124 @@
-import React from 'react';
+import { forwardRef } from 'react';
+// import clsx from 'clsx';
 import * as Select from '@radix-ui/react-select';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import styles from './Select.module.scss';
-import { CheckIcon } from '@radix-ui/react-icons';
+import { QUEUE_UI_SIZES, QUEUE_UI_SIZE } from 'styles/ui/Size';
 import clsx from 'clsx';
 
-export const Root = ({ children, ...props }: Select.SelectProps) => {
-  return <Select.Root {...props}>{children}</Select.Root>;
+export type QueueSelectProps = Select.SelectProps &
+  Select.SelectContentProps &
+  Select.SelectValueProps & {
+    size?: QUEUE_UI_SIZES;
+  };
+
+export interface QueueSelectGroupProps extends Select.SelectGroupProps {
+  label?: Select.SelectLabelProps['children'];
+}
+
+type SelectContentPropsKeys = keyof Select.SelectContentProps;
+
+const SELECT_CONTENT_PROP_KEYS: Record<string, SelectContentPropsKeys> = {
+  onCloseAutoFocus: 'onCloseAutoFocus',
+  onEscapeKeyDown: 'onEscapeKeyDown',
+  onPointerDownOutside: 'onPointerDownOutside',
+  position: 'position',
+  side: 'side',
+  sideOffset: 'sideOffset',
+  align: 'align',
+  alignOffset: 'alignOffset',
+  avoidCollisions: 'avoidCollisions',
+  collisionBoundary: 'collisionBoundary',
+  collisionPadding: 'collisionPadding',
+  arrowPadding: 'arrowPadding',
+  sticky: 'sticky',
+  hideWhenDetached: 'hideWhenDetached',
 };
 
-export const Trigger = React.forwardRef<
-  HTMLButtonElement,
-  Select.SelectTriggerProps
->(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Select.Trigger {...props} ref={forwardedRef} className={clsx(className, styles.SelectTrigger)}>
-      {children}
-    </Select.Trigger>
-  );
-});
+// 올바른 타입이 맞는지 모르겠음...
+const getSelectContentProps = (props: QueueSelectProps): Select.SelectContentProps => {
+  const selectContentProps: Select.SelectContentProps & {
+    [key: string]: Select.SelectContentProps[keyof Select.SelectContentProps];
+  } = {};
 
-export const Value = React.forwardRef<HTMLDivElement, Select.SelectValueProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Select.Value {...props} ref={forwardedRef} className={clsx(className, styles.SelectValue)}>
-        {children}
-      </Select.Value>
-    );
-  },
-);
+  Object.entries(props).reduce((acc, [key, value]) => {
+    if (SELECT_CONTENT_PROP_KEYS[key]) {
+      acc[key] = value;
+    }
 
-export const Icon = React.forwardRef<HTMLDivElement, Select.SelectIconProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Select.Icon {...props} ref={forwardedRef} className={clsx(className, styles.SelectIcon)}>
-        {children}
-      </Select.Icon>
-    );
-  },
-);
+    return acc;
+  }, selectContentProps);
 
-export const Portal = ({ children, ...props }: Select.SelectPortalProps) => {
-  return <Select.Portal {...props}>{children}</Select.Portal>;
+  return selectContentProps;
 };
 
-export const Content = React.forwardRef<
-  HTMLDivElement,
-  Select.SelectContentProps
->(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Select.Content {...props} ref={forwardedRef} className={clsx(className, styles.SelectContent)}>
-      {children}
-    </Select.Content>
-  );
-});
+/**
+ * Root === Root & Trigger & Value & Icon & Portal & Content & ScrollUpButton & Viewport & ScrollDownButton
+ */
+const Root = ({ children, size = QUEUE_UI_SIZE.MEDIUM, placeholder, ...props }: QueueSelectProps) => {
+  const selectContentProps = getSelectContentProps(props);
 
-export const ScrollUpButton = React.forwardRef<
-  HTMLDivElement,
-  Select.SelectScrollUpButtonProps
->(({ children, className, ...props }, forwardedRef) => {
   return (
-    <Select.ScrollUpButton {...props} ref={forwardedRef} className={clsx(className, styles.SelectScrollButton)}>
-      {children}
-    </Select.ScrollUpButton>
-  );
-});
+    <Select.Root {...props}>
+      <Select.Trigger className={styles.SelectTrigger}>
+        <Select.Value placeholder={placeholder} />
+        <Select.Icon className={styles.SelectIcon}>
+          <ChevronDownIcon />
+        </Select.Icon>
+      </Select.Trigger>
 
-export const ScrollDownButton = React.forwardRef<
-  HTMLDivElement,
-  Select.SelectScrollDownButtonProps
->(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Select.ScrollDownButton {...props} ref={forwardedRef} className={clsx(className, styles.SelectScrollButton)}>
-      {children}
-    </Select.ScrollDownButton>
-  );
-});
+      {/* portal container 변경할 수 있도록 props 추가 필요 */}
+      <Select.Portal>
+        <Select.Content {...selectContentProps} className={styles.SelectContent}>
+          <Select.ScrollUpButton className={styles.SelectScrollButton}>
+            <ChevronUpIcon />
+          </Select.ScrollUpButton>
 
-export const Viewport = React.forwardRef<
-  HTMLDivElement,
-  Select.SelectViewportProps
->(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Select.Viewport {...props} ref={forwardedRef} className={clsx(className, styles.SelectViewport)}>
-      {children}
-    </Select.Viewport>
-  );
-});
+          <Select.Viewport>{children}</Select.Viewport>
 
-export const Group = React.forwardRef<HTMLDivElement, Select.SelectGroupProps>(
-  ({ children, ...props }, forwardedRef) => {
+          <Select.ScrollDownButton className={styles.SelectScrollButton}>
+            <ChevronDownIcon />
+          </Select.ScrollDownButton>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  );
+};
+
+/**
+ * Group === Group & Label
+ */
+const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps>(
+  ({ children, label, ...props }, forwardedRef) => {
     return (
       <Select.Group {...props} ref={forwardedRef}>
+        {label && <Select.Label className={styles.SelectGroupLabel}>{label}</Select.Label>}
         {children}
       </Select.Group>
     );
   },
 );
 
-export const Label = React.forwardRef<HTMLDivElement, Select.SelectLabelProps>(
+/**
+ * Option === Item & ItemIndicator & ItemText
+ */
+const Option = forwardRef<HTMLDivElement, Select.SelectItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
-      <Select.Label {...props} ref={forwardedRef} className={clsx(className, styles.SelectLabel)}>
-        {children}
-      </Select.Label>
-    );
-  },
-);
-
-export const Item = React.forwardRef<HTMLDivElement, Select.SelectItemProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Select.Item className={clsx(className, styles.SelectItem)} {...props} ref={forwardedRef}>
-        <Select.ItemText>{children}</Select.ItemText>
-        <Select.ItemIndicator className="SelectItemIndicator">
+      <Select.Item className={clsx(styles.SelectItem, className)} {...props} ref={forwardedRef}>
+        <Select.ItemIndicator className={styles.SelectItemIndicator}>
           <CheckIcon />
         </Select.ItemIndicator>
+        <Select.ItemText>{children}</Select.ItemText>
       </Select.Item>
     );
   },
 );
 
-export const Separator = React.forwardRef<HTMLDivElement, Select.SelectItemProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Select.Separator {...props} ref={forwardedRef} className={clsx(className, styles.SelectSeparator)}>
-        {children}
-      </Select.Separator>
-    );
+const Separator = forwardRef<HTMLDivElement, Select.SelectSeparatorProps>(
+  ({ className, ...props }) => {
+    return <Select.Separator className={clsx(styles.SelectSeparator, className)} {...props} />;
   },
 );
 
-export const QueueSelect = {
-  Root,
-  Trigger,
-  Value,
-  Icon,
-  Portal,
-  Content,
-  ScrollUpButton,
-  ScrollDownButton,
-  Viewport,
-  Group,
-  Label,
-  Item,
-  Separator,
-};
+export const QueueSelect = Object.assign(Root, { Group, Option, Separator });

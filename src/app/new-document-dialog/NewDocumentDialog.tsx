@@ -2,8 +2,6 @@ import { QueueDialog } from 'components/dialog/Dialog';
 import * as Dialog from '@radix-ui/react-dialog';
 import React, { useMemo } from 'react';
 import { QueueButton } from 'components/button/Button';
-import { QueueSelect } from 'components/select/Select';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
@@ -12,6 +10,7 @@ import { QueueDocument } from 'model/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { QueueSelect } from 'components/select/Select';
 
 export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
   onSubmit?: (document: QueueDocument) => void;
@@ -68,25 +67,13 @@ export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps
           <div className={styles.Container}>
             <div className={styles.RatioContainer} style={{ display: 'none' }}>
               <h6>문서 크기 비율</h6>
-              <QueueSelect.Root value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
-                <QueueSelect.Trigger className={styles.RatioSelector} aria-label="Food">
-                  <QueueSelect.Value />
-                  <QueueSelect.Icon>
-                    <ChevronDownIcon />
-                  </QueueSelect.Icon>
-                </QueueSelect.Trigger>
-                <QueueSelect.Portal>
-                  <QueueSelect.Content>
-                    <QueueSelect.Viewport>
-                      <QueueSelect.Group>
-                        <QueueSelect.Item value="16:9">와이드 (16:9)</QueueSelect.Item>
-                        <QueueSelect.Item value="16:10">와이드 (16:10)</QueueSelect.Item>
-                        <QueueSelect.Item value="4:3">35mm (4:3)</QueueSelect.Item>
-                      </QueueSelect.Group>
-                    </QueueSelect.Viewport>
-                  </QueueSelect.Content>
-                </QueueSelect.Portal>
-              </QueueSelect.Root>
+              <QueueSelect value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
+                <QueueSelect.Group>
+                  <QueueSelect.Option value="16:9">와이드 (16:9)</QueueSelect.Option>
+                  <QueueSelect.Option value="16:10">와이드 (16:10)</QueueSelect.Option>
+                  <QueueSelect.Option value="4:3">35mm (4:3)</QueueSelect.Option>
+                </QueueSelect.Group>
+              </QueueSelect>
             </div>
             <div className={styles.TemplateContainer}>
               <QueueToggleGroup.Root

@@ -5,6 +5,10 @@
 @import 'styles/list/List.module.scss';
 @import 'components/button/Button.module.scss';
 
+button {
+  all: unset;
+}
+
 .SelectTrigger {
   // base
   @include queue-button-base;
@@ -21,6 +25,7 @@
   @include queue-button-color-blue;
   @include queue-button-color-red;
   @apply tw-justify-between;
+  gap: 4px;
 }
 
 .SelectTrigger:hover {
@@ -28,19 +33,23 @@
 }
 
 .SelectTrigger:focus {
-  box-shadow: 0 0 0 2px black;
+  box-shadow: 0 0 0 2px var(--mauve-12);
 }
 
 .SelectTrigger[data-placeholder] {
-  color: var(--violet-9);
+  color: var(--mauve-9);
 }
 
 .SelectIcon {
-  color: Var(--violet-11);
+  color: var(--mauve-12);
 }
 
 .SelectContent {
   @include popover;
+}
+
+.SelectGroupLabel {
+  @include list-group-label;
 }
 
 .SelectItem {
@@ -55,6 +64,14 @@
   @include list-item-hover;
 }
 
+.SelectItemIndicator {
+  @include list-item-indicator;
+}
+
 .SelectSeparator {
   @include list-separator;
+}
+
+.SelectScrollButton {
+  @include list-scroll-button;
 }
