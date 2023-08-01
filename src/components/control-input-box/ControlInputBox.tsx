@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './ControlInputBox.module.scss';
 import typeImg from './images/type.png';
-import { usePrevious } from 'app/events/custom-hook';
 
 export interface QueueControlInputBoxRootProps {
   children?: React.ReactNode;
-  valueChanges?: (e: string) => void;
+  valueChanges?: (e: number) => void;
 }
 
 type QueueControlInputBoxUnitType = 'percent' | 'degree' | 'pt';
 
 export interface QueueControlInputBoxAllProps {
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: number;
   variant?: 'outline' | 'filled' | 'standard';
   type?: 'text' | 'number';
   size?: string;
@@ -25,6 +24,7 @@ export interface QueueControlInputBoxAllProps {
   iconImg?: string;
   width?: string;
   unit?: QueueControlInputBoxUnitType;
+  maxValue?: number;
 }
 
 // const setInitValue = (props: QueueControlInputBoxAllProps) => {
@@ -50,6 +50,10 @@ const isValidateValue = (value: string): boolean => {
   return /^\d+(\u0025|\u00B0|pt)$/.test(value) || /^\d+$/.test(value);
 };
 
+const isValidLimit = (value: number, maxValue: number): boolean => {
+  return 0 <= value && value <= maxValue;
+};
+
 const Root = ({ children, color, variant, margin, padding, ...props }: QueueControlInputBoxRootProps & QueueControlInputBoxAllProps) => {
   // const initProps = setInitValue(props); // not yet...
   margin = '4px';
@@ -69,8 +73,9 @@ const Icon = ({iconImg}: Partial<QueueControlInputBoxAllProps> ) => {
   );
 };
 
-const InputBox = ({placeholder, color, variant, unit='percent', valueChanges, ...props}: Partial<QueueControlInputBoxRootProps & QueueControlInputBoxAllProps> ) => {
-  const [text, setText] = useState('');
+const InputBox = ({placeholder, color, variant, maxValue = 100, unit='percent', valueChanges, ...props}: Partial<QueueControlInputBoxRootProps & QueueControlInputBoxAllProps> ) => {
+  const [text, setText] = useState<string>('');
+  const [prevValue, setPrevValue] = useState<number>(0);
 
   useEffect(() => {
     // console.log('useEffect start');
@@ -80,7 +85,6 @@ const InputBox = ({placeholder, color, variant, unit='percent', valueChanges, ..
     };
   }, []);
 
-  const prevText = usePrevious(text); // 흠 내가 원하는 동작이 아닌데. 직전에 성공한 값을 가지고 있고 싶음
   const unitSymbol = getUnitSymbol(unit);
 
   return (
@@ -93,15 +97,38 @@ const InputBox = ({placeholder, color, variant, unit='percent', valueChanges, ..
       }}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
-          const isValid = isValidateValue(text);
+          const next = parseInt(text.replace(unitSymbol, ''), 10);
 
-          if (isValid) {
-            valueChanges(text);
-            setText(text.replace(unitSymbol, '') + unitSymbol);
+          if (isValidateValue(text) && isValidLimit(next, maxValue)) {
+            setPrevValue(next);
+            setText(next + unitSymbol);
+            valueChanges(next);
             return;
           }
 
-          setText((prevText as string).replace(unitSymbol, '') + unitSymbol);
+          if (prevValue) {
+            setText(prevValue + unitSymbol);
+            return;
+          }
+
+          setText('');
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          const next = prevValue  === 0 ? prevValue : prevValue - 1;
+          setText(next + unitSymbol);
+          setPrevValue(next);
+          valueChanges(next);
+          return;
+        }
+
+        if (e.key === 'ArrowUp') {
+          const next = prevValue  === maxValue ? prevValue : prevValue + 1;
+          setText(next + unitSymbol);
+          setPrevValue(next);
+          valueChanges(next);
+          return;
         }
       }}
     />

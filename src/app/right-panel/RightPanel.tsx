@@ -4,7 +4,7 @@ export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
 }
 
-const inputValueChanges = (e: string) => {
+const inputValueChanges = (e: number) => {
   // console.log('inputValueChanges e: ', e);
 };
 
