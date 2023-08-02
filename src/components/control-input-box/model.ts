@@ -14,9 +14,10 @@ export interface QueueControlInputBoxAllProps {
   width?: string;
   unit: QueueControlInputBoxUnitType;
   maxValue?: number;
+  children?: React.ReactNode;
   valueChangeEvent?: (e: number) => void;
 }
 
-export interface QueueControlInputRootProps {
-  children?: React.ReactNode;
-}
+// export interface QueueControlInputRootProps {
+//   children?: React.ReactNode;
+// }
