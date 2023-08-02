@@ -7,35 +7,30 @@ import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
-export const QueueAlertDialogRoot = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
-  return <AlertDialog.Root {...props}>{children}</AlertDialog.Root>;
-};
+export interface QueueAlertDialogNewProps {
+  children?: React.ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
 
-export const QueueAlertDialogPortal = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
-  return <AlertDialog.Portal {...props}>{children}</AlertDialog.Portal>;
-};
-
-export const QueueAlertDialogOverlay = React.forwardRef<
-  HTMLDivElement,
-  AlertDialog.AlertDialogOverlayProps
->(({ children, className, ...props }, ref) => {
+export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogNewProps) => {
   return (
-    <AlertDialog.Overlay ref={ref} {...props} className={clsx(styles.AlertDialogOverlay, className)}>
-      {children}
-    </AlertDialog.Overlay>
+    <AlertDialog.Root
+      open={props.open}
+      defaultOpen={props.defaultOpen}
+      onOpenChange={props.onOpenChange}
+    >
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay className={clsx(styles.AlertDialogOverlay)}>
+        </AlertDialog.Overlay>
+        <AlertDialog.Content className={clsx(styles.AlertDialogContent)} asChild={false}>
+          {children}
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
   );
-});
-
-export const QueueAlertDialogContent = React.forwardRef<
-  HTMLDivElement,
-  AlertDialog.AlertDialogContentProps
->(({ children, className, ...props }, ref) => {
-  return (
-    <AlertDialog.Content ref={ref} {...props} className={clsx(styles.AlertDialogContent, className)}>
-      {children}
-    </AlertDialog.Content>
-  );
-});
+};
 
 export const QueueAlertDialogTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -76,10 +71,7 @@ export const QueueAlertDialogFooter = forwardRef<
 
 const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
-  Portal: QueueAlertDialogPortal,
-  Overlay: QueueAlertDialogOverlay,
   Title: QueueAlertDialogTitle,
-  Content: QueueAlertDialogContent,
   Description: QueueAlertDialogDescription,
   Footer: QueueAlertDialogFooter,
 };
@@ -155,34 +147,31 @@ export const useAlertDialog = () => {
             params.onOpenChange?.(opened);
           }}
         >
-          <QueueAlertDialog.Overlay />
-          <QueueAlertDialog.Content asChild={false}>
-            {params.title && (
-              <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>
-            )}
-            {params.description && (
-              <QueueAlertDialog.Description>{params.description}</QueueAlertDialog.Description>
-            )}
-            {params.buttons?.length && (
-              <QueueAlertDialog.Footer>
-                {params.buttons.map(({
-                  closeOnClick = true,
-                  ...button
-                }, index) => (
-                  <QueueButton
-                    key={index}
-                    size={button.size || QUEUE_UI_SIZE.MEDIUM}
-                    color={button.color || QUEUE_UI_COLOR.BLUE}
-                    onClick={() => {
-                      button.onClick?.();
-                      closeOnClick && rootRenderer.clear(key);
-                    }}>
-                    {button.label}
-                  </QueueButton>
-                ))}
-              </QueueAlertDialog.Footer>
-            )}
-          </QueueAlertDialog.Content>
+          {params.title && (
+            <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>
+          )}
+          {params.description && (
+            <QueueAlertDialog.Description>{params.description}</QueueAlertDialog.Description>
+          )}
+          {params.buttons?.length && (
+            <QueueAlertDialog.Footer>
+              {params.buttons.map(({
+                closeOnClick = true,
+                ...button
+              }, index) => (
+                <QueueButton
+                  key={index}
+                  size={button.size || QUEUE_UI_SIZE.MEDIUM}
+                  color={button.color || QUEUE_UI_COLOR.BLUE}
+                  onClick={() => {
+                    button.onClick?.();
+                    closeOnClick && rootRenderer.clear(key);
+                  }}>
+                  {button.label}
+                </QueueButton>
+              ))}
+            </QueueAlertDialog.Footer>
+          )}
         </QueueAlertDialog.Root>
       );
       return key;
