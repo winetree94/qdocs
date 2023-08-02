@@ -5,7 +5,6 @@ type Story = StoryObj<typeof QueueControlInputBoxComponent>;
 
 const meta: Meta<typeof QueueControlInputBoxComponent> = {
   title: 'Components/ControlInputBox',
-  component: QueueControlInputBoxComponent,
   parameters: {},
 };
 
