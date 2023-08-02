@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
-import { QueueButtonProps } from 'components/button/Button';
+import { QueueButton } from 'components/button/Button';
 import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
@@ -10,17 +10,6 @@ import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 export const QueueAlertDialogRoot = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
   return <AlertDialog.Root {...props}>{children}</AlertDialog.Root>;
 };
-
-export const QueueAlertDialogTrigger = React.forwardRef<
-  HTMLButtonElement,
-  Omit<AlertDialog.AlertDialogTriggerProps, 'className'>
->(({ children, ...props }, ref) => {
-  return (
-    <AlertDialog.Trigger ref={ref} {...props}>
-      {children}
-    </AlertDialog.Trigger>
-  );
-});
 
 export const QueueAlertDialogPortal = ({ children, ...props }: AlertDialog.AlertDialogProps) => {
   return <AlertDialog.Portal {...props}>{children}</AlertDialog.Portal>;
@@ -45,34 +34,6 @@ export const QueueAlertDialogContent = React.forwardRef<
     <AlertDialog.Content ref={ref} {...props} className={clsx(styles.AlertDialogContent, className)}>
       {children}
     </AlertDialog.Content>
-  );
-});
-
-export const QueueAlertDialogAction = React.forwardRef<
-  HTMLButtonElement,
-  QueueButtonProps & AlertDialog.AlertDialogActionProps
->(({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
-  return (
-    <AlertDialog.Action
-      ref={ref}
-      {...props}
-      className={clsx(styles.AlertDialogAction, className, styles[size], styles[color])}>
-      {children}
-    </AlertDialog.Action>
-  );
-});
-
-export const QueueAlertDialogCancel = React.forwardRef<
-  HTMLButtonElement,
-  QueueButtonProps & AlertDialog.AlertDialogCancelProps
->(({ children, className, size = QUEUE_UI_SIZE.MEDIUM, color = QUEUE_UI_COLOR.DEFAULT, ...props }, ref) => {
-  return (
-    <AlertDialog.Cancel
-      ref={ref}
-      {...props}
-      className={clsx(styles.AlertDialogCancel, className, styles[size], styles[color])}>
-      {children}
-    </AlertDialog.Cancel>
   );
 });
 
@@ -115,13 +76,10 @@ export const QueueAlertDialogFooter = forwardRef<
 
 const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
-  Trigger: QueueAlertDialogTrigger,
   Portal: QueueAlertDialogPortal,
   Overlay: QueueAlertDialogOverlay,
-  Content: QueueAlertDialogContent,
-  Action: QueueAlertDialogAction,
-  Cancel: QueueAlertDialogCancel,
   Title: QueueAlertDialogTitle,
+  Content: QueueAlertDialogContent,
   Description: QueueAlertDialogDescription,
   Footer: QueueAlertDialogFooter,
 };
@@ -211,7 +169,7 @@ export const useAlertDialog = () => {
                   closeOnClick = true,
                   ...button
                 }, index) => (
-                  <QueueAlertDialog.Action
+                  <QueueButton
                     key={index}
                     size={button.size || QUEUE_UI_SIZE.MEDIUM}
                     color={button.color || QUEUE_UI_COLOR.BLUE}
@@ -220,7 +178,7 @@ export const useAlertDialog = () => {
                       closeOnClick && rootRenderer.clear(key);
                     }}>
                     {button.label}
-                  </QueueAlertDialog.Action>
+                  </QueueButton>
                 ))}
               </QueueAlertDialog.Footer>
             )}
