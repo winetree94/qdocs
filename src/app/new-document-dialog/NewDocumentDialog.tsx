@@ -1,6 +1,5 @@
-import { QueueDialog } from 'components/dialog/Dialog';
-import * as Dialog from '@radix-ui/react-dialog';
-import React, { useMemo } from 'react';
+import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
+import React, { useMemo, useRef } from 'react';
 import { QueueButton } from 'components/button/Button';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
@@ -12,12 +11,13 @@ import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QueueSelect } from 'components/select/Select';
 
-export interface NewDocumentDialogProps extends Omit<Dialog.DialogProps, 'children'> {
+export interface NewDocumentDialogProps {
   onSubmit?: (document: QueueDocument) => void;
 }
 
-export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps) => {
+export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
   const { t } = useTranslation();
+  const dialogRef = useRef<QueueDialogRootRef>();
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
   const [documentTemplate, setDocumentTemplate] = React.useState<string>('Empty');
 
@@ -38,9 +38,9 @@ export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps
       setFetching(true);
       const document = await template.getTemplate();
       onSubmit?.(document);
-      props.onOpenChange?.(false);
     } finally {
       setFetching(false);
+      dialogRef.current.close();
     }
   };
 
@@ -52,14 +52,14 @@ export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps
       setFetching(true);
       const document = await fetcher();
       onSubmit?.(document);
-      props.onOpenChange?.(false);
-    } finally {
+     } finally {
       setFetching(false);
+      dialogRef.current.close();
     }
   };
 
   return (
-    <QueueDialog.Root {...props}>
+    <QueueDialog.Root ref={dialogRef}>
       <QueueDialog.Title>{t('new-document.set-up-new-document-template')}</QueueDialog.Title>
       <QueueDialog.Description>
         <div className={styles.Container}>
@@ -97,7 +97,7 @@ export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps
           type="button"
           size={QUEUE_UI_SIZE.MEDIUM}
           color={QUEUE_UI_COLOR.RED}
-          onClick={(): void => props.onOpenChange?.(false)}>
+          onClick={(): void => dialogRef.current.close()}>
           {t('global.cancel')}
         </QueueButton>
         <QueueButton type="button" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE} onClick={onSubmitClick}>

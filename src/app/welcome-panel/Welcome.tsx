@@ -1,26 +1,27 @@
-import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
+import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import clsx from 'clsx';
 import { QueueButton } from 'components/button/Button';
 import { QueueH2 } from 'components/head/Head';
 import { QueueDocument } from 'model/document';
-import { useState } from 'react';
 import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
 export const Welcome = () => {
   const dispatch = useAppDispatch();
+  const rootRenderer = useRootRenderer();
   const { t } = useTranslation();
-  const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
 
   const onNewDocumentClick = (): void => {
-    setNewDocumentDialogProps({
-      onSubmit: (document) => {
-        dispatch(DocumentActions.loadDocument(document));
-      },
-    });
+    rootRenderer.render(
+      <NewDocumentDialog
+      onSubmit={(document) => {
+          dispatch(DocumentActions.loadDocument(document));
+      }} />
+    );
   };
 
   const startFileChooser = (): void => {
@@ -61,14 +62,6 @@ export const Welcome = () => {
           {t('welcome.open-document')}
         </QueueButton>
       </div>
-
-      {newDocumentDialogProps && (
-        <NewDocumentDialog
-          {...newDocumentDialogProps}
-          open={!!newDocumentDialogProps}
-          onOpenChange={(opened): void => !opened && setNewDocumentDialogProps(null)}
-        />
-      )}
     </div>
   );
 };

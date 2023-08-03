@@ -46,13 +46,13 @@ export const RootRendererProvider = ({ children }: { children: React.ReactNode }
       id: nanoid(),
       element: element,
     };
-    setRendered([...rendered, model]);
+    setRendered((rendered) => [...rendered, model]);
     return model.id;
   };
 
   const clear = (key: string) => {
     setRendered(
-      rendered.filter((model) => {
+      (rendered) => rendered.filter((model) => {
         return model.id !== key;
       }),
     );
