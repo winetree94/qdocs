@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import styles from './Dialog.module.scss';
 import clsx from 'clsx';
+import { useRootRenderedContext } from 'cdk/root-renderer/root-renderer';
 
 export interface QueueDialogNewRootProps {
   children?: React.ReactNode;
@@ -11,6 +12,8 @@ export interface QueueDialogNewRootProps {
 }
 
 export const QueueDialogRoot = ({ children, ...props }: QueueDialogNewRootProps) => {
+  const rendered = useRootRenderedContext();
+  console.log(rendered);
   return (
     <Dialog.Root
       open={props.open}
