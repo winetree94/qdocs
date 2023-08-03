@@ -19,17 +19,27 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { Timeline } from 'components/timeline/Timeline';
+import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
 export const BottomPanel = () => {
   const { t } = useTranslation();
+  const rootRenderer = useRootRenderer();
   const alertDialog = useAlertDialog();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
-
   const [dragOverIndex, setDragOverIndex] = useState(-1);
-  const [editNamePageId, setEditNamePageId] = useState<EntityId>('');
+
+  const openEditPageNameDialog = (pageId: EntityId) => {
+    const page = pages.find((page) => page.id === pageId);
+    rootRenderer.render(
+      <EditPageNameDialog
+        pageName={page.pageName}
+        onSubmit={(value): void => onPageNameEdit(value, pageId)}
+      />
+    );
+  };
 
   const setQueuePageIndex = (id: EntityId): void => {
     dispatch(
@@ -110,7 +120,6 @@ export const BottomPanel = () => {
         },
       }),
     );
-    setEditNamePageId('');
   };
 
   const onPageCopy = (index: number): void => {
@@ -166,7 +175,7 @@ export const BottomPanel = () => {
                         onDragEnd={(): void => setDragOverIndex(-1)}
                         onDragOver={onDragOver}
                         onDrop={onDrop}
-                        onDoubleClick={(): void => setEditNamePageId(page.id)}>
+                        onDoubleClick={(): void => openEditPageNameDialog(page.id)}>
                         <QueueToggleGroup.Item value={`${page.id}`} size={QUEUE_UI_SIZE.MEDIUM}>
                           {page.pageName}
                         </QueueToggleGroup.Item>
@@ -192,7 +201,7 @@ export const BottomPanel = () => {
                           <QueueContextMenu.Item onClick={(): void => onPageCopy(index)}>
                             {t('global.duplicate')}
                           </QueueContextMenu.Item>
-                          <QueueContextMenu.Item onClick={(): void => setEditNamePageId(page.id)}>
+                          <QueueContextMenu.Item onClick={(): void => openEditPageNameDialog(page.id)}>
                             {t('global.rename')}
                           </QueueContextMenu.Item>
                           {pages.length >= 2 && (
@@ -222,16 +231,6 @@ export const BottomPanel = () => {
             <SvgRemixIcon icon="ri-add-fill" />
           </QueueIconButton>
         </div>
-
-        {/* 페이지 이름 수정 다이얼로그 */}
-        {editNamePageId && (
-          <EditPageNameDialog
-            open={!!editNamePageId}
-            onOpenChange={(opened): void => !opened && setEditNamePageId('')}
-            pageName={pages.find((page) => page.id === editNamePageId).pageName}
-            onSubmit={(value): void => onPageNameEdit(value, editNamePageId)}
-          />
-        )}
       </div>
     </div>
   );

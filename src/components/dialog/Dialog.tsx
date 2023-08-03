@@ -1,21 +1,38 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import styles from './Dialog.module.scss';
 import clsx from 'clsx';
+import { useRootRenderedContext } from 'cdk/root-renderer/root-renderer';
 
-export interface QueueDialogNewRootProps {
+export interface QueueDialogRootProps {
   children?: React.ReactNode;
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
 }
 
-export const QueueDialogRoot = ({ children, ...props }: QueueDialogNewRootProps) => {
+export interface QueueDialogRootRef {
+  close: () => void;
+}
+
+export const QueueDialogRoot = forwardRef<
+  QueueDialogRootRef,
+  QueueDialogRootProps
+>(({ children }, ref) => {
+  const rendered = useRootRenderedContext();
+
+  useImperativeHandle(ref, () => {
+    return {
+      close: (): void => {
+        rendered.close();
+      },
+    };
+  }, [rendered]);
+
   return (
     <Dialog.Root
-      open={props.open}
-      defaultOpen={props.defaultOpen}
-      onOpenChange={props.onOpenChange}
+      open={true}
+      defaultOpen={true}
+      onOpenChange={(opened) => {
+        !opened && rendered.close();
+      }}
     >
       <Dialog.Portal>
         <Dialog.Overlay className={clsx(styles.DialogOverlay)}></Dialog.Overlay>
@@ -25,7 +42,7 @@ export const QueueDialogRoot = ({ children, ...props }: QueueDialogNewRootProps)
       </Dialog.Portal>
     </Dialog.Root>
   );
-};
+});
 
 export const QueueDialogTitle = forwardRef<
   HTMLHeadingElement,
@@ -43,9 +60,9 @@ export const QueueDialogDescription = forwardRef<
   Dialog.DialogDescriptionProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Description ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
+    <div ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
       {children}
-    </Dialog.Description>
+    </div>
   );
 });
 

@@ -1,7 +1,7 @@
 import { QueueButton } from 'components/button/Button';
-import { QueueDialog } from 'components/dialog/Dialog';
+import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
 import { QueueInput } from 'components/input/Input';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
@@ -9,18 +9,21 @@ import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 export interface EditPageNameProps {
   pageName: string;
   onSubmit: (pageName: string) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export const EditPageNameDialog = ({ pageName, onSubmit, open, onOpenChange }: EditPageNameProps) => {
+export const EditPageNameDialog = ({ pageName, onSubmit }: EditPageNameProps) => {
   const { t } = useTranslation();
+  const renderedRef = useRef<QueueDialogRootRef>();
   const [currentPageName, setCurrentPageName] = useState(pageName);
 
   return (
-    <QueueDialog.Root open={open} onOpenChange={onOpenChange}>
+    <QueueDialog.Root ref={renderedRef}>
       <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
-      <form onSubmit={(): void => onSubmit(currentPageName)}>
+      <form onSubmit={(event): void => {
+        event.preventDefault();
+        onSubmit(currentPageName);
+        renderedRef.current.close();
+      }}>
         <QueueDialog.Description>
           <QueueInput
             required
@@ -35,7 +38,7 @@ export const EditPageNameDialog = ({ pageName, onSubmit, open, onOpenChange }: E
             type="button"
             size={QUEUE_UI_SIZE.MEDIUM}
             color={QUEUE_UI_COLOR.RED}
-            onClick={(): void => onOpenChange(false)}>
+            onClick={() => renderedRef.current.close()}>
             {t('global.cancel')}
           </QueueButton>
           <QueueButton type="submit" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE}>

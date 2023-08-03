@@ -1,11 +1,11 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import styles from './Toolbar.module.scss';
 import clsx from 'clsx';
 import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { useAlertDialog } from 'components/alert-dialog/AlertDialog';
-import { NewDocumentDialog, NewDocumentDialogProps } from 'app/new-document-dialog/NewDocumentDialog';
+import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { DocumentActions } from '../../store/document';
@@ -20,6 +20,7 @@ import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
 export interface ToolbarModel {
   key: string;
@@ -36,7 +37,16 @@ export const QueueToolbar = () => {
   const alertDialog = useAlertDialog();
   const preferences = useAppSelector(PreferencesSelectors.all);
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
-  const [newDocumentDialogProps, setNewDocumentDialogProps] = useState<NewDocumentDialogProps>(null);
+  const rootRenderer = useRootRenderer();
+
+  const openNewDocumentDialog = () => {
+    rootRenderer.render(
+      <NewDocumentDialog
+        onSubmit={
+          (document) => dispatch(DocumentActions.loadDocument(document))
+        } />
+    );
+  };
 
   const onNewDocumentClick = (): void => {
     if (docs) {
@@ -53,19 +63,13 @@ export const QueueToolbar = () => {
             label: t('global.confirm'),
             size: QUEUE_UI_SIZE.MEDIUM,
             color: QUEUE_UI_COLOR.BLUE,
-            onClick: () => {
-              setNewDocumentDialogProps({
-                onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
-              });
-            }
+            onClick: openNewDocumentDialog,
           }
         ],
       });
       return;
     }
-    setNewDocumentDialogProps({
-      onSubmit: (document) => dispatch(DocumentActions.loadDocument(document)),
-    });
+    openNewDocumentDialog();
   };
 
   const startFileChooser = (): void => {
@@ -277,14 +281,6 @@ export const QueueToolbar = () => {
           </QueueMenubar.Menu>
         </QueueMenubar.Root>
       </div>
-
-      {newDocumentDialogProps && (
-        <NewDocumentDialog
-          {...newDocumentDialogProps}
-          open={!!newDocumentDialogProps}
-          onOpenChange={(opened): void => !opened && setNewDocumentDialogProps(null)}
-        />
-      )}
     </div>
   );
 };
