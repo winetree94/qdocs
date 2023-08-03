@@ -61,35 +61,37 @@ export const NewDocumentDialog = ({ onSubmit, ...props }: NewDocumentDialogProps
   return (
     <QueueDialog.Root {...props}>
       <QueueDialog.Title>{t('new-document.set-up-new-document-template')}</QueueDialog.Title>
-      <div className={styles.Container}>
-        <div className={styles.RatioContainer} style={{ display: 'none' }}>
-          <h6>문서 크기 비율</h6>
-          <QueueSelect value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
-            <QueueSelect.Group>
-              <QueueSelect.Option value="16:9">와이드 (16:9)</QueueSelect.Option>
-              <QueueSelect.Option value="16:10">와이드 (16:10)</QueueSelect.Option>
-              <QueueSelect.Option value="4:3">35mm (4:3)</QueueSelect.Option>
-            </QueueSelect.Group>
-          </QueueSelect>
+      <QueueDialog.Description>
+        <div className={styles.Container}>
+          <div className={styles.RatioContainer} style={{ display: 'none' }}>
+            <h6>문서 크기 비율</h6>
+            <QueueSelect value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
+              <QueueSelect.Group>
+                <QueueSelect.Option value="16:9">와이드 (16:9)</QueueSelect.Option>
+                <QueueSelect.Option value="16:10">와이드 (16:10)</QueueSelect.Option>
+                <QueueSelect.Option value="4:3">35mm (4:3)</QueueSelect.Option>
+              </QueueSelect.Group>
+            </QueueSelect>
+          </div>
+          <div className={styles.TemplateContainer}>
+            <QueueToggleGroup.Root
+              type="single"
+              value={documentTemplate}
+              onValueChange={(value): void => value && setDocumentTemplate(value)}
+              className={clsx(styles.TemplateGroup)}>
+              {templates.map(({ name, getTemplate }) => (
+                <QueueToggleGroup.Item
+                  key={name}
+                  className={styles.TemplateItem}
+                  value={name}
+                  onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}>
+                  {name}
+                </QueueToggleGroup.Item>
+              ))}
+            </QueueToggleGroup.Root>
+          </div>
         </div>
-        <div className={styles.TemplateContainer}>
-          <QueueToggleGroup.Root
-            type="single"
-            value={documentTemplate}
-            onValueChange={(value): void => value && setDocumentTemplate(value)}
-            className={clsx(styles.TemplateGroup)}>
-            {templates.map(({ name, getTemplate }) => (
-              <QueueToggleGroup.Item
-                key={name}
-                className={styles.TemplateItem}
-                value={name}
-                onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}>
-                {name}
-              </QueueToggleGroup.Item>
-            ))}
-          </QueueToggleGroup.Root>
-        </div>
-      </div>
+      </QueueDialog.Description>
       <QueueDialog.Footer>
         <QueueButton
           type="button"

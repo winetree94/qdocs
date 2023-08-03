@@ -10,7 +10,7 @@ export interface QueueDialogNewRootProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export const QueueDialogNewRoot = ({ children, ...props }: QueueDialogNewRootProps) => {
+export const QueueDialogRoot = ({ children, ...props }: QueueDialogNewRootProps) => {
   return (
     <Dialog.Root
       open={props.open}
@@ -65,7 +65,7 @@ export const QueueDialogFooter = forwardRef<
 });
 
 export const QueueDialog = {
-  Root: QueueDialogNewRoot,
+  Root: QueueDialogRoot,
   Title: QueueDialogTitle,
   Description: QueueDialogDescription,
   Footer: QueueDialogFooter,

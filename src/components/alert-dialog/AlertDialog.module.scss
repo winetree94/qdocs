@@ -24,37 +24,3 @@
 .AlertDialogFooter {
   @include queue-dialog-footer;
 }
-
-.AlertDialogCancel {
-  // base
-  @include queue-button-base;
-
-  // sizing
-  @include queue-ui-x-padding;
-  @include queue-ui-fixed-height;
-
-  // font
-  @include queue-ui-fixed-font-size;
-
-  // theme
-  @include queue-button-color-default;
-  @include queue-button-color-blue;
-  @include queue-button-color-red;
-}
-
-.AlertDialogAction {
-  // base
-  @include queue-button-base;
-
-  // sizing
-  @include queue-ui-x-padding;
-  @include queue-ui-fixed-height;
-
-  // font
-  @include queue-ui-fixed-font-size;
-
-  // theme
-  @include queue-button-color-default;
-  @include queue-button-color-blue;
-  @include queue-button-color-red;
-}
