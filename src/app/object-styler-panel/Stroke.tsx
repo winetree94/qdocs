@@ -1,7 +1,5 @@
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { Slider } from 'components';
 import { QueueH6 } from 'components/head/Head';
-import { QueueSelect } from 'components/select/Select';
 import { QueueStroke } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
@@ -9,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import styles from './Stroke.module.scss';
+import { QueueSelect } from 'components/select/Select';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();
@@ -70,27 +69,11 @@ export const ObjectStyleStroke = () => {
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.style')}</div>
         <div className={styles.SubInputContainer}>
-          <QueueSelect.Root
-            value={stroke.dasharray}
-            onValueChange={(value): void => updateStroke({ dasharray: value })}>
-            <QueueSelect.Trigger className={styles.Select}>
-              <QueueSelect.Value />
-              <QueueSelect.Icon className="SelectIcon">
-                <ChevronDownIcon />
-              </QueueSelect.Icon>
-            </QueueSelect.Trigger>
-            <QueueSelect.Portal>
-              <QueueSelect.Content>
-                <QueueSelect.Viewport>
-                  <QueueSelect.Group>
-                    <QueueSelect.Item value="solid">-------</QueueSelect.Item>
-                    <QueueSelect.Item value="Inter">- - - - -</QueueSelect.Item>
-                    <QueueSelect.Item value="Roboto">-- -- --</QueueSelect.Item>
-                  </QueueSelect.Group>
-                </QueueSelect.Viewport>
-              </QueueSelect.Content>
-            </QueueSelect.Portal>
-          </QueueSelect.Root>
+          <QueueSelect value={stroke.dasharray} onValueChange={(value): void => updateStroke({ dasharray: value })}>
+            <QueueSelect.Option value='solid'>-------</QueueSelect.Option>
+            <QueueSelect.Option value='dashed'>- - - -</QueueSelect.Option>
+            <QueueSelect.Option value='longDashed'>-- -- --</QueueSelect.Option>
+          </QueueSelect>
         </div>
       </div>
     </div>

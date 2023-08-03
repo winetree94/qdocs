@@ -1,5 +1,3 @@
-import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { QueueSelect } from 'components/select/Select';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -9,6 +7,7 @@ import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { AnimatorTimingFunctionType, TIMING_FUNCTION_META } from 'cdk/animation/timing/meta';
+import { QueueSelect } from 'components/select/Select';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -50,25 +49,15 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
   return (
     <div>
       <p className="tw-text-sm">timing function</p>
-      <QueueSelect.Root defaultValue={firstObjectEffect.timing} onValueChange={handleTimingFunctionChange}>
-        <QueueSelect.Trigger>
-          <QueueSelect.Value />
-          <QueueSelect.Icon>
-            <ChevronDownIcon />
-          </QueueSelect.Icon>
-        </QueueSelect.Trigger>
-        <QueueSelect.Portal>
-          <QueueSelect.Content>
-            <QueueSelect.Viewport>
-              {timingFunctions.map((timingFunction) => (
-                <QueueSelect.Item value={timingFunction} key={timingFunction}>
-                  {timingFunction}
-                </QueueSelect.Item>
-              ))}
-            </QueueSelect.Viewport>
-          </QueueSelect.Content>
-        </QueueSelect.Portal>
-      </QueueSelect.Root>
+      <QueueSelect defaultValue={firstObjectEffect.timing} onValueChange={handleTimingFunctionChange}>
+        <QueueSelect.Group>
+          {timingFunctions.map((timingFunction) => (
+            <QueueSelect.Option value={timingFunction} key={timingFunction}>
+              {timingFunction}
+            </QueueSelect.Option>
+          ))}
+        </QueueSelect.Group>
+      </QueueSelect>
     </div>
   );
 };

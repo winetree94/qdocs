@@ -1,8 +1,6 @@
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueH6 } from 'components/head/Head';
 import { QueueInput } from 'components/input/Input';
-import { QueueSelect } from 'components/select/Select';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueText } from 'model/property';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QueueSelect } from 'components/select/Select';
 import styles from './Text.module.scss';
 
 export const ObjectStyleText = () => {
@@ -44,25 +43,13 @@ export const ObjectStyleText = () => {
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.font-family')}</div>
         <div className={styles.SubInputContainer}>
-          <QueueSelect.Root value={text.fontFamily} onValueChange={(value): void => updateText({ fontFamily: value })}>
-            <QueueSelect.Trigger className={styles.Select}>
-              <QueueSelect.Value />
-              <QueueSelect.Icon className="SelectIcon">
-                <ChevronDownIcon />
-              </QueueSelect.Icon>
-            </QueueSelect.Trigger>
-            <QueueSelect.Portal>
-              <QueueSelect.Content>
-                <QueueSelect.Viewport>
-                  <QueueSelect.Group>
-                    <QueueSelect.Item value="Arial">Arial</QueueSelect.Item>
-                    <QueueSelect.Item value="Inter">Inter</QueueSelect.Item>
-                    <QueueSelect.Item value="Roboto">Roboto</QueueSelect.Item>
-                  </QueueSelect.Group>
-                </QueueSelect.Viewport>
-              </QueueSelect.Content>
-            </QueueSelect.Portal>
-          </QueueSelect.Root>
+          <QueueSelect value={text.fontFamily} onValueChange={(value): void => updateText({ fontFamily: value })}>
+            <QueueSelect.Group>
+              <QueueSelect.Option value="Arial">Arial</QueueSelect.Option>
+              <QueueSelect.Option value="Inter">Inter</QueueSelect.Option>
+              <QueueSelect.Option value="Roboto">Roboto</QueueSelect.Option>
+            </QueueSelect.Group>
+          </QueueSelect>
         </div>
       </div>
       <div className={styles.SubItemContainer}>

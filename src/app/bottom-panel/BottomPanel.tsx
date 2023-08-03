@@ -5,7 +5,7 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import styles from './BottomPanel.module.scss';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { EditPageNameDialog } from 'app/dialogs/EditPageNameDialog';
-import { QueueAlertDialog } from 'components/alert-dialog/AlertDialog';
+import { useAlertDialog } from 'components/alert-dialog/AlertDialog';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -22,6 +22,7 @@ import { Timeline } from 'components/timeline/Timeline';
 
 export const BottomPanel = () => {
   const { t } = useTranslation();
+  const alertDialog = useAlertDialog();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
@@ -29,7 +30,6 @@ export const BottomPanel = () => {
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
   const [editNamePageId, setEditNamePageId] = useState<EntityId>('');
-  const [deleteConfirmPageId, setDeleteConfirmPageId] = useState<EntityId>('');
 
   const setQueuePageIndex = (id: EntityId): void => {
     dispatch(
@@ -125,9 +125,22 @@ export const BottomPanel = () => {
     );
   };
 
-  const onPageDeleteSubmit = (id: EntityId): void => {
-    removePage(id);
-    setDeleteConfirmPageId('');
+  const openDeleteConfirmDialog = (id: EntityId): void => {
+    alertDialog.open({
+      title: '페이지 삭제',
+      description: '페이지를 삭제하시겠습니까?',
+      buttons: [
+        {
+          label: '취소',
+          size: QUEUE_UI_SIZE.MEDIUM,
+          color: QUEUE_UI_COLOR.RED,
+        },
+        {
+          label: '삭제',
+          onClick: (): void => removePage(id),
+        },
+      ],
+    });
   };
 
   return (
@@ -187,7 +200,7 @@ export const BottomPanel = () => {
                               <QueueContextMenu.Separator />
                               <QueueContextMenu.Item
                                 className={styles.Remove}
-                                onClick={(): void => setDeleteConfirmPageId(page.id)}>
+                                onClick={(): void => openDeleteConfirmDialog(page.id)}>
                                 {t('global.delete')}
                               </QueueContextMenu.Item>
                             </>
@@ -209,30 +222,6 @@ export const BottomPanel = () => {
             <SvgRemixIcon icon="ri-add-fill" />
           </QueueIconButton>
         </div>
-
-        {/* 페이지 삭제 확인 다이얼로그 */}
-        {deleteConfirmPageId && (
-          <QueueAlertDialog.Root
-            open={!!deleteConfirmPageId}
-            onOpenChange={(opened): void => !opened && setDeleteConfirmPageId('')}>
-            <QueueAlertDialog.Overlay />
-            <QueueAlertDialog.Content>
-              <QueueAlertDialog.Title>페이지 삭제</QueueAlertDialog.Title>
-              <QueueAlertDialog.Description>페이지를 삭제하시겠습니까?</QueueAlertDialog.Description>
-              <QueueAlertDialog.Footer>
-                <QueueAlertDialog.Cancel size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.RED}>
-                  취소
-                </QueueAlertDialog.Cancel>
-                <QueueAlertDialog.Action
-                  size={QUEUE_UI_SIZE.MEDIUM}
-                  color={QUEUE_UI_COLOR.BLUE}
-                  onClick={(): void => onPageDeleteSubmit(deleteConfirmPageId)}>
-                  확인
-                </QueueAlertDialog.Action>
-              </QueueAlertDialog.Footer>
-            </QueueAlertDialog.Content>
-          </QueueAlertDialog.Root>
-        )}
 
         {/* 페이지 이름 수정 다이얼로그 */}
         {editNamePageId && (
