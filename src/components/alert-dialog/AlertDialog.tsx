@@ -7,14 +7,14 @@ import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
-export interface QueueAlertDialogNewProps {
+export interface QueueAlertDialogRootProps {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
-export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogNewProps) => {
+export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogRootProps) => {
   return (
     <AlertDialog.Root
       open={props.open}
