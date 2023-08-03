@@ -19,35 +19,30 @@ export const EditPageNameDialog = ({ pageName, onSubmit, open, onOpenChange }: E
 
   return (
     <QueueDialog.Root open={open} onOpenChange={onOpenChange}>
-      <QueueDialog.Portal>
-        <QueueDialog.Overlay />
-        <QueueDialog.Content>
-          <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
-          <form onSubmit={(): void => onSubmit(currentPageName)}>
-            <QueueDialog.Description>
-              <QueueInput
-                required
-                id="pagename"
-                className="tw-border-solid tw-border-2 tw-border-gray-200 focus:tw-border-gray-400"
-                value={currentPageName}
-                onChange={(e): void => setCurrentPageName(e.target.value)}
-              />
-            </QueueDialog.Description>
-            <QueueDialog.Footer>
-              <QueueButton
-                type="button"
-                size={QUEUE_UI_SIZE.MEDIUM}
-                color={QUEUE_UI_COLOR.RED}
-                onClick={(): void => onOpenChange(false)}>
-                {t('global.cancel')}
-              </QueueButton>
-              <QueueButton type="submit" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE}>
-                {t('global.confirm')}
-              </QueueButton>
-            </QueueDialog.Footer>
-          </form>
-        </QueueDialog.Content>
-      </QueueDialog.Portal>
+      <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
+      <form onSubmit={(): void => onSubmit(currentPageName)}>
+        <QueueDialog.Description>
+          <QueueInput
+            required
+            id="pagename"
+            className="tw-border-solid tw-border-2 tw-border-gray-200 focus:tw-border-gray-400"
+            value={currentPageName}
+            onChange={(e): void => setCurrentPageName(e.target.value)}
+          />
+        </QueueDialog.Description>
+        <QueueDialog.Footer>
+          <QueueButton
+            type="button"
+            size={QUEUE_UI_SIZE.MEDIUM}
+            color={QUEUE_UI_COLOR.RED}
+            onClick={(): void => onOpenChange(false)}>
+            {t('global.cancel')}
+          </QueueButton>
+          <QueueButton type="submit" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE}>
+            {t('global.confirm')}
+          </QueueButton>
+        </QueueDialog.Footer>
+      </form>
     </QueueDialog.Root>
   );
 };
