@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { createContext, Fragment, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 export interface RootRendererContextType {
   /**
@@ -28,6 +28,14 @@ const RootRendererContext = createContext<RootRendererContextType>({
   rendered: [],
   render: (element: JSX.Element) => '',
   clear: (key: string) => void 0,
+});
+
+export interface RootRenderedContextType {
+  close: () => void;
+}
+
+const RootRenderedContext = createContext<RootRenderedContextType>({
+  close: () => void 0,
 });
 
 export const RootRendererProvider = ({ children }: { children: React.ReactNode }) => {
@@ -59,7 +67,13 @@ export const RootRendererProvider = ({ children }: { children: React.ReactNode }
       }}>
       {children}
       {rendered.map((model) => (
-        <Fragment key={model.id}>{model.element}</Fragment>
+        <RootRenderedContext.Provider key={model.id} value={{
+          close: () => {
+            clear(model.id);
+          },
+        }}>
+          {model.element}
+        </RootRenderedContext.Provider>
       ))}
     </RootRendererContext.Provider>
   );
@@ -67,4 +81,8 @@ export const RootRendererProvider = ({ children }: { children: React.ReactNode }
 
 export const useRootRenderer = () => {
   return useContext(RootRendererContext);
+};
+
+export const useRootRenderedContext = () => {
+  return useContext(RootRenderedContext);
 };
