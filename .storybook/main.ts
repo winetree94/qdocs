@@ -8,7 +8,7 @@ const config: StorybookConfig = {
     '@storybook/preset-create-react-app',
     '@storybook/addon-onboarding',
     '@storybook/addon-interactions',
-    '@storybook/addon-styling'
+    '@storybook/addon-styling',
   ],
   framework: {
     name: '@storybook/react-webpack5',
@@ -18,5 +18,15 @@ const config: StorybookConfig = {
     autodocs: 'tag',
   },
   staticDirs: ['../public'],
+  webpackFinal: async (config) => ({
+    ...config,
+    plugins: config.plugins?.filter((plugin) => {
+      if (plugin?.constructor.name === 'ESLintWebpackPlugin') {
+        return false;
+      }
+      return true;
+    }),
+  }),
 };
+
 export default config;
