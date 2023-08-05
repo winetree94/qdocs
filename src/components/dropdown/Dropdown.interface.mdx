@@ -1,0 +1,42 @@
+import { Meta, Story } from '@storybook/blocks';
+
+import * as DropdownStories from './Dropdown.stories';
+
+<Meta of={DropdownStories} />
+
+# QueueDropdown API
+
+## QueueDropdown Component Interface
+
+```tsx
+// Queue에서 간략하게 만들 구조
+<QueueDropdown {...rootProps}>
+  <QueueDropdown.Trigger />
+
+  <QueueDropdown.Content {...contentProps}>
+    <QueueDropdown.Item />
+
+    <QueueDropdown.Group label="" {...groupProps}>
+      <QueueDropdown.Item />
+    </QueueDropdown.Group>
+
+    <QueueDropdown.CheckboxItem {...checkboxProps} />
+
+    <QueueDropdown.RadioGroup label="" {...radioGroupProps}>
+      <QueueDropdown.RadioItem {...radioProps} />
+    </QueueDropdown.RadioGroup>
+
+    <QueueDropdown.Sub {...subProps}>
+      <QueueDropdown.SubTrigger />
+
+      <QueueDropdown.SubContent {...subContentProps} />
+    </QueueDropdown.Sub>
+    
+    <QueueDropdown.Separator />
+  </QueueDropdown.Content>
+</QueueDropdown>
+```
+
+## Radix ui reference
+
+[Radix ui - Dropdown](https://www.radix-ui.com/docs/primitives/components/dropdown-menu)

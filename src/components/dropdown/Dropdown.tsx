@@ -1,119 +1,156 @@
-import { forwardRef, ReactElement } from 'react';
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
-import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
-import classes from './Dropdown.module.scss';
+import { forwardRef } from 'react';
 import clsx from 'clsx';
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
 
-export const DropdownRoot = ({
-  children,
-  ...dropdownMenuProps
-}: DropdownMenuPrimitive.DropdownMenuProps): ReactElement => {
-  return <DropdownMenuPrimitive.Root {...dropdownMenuProps}>{children}</DropdownMenuPrimitive.Root>;
-};
+export interface QueueDropdownGroupProps extends Dropdown.MenuGroupProps {
+  label?: Dropdown.MenuLabelProps['children'];
+}
 
-const DropdownContent = forwardRef<HTMLDivElement, DropdownMenuPrimitive.DropdownMenuContentProps>(
-  ({ children, className, ...dropdownContentProps }, forwardedRef) => {
+export interface QueueDropdownRadioGroupProps extends Dropdown.MenuRadioGroupProps {
+  label?: Dropdown.MenuLabelProps['children'];
+}
+
+const DropdownItemBase = [
+  'tw-relative',
+  'tw-flex',
+  'tw-px-6',
+  'tw-py-2',
+  'tw-text-[var(--mauve-12)]',
+  'tw-cursor-pointer',
+  'tw-outline-none',
+  'hover:tw-bg-[var(--blue-10)]',
+  'hover:tw-text-[var(--blue-1)]',
+  'active:tw-bg-[var(--blue-11)]',
+  'data-[disabled]:tw-pointer-events-none',
+  'data-[disabled]:tw-text-[var(--gray-8)]',
+];
+
+const DropdownLabelBase = ['tw-pl-6', 'tw-text-xs', 'tw-text-[var(--mauve-9)]', , 'tw-cursor-default'];
+
+const DropdownIndicatorBase = [
+  'tw-absolute',
+  'tw-left-0',
+  'tw-top-0',
+  'tw-w-6',
+  'tw-h-full',
+  'tw-flex',
+  'tw-items-center',
+  'tw-justify-center',
+];
+
+const Content = forwardRef<HTMLDivElement, Dropdown.MenuContentProps>(
+  ({ children, className, ...props }, forwardedRef) => {
     return (
-      <DropdownMenuPrimitive.Portal>
-        <DropdownMenuPrimitive.Content
-          className={clsx(classes['dropdown-content'], className)}
-          ref={forwardedRef}
-          {...dropdownContentProps}>
+      <Dropdown.Portal>
+        <Dropdown.Content
+          className={clsx(
+            'tw-py-1 tw-rounded-sm tw-bg-white tw-drop-shadow-md tw-text-sm',
+            className,
+          )}
+          {...props}
+          ref={forwardedRef}>
           {children}
-          <DropdownMenuPrimitive.Arrow className={classes['dropdown-arrow']} width={12} height={8} />
-        </DropdownMenuPrimitive.Content>
-      </DropdownMenuPrimitive.Portal>
+          <Dropdown.Arrow
+            className={clsx('tw-fill-white')}
+            width={12}
+            height={8}
+          />
+        </Dropdown.Content>
+      </Dropdown.Portal>
     );
   },
 );
 
-const DropdownItem = ({
-  children,
-  className,
-  ...dropdownItemProps
-}: DropdownMenuPrimitive.DropdownMenuItemProps): ReactElement => {
+const Group = forwardRef<HTMLDivElement, QueueDropdownGroupProps>(({ children, label, ...props }, forwardedRef) => {
   return (
-    <DropdownMenuPrimitive.Item className={clsx(classes['dropdown-item'], className)} {...dropdownItemProps}>
+    <Dropdown.Group {...props} ref={forwardedRef}>
+      <Dropdown.Label className={clsx(DropdownLabelBase)}>{label}</Dropdown.Label>
       {children}
-    </DropdownMenuPrimitive.Item>
+    </Dropdown.Group>
   );
-};
+});
 
-const DropdownCheckboxItem = forwardRef<HTMLDivElement, DropdownMenuPrimitive.DropdownMenuCheckboxItemProps>(
-  ({ children, className, ...dropdownCheckboxProps }, forwardedRef) => {
+const RadioGroup = forwardRef<HTMLDivElement, QueueDropdownRadioGroupProps>(
+  ({ children, label, ...props }, forwardedRef) => {
     return (
-      <DropdownMenuPrimitive.CheckboxItem
-        className={clsx(classes['dropdown-item'])}
-        ref={forwardedRef}
-        {...dropdownCheckboxProps}>
-        <DropdownMenuPrimitive.ItemIndicator className={classes['dropdown-indicator']}>
+      <Dropdown.RadioGroup {...props} ref={forwardedRef}>
+        <Dropdown.Label className={clsx(DropdownLabelBase)}>{label}</Dropdown.Label>
+        {children}
+      </Dropdown.RadioGroup>
+    );
+  },
+);
+
+const Item = forwardRef<HTMLDivElement, Dropdown.MenuItemProps>(({ children, className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.Item className={clsx(DropdownItemBase, '', className)} {...props} ref={forwardedRef}>
+      {children}
+    </Dropdown.Item>
+  );
+});
+
+const CheckboxItem = forwardRef<HTMLDivElement, Dropdown.MenuCheckboxItemProps>(
+  ({ children, className, ...props }, forwardedRef) => {
+    return (
+      <Dropdown.CheckboxItem className={clsx(DropdownItemBase, className)} {...props} ref={forwardedRef}>
+        <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
           <CheckIcon />
-        </DropdownMenuPrimitive.ItemIndicator>
+        </Dropdown.ItemIndicator>
         {children}
-      </DropdownMenuPrimitive.CheckboxItem>
+      </Dropdown.CheckboxItem>
     );
   },
 );
 
-const DropdownRadioItem = forwardRef<HTMLDivElement, DropdownMenuPrimitive.DropdownMenuRadioItemProps>(
-  ({ children, className, ...dropdownRadioItemProps }, forwardedRef) => {
+const RadioItem = forwardRef<HTMLDivElement, Dropdown.MenuRadioItemProps>(
+  ({ children, className, ...props }, forwardedRef) => {
     return (
-      <DropdownMenuPrimitive.RadioItem
-        className={clsx(classes['dropdown-item'])}
-        ref={forwardedRef}
-        {...dropdownRadioItemProps}>
-        <DropdownMenuPrimitive.ItemIndicator className={classes['dropdown-indicator']}>
+      <Dropdown.RadioItem className={clsx(DropdownItemBase, className)} {...props} ref={forwardedRef}>
+        <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
           <DotFilledIcon />
-        </DropdownMenuPrimitive.ItemIndicator>
+        </Dropdown.ItemIndicator>
         {children}
-      </DropdownMenuPrimitive.RadioItem>
+      </Dropdown.RadioItem>
     );
   },
 );
 
-const DropdownLabel = ({
-  children,
-  className,
-  ...dropdownLabelProps
-}: DropdownMenuPrimitive.DropdownMenuLabelProps): ReactElement => {
+const Separator = forwardRef<HTMLDivElement, Dropdown.MenuSeparatorProps>(({ className, ...props }, forwardedRef) => {
   return (
-    <DropdownMenuPrimitive.Label className={clsx(classes['dropdown-label'], className)} {...dropdownLabelProps}>
-      {children}
-    </DropdownMenuPrimitive.Label>
-  );
-};
-
-const DropdownSeparator = ({
-  className,
-  ...dropdownSeparatorProps
-}: DropdownMenuPrimitive.MenuSeparatorProps): ReactElement => {
-  return (
-    <DropdownMenuPrimitive.Separator
-      className={clsx(classes['dropdown-separator'], className)}
-      {...dropdownSeparatorProps}
+    <Dropdown.Separator
+      className={clsx('tw-h-px tw-mx-2 tw-my-1.5 tw-bg-stone-100', className)}
+      {...props}
+      ref={forwardedRef}
     />
   );
-};
+});
 
-const DropdownTrigger = ({
-  children,
-  className,
-  ...dropdownTriggerProps
-}: DropdownMenuPrimitive.DropdownMenuTriggerProps): ReactElement => {
-  return (
-    <DropdownMenuPrimitive.Trigger className={clsx(classes['dropdown-trigger'], className)} {...dropdownTriggerProps}>
-      {children}
-    </DropdownMenuPrimitive.Trigger>
-  );
-};
+const SubContent = forwardRef<HTMLDivElement, Dropdown.MenuSubContentProps>(
+  ({ children, className, ...props }, forwardedRef) => {
+    return (
+      <Dropdown.Portal>
+        <Dropdown.SubContent
+          className={clsx('tw-py-2 tw-rounded-sm tw-bg-white tw-text-sm tw-drop-shadow-md', className)}
+          {...props}
+          ref={forwardedRef}>
+          {children}
+        </Dropdown.SubContent>
+      </Dropdown.Portal>
+    );
+  },
+);
 
-export const QueueDropdown = {
-  Root: DropdownRoot,
-  Content: DropdownContent,
-  Item: DropdownItem,
-  CheckboxItem: DropdownCheckboxItem,
-  RadioItem: DropdownRadioItem,
-  Label: DropdownLabel,
-  Separator: DropdownSeparator,
-  Trigger: DropdownTrigger,
-};
+export const QueueDropdown = Object.assign(Dropdown.Root, {
+  Content,
+  Group,
+  RadioGroup,
+  Item,
+  CheckboxItem,
+  RadioItem,
+  Separator,
+  SubContent,
+  Trigger: Dropdown.Trigger,
+  Sub: Dropdown.Sub,
+  SubTrigger: Dropdown.SubTrigger,
+});

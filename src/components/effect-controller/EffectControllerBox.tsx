@@ -236,13 +236,15 @@ export const EffectControllerBox = (): ReactElement | null => {
       <div>
         <div className="tw-flex tw-justify-between">
           <p className="tw-font-medium">{t('effect-panel.current-effects')}</p>
-          <QueueDropdown.Root>
-            <QueueDropdown.Trigger
-              className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
-              disabled={createEffectIndex === settings.queueIndex}>
-              <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
+          <QueueDropdown>
+            <QueueDropdown.Trigger asChild>
+              <button
+                className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
+                disabled={createEffectIndex === settings.queueIndex}>
+                <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
+              </button>
             </QueueDropdown.Trigger>
-            <QueueDropdown.Content side="right">
+            <QueueDropdown.Content side="right" className="tw-w-[100px]">
               {addableEffectTypes.map((effectType) => {
                 if (currentQueueObjectEffectTypes.includes(effectType)) {
                   return null;
@@ -255,7 +257,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                 );
               })}
             </QueueDropdown.Content>
-          </QueueDropdown.Root>
+          </QueueDropdown>
         </div>
         <div className="tw-flex tw-flex-col tw-gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
