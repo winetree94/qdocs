@@ -18,6 +18,7 @@
 }
 
 .QueueButton {
+  position: relative;
   // base
   @include queue-button-base;
 
