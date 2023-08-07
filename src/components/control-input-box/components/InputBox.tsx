@@ -4,7 +4,7 @@ import { getUnitSymbol, isValidateValue, isValidLimit } from '../utils';
 import styles from '../ControlInputBox.module.scss';
 import { QueueControlInputBoxProps } from '../model';
 
-const InputBox = ({placeholder, valueChangeEvent, maxValue = 100, unit='percent', ...props}: Partial<QueueControlInputBoxProps>) => {
+const InputBox = ({placeholder, valueChangeEvent, minValue = 0, maxValue = 100, padding,  unit='percent', ...props}: Partial<QueueControlInputBoxProps>) => {
     const [text, setText] = useState<string>('');
     const [prevValue, setPrevValue] = useState<number>(0);
 
@@ -19,7 +19,7 @@ const InputBox = ({placeholder, valueChangeEvent, maxValue = 100, unit='percent'
     const unitSymbol = getUnitSymbol(unit);
 
     return (
-      <div className={clsx(styles.InputBox)}>
+      <div className={clsx(styles.InputBox)} style={{padding: padding ?? 0 }}>
       <input
         placeholder={placeholder ?? unitSymbol}
         value={text}

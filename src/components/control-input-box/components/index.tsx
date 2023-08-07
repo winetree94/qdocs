@@ -3,12 +3,6 @@ import PrefixIcon from './PrefixIcon';
 import InputBox from './InputBox';
 
 
-// const setInitValue = (props: QueueControlInputBoxAllProps) => {
-//   const init = {...props};
-//   console.log(init);
-// };
-
-
 const test = () => {
   return <></>;
 };
