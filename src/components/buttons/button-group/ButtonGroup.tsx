@@ -42,11 +42,6 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
     [children, currentActiveIndex],
   );
 
-  useEffect(() => {
-    console.log('-> children', children);
-    console.log('-> clones', clones());
-  }, [children, clones]);
-
   return (
     <>
       <div className={clsx('tw-flex')} ref={groupRef}>
