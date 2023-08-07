@@ -4,7 +4,7 @@ import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { QueueButton } from 'components/button/Button';
+import { QueueButton } from 'components/buttons/button/Button';
 import { QueueSeparator } from 'components/separator/Separator';
 
 const PagePanelRoot = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
