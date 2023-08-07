@@ -29,6 +29,8 @@ export const BottomPanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
+  console.log('pages', pages);
+
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
   const openEditPageNameDialog = (pageId: EntityId) => {
