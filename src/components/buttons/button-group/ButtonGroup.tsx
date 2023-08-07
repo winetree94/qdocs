@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, ReactElement, useCallback, cloneElement, useState } from 'react';
+import React, { useRef, ReactElement, useCallback, cloneElement, useState } from 'react';
 import clsx from 'clsx';
 import style from './ButtonGroup.module.scss';
 
