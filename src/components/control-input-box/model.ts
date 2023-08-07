@@ -1,15 +1,12 @@
+import { InputHTMLAttributes } from 'react';
+
 export type QueueControlInputBoxUnitType = 'percent' | 'degree' | 'pt';
 
-export interface QueueControlInputBoxAllProps {
-  placeholder?: string;
-  defaultValue?: number;
+export interface QueueControlInputBoxAllProps extends InputHTMLAttributes<HTMLInputElement> {
   variant?: 'outline' | 'filled' | 'standard';
-  size?: string;
   margin?: string;
-  padding?: string;
   color?: string;
-  label?: string;
-  subDescription?: string;
+  padding?: string;
   iconImg?: string;
   width?: string;
   unit: QueueControlInputBoxUnitType;
@@ -18,6 +15,25 @@ export interface QueueControlInputBoxAllProps {
   valueChangeEvent?: (e: number) => void;
 }
 
-// export interface QueueControlInputRootProps {
-//   children?: React.ReactNode;
-// }
+export interface QueueControlInputWrapperProps {
+  variant?: 'outline' | 'filled' | 'standard';
+  margin?: string;
+  color?: string;
+  padding?: string;
+  width?: string;
+  children?: React.ReactNode;
+}
+
+export interface QueueControlInputPrefixIconProps {
+  prefixType: 'img' | 'class' | 'svg';
+  prefixValue: string;
+}
+
+export interface QueueControlInputBoxProps extends InputHTMLAttributes<HTMLInputElement> {
+  margin?: string;
+  padding?: string;
+  unit: QueueControlInputBoxUnitType;
+  maxValue?: number;
+  children?: React.ReactNode;
+  valueChangeEvent?: (e: number) => void;
+}

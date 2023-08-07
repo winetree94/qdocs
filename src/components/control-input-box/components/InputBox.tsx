@@ -2,9 +2,9 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { getUnitSymbol, isValidateValue, isValidLimit } from '../utils';
 import styles from '../ControlInputBox.module.scss';
-import { QueueControlInputBoxAllProps } from '../model';
+import { QueueControlInputBoxProps } from '../model';
 
-const InputBox = ({placeholder, color, variant, valueChangeEvent, maxValue = 100, unit='percent', ...props}: Partial<QueueControlInputBoxAllProps> ) => {
+const InputBox = ({placeholder, valueChangeEvent, maxValue = 100, unit='percent', ...props}: Partial<QueueControlInputBoxProps>) => {
     const [text, setText] = useState<string>('');
     const [prevValue, setPrevValue] = useState<number>(0);
 
