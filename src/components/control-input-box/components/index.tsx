@@ -9,8 +9,19 @@ import InputBox from './InputBox';
 // };
 
 
+const test = () => {
+  return <></>;
+};
+
+
 export const QueueControlInputBoxComponent = {
   Wrapper: Root,
-  PrefixIcon: PrefixIcon,
-  InputBox: InputBox,
+  PrefixIcon,
+  InputBox,
 };
+
+export const QueueControlInputBox = Object.assign(test, {
+  Wrapper: Root,
+  PrefixIcon,
+  InputBox,
+});
