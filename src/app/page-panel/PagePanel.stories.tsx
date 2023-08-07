@@ -12,10 +12,12 @@ const meta: Meta<typeof PagePanel> = {
 
 export const Sandbox: Story = {
   render: () => (
-    <PanelResizer.Panel>
-      <PanelResizer.Pane panePosition="left"></PanelResizer.Pane>
-      <PagePanel />
-    </PanelResizer.Panel>
+    <div className="tw-w-full tw-h-screen tw-py-4 tw-bg-stone-200">
+      <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
+        <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
+        <PagePanel />
+      </PanelResizer.Panel>
+    </div>
   ),
 };
 

@@ -96,6 +96,7 @@ const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerP
       {...props}
       className={clsx(
         'tw-absolute',
+        'tw-z-50',
         `tw-${panePosition}-0`,
         horizontal ? 'tw-cursor-row-resize' : 'tw-cursor-col-resize',
         horizontal ? 'tw-w-full' : 'tw-h-full',
