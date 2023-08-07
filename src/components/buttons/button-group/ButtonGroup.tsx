@@ -1,4 +1,4 @@
-import React, { useRef, ReactElement, useCallback, cloneElement, useState } from 'react';
+import React, { ReactElement, useCallback, cloneElement, useState } from 'react';
 import clsx from 'clsx';
 import style from './ButtonGroup.module.scss';
 
@@ -10,7 +10,6 @@ interface Props {
 const QueueButtonGroup = ({ children, activeIndex }: Props) => {
   const [currentActiveIndex, setCurrentActiveIndex] = useState<number | null>(activeIndex ? activeIndex : null);
 
-  const groupRef = useRef();
   const clones = useCallback(
     () =>
       children.map((child, index) => {
@@ -18,6 +17,7 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
           child,
           {
             ...child.props,
+            key: index,
             style: {
               borderRadius:
                 index !== 0 && children.length - 1 !== index
@@ -30,7 +30,7 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
               ...child.props.style,
             },
             index,
-            isActive: currentActiveIndex === index,
+            'data-state': currentActiveIndex === index && 'on',
             onClick: () => setCurrentActiveIndex(index),
           },
           <>
@@ -44,9 +44,7 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
 
   return (
     <>
-      <div className={clsx('tw-flex')} ref={groupRef}>
-        {clones()}
-      </div>
+      <div className={clsx('tw-flex')}>{clones()}</div>
     </>
   );
 };
