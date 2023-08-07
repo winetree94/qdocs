@@ -1,6 +1,6 @@
 import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import clsx from 'clsx';
-import { QueueButton } from 'components/button/Button';
+import { QueueButton } from 'components/buttons/button/Button';
 import { QueueH2 } from 'components/head/Head';
 import { QueueDocument } from 'model/document';
 import { useAppDispatch } from 'store/hooks';
@@ -18,9 +18,10 @@ export const Welcome = () => {
   const onNewDocumentClick = (): void => {
     rootRenderer.render(
       <NewDocumentDialog
-      onSubmit={(document) => {
+        onSubmit={(document) => {
           dispatch(DocumentActions.loadDocument(document));
-      }} />
+        }}
+      />,
     );
   };
 

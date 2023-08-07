@@ -2,7 +2,7 @@ import { EffectControllerIndex } from 'components/effect-controller/EffectContro
 import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { ReactElement, useState } from 'react';
 import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
-import { QueueButton, QueueIconButton } from 'components/button/Button';
+import { QueueButton, QueueIconButton } from 'components/buttons/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from 'store/hooks';

@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { QueueIconButton } from 'components/button/Button';
+import { QueueIconButton } from 'components/buttons/button/Button';
 import { useState } from 'react';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import styles from './BottomPanel.module.scss';
@@ -34,10 +34,7 @@ export const BottomPanel = () => {
   const openEditPageNameDialog = (pageId: EntityId) => {
     const page = pages.find((page) => page.id === pageId);
     rootRenderer.render(
-      <EditPageNameDialog
-        pageName={page.pageName}
-        onSubmit={(value): void => onPageNameEdit(value, pageId)}
-      />
+      <EditPageNameDialog pageName={page.pageName} onSubmit={(value): void => onPageNameEdit(value, pageId)} />,
     );
   };
 

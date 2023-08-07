@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
-import { QueueButton } from 'components/button/Button';
+import { QueueButton } from '../buttons/button/Button';
 import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
@@ -16,14 +16,9 @@ export interface QueueAlertDialogRootProps {
 
 export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogRootProps) => {
   return (
-    <AlertDialog.Root
-      open={props.open}
-      defaultOpen={props.defaultOpen}
-      onOpenChange={props.onOpenChange}
-    >
+    <AlertDialog.Root open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className={clsx(styles.AlertDialogOverlay)}>
-        </AlertDialog.Overlay>
+        <AlertDialog.Overlay className={clsx(styles.AlertDialogOverlay)}></AlertDialog.Overlay>
         <AlertDialog.Content className={clsx(styles.AlertDialogContent)} asChild={false}>
           {children}
         </AlertDialog.Content>
@@ -32,16 +27,15 @@ export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogRoo
   );
 };
 
-export const QueueAlertDialogTitle = React.forwardRef<
-  HTMLHeadingElement,
-  AlertDialog.AlertDialogTitleProps
->(({ children, className, ...props }, ref) => {
-  return (
-    <AlertDialog.Title ref={ref} {...props} className={clsx(styles.AlertDialogTitle, className)}>
-      {children}
-    </AlertDialog.Title>
-  );
-});
+export const QueueAlertDialogTitle = React.forwardRef<HTMLHeadingElement, AlertDialog.AlertDialogTitleProps>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <AlertDialog.Title ref={ref} {...props} className={clsx(styles.AlertDialogTitle, className)}>
+        {children}
+      </AlertDialog.Title>
+    );
+  },
+);
 
 export const QueueAlertDialogDescription = React.forwardRef<
   HTMLParagraphElement,
@@ -58,16 +52,15 @@ export interface QueueAlertDialogFooterProps extends React.BaseHTMLAttributes<HT
   children?: React.ReactNode;
 }
 
-export const QueueAlertDialogFooter = forwardRef<
-  HTMLDivElement,
-  QueueAlertDialogFooterProps
->(({ children, className, ...props }, ref) => {
-  return (
-    <div ref={ref} {...props} className={clsx(styles.AlertDialogFooter, className)}>
-      {children}
-    </div>
-  );
-});
+export const QueueAlertDialogFooter = forwardRef<HTMLDivElement, QueueAlertDialogFooterProps>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <div ref={ref} {...props} className={clsx(styles.AlertDialogFooter, className)}>
+        {children}
+      </div>
+    );
+  },
+);
 
 const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
@@ -145,20 +138,12 @@ export const useAlertDialog = () => {
           onOpenChange={(opened) => {
             !opened && rootRenderer.clear(key);
             params.onOpenChange?.(opened);
-          }}
-        >
-          {params.title && (
-            <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>
-          )}
-          {params.description && (
-            <QueueAlertDialog.Description>{params.description}</QueueAlertDialog.Description>
-          )}
+          }}>
+          {params.title && <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>}
+          {params.description && <QueueAlertDialog.Description>{params.description}</QueueAlertDialog.Description>}
           {params.buttons?.length && (
             <QueueAlertDialog.Footer>
-              {params.buttons.map(({
-                closeOnClick = true,
-                ...button
-              }, index) => (
+              {params.buttons.map(({ closeOnClick = true, ...button }, index) => (
                 <QueueButton
                   key={index}
                   size={button.size || QUEUE_UI_SIZE.MEDIUM}
@@ -172,7 +157,7 @@ export const useAlertDialog = () => {
               ))}
             </QueueAlertDialog.Footer>
           )}
-        </QueueAlertDialog.Root>
+        </QueueAlertDialog.Root>,
       );
       return key;
     },

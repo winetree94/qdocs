@@ -2,7 +2,7 @@ import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import styles from './PresentationRemote.module.scss';
 import { SettingsActions } from 'store/settings/actions';
-import { QueueIconButton } from 'components/button/Button';
+import { QueueIconButton } from 'components/buttons/button/Button';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';

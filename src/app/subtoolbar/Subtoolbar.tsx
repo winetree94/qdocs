@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
-import { QueueIconButton } from '../../components/button/Button';
+import { QueueIconButton } from 'components/buttons/button/Button';
 import styles from './Subtoolbar.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';

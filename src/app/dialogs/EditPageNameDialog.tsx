@@ -1,4 +1,4 @@
-import { QueueButton } from 'components/button/Button';
+import { QueueButton } from 'components/buttons/button/Button';
 import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
 import { QueueInput } from 'components/input/Input';
 import { useRef, useState } from 'react';
@@ -19,11 +19,12 @@ export const EditPageNameDialog = ({ pageName, onSubmit }: EditPageNameProps) =>
   return (
     <QueueDialog.Root ref={renderedRef}>
       <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
-      <form onSubmit={(event): void => {
-        event.preventDefault();
-        onSubmit(currentPageName);
-        renderedRef.current.close();
-      }}>
+      <form
+        onSubmit={(event): void => {
+          event.preventDefault();
+          onSubmit(currentPageName);
+          renderedRef.current.close();
+        }}>
         <QueueDialog.Description>
           <QueueInput
             required

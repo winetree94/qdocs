@@ -1,6 +1,6 @@
 import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
 import React, { useMemo, useRef } from 'react';
-import { QueueButton } from 'components/button/Button';
+import { QueueButton } from 'components/buttons/button/Button';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
@@ -52,7 +52,7 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
       setFetching(true);
       const document = await fetcher();
       onSubmit?.(document);
-     } finally {
+    } finally {
       setFetching(false);
       dialogRef.current.close();
     }
