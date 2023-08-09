@@ -5,7 +5,6 @@ import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
-import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { Welcome } from 'app/welcome-panel/Welcome';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
@@ -21,6 +20,8 @@ import { HistorySelectors } from 'store/history/selectors';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
 import { RightPanel } from 'app/right-panel/RightPanel';
+import { PagePanel } from 'app/page-panel/PagePanel';
+import { Timeline } from 'components/timeline/Timeline';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -255,18 +256,29 @@ export const RootLayout = () => {
       {docs && (
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
-            <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
-              <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
-              <LeftPanel />
-            </PanelResizer.Panel>
+            <div className="tw-flex tw-flex-col tw-h-full">
+              <PanelResizer.Panel className="tw-flex-1 tw-flex-shrink-0 tw-h-full" width={200} minWidth={30}>
+                <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
+                <LeftPanel />
+              </PanelResizer.Panel>
+
+              <div className="tw-h-[50%]">
+                <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
+                  <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
+                  <PagePanel />
+                </PanelResizer.Panel>
+              </div>
+            </div>
           )}
           <div className={clsx(styles.Right)}>
             <QueueEditor />
             {!settings.presentationMode && (
-              <PanelResizer.Panel className="tw-w-full tw-bg-gray-100 tw-px-[10px]" height={200} minHeight={30}>
-                <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
-                <BottomPanel />
-              </PanelResizer.Panel>
+              <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
+                <PanelResizer.Panel className="tw-w-full tw-px-[10px]" height={200} minHeight={30}>
+                  <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
+                  <Timeline />
+                </PanelResizer.Panel>
+              </div>
             )}
           </div>
           <PanelResizer.Panel width={200} minWidth={50}>
@@ -281,7 +293,6 @@ export const RootLayout = () => {
           <Welcome></Welcome>
         </div>
       )}
-
     </div>
   );
 };

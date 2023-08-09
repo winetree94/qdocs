@@ -34,10 +34,6 @@
   "global.undo": "실행 취소",
   "global.redo": "다시 실행",
   "global.paste": "붙여넣기",
-  "bottom-panel.move-page-to-left": "페이지를 왼쪽으로 이동",
-  "bottom-panel.move-page-to-right": "페이지를 오른쪽으로 이동",
-  "bottom-panel.add-page-to-left": "왼쪽에 페이지 추가",
-  "bottom-panel.add-page-to-right": "오른쪽에 페이지 추가",
   "global.rename": "이름 변경",
   "global.delete": "삭제",
   "edit-page-name-dialog.edit-page-name": "페이지 이름 수정",
@@ -70,5 +66,10 @@
   "global.line": "선",
   "global.icon": "아이콘",
   "effect-panel.all-effects": "전체 이펙트",
-  "effect-panel.current-effects": "현재 이펙트"
+  "effect-panel.current-effects": "현재 이펙트",
+  "page-panel.add-slide": "슬라이드 추가",
+  "page-panel.move-page-to-before": "슬라이드를 위로 이동",
+  "page-panel.move-page-to-after": "슬라이드를 아래로 이동",
+  "page-panel.add-page-to-before": "위쪽에 슬라이드 추가",
+  "bottom-panel.add-page-to-after": "아래쪽에 슬라이드 추가"
 }

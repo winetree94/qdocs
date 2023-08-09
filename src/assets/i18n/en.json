@@ -34,10 +34,6 @@
   "global.undo": "Undo",
   "global.redo": "Redo",
   "global.paste": "Paste",
-  "bottom-panel.move-page-to-left": "Move the page to the left",
-  "bottom-panel.move-page-to-right": "Move the page to the Right",
-  "bottom-panel.add-page-to-left": "Add page to left",
-  "bottom-panel.add-page-to-right": "Add page to right",
   "global.rename": "Rename",
   "global.delete": "Delete",
   "edit-page-name-dialog.edit-page-name": "Edit Page Name",
@@ -70,5 +66,10 @@
   "global.line": "Line",
   "global.icon": "Icon",
   "effect-panel.all-effects": "All Effects",
-  "effect-panel.current-effects": "Current Effects"
+  "effect-panel.current-effects": "Current Effects",
+  "page-panel.add-slide": "Add slide",
+  "page-panel.move-page-to-before": "Move to slide to the top",
+  "page-panel.move-page-to-after": "Move to slide to the bottom",
+  "page-panel.add-page-to-before": "Add slide to top",
+  "bottom-panel.add-page-to-after": "Add slide to bottom"
 }
