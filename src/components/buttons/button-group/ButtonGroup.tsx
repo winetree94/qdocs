@@ -8,6 +8,7 @@ interface Props {
 }
 
 const QueueButtonGroup = ({ children, activeIndex }: Props) => {
+  // 추후에 prop에 active를 판별하기위해서 인덱스가 아닌 id로 받을 수 있도록 할지 고민 현재는 id를 잘 넘기지 않는 편
   const [currentActiveIndex, setCurrentActiveIndex] = useState<number | null>(activeIndex ? activeIndex : null);
 
   const clones = useCallback(

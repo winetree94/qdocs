@@ -1,0 +1,79 @@
+@import '~styles/button/Button.module.scss';
+
+// 아래 전부 정리가 필요함!!
+@mixin queue-checkbox-color-default {
+  &.default {
+    color: $ui-default-color;
+    &:hover {
+      color: $ui-default-color-hover;
+    }
+    &:checked {
+      color: $ui-default-color-active;
+    }
+    &:disabled {
+      color: $ui-default-color-disabled;
+    }
+  }
+}
+
+@mixin queue-checkbox-color-blue {
+  &.blue {
+    color: $ui-default-color;
+    &:hover {
+      color: $ui-default-color;
+    }
+    &:checked {
+      color: $ui-default-color-active;
+    }
+    &:disabled {
+      color: $ui-default-color-disabled;
+    }
+  }
+}
+
+@mixin queue-checkbox-color-red {
+  &.red {
+    color: $ui-default-color;
+    &:hover {
+      color: $ui-default-color;
+    }
+    &:checked {
+      color: $ui-default-color;
+    }
+    &:disabled {
+      color: $ui-default-color-disabled;
+    }
+  }
+}
+
+.QueueCheckbox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-checkbox-color-default;
+  @include queue-checkbox-color-blue;
+  @include queue-checkbox-color-red;
+
+  cursor: pointer;
+
+}
+
+.CheckboxInput {
+  appearance: none;
+  display: none;
+}
+
+
+.CheckboxIcon {
+  margin-right: 4px;
+}

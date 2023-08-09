@@ -1,8 +1,10 @@
+import { useState, ChangeEvent } from 'react';
 import { QueueControlInputBoxComponent } from 'components/control-input-box/components';
 import QueueButtonGroup from 'components/buttons/button-group/ButtonGroup';
 import { QueueButton } from 'components/buttons/button/Button';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
 
 export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
@@ -13,6 +15,25 @@ const inputValueChanges = (e: number) => {
 };
 
 export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
+  const testCheckboxData = [
+    { id: 'id1', name: 'testData', value: 'testValue1', checked: false, checkboxColor: QUEUE_UI_COLOR.DEFAULT },
+    { id: 'id2', name: 'testData', value: 'testValue2', checked: true, checkboxColor: QUEUE_UI_COLOR.BLUE },
+    { id: 'id3', name: 'testData', value: 'testValue3', checked: true, checkboxColor: QUEUE_UI_COLOR.RED },
+  ];
+
+  const [checkboxOptions, setCheckboxOptions] = useState(testCheckboxData);
+
+  const checkboxOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCheckboxOptions((prev) =>
+      prev.map((option) => {
+        return {
+          ...option,
+          checked: option.id === e.target.id ? !option.checked : option.checked,
+        };
+      }),
+    );
+  };
+
   return (
     <>
       <div {...props}>
@@ -65,6 +86,19 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
             btn4
           </QueueButton>
         </QueueButtonGroup>
+        {checkboxOptions.map((option) => (
+          <QueueCheckbox
+            key={option.id}
+            id={option.id}
+            name={option.name}
+            value={option.value}
+            checked={option.checked}
+            checkboxColor={option.checkboxColor}
+            checkboxSize={QUEUE_UI_SIZE.LARGE}
+            onchange={checkboxOnChange}>
+            {option.value}
+          </QueueCheckbox>
+        ))}
       </div>
     </>
   );
