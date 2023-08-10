@@ -5,33 +5,65 @@ import clsx from 'clsx';
 import { useRootRenderedContext } from 'cdk/root-renderer/root-renderer';
 
 export interface QueueDialogRootProps {
+  /**
+   * @description
+   * 다이얼로그의 열림 여부를 지정합니다.
+   * Radix DialogRoot 의 open 과 동일합니다.
+   * RootRenderer 를 통해 사용하는 경우 지정할 필요가 없습니다.
+   *
+   * @default true
+   */
+  open?: boolean;
+
+  /**
+   * @description
+   * 다이얼로그의 열림 여부를 지정합니다.
+   * Radix DialogRoot 의 defaultOpen 과 동일합니다.
+   * RootRenderer 를 통해 사용하는 경우 지정할 필요가 없습니다.
+   *
+   * @default true
+   */
+  defaultOpen?: boolean;
+
+  /**
+   * @description
+   * 다이얼로그의 열림 여부가 변경될 때 호출되는 콜백입니다.
+   * Radix DialogRoot 의 onOpenChange 와 동일합니다.
+   */
+  onOpenChange?: (opened: boolean) => void;
+
   children?: React.ReactNode;
 }
 
 export interface QueueDialogRootRef {
+  /**
+   * @description
+   * 다이얼로그를 닫습니다.
+   */
   close: () => void;
 }
 
 export const QueueDialogRoot = forwardRef<
   QueueDialogRootRef,
   QueueDialogRootProps
->(({ children }, ref) => {
-  const rendered = useRootRenderedContext();
+>(({ children, ...props }, ref) => {
+  const context = useRootRenderedContext();
 
   useImperativeHandle(ref, () => {
     return {
       close: (): void => {
-        rendered.close();
+        context.close();
       },
     };
-  }, [rendered]);
+  }, [context]);
 
   return (
     <Dialog.Root
-      open={true}
-      defaultOpen={true}
+      open={props.open}
+      defaultOpen={props.defaultOpen}
       onOpenChange={(opened) => {
-        !opened && rendered.close();
+        !opened && context.close();
+        props.onOpenChange?.(opened);
       }}
     >
       <Dialog.Portal>
@@ -43,6 +75,11 @@ export const QueueDialogRoot = forwardRef<
     </Dialog.Root>
   );
 });
+
+QueueDialogRoot.defaultProps = {
+  open: true,
+  defaultOpen: true,
+};
 
 export const QueueDialogTitle = forwardRef<
   HTMLHeadingElement,

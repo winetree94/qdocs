@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
 import { QueueButton } from '../buttons/button/Button';
 import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
-import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
+import { useRootRenderedContext, useRootRenderer } from 'cdk/root-renderer/root-renderer';
 
 export interface QueueAlertDialogRootProps {
   children?: React.ReactNode;
@@ -14,7 +14,24 @@ export interface QueueAlertDialogRootProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogRootProps) => {
+export interface QueueAlertDialogRootRef {
+  close: () => void;
+}
+
+const QueueAlertDialogRoot = forwardRef<
+  QueueAlertDialogRootRef,
+  QueueAlertDialogRootProps
+>(({ children, ...props }: QueueAlertDialogRootProps, ref) => {
+  const context = useRootRenderedContext();
+
+  useImperativeHandle(ref, () => {
+    return {
+      close: (): void => {
+        context.close();
+      },
+    };
+  }, [context]);
+
   return (
     <AlertDialog.Root open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}>
       <AlertDialog.Portal>
@@ -25,9 +42,14 @@ export const QueueAlertDialogRoot = ({ children, ...props }: QueueAlertDialogRoo
       </AlertDialog.Portal>
     </AlertDialog.Root>
   );
+});
+
+QueueAlertDialogRoot.defaultProps = {
+  open: true,
+  defaultOpen: true,
 };
 
-export const QueueAlertDialogTitle = React.forwardRef<HTMLHeadingElement, AlertDialog.AlertDialogTitleProps>(
+const QueueAlertDialogTitle = React.forwardRef<HTMLHeadingElement, AlertDialog.AlertDialogTitleProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <AlertDialog.Title ref={ref} {...props} className={clsx(styles.AlertDialogTitle, className)}>
@@ -37,7 +59,7 @@ export const QueueAlertDialogTitle = React.forwardRef<HTMLHeadingElement, AlertD
   },
 );
 
-export const QueueAlertDialogDescription = React.forwardRef<
+const QueueAlertDialogDescription = React.forwardRef<
   HTMLParagraphElement,
   AlertDialog.AlertDialogDescriptionProps
 >(({ children, className, ...props }, ref) => {
@@ -52,7 +74,7 @@ export interface QueueAlertDialogFooterProps extends React.BaseHTMLAttributes<HT
   children?: React.ReactNode;
 }
 
-export const QueueAlertDialogFooter = forwardRef<HTMLDivElement, QueueAlertDialogFooterProps>(
+const QueueAlertDialogFooter = forwardRef<HTMLDivElement, QueueAlertDialogFooterProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div ref={ref} {...props} className={clsx(styles.AlertDialogFooter, className)}>
@@ -62,7 +84,7 @@ export const QueueAlertDialogFooter = forwardRef<HTMLDivElement, QueueAlertDialo
   },
 );
 
-const QueueAlertDialog = {
+export const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
   Title: QueueAlertDialogTitle,
   Description: QueueAlertDialogDescription,
