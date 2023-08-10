@@ -47,10 +47,7 @@
 }
 
 .QueueCheckbox {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  @apply tw-inline-flex tw-items-center tw-relative tw-cursor-pointer;
 
   // sizing
   @include queue-ui-x-padding;
@@ -63,17 +60,21 @@
   @include queue-checkbox-color-default;
   @include queue-checkbox-color-blue;
   @include queue-checkbox-color-red;
-
-  cursor: pointer;
-
 }
 
 .CheckboxInput {
-  appearance: none;
-  display: none;
+  @apply tw-appearance-none tw-hidden;
+}
+
+.CheckboxLabel {
+  @apply tw-flex;
 }
 
 
 .CheckboxIcon {
-  margin-right: 4px;
+  @apply tw-shrink-0 tw-mr-1;
+}
+
+.CheckboxChildren {
+  @apply tw-flex-auto tw-truncate;
 }
