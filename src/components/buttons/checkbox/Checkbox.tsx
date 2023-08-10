@@ -10,6 +10,7 @@ export interface QueueCheckboxProps extends React.InputHTMLAttributes<HTMLInputE
   name: string;
   value: any;
   checked?: boolean;
+  disabled?: boolean;
   onchange?: (e: ChangeEvent<HTMLInputElement>) => void;
   checkboxSize?: QUEUE_UI_SIZES;
   checkboxColor?: QUEUE_UI_COLORS;
@@ -21,6 +22,7 @@ const QueueCheckbox = ({
   name,
   value,
   checked,
+  disabled = false,
   onchange,
   checkboxSize = QUEUE_UI_SIZE.MEDIUM,
   checkboxColor = QUEUE_UI_COLOR.DEFAULT,
@@ -34,14 +36,14 @@ const QueueCheckbox = ({
           icon="ri-checkbox-fill"
           size={checkboxSize}
           color={checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT}
-          className={clsx(styles.CheckboxIcon)}
+          className={clsx(styles.CheckboxIcon, disabled && styles.Disabled)}
         />
       ),
       off: (
         <SvgRemixIcon
           icon="ri-checkbox-blank-line"
           size={checkboxSize}
-          color={checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT}
+          color={(checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT, disabled && styles.Disabled)}
           className={clsx(styles.CheckboxIcon)}
         />
       ),
@@ -56,12 +58,13 @@ const QueueCheckbox = ({
         name={name}
         value={value}
         checked={checked}
+        disabled={disabled}
         onChange={onchange}
-        className={clsx(styles.QueueCheckbox, styles[checkboxSize], styles[checkboxColor], styles.CheckboxInput)}
+        className={clsx(styles.QueueCheckbox, styles.CheckboxInput)}
       />
       <label
         htmlFor={id}
-        className={clsx(styles.QueueCheckbox, styles.CheckboxLabel, styles[checkboxSize], styles[checkboxColor])}>
+        className={clsx(styles.QueueCheckbox, styles.CheckboxLabel, styles[checkboxSize], disabled && styles.Disabled)}>
         {useIcon && checked ? Icon.on : Icon.off}
         <span className={clsx(styles.CheckboxChildren)}>{children}</span>
       </label>

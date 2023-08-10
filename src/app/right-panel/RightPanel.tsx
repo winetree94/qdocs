@@ -23,7 +23,14 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
       checked: false,
       checkboxColor: QUEUE_UI_COLOR.DEFAULT,
     },
-    { id: 'id2', name: 'testData', value: 'testValue2', checked: true, checkboxColor: QUEUE_UI_COLOR.BLUE },
+    {
+      id: 'id2',
+      name: 'testData',
+      value: 'testValue2',
+      checked: true,
+      disabled: true,
+      checkboxColor: QUEUE_UI_COLOR.BLUE,
+    },
     { id: 'id3', name: 'testData', value: 'testValue3', checked: true, checkboxColor: QUEUE_UI_COLOR.RED },
   ];
 
@@ -99,6 +106,7 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
             name={option.name}
             value={option.value}
             checked={option.checked}
+            disabled={option.disabled}
             checkboxColor={option.checkboxColor}
             checkboxSize={QUEUE_UI_SIZE.LARGE}
             onchange={checkboxOnChange}>
