@@ -32,7 +32,10 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
             },
             index,
             'data-state': currentActiveIndex === index && 'on',
-            onClick: () => setCurrentActiveIndex(index),
+            onClick: () => {
+              setCurrentActiveIndex(index);
+              child.props.onClick();
+            },
           },
           <>
             {child.props.children}
