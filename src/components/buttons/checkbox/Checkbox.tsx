@@ -59,9 +59,11 @@ const QueueCheckbox = ({
         onChange={onchange}
         className={clsx(styles.QueueCheckbox, styles[checkboxSize], styles[checkboxColor], styles.CheckboxInput)}
       />
-      <label htmlFor={id} className={clsx(styles.QueueCheckbox, styles[checkboxSize], styles[checkboxColor])}>
+      <label
+        htmlFor={id}
+        className={clsx(styles.QueueCheckbox, styles.CheckboxLabel, styles[checkboxSize], styles[checkboxColor])}>
         {useIcon && checked ? Icon.on : Icon.off}
-        <span>{children}</span>
+        <span className={clsx(styles.CheckboxChildren)}>{children}</span>
       </label>
     </>
   );
