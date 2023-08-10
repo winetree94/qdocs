@@ -16,7 +16,13 @@ const inputValueChanges = (e: number) => {
 
 export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
   const testCheckboxData = [
-    { id: 'id1', name: 'testData', value: 'testValue1', checked: false, checkboxColor: QUEUE_UI_COLOR.DEFAULT },
+    {
+      id: 'id1',
+      name: 'testData',
+      value: 'testValue1testValue1testValue1',
+      checked: false,
+      checkboxColor: QUEUE_UI_COLOR.DEFAULT,
+    },
     { id: 'id2', name: 'testData', value: 'testValue2', checked: true, checkboxColor: QUEUE_UI_COLOR.BLUE },
     { id: 'id3', name: 'testData', value: 'testValue3', checked: true, checkboxColor: QUEUE_UI_COLOR.RED },
   ];
