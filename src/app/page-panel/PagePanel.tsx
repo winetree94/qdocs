@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
-import { PageActions, PageSelectors } from 'store/page';
+import { NormalizedQueueDocumentPage, PageActions, PageSelectors } from 'store/page';
 import { HistoryActions } from 'store/history';
 import { DocumentSelectors } from 'store/document';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
@@ -15,6 +15,9 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueButton } from 'components/buttons/button/Button';
 import { QueueContextMenu } from 'components/context-menu/Context';
+import { ObjectSelectors } from 'store/object';
+import { EffectSelectors } from 'store/effect';
+import { StandaloneRect } from 'components/queue/standaloneRects';
 
 const PagePanelRoot = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
   return (
@@ -65,7 +68,19 @@ const PageBox = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) =>
   );
 };
 
-const PagePreview = () => {
+export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
+  page: NormalizedQueueDocumentPage;
+}
+
+const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
+  const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, page.id));
+  const effects = useAppSelector((state) => EffectSelectors.allByPageId(state, page.id));
+
+  const firstQueueEffects = effects.filter((effect) => effect.index === 0);
+  const firstQueueEffectObjectIds = firstQueueEffects.map((effect) => effect.objectId);
+
+  const firstQueueObjects = objects.filter((object) => firstQueueEffectObjectIds.includes(object.id));
+
   return (
     <div
       className={clsx(
@@ -75,7 +90,28 @@ const PagePreview = () => {
         'tw-border-[var(--blue-10)]',
         'tw-rounded-[4px]',
         'tw-bg-[var(--gray-1)]',
-      )}></div>
+        'tw-overflow-hidden',
+        className,
+      )}
+      {...props}>
+      {firstQueueObjects.map((firstQueueObject) => (
+        <StandaloneRect
+          type="rect"
+          objectId={firstQueueObject.id}
+          width={firstQueueObject.rect.width}
+          height={firstQueueObject.rect.height}
+          position={{
+            x: firstQueueObject.rect.x,
+            y: firstQueueObject.rect.y,
+          }}
+          stroke={firstQueueObject.stroke}
+          rotate={firstQueueObject.rotate}
+          fade={firstQueueObject.fade}
+          scale={firstQueueObject.scale}
+          fill={firstQueueObject.fill}
+        />
+      ))}
+    </div>
   );
 };
 
@@ -260,7 +296,7 @@ export const PagePanel = () => {
                     </div>
 
                     <div className="tw-flex-1 tw-max-w-[80%]">
-                      <PagePreview />
+                      <PagePreview page={page} />
                     </div>
                   </PageBox>
                 </QueueContextMenu.Trigger>
