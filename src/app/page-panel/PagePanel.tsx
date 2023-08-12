@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
-import { NormalizedQueueDocumentPage, PageActions, PageSelectors } from 'store/page';
+import {
+  NormalizedQueueDocumentPage,
+  PageActions,
+  PageSelectors,
+} from 'store/page';
 import { HistoryActions } from 'store/history';
 import { DocumentSelectors } from 'store/document';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
@@ -19,7 +23,10 @@ import { ObjectSelectors } from 'store/object';
 import { EffectSelectors } from 'store/effect';
 import { StandaloneRect } from 'components/queue/standaloneRects';
 
-const PagePanelRoot = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
+const PagePanelRoot = ({
+  className,
+  ...props
+}: BaseHTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={clsx(
@@ -39,16 +46,30 @@ const PagePanelRoot = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElemen
   );
 };
 
-const PagesBox = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
+const PagesBox = ({
+  className,
+  ...props
+}: BaseHTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={clsx('tw-p-3', 'tw-flex', 'tw-flex-col', 'tw-gap-1', 'tw-w-full', 'tw-h-full', className)}
+      className={clsx(
+        'tw-p-3',
+        'tw-flex',
+        'tw-flex-col',
+        'tw-gap-1',
+        'tw-w-full',
+        'tw-h-full',
+        className,
+      )}
       {...props}
     />
   );
 };
 
-const PageBox = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
+const PageBox = ({
+  className,
+  ...props
+}: BaseHTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={clsx(
@@ -73,13 +94,21 @@ export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
 }
 
 const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
-  const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, page.id));
-  const effects = useAppSelector((state) => EffectSelectors.allByPageId(state, page.id));
+  const objects = useAppSelector((state) =>
+    ObjectSelectors.allByPageId(state, page.id),
+  );
+  const effects = useAppSelector((state) =>
+    EffectSelectors.allByPageId(state, page.id),
+  );
 
   const firstQueueEffects = effects.filter((effect) => effect.index === 0);
-  const firstQueueEffectObjectIds = firstQueueEffects.map((effect) => effect.objectId);
+  const firstQueueEffectObjectIds = firstQueueEffects.map(
+    (effect) => effect.objectId,
+  );
 
-  const firstQueueObjects = objects.filter((object) => firstQueueEffectObjectIds.includes(object.id));
+  const firstQueueObjects = objects.filter((object) =>
+    firstQueueEffectObjectIds.includes(object.id),
+  );
 
   return (
     <div
@@ -94,8 +123,9 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         className,
       )}
       {...props}>
-      {firstQueueObjects.map((firstQueueObject) => (
+      {firstQueueObjects.map((firstQueueObject, index) => (
         <StandaloneRect
+          key={index}
           type="rect"
           objectId={firstQueueObject.id}
           width={firstQueueObject.rect.width}
@@ -115,7 +145,10 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
   );
 };
 
-const PageAddBox = ({ className, ...props }: BaseHTMLAttributes<HTMLDivElement>) => {
+const PageAddBox = ({
+  className,
+  ...props
+}: BaseHTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={clsx(
@@ -207,7 +240,10 @@ export const PagePanel = () => {
   };
 
   // drag
-  const handleDragStart = (event: React.DragEvent<HTMLSpanElement>, id: EntityId): void => {
+  const handleDragStart = (
+    event: React.DragEvent<HTMLSpanElement>,
+    id: EntityId,
+  ): void => {
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', `${id}`);
   };
@@ -219,10 +255,13 @@ export const PagePanel = () => {
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>): void => {
-    const from = event.dataTransfer.getData('text/plain') as string;
-    const to = event.currentTarget.getAttribute('data-id') as string;
+    const from = event.dataTransfer.getData('text/plain');
+    const to = event.currentTarget.getAttribute('data-id');
 
-    if (!event.currentTarget || !event.currentTarget.classList.contains('page-item')) {
+    if (
+      !event.currentTarget ||
+      !event.currentTarget.classList.contains('page-item')
+    ) {
       return;
     }
 
@@ -281,16 +320,25 @@ export const PagePanel = () => {
                     })}
                     data-id={page.id}
                     onClick={() => navigatePage(page.id)}
-                    onDragStart={(event): void => handleDragStart(event, page.id)}
+                    onDragStart={(event): void =>
+                      handleDragStart(event, page.id)
+                    }
                     onDragEnter={(): void => setDragOverIndex(index)}
                     onDragEnd={(): void => setDragOverIndex(-1)}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}>
                     <div className="tw-shrink-0 tw-flex tw-flex-col tw-justify-between tw-items-end">
-                      <div className="tw-text-xs tw-cursor-default">{page.index + 1}</div>
+                      <div className="tw-text-xs tw-cursor-default">
+                        {page.index + 1}
+                      </div>
                       <div className="tw-flex">
-                        <button className="tw-text-[var(--gray-10)] tw-cursor-pointer" onClick={() => copyPage(index)}>
-                          <SvgRemixIcon icon="ri-file-copy-line" size={QUEUE_UI_SIZE.MEDIUM} />
+                        <button
+                          className="tw-text-[var(--gray-10)] tw-cursor-pointer"
+                          onClick={() => copyPage(index)}>
+                          <SvgRemixIcon
+                            icon="ri-file-copy-line"
+                            size={QUEUE_UI_SIZE.MEDIUM}
+                          />
                         </button>
                       </div>
                     </div>
@@ -303,18 +351,28 @@ export const PagePanel = () => {
 
                 <QueueContextMenu.Portal>
                   <QueueContextMenu.Content>
-                    <QueueContextMenu.Item onClick={() => movePage(page.id, self[Math.max(index - 1, 0)].id)}>
+                    <QueueContextMenu.Item
+                      onClick={() =>
+                        movePage(page.id, self[Math.max(index - 1, 0)].id)
+                      }>
                       {t('page-panel.move-page-to-before')}
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Item
-                      onClick={() => movePage(page.id, self[Math.min(index + 1, self.length - 1)].id)}>
+                      onClick={() =>
+                        movePage(
+                          page.id,
+                          self[Math.min(index + 1, self.length - 1)].id,
+                        )
+                      }>
                       {t('page-panel.move-page-to-after')}
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Separator />
-                    <QueueContextMenu.Item onClick={() => createPage(Math.max(index - 1))}>
+                    <QueueContextMenu.Item
+                      onClick={() => createPage(Math.max(index - 1))}>
                       {t('page-panel.add-page-to-before')}
                     </QueueContextMenu.Item>
-                    <QueueContextMenu.Item onClick={() => createPage(Math.min(index, self.length))}>
+                    <QueueContextMenu.Item
+                      onClick={() => createPage(Math.min(index, self.length))}>
                       {t('bottom-panel.add-page-to-after')}
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Separator />

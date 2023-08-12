@@ -7,7 +7,8 @@ export interface QueueDropdownGroupProps extends Dropdown.MenuGroupProps {
   label?: Dropdown.MenuLabelProps['children'];
 }
 
-export interface QueueDropdownRadioGroupProps extends Dropdown.MenuRadioGroupProps {
+export interface QueueDropdownRadioGroupProps
+  extends Dropdown.MenuRadioGroupProps {
   label?: Dropdown.MenuLabelProps['children'];
 }
 
@@ -26,7 +27,12 @@ const DropdownItemBase = [
   'data-[disabled]:tw-text-[var(--gray-8)]',
 ];
 
-const DropdownLabelBase = ['tw-pl-6', 'tw-text-xs', 'tw-text-[var(--mauve-9)]', , 'tw-cursor-default'];
+const DropdownLabelBase = [
+  'tw-pl-6',
+  'tw-text-xs',
+  'tw-text-[var(--mauve-9)]',
+  'tw-cursor-default',
+];
 
 const DropdownIndicatorBase = [
   'tw-absolute',
@@ -62,38 +68,52 @@ const Content = forwardRef<HTMLDivElement, Dropdown.MenuContentProps>(
   },
 );
 
-const Group = forwardRef<HTMLDivElement, QueueDropdownGroupProps>(({ children, label, ...props }, forwardedRef) => {
-  return (
-    <Dropdown.Group {...props} ref={forwardedRef}>
-      <Dropdown.Label className={clsx(DropdownLabelBase)}>{label}</Dropdown.Label>
-      {children}
-    </Dropdown.Group>
-  );
-});
+const Group = forwardRef<HTMLDivElement, QueueDropdownGroupProps>(
+  ({ children, label, ...props }, forwardedRef) => {
+    return (
+      <Dropdown.Group {...props} ref={forwardedRef}>
+        <Dropdown.Label className={clsx(DropdownLabelBase)}>
+          {label}
+        </Dropdown.Label>
+        {children}
+      </Dropdown.Group>
+    );
+  },
+);
 
 const RadioGroup = forwardRef<HTMLDivElement, QueueDropdownRadioGroupProps>(
   ({ children, label, ...props }, forwardedRef) => {
     return (
       <Dropdown.RadioGroup {...props} ref={forwardedRef}>
-        <Dropdown.Label className={clsx(DropdownLabelBase)}>{label}</Dropdown.Label>
+        <Dropdown.Label className={clsx(DropdownLabelBase)}>
+          {label}
+        </Dropdown.Label>
         {children}
       </Dropdown.RadioGroup>
     );
   },
 );
 
-const Item = forwardRef<HTMLDivElement, Dropdown.MenuItemProps>(({ children, className, ...props }, forwardedRef) => {
-  return (
-    <Dropdown.Item className={clsx(DropdownItemBase, '', className)} {...props} ref={forwardedRef}>
-      {children}
-    </Dropdown.Item>
-  );
-});
+const Item = forwardRef<HTMLDivElement, Dropdown.MenuItemProps>(
+  ({ children, className, ...props }, forwardedRef) => {
+    return (
+      <Dropdown.Item
+        className={clsx(DropdownItemBase, '', className)}
+        {...props}
+        ref={forwardedRef}>
+        {children}
+      </Dropdown.Item>
+    );
+  },
+);
 
 const CheckboxItem = forwardRef<HTMLDivElement, Dropdown.MenuCheckboxItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
-      <Dropdown.CheckboxItem className={clsx(DropdownItemBase, className)} {...props} ref={forwardedRef}>
+      <Dropdown.CheckboxItem
+        className={clsx(DropdownItemBase, className)}
+        {...props}
+        ref={forwardedRef}>
         <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
           <CheckIcon />
         </Dropdown.ItemIndicator>
@@ -106,7 +126,10 @@ const CheckboxItem = forwardRef<HTMLDivElement, Dropdown.MenuCheckboxItemProps>(
 const RadioItem = forwardRef<HTMLDivElement, Dropdown.MenuRadioItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
-      <Dropdown.RadioItem className={clsx(DropdownItemBase, className)} {...props} ref={forwardedRef}>
+      <Dropdown.RadioItem
+        className={clsx(DropdownItemBase, className)}
+        {...props}
+        ref={forwardedRef}>
         <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
           <DotFilledIcon />
         </Dropdown.ItemIndicator>
@@ -116,22 +139,27 @@ const RadioItem = forwardRef<HTMLDivElement, Dropdown.MenuRadioItemProps>(
   },
 );
 
-const Separator = forwardRef<HTMLDivElement, Dropdown.MenuSeparatorProps>(({ className, ...props }, forwardedRef) => {
-  return (
-    <Dropdown.Separator
-      className={clsx('tw-h-px tw-mx-2 tw-my-1.5 tw-bg-stone-100', className)}
-      {...props}
-      ref={forwardedRef}
-    />
-  );
-});
+const Separator = forwardRef<HTMLDivElement, Dropdown.MenuSeparatorProps>(
+  ({ className, ...props }, forwardedRef) => {
+    return (
+      <Dropdown.Separator
+        className={clsx('tw-h-px tw-mx-2 tw-my-1.5 tw-bg-stone-100', className)}
+        {...props}
+        ref={forwardedRef}
+      />
+    );
+  },
+);
 
 const SubContent = forwardRef<HTMLDivElement, Dropdown.MenuSubContentProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Dropdown.Portal>
         <Dropdown.SubContent
-          className={clsx('tw-py-2 tw-rounded-sm tw-bg-white tw-text-sm tw-drop-shadow-md', className)}
+          className={clsx(
+            'tw-py-2 tw-rounded-sm tw-bg-white tw-text-sm tw-drop-shadow-md',
+            className,
+          )}
           {...props}
           ref={forwardedRef}>
           {children}

@@ -56,10 +56,16 @@ export const Welcome = () => {
     <div className={clsx(styles.Container)}>
       <QueueH2 className={clsx(styles.Header)}>The Queue</QueueH2>
       <div className={styles.ButtonGroup}>
-        <QueueButton className={clsx(styles.ActionButton)} size={QUEUE_UI_SIZE.LARGE} onClick={onNewDocumentClick}>
+        <QueueButton
+          className={clsx(styles.ActionButton)}
+          size={QUEUE_UI_SIZE.LARGE}
+          onClick={onNewDocumentClick}>
           {t('welcome.new-document')}
         </QueueButton>
-        <QueueButton className={clsx(styles.ActionButton)} size={QUEUE_UI_SIZE.LARGE} onClick={startFileChooser}>
+        <QueueButton
+          className={clsx(styles.ActionButton)}
+          size={QUEUE_UI_SIZE.LARGE}
+          onClick={startFileChooser}>
           {t('welcome.open-document')}
         </QueueButton>
       </div>

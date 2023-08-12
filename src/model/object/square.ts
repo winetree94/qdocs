@@ -1,6 +1,14 @@
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
+import {
+  WithFade,
+  WithFill,
+  WithRect,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText,
+} from 'model/property';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 
 export interface QueueSquare
@@ -17,7 +25,10 @@ export interface QueueSquare
   id: EntityId;
 }
 
-export const createDefaultSquare = (documentRect: QueueDocumentRect, queueIndex: number): QueueSquare => {
+export const createDefaultSquare = (
+  documentRect: QueueDocumentRect,
+  queueIndex: number,
+): QueueSquare => {
   const width = 300;
   const height = 300;
   const objectId = nanoid();

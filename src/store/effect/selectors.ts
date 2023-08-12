@@ -15,30 +15,45 @@ const ids = selectors.selectIds;
 const byId = selectors.selectById;
 const entities = selectors.selectEntities;
 
-const byIds = createSelector([entities, (_: RootState, ids: EntityId[]) => ids], (state, ids) => {
-  return ids.map((id) => state[id]);
-});
+const byIds = createSelector(
+  [entities, (_: RootState, ids: EntityId[]) => ids],
+  (state, ids) => {
+    return ids.map((id) => state[id]);
+  },
+);
 
-const byObjectId = createSelector([entities, (_: RootState, id: EntityId) => id], (state, id) => {
-  return Object.values(state).filter(({ objectId }) => objectId === id);
-});
+const byObjectId = createSelector(
+  [entities, (_: RootState, id: EntityId) => id],
+  (state, id) => {
+    return Object.values(state).filter(({ objectId }) => objectId === id);
+  },
+);
 
-const allOfObjectId = createSelector([all, (_: RootState, id: EntityId) => id], (effects, id) => {
-  return effects.filter(({ objectId }) => objectId === id);
-});
+const allOfObjectId = createSelector(
+  [all, (_: RootState, id: EntityId) => id],
+  (effects, id) => {
+    return effects.filter(({ objectId }) => objectId === id);
+  },
+);
 
-const allByPageId = createSelector([all, ObjectSelectors.idSetOfPageId], (effects, ids) => {
-  return effects.filter(({ objectId }) => ids.has(objectId));
-});
+const allByPageId = createSelector(
+  [all, ObjectSelectors.idSetOfPageId],
+  (effects, ids) => {
+    return effects.filter(({ objectId }) => ids.has(objectId));
+  },
+);
 
 const groupByObjectId = createSelector([all], (effects) => {
-  return effects.reduce<Record<EntityId, NormalizedQueueEffect[]>>((result, effect) => {
-    if (!result[effect.objectId]) {
-      result[effect.objectId] = [];
-    }
-    result[effect.objectId].push(effect);
-    return result;
-  }, {});
+  return effects.reduce<Record<EntityId, NormalizedQueueEffect[]>>(
+    (result, effect) => {
+      if (!result[effect.objectId]) {
+        result[effect.objectId] = [];
+      }
+      result[effect.objectId].push(effect);
+      return result;
+    },
+    {},
+  );
 });
 
 const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
@@ -62,7 +77,12 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
  * 루트부터의 탐색을 피할 수 없는가?
  */
 const allEffectedObjects = createSelector(
-  [SettingSelectors.settings, PageSelectors.all, ObjectSelectors.all, groupByObjectId],
+  [
+    SettingSelectors.settings,
+    PageSelectors.all,
+    ObjectSelectors.all,
+    groupByObjectId,
+  ],
   (settings, pages, objects, effects) => {
     const pageId = settings.pageId;
     return objects
@@ -71,7 +91,9 @@ const allEffectedObjects = createSelector(
         const object = { ...current };
         (effects[current.id] || [])
           .filter(({ index }) => index <= settings.queueIndex)
-          .filter((effect) => effect.type !== 'create' && effect.type !== 'remove')
+          .filter(
+            (effect) => effect.type !== 'create' && effect.type !== 'remove',
+          )
           .forEach((effect) => {
             if (effect.type === 'rect') {
               object.rect = effect.prop;
@@ -101,12 +123,18 @@ const allEffectedObjects = createSelector(
   },
 );
 
-const allEffectedObjectsMap = createSelector([allEffectedObjects], (objects) => {
-  return objects.reduce<Record<string, NormalizedQueueObjectType>>((result, object) => {
-    result[object.id] = object;
-    return result;
-  }, {});
-});
+const allEffectedObjectsMap = createSelector(
+  [allEffectedObjects],
+  (objects) => {
+    return objects.reduce<Record<string, NormalizedQueueObjectType>>(
+      (result, object) => {
+        result[object.id] = object;
+        return result;
+      },
+      {},
+    );
+  },
+);
 
 export const EffectSelectors = {
   all,

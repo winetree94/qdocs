@@ -4,7 +4,10 @@ import { QueueObjectType } from 'model/object';
 
 export interface BaseQueueEffect<T> {
   id: EntityId;
-  type: keyof Omit<QueueObjectType, 'effects' | 'type' | 'id'> | 'create' | 'remove';
+  type:
+    | keyof Omit<QueueObjectType, 'effects' | 'type' | 'id'>
+    | 'create'
+    | 'remove';
   objectId: EntityId;
   index: number;
   delay: number;

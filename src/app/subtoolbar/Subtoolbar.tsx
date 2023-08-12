@@ -22,7 +22,9 @@ export const QueueSubtoolbar = () => {
 
   const history = useAppSelector(HistorySelectors.all);
   const settings = useAppSelector(SettingSelectors.settings);
-  const byEffectIndex = useAppSelector((state) => EffectSelectors.allByPageAndEffectIndex(state, settings.pageId));
+  const byEffectIndex = useAppSelector((state) =>
+    EffectSelectors.allByPageAndEffectIndex(state, settings.pageId),
+  );
 
   const ranges: number[] = [];
   const { queueIndex } = settings;
@@ -71,18 +73,26 @@ export const QueueSubtoolbar = () => {
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
                 dispatch(HistoryActions.Capture());
-                dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
+                dispatch(
+                  ObjectActions.duplicate({ ids: settings.selectedObjectIds }),
+                );
               }}
               disabled={!settings.selectedObjectIds.length}>
               <SvgRemixIcon icon={'ri-file-copy-line'} />
             </QueueIconButton>
 
             {/* presentation mode */}
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={onPresentationStartClick}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={onPresentationStartClick}>
               <SvgRemixIcon icon={'ri-slideshow-3-line'} />
             </QueueIconButton>
 
-            <QueueSeparator.Root orientation="vertical" decorative className={styles.Separator} />
+            <QueueSeparator.Root
+              orientation="vertical"
+              decorative
+              className={styles.Separator}
+            />
           </div>
 
           <div className={styles.ItemGroup}>
@@ -112,16 +122,24 @@ export const QueueSubtoolbar = () => {
           </div>
 
           <div className={styles.ItemGroup}>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.rewind())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.rewind())}>
               <SvgRemixIcon icon={'ri-rewind-line'} />
             </QueueIconButton>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.forward())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.forward())}>
               <SvgRemixIcon icon={'ri-speed-line'} />
             </QueueIconButton>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.pause())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.pause())}>
               <SvgRemixIcon icon={'ri-pause-line'} />
             </QueueIconButton>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.play())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.play())}>
               <SvgRemixIcon icon={'ri-play-line'} />
             </QueueIconButton>
             <QueueToggle.Root
@@ -130,15 +148,25 @@ export const QueueSubtoolbar = () => {
               <SvgRemixIcon icon={'ri-repeat-line'} />
             </QueueToggle.Root>
 
-            <QueueSeparator.Root orientation="vertical" decorative className={styles.Separator} />
+            <QueueSeparator.Root
+              orientation="vertical"
+              decorative
+              className={styles.Separator}
+            />
 
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => eventDispatch(fitScreenSizeEvent())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => eventDispatch(fitScreenSizeEvent())}>
               <SvgRemixIcon icon={'ri-fullscreen-fill'} />
             </QueueIconButton>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.decreaseScale())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.decreaseScale())}>
               <SvgRemixIcon icon={'ri-subtract-line'} />
             </QueueIconButton>
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.increaseScale())}>
+            <QueueIconButton
+              size={QUEUE_UI_SIZE.MEDIUM}
+              onClick={() => dispatch(SettingsActions.increaseScale())}>
               <SvgRemixIcon icon={'ri-add-line'} />
             </QueueIconButton>
           </div>

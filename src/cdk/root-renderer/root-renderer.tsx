@@ -38,8 +38,14 @@ const RootRenderedContext = createContext<RootRenderedContextType>({
   close: () => void 0,
 });
 
-export const RootRendererProvider = ({ children }: { children: React.ReactNode }) => {
-  const [rendered, setRendered] = useState<RootRendererContextType['rendered']>([]);
+export const RootRendererProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [rendered, setRendered] = useState<RootRendererContextType['rendered']>(
+    [],
+  );
 
   const render = (element: JSX.Element) => {
     const model = {
@@ -51,8 +57,8 @@ export const RootRendererProvider = ({ children }: { children: React.ReactNode }
   };
 
   const clear = (key: string) => {
-    setRendered(
-      (rendered) => rendered.filter((model) => {
+    setRendered((rendered) =>
+      rendered.filter((model) => {
         return model.id !== key;
       }),
     );
@@ -67,11 +73,13 @@ export const RootRendererProvider = ({ children }: { children: React.ReactNode }
       }}>
       {children}
       {rendered.map((model) => (
-        <RootRenderedContext.Provider key={model.id} value={{
-          close: () => {
-            clear(model.id);
-          },
-        }}>
+        <RootRenderedContext.Provider
+          key={model.id}
+          value={{
+            close: () => {
+              clear(model.id);
+            },
+          }}>
           {model.element}
         </RootRenderedContext.Provider>
       ))}

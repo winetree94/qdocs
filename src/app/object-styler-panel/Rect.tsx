@@ -39,13 +39,21 @@ export const ObjectStyleRect = () => {
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>X</div>
         <div className={styles.SubInputContainer}>
-          <QueueInput value={rect.x} type="number" onChange={(e): void => updateRect({ x: Number(e.target.value) })} />
+          <QueueInput
+            value={rect.x}
+            type="number"
+            onChange={(e): void => updateRect({ x: Number(e.target.value) })}
+          />
         </div>
       </div>
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>Y</div>
         <div className={styles.SubInputContainer}>
-          <QueueInput value={rect.y} type="number" onChange={(e): void => updateRect({ y: Number(e.target.value) })} />
+          <QueueInput
+            value={rect.y}
+            type="number"
+            onChange={(e): void => updateRect({ y: Number(e.target.value) })}
+          />
         </div>
       </div>
       <div className={styles.SubItemContainer}>
@@ -54,7 +62,9 @@ export const ObjectStyleRect = () => {
           <QueueInput
             value={rect.width}
             type="number"
-            onChange={(e): void => updateRect({ width: Number(e.target.value) })}
+            onChange={(e): void =>
+              updateRect({ width: Number(e.target.value) })
+            }
           />
         </div>
       </div>
@@ -64,7 +74,9 @@ export const ObjectStyleRect = () => {
           <QueueInput
             value={rect.height}
             type="number"
-            onChange={(e): void => updateRect({ height: Number(e.target.value) })}
+            onChange={(e): void =>
+              updateRect({ height: Number(e.target.value) })
+            }
           />
         </div>
       </div>

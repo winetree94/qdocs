@@ -3,10 +3,11 @@ import { NormalizedQueueDocumentPage } from './model';
 import { DocumentActions } from '../document';
 import { PageActions } from './actions';
 
-export const pageEntityAdapter = createEntityAdapter<NormalizedQueueDocumentPage>({
-  selectId: (page) => page.id,
-  sortComparer: (a, b) => a.index - b.index,
-});
+export const pageEntityAdapter =
+  createEntityAdapter<NormalizedQueueDocumentPage>({
+    selectId: (page) => page.id,
+    sortComparer: (a, b) => a.index - b.index,
+  });
 
 export const pagesSlice = createSlice({
   name: 'pages',

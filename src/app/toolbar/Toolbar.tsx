@@ -42,9 +42,10 @@ export const QueueToolbar = () => {
   const openNewDocumentDialog = () => {
     rootRenderer.render(
       <NewDocumentDialog
-        onSubmit={
-          (document) => dispatch(DocumentActions.loadDocument(document))
-        } />
+        onSubmit={(document) =>
+          dispatch(DocumentActions.loadDocument(document))
+        }
+      />,
     );
   };
 
@@ -64,7 +65,7 @@ export const QueueToolbar = () => {
             size: QUEUE_UI_SIZE.MEDIUM,
             color: QUEUE_UI_COLOR.BLUE,
             onClick: openNewDocumentDialog,
-          }
+          },
         ],
       });
       return;
@@ -116,8 +117,8 @@ export const QueueToolbar = () => {
             size: QUEUE_UI_SIZE.MEDIUM,
             color: QUEUE_UI_COLOR.BLUE,
             onClick: startFileChooser,
-          }
-        ]
+          },
+        ],
       });
       return;
     }
@@ -156,7 +157,7 @@ export const QueueToolbar = () => {
             size: QUEUE_UI_SIZE.MEDIUM,
             color: QUEUE_UI_COLOR.BLUE,
             onClick: clearDocument,
-          }
+          },
         ],
       });
       return;
@@ -178,14 +179,22 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>{t('toolbar.file')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item onClick={onNewDocumentClick}>{t('toolbar.file.new-document')}</QueueMenubar.Item>
+                <QueueMenubar.Item onClick={onNewDocumentClick}>
+                  {t('toolbar.file.new-document')}
+                </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onOpenDocumentClick}>{t('toolbar.file.open-document')}</QueueMenubar.Item>
-                <QueueMenubar.Item onClick={onSaveDocumentClick} disabled={!docs}>
+                <QueueMenubar.Item onClick={onOpenDocumentClick}>
+                  {t('toolbar.file.open-document')}
+                </QueueMenubar.Item>
+                <QueueMenubar.Item
+                  onClick={onSaveDocumentClick}
+                  disabled={!docs}>
                   {t('toolbar.file.save-document')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onCloseDocumentClick} disabled={!docs}>
+                <QueueMenubar.Item
+                  onClick={onCloseDocumentClick}
+                  disabled={!docs}>
                   {t('toolbar.file.close-document')}
                 </QueueMenubar.Item>
               </QueueMenubar.Content>
@@ -207,8 +216,12 @@ export const QueueToolbar = () => {
                   {t('global.redo')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs || true}>{t('toolbar.edit.edit-title')}</QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!docs || true}>{t('toolbar.edit.page-settings')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>
+                  {t('toolbar.edit.edit-title')}
+                </QueueMenubar.Item>
+                <QueueMenubar.Item disabled={!docs || true}>
+                  {t('toolbar.edit.page-settings')}
+                </QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -217,11 +230,17 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>{t('toolbar.view')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled={!docs} onClick={() => dispatch(SettingsActions.setPresentationMode(true))}>
+                <QueueMenubar.Item
+                  disabled={!docs}
+                  onClick={() =>
+                    dispatch(SettingsActions.setPresentationMode(true))
+                  }>
                   {t('toolbar.view.start-presentation-mode')}
                 </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>{t('toolbar.view.full-screen')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>
+                  {t('toolbar.view.full-screen')}
+                </QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>
@@ -241,10 +260,16 @@ export const QueueToolbar = () => {
                     <QueueMenubar.SubContent alignOffset={-5}>
                       <QueueMenubar.RadioGroup
                         value={preferences.language}
-                        onValueChange={(rawValue) => {
+                        onValueChange={async (rawValue) => {
                           const value = rawValue as SUPPORTED_LANGUAGES;
-                          i18n.changeLanguage(value !== 'auto' ? value : null);
-                          dispatch(PreferencesActions.changeLanguage({ language: value }));
+                          await i18n.changeLanguage(
+                            value !== 'auto' ? value : null,
+                          );
+                          dispatch(
+                            PreferencesActions.changeLanguage({
+                              language: value,
+                            }),
+                          );
                         }}>
                         <QueueMenubar.RadioItem value="auto">
                           {t('toolbar.extra.language-auth')}
@@ -270,12 +295,20 @@ export const QueueToolbar = () => {
             <QueueMenubar.Trigger>{t('toolbar.help')}</QueueMenubar.Trigger>
             <QueueMenubar.Portal>
               <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled>{t('toolbar.help.keyboard-shortcut')}</QueueMenubar.Item>
-                <QueueMenubar.Item disabled>{t('toolbar.help.web-site')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>
+                  {t('toolbar.help.keyboard-shortcut')}
+                </QueueMenubar.Item>
+                <QueueMenubar.Item disabled>
+                  {t('toolbar.help.web-site')}
+                </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>{t('toolbar.help.check-update')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>
+                  {t('toolbar.help.check-update')}
+                </QueueMenubar.Item>
                 <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>{t('toolbar.help.about')}</QueueMenubar.Item>
+                <QueueMenubar.Item disabled>
+                  {t('toolbar.help.about')}
+                </QueueMenubar.Item>
               </QueueMenubar.Content>
             </QueueMenubar.Portal>
           </QueueMenubar.Menu>

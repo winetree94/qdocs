@@ -19,7 +19,9 @@ export const parseTheQueueFile = (queFile: File) => {
     if (!!result && typeof result === 'string') {
       const assetsStartIndex = result.indexOf(ASSETS_START);
       const assetsEndIndex = result.indexOf(ASSETS_END);
-      const assets = result.substring(assetsStartIndex + ASSETS_START.length, assetsEndIndex).trim();
+      const assets = result
+        .substring(assetsStartIndex + ASSETS_START.length, assetsEndIndex)
+        .trim();
 
       const assetsObj = JSON.parse(assets);
 

@@ -7,7 +7,8 @@ export const IMAGE_ENCODING_STATUS = {
   ERROR: 'ERROR',
 } as const;
 
-export type ImageEncodingStatusType = (typeof IMAGE_ENCODING_STATUS)[keyof typeof IMAGE_ENCODING_STATUS];
+export type ImageEncodingStatusType =
+  (typeof IMAGE_ENCODING_STATUS)[keyof typeof IMAGE_ENCODING_STATUS];
 
 export interface ImageEncodingMessage {
   status: ImageEncodingStatusType;

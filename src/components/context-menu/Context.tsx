@@ -3,7 +3,10 @@ import clsx from 'clsx';
 import { forwardRef, FunctionComponent } from 'react';
 import styles from './Context.module.scss';
 
-export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({ children, ...props }) => {
+export const Root: FunctionComponent<ContextMenu.ContextMenuProps> = ({
+  children,
+  ...props
+}) => {
   return <ContextMenu.Root {...props}>{children}</ContextMenu.Root>;
 };
 
@@ -18,7 +21,10 @@ export const Trigger = forwardRef<
   );
 });
 
-export const Portal = ({ children, ...props }: ContextMenu.ContextMenuPortalProps) => {
+export const Portal = ({
+  children,
+  ...props
+}: ContextMenu.ContextMenuPortalProps) => {
   return <ContextMenu.Portal {...props}>{children}</ContextMenu.Portal>;
 };
 
@@ -27,28 +33,38 @@ export const Content = forwardRef<
   ContextMenu.ContextMenuContentProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.Content {...props} className={clsx(styles.ContextMenuContent, props.className)} ref={ref}>
+    <ContextMenu.Content
+      {...props}
+      className={clsx(styles.ContextMenuContent, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.Content>
   );
 });
 
-export const Item = forwardRef<HTMLDivElement, ContextMenu.ContextMenuItemProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <ContextMenu.Item {...props} className={clsx(styles.ContextMenuItem, props.className)} ref={ref}>
-        {children}
-      </ContextMenu.Item>
-    );
-  },
-);
+export const Item = forwardRef<
+  HTMLDivElement,
+  ContextMenu.ContextMenuItemProps
+>(({ children, ...props }, ref) => {
+  return (
+    <ContextMenu.Item
+      {...props}
+      className={clsx(styles.ContextMenuItem, props.className)}
+      ref={ref}>
+      {children}
+    </ContextMenu.Item>
+  );
+});
 
 export const CheckboxItem = forwardRef<
   HTMLDivElement,
   ContextMenu.ContextMenuCheckboxItemProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.CheckboxItem {...props} className={clsx(styles.ContextMenuCheckboxItem, props.className)} ref={ref}>
+    <ContextMenu.CheckboxItem
+      {...props}
+      className={clsx(styles.ContextMenuCheckboxItem, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.CheckboxItem>
   );
@@ -70,7 +86,10 @@ export const RadioItem = forwardRef<
   ContextMenu.ContextMenuRadioItemProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.RadioItem {...props} className={clsx(styles.ContextMenuRadioItem, props.className)} ref={ref}>
+    <ContextMenu.RadioItem
+      {...props}
+      className={clsx(styles.ContextMenuRadioItem, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.RadioItem>
   );
@@ -81,13 +100,19 @@ export const Separator = forwardRef<
   ContextMenu.ContextMenuSeparatorProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.Separator {...props} className={clsx(styles.ContextMenuSeparator, props.className)} ref={ref}>
+    <ContextMenu.Separator
+      {...props}
+      className={clsx(styles.ContextMenuSeparator, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.Separator>
   );
 });
 
-export const MenuSub = ({ children, ...props }: ContextMenu.ContextMenuSubProps) => {
+export const MenuSub = ({
+  children,
+  ...props
+}: ContextMenu.ContextMenuSubProps) => {
   return <ContextMenu.Sub {...props}>{children}</ContextMenu.Sub>;
 };
 
@@ -96,7 +121,10 @@ export const SubTrigger = forwardRef<
   ContextMenu.ContextMenuSubTriggerProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.SubTrigger {...props} className={clsx(styles.ContextMenuSubTrigger, props.className)} ref={ref}>
+    <ContextMenu.SubTrigger
+      {...props}
+      className={clsx(styles.ContextMenuSubTrigger, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.SubTrigger>
   );
@@ -107,7 +135,10 @@ export const SubContent = forwardRef<
   ContextMenu.ContextMenuSubContentProps
 >(({ children, ...props }, ref) => {
   return (
-    <ContextMenu.SubContent {...props} className={clsx(styles.ContextMenuSubContent, props.className)} ref={ref}>
+    <ContextMenu.SubContent
+      {...props}
+      className={clsx(styles.ContextMenuSubContent, props.className)}
+      ref={ref}>
       {children}
     </ContextMenu.SubContent>
   );

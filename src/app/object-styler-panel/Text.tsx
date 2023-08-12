@@ -43,7 +43,9 @@ export const ObjectStyleText = () => {
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.font-family')}</div>
         <div className={styles.SubInputContainer}>
-          <QueueSelect value={text.fontFamily} onValueChange={(value): void => updateText({ fontFamily: value })}>
+          <QueueSelect
+            value={text.fontFamily}
+            onValueChange={(value): void => updateText({ fontFamily: value })}>
             <QueueSelect.Group>
               <QueueSelect.Option value="Arial">Arial</QueueSelect.Option>
               <QueueSelect.Option value="Inter">Inter</QueueSelect.Option>
@@ -58,7 +60,9 @@ export const ObjectStyleText = () => {
           <QueueInput
             value={text.fontSize}
             type="number"
-            onChange={(e): void => updateText({ fontSize: Number(e.target.value) })}
+            onChange={(e): void =>
+              updateText({ fontSize: Number(e.target.value) })
+            }
           />
         </div>
       </div>

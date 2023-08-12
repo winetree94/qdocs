@@ -12,7 +12,10 @@ export interface TypedListenerMiddleware {
 
 export const createTypedListenerMiddleware = (): TypedListenerMiddleware => {
   const middleware = createListenerMiddleware();
-  const startListening = middleware.startListening as TypedStartListening<RootState, AppDispatch>;
+  const startListening = middleware.startListening as TypedStartListening<
+    RootState,
+    AppDispatch
+  >;
   return {
     middleware: middleware.middleware,
     startListening: startListening,

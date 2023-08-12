@@ -6,9 +6,15 @@ export interface ColorProps extends HTMLAttributes<HTMLInputElement> {
   displayColor: string;
 }
 
-export const Color = ({ displayColor, className, ...props }: ColorProps): ReactElement => {
+export const Color = ({
+  displayColor,
+  className,
+  ...props
+}: ColorProps): ReactElement => {
   return (
-    <label className={clsx(className, classes['input-color'])} style={{ backgroundColor: displayColor }}>
+    <label
+      className={clsx(className, classes['input-color'])}
+      style={{ backgroundColor: displayColor }}>
       <input type="color" defaultValue={displayColor} {...props} />
     </label>
   );

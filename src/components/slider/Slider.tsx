@@ -9,12 +9,18 @@ const CustomSlider = forwardRef<HTMLScriptElement, SliderPrimitive.SliderProps>(
     const key = props.id || 'SliderThumb';
 
     return (
-      <SliderPrimitive.Slider {...props} className={clsx(classes['slider-root'], className)} ref={forwardedRef}>
+      <SliderPrimitive.Slider
+        {...props}
+        className={clsx(classes['slider-root'], className)}
+        ref={forwardedRef}>
         <SliderPrimitive.Track className={classes['slider-track']}>
           <SliderPrimitive.Range className={classes['slider-range']} />
         </SliderPrimitive.Track>
         {value.map((_, i) => (
-          <SliderPrimitive.Thumb key={`${key}-${i}`} className={classes['slider-thumb']} />
+          <SliderPrimitive.Thumb
+            key={`${key}-${i}`}
+            className={classes['slider-thumb']}
+          />
         ))}
       </SliderPrimitive.Slider>
     );

@@ -1,7 +1,15 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import { WithRect, WithFade, WithFill, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
+import {
+  WithRect,
+  WithFade,
+  WithFill,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText,
+} from 'model/property';
 import { WithImage } from 'model/property/image';
 
 export interface QueueImage

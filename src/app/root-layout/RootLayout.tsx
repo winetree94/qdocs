@@ -11,7 +11,11 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { SettingsActions } from '../../store/settings';
 import { useGlobalKeydown } from 'cdk/hooks/useGlobalKeydown';
-import { EffectActions, EffectSelectors, NormalizedQueueEffect } from 'store/effect';
+import {
+  EffectActions,
+  EffectSelectors,
+  NormalizedQueueEffect,
+} from 'store/effect';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
 import { nanoid } from '@reduxjs/toolkit';
@@ -64,7 +68,7 @@ export const RootLayout = () => {
                 effects: effects[object.id],
               };
             });
-            navigator.clipboard.writeText(
+            await navigator.clipboard.writeText(
               JSON.stringify({
                 identity: QUEUE_CLIPBOARD_UNIQUE_ID,
                 type: 'objects',
@@ -83,7 +87,7 @@ export const RootLayout = () => {
           if (settings.selectionMode === 'detail') return;
           try {
             const raw = await navigator.clipboard.readText();
-            const clipboardData = JSON.parse(raw);
+            const clipboardData = JSON.parse(raw) as ClipboardItemData;
             if (isQueueObjectClipboardModel(clipboardData)) {
               const pendingObjects: NormalizedQueueObjectType[] = [];
               const pendingEffects: NormalizedQueueEffect[] = [];
@@ -182,7 +186,10 @@ export const RootLayout = () => {
         keys: ['Delete', 'Backspace'],
         meta: false,
         callback: (e) => {
-          if (settings.selectedObjectIds.length === 0 || settings.selectionMode !== 'normal') {
+          if (
+            settings.selectedObjectIds.length === 0 ||
+            settings.selectionMode !== 'normal'
+          ) {
             return;
           }
           dispatch(HistoryActions.Capture());
@@ -197,7 +204,10 @@ export const RootLayout = () => {
         keys: ['Delete', 'Backspace'],
         meta: true,
         callback: (e) => {
-          if (settings.selectedObjectIds.length === 0 || settings.selectionMode !== 'normal') {
+          if (
+            settings.selectedObjectIds.length === 0 ||
+            settings.selectionMode !== 'normal'
+          ) {
             return;
           }
           dispatch(HistoryActions.Capture());
@@ -257,13 +267,19 @@ export const RootLayout = () => {
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
             <div className="tw-flex tw-flex-col tw-h-full">
-              <PanelResizer.Panel className="tw-flex-1 tw-flex-shrink-0 tw-h-full" width={200} minWidth={30}>
+              <PanelResizer.Panel
+                className="tw-flex-1 tw-flex-shrink-0 tw-h-full"
+                width={200}
+                minWidth={30}>
                 <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
                 <LeftPanel />
               </PanelResizer.Panel>
 
               <div className="tw-h-[50%]">
-                <PanelResizer.Panel className="tw-h-full" width={200} minWidth={30}>
+                <PanelResizer.Panel
+                  className="tw-h-full"
+                  width={200}
+                  minWidth={30}>
                   <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
                   <PagePanel />
                 </PanelResizer.Panel>
@@ -274,7 +290,10 @@ export const RootLayout = () => {
             <QueueEditor />
             {!settings.presentationMode && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
-                <PanelResizer.Panel className="tw-w-full tw-px-[10px]" height={200} minHeight={30}>
+                <PanelResizer.Panel
+                  className="tw-w-full tw-px-[10px]"
+                  height={200}
+                  minHeight={30}>
                   <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
                   <Timeline />
                 </PanelResizer.Panel>

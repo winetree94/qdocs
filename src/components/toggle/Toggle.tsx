@@ -6,10 +6,25 @@ import { QueueButtonProps } from 'components/buttons/button/Button';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
-export const QueueToggleRoot = forwardRef<HTMLButtonElement, QueueButtonProps & Toggle.ToggleProps>(
-  ({ children, className, color = QUEUE_UI_COLOR.DEFAULT, size = QUEUE_UI_SIZE.MEDIUM, ...props }, ref) => {
+export const QueueToggleRoot = forwardRef<
+  HTMLButtonElement,
+  QueueButtonProps & Toggle.ToggleProps
+>(
+  (
+    {
+      children,
+      className,
+      color = QUEUE_UI_COLOR.DEFAULT,
+      size = QUEUE_UI_SIZE.MEDIUM,
+      ...props
+    },
+    ref,
+  ) => {
     return (
-      <Toggle.Root ref={ref} {...props} className={clsx(styles.Toggle, className, styles[color], styles[size])}>
+      <Toggle.Root
+        ref={ref}
+        {...props}
+        className={clsx(styles.Toggle, className, styles[color], styles[size])}>
         {children}
       </Toggle.Root>
     );

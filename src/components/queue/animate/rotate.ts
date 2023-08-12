@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
@@ -30,7 +29,11 @@ export const getRotateAnimation = (
     return null;
   }
 
-  const fromRotate = getCurrentRotate(object, effects, position === 'forward' ? index - 1 : index + 1);
+  const fromRotate = getCurrentRotate(
+    object,
+    effects,
+    position === 'forward' ? index - 1 : index + 1,
+  );
 
   const rotateEffect = effects.find((effect): effect is RotateEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -66,6 +69,7 @@ export const getAnimatableRotate = (
     return targetScale;
   }
   return {
-    degree: fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
+    degree:
+      fromScale.degree + (targetScale.degree - fromScale.degree) * progress,
   };
 };

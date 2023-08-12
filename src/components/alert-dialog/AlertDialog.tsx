@@ -5,7 +5,10 @@ import styles from './AlertDialog.module.scss';
 import { QueueButton } from '../buttons/button/Button';
 import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
-import { useRootRenderedContext, useRootRenderer } from 'cdk/root-renderer/root-renderer';
+import {
+  useRootRenderedContext,
+  useRootRenderer,
+} from 'cdk/root-renderer/root-renderer';
 
 export interface QueueAlertDialogRootProps {
   children?: React.ReactNode;
@@ -24,19 +27,29 @@ const QueueAlertDialogRoot = forwardRef<
 >(({ children, ...props }: QueueAlertDialogRootProps, ref) => {
   const context = useRootRenderedContext();
 
-  useImperativeHandle(ref, () => {
-    return {
-      close: (): void => {
-        context.close();
-      },
-    };
-  }, [context]);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        close: (): void => {
+          context.close();
+        },
+      };
+    },
+    [context],
+  );
 
   return (
-    <AlertDialog.Root open={props.open} defaultOpen={props.defaultOpen} onOpenChange={props.onOpenChange}>
+    <AlertDialog.Root
+      open={props.open}
+      defaultOpen={props.defaultOpen}
+      onOpenChange={props.onOpenChange}>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className={clsx(styles.AlertDialogOverlay)}></AlertDialog.Overlay>
-        <AlertDialog.Content className={clsx(styles.AlertDialogContent)} asChild={false}>
+        <AlertDialog.Overlay
+          className={clsx(styles.AlertDialogOverlay)}></AlertDialog.Overlay>
+        <AlertDialog.Content
+          className={clsx(styles.AlertDialogContent)}
+          asChild={false}>
           {children}
         </AlertDialog.Content>
       </AlertDialog.Portal>
@@ -49,40 +62,52 @@ QueueAlertDialogRoot.defaultProps = {
   defaultOpen: true,
 };
 
-const QueueAlertDialogTitle = React.forwardRef<HTMLHeadingElement, AlertDialog.AlertDialogTitleProps>(
-  ({ children, className, ...props }, ref) => {
-    return (
-      <AlertDialog.Title ref={ref} {...props} className={clsx(styles.AlertDialogTitle, className)}>
-        {children}
-      </AlertDialog.Title>
-    );
-  },
-);
+const QueueAlertDialogTitle = React.forwardRef<
+  HTMLHeadingElement,
+  AlertDialog.AlertDialogTitleProps
+>(({ children, className, ...props }, ref) => {
+  return (
+    <AlertDialog.Title
+      ref={ref}
+      {...props}
+      className={clsx(styles.AlertDialogTitle, className)}>
+      {children}
+    </AlertDialog.Title>
+  );
+});
 
 const QueueAlertDialogDescription = React.forwardRef<
   HTMLParagraphElement,
   AlertDialog.AlertDialogDescriptionProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <AlertDialog.Description ref={ref} {...props} className={clsx(styles.AlertDialogDescription, className)}>
+    <AlertDialog.Description
+      ref={ref}
+      {...props}
+      className={clsx(styles.AlertDialogDescription, className)}>
       {children}
     </AlertDialog.Description>
   );
 });
 
-export interface QueueAlertDialogFooterProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface QueueAlertDialogFooterProps
+  extends React.BaseHTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
-const QueueAlertDialogFooter = forwardRef<HTMLDivElement, QueueAlertDialogFooterProps>(
-  ({ children, className, ...props }, ref) => {
-    return (
-      <div ref={ref} {...props} className={clsx(styles.AlertDialogFooter, className)}>
-        {children}
-      </div>
-    );
-  },
-);
+const QueueAlertDialogFooter = forwardRef<
+  HTMLDivElement,
+  QueueAlertDialogFooterProps
+>(({ children, className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      {...props}
+      className={clsx(styles.AlertDialogFooter, className)}>
+      {children}
+    </div>
+  );
+});
 
 export const QueueAlertDialog = {
   Root: QueueAlertDialogRoot,
@@ -161,22 +186,30 @@ export const useAlertDialog = () => {
             !opened && rootRenderer.clear(key);
             params.onOpenChange?.(opened);
           }}>
-          {params.title && <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>}
-          {params.description && <QueueAlertDialog.Description>{params.description}</QueueAlertDialog.Description>}
+          {params.title && (
+            <QueueAlertDialog.Title>{params.title}</QueueAlertDialog.Title>
+          )}
+          {params.description && (
+            <QueueAlertDialog.Description>
+              {params.description}
+            </QueueAlertDialog.Description>
+          )}
           {params.buttons?.length && (
             <QueueAlertDialog.Footer>
-              {params.buttons.map(({ closeOnClick = true, ...button }, index) => (
-                <QueueButton
-                  key={index}
-                  size={button.size || QUEUE_UI_SIZE.MEDIUM}
-                  color={button.color || QUEUE_UI_COLOR.BLUE}
-                  onClick={() => {
-                    button.onClick?.();
-                    closeOnClick && rootRenderer.clear(key);
-                  }}>
-                  {button.label}
-                </QueueButton>
-              ))}
+              {params.buttons.map(
+                ({ closeOnClick = true, ...button }, index) => (
+                  <QueueButton
+                    key={index}
+                    size={button.size || QUEUE_UI_SIZE.MEDIUM}
+                    color={button.color || QUEUE_UI_COLOR.BLUE}
+                    onClick={() => {
+                      button.onClick?.();
+                      closeOnClick && rootRenderer.clear(key);
+                    }}>
+                    {button.label}
+                  </QueueButton>
+                ),
+              )}
             </QueueAlertDialog.Footer>
           )}
         </QueueAlertDialog.Root>,

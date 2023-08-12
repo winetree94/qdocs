@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FadeEffect } from 'model/effect';
 import { QueueFade } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
@@ -30,7 +29,11 @@ export const getFadeAnimation = (
     return null;
   }
 
-  const fromFade = getCurrentFade(object, effects, position === 'forward' ? index - 1 : index + 1);
+  const fromFade = getCurrentFade(
+    object,
+    effects,
+    position === 'forward' ? index - 1 : index + 1,
+  );
 
   const fadeEffect = effects.find((effect): effect is FadeEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -69,6 +72,9 @@ export const getAnimatableFade = (
     };
   }
   return {
-    opacity: Math.max(fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress, min),
+    opacity: Math.max(
+      fromFade.opacity + (targetFade.opacity - fromFade.opacity) * progress,
+      min,
+    ),
   };
 };

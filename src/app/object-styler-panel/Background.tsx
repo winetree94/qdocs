@@ -21,7 +21,10 @@ export const ObjectStyleBackground = () => {
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
-        selectedObjects.map<{ id: EntityId; changes: Partial<NormalizedQueueObjectType> }>((object) => {
+        selectedObjects.map<{
+          id: EntityId;
+          changes: Partial<NormalizedQueueObjectType>;
+        }>((object) => {
           return {
             id: object.id,
             changes: {

@@ -1,7 +1,15 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { WithEffects } from 'model/effect';
-import { WithFade, WithFill, WithRect, WithRotation, WithScale, WithStroke, WithText } from 'model/property';
+import {
+  WithFade,
+  WithFill,
+  WithRect,
+  WithRotation,
+  WithScale,
+  WithStroke,
+  WithText,
+} from 'model/property';
 
 export interface QueueLine
   extends WithEffects,
@@ -17,7 +25,10 @@ export interface QueueLine
   id: EntityId;
 }
 
-export const createDefaultLine = (documentRect: QueueDocumentRect, queueIndex: number): QueueLine => {
+export const createDefaultLine = (
+  documentRect: QueueDocumentRect,
+  queueIndex: number,
+): QueueLine => {
   const width = 300;
   const height = 300;
   const objectId = nanoid();

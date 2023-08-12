@@ -38,111 +38,149 @@ export const documentSettingsSlice = createSlice({
      * @description
      * 새로운 문서 열람시 초기화
      */
-    builder.addCase(DocumentActions.loadDocument, (state, action): QueueDocumentSettings => {
-      if (!action.payload) {
-        return { ...initialState };
-      }
-      return {
-        ...initialState,
-        documentId: action.payload.id,
-        pageId: action.payload.pages[0].id,
-      };
-    });
+    builder.addCase(
+      DocumentActions.loadDocument,
+      (state, action): QueueDocumentSettings => {
+        if (!action.payload) {
+          return { ...initialState };
+        }
+        return {
+          ...initialState,
+          documentId: action.payload.id,
+          pageId: action.payload.pages[0].id,
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.updateSettings, (state, action): QueueDocumentSettings => {
-      return { ...state, ...action.payload.changes };
-    });
+    builder.addCase(
+      SettingsActions.updateSettings,
+      (state, action): QueueDocumentSettings => {
+        return { ...state, ...action.payload.changes };
+      },
+    );
 
-    builder.addCase(SettingsActions.setSettings, (state, action): QueueDocumentSettings => {
-      return { ...state, ...action.payload };
-    });
+    builder.addCase(
+      SettingsActions.setSettings,
+      (state, action): QueueDocumentSettings => {
+        return { ...state, ...action.payload };
+      },
+    );
 
-    builder.addCase(SettingsActions.setScale, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        scale: Math.max(action.payload, 0.25),
-      };
-    });
+    builder.addCase(
+      SettingsActions.setScale,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          scale: Math.max(action.payload, 0.25),
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.increaseScale, (state): QueueDocumentSettings => {
-      return {
-        ...state,
-        scale: Math.max(state.scale + 0.05, 0.25),
-      };
-    });
+    builder.addCase(
+      SettingsActions.increaseScale,
+      (state): QueueDocumentSettings => {
+        return {
+          ...state,
+          scale: Math.max(state.scale + 0.05, 0.25),
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.decreaseScale, (state): QueueDocumentSettings => {
-      return {
-        ...state,
-        scale: Math.max(state.scale - 0.05, 0.25),
-      };
-    });
+    builder.addCase(
+      SettingsActions.decreaseScale,
+      (state): QueueDocumentSettings => {
+        return {
+          ...state,
+          scale: Math.max(state.scale - 0.05, 0.25),
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.movePage, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        pageId: action.payload.pageIndex,
-        queueIndex: Math.max(action.payload.pageId, 0),
-        queuePosition: 'pause',
-        queueStart: -1,
-        selectedObjectIds: [],
-        selectionMode: 'normal',
-      };
-    });
+    builder.addCase(
+      SettingsActions.movePage,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          pageId: action.payload.pageIndex,
+          queueIndex: Math.max(action.payload.pageId, 0),
+          queuePosition: 'pause',
+          queueStart: -1,
+          selectedObjectIds: [],
+          selectionMode: 'normal',
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.setSelection, (state, action): QueueDocumentSettings => {
-      const pending: Partial<QueueDocumentSettings> = {};
+    builder.addCase(
+      SettingsActions.setSelection,
+      (state, action): QueueDocumentSettings => {
+        const pending: Partial<QueueDocumentSettings> = {};
 
-      switch (action.payload.selectionMode) {
-        case 'detail':
-          pending.queueStart = -1;
-          pending.selectionMode = 'detail';
-          pending.selectedObjectIds = [action.payload.id];
-          break;
-        case 'normal':
-          pending.queueStart = -1;
-          pending.selectionMode = 'normal';
-          pending.selectedObjectIds = action.payload.ids;
-      }
+        switch (action.payload.selectionMode) {
+          case 'detail':
+            pending.queueStart = -1;
+            pending.selectionMode = 'detail';
+            pending.selectedObjectIds = [action.payload.id];
+            break;
+          case 'normal':
+            pending.queueStart = -1;
+            pending.selectionMode = 'normal';
+            pending.selectedObjectIds = action.payload.ids;
+        }
 
-      return {
-        ...state,
-        ...pending,
-      };
-    });
+        return {
+          ...state,
+          ...pending,
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.addSelection, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        selectionMode: 'normal',
-        selectedObjectIds: [...state.selectedObjectIds, action.payload],
-      };
-    });
+    builder.addCase(
+      SettingsActions.addSelection,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          selectionMode: 'normal',
+          selectedObjectIds: [...state.selectedObjectIds, action.payload],
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.removeSelection, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        selectionMode: 'normal',
-        selectedObjectIds: state.selectedObjectIds.filter((id) => !action.payload.includes(id)),
-      };
-    });
+    builder.addCase(
+      SettingsActions.removeSelection,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          selectionMode: 'normal',
+          selectedObjectIds: state.selectedObjectIds.filter(
+            (id) => !action.payload.includes(id),
+          ),
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.resetSelection, (state): QueueDocumentSettings => {
-      return {
-        ...state,
-        selectionMode: 'normal',
-        selectedObjectIds: [],
-      };
-    });
+    builder.addCase(
+      SettingsActions.resetSelection,
+      (state): QueueDocumentSettings => {
+        return {
+          ...state,
+          selectionMode: 'normal',
+          selectedObjectIds: [],
+        };
+      },
+    );
 
-    builder.addCase(SettingsActions.setPresentationMode, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        presentationMode: action.payload,
-        selectedObjectIds: [],
-        selectionMode: 'normal',
-      };
-    });
+    builder.addCase(
+      SettingsActions.setPresentationMode,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          presentationMode: action.payload,
+          selectedObjectIds: [],
+          selectionMode: 'normal',
+        };
+      },
+    );
 
     builder.addCase(SettingsActions.pause, (state) => {
       state.autoPlay = false;
@@ -160,19 +198,22 @@ export const documentSettingsSlice = createSlice({
       state.autoPlayRepeat = action.payload;
     });
 
-    builder.addCase(SettingsActions.setQueueIndex, (state, action): QueueDocumentSettings => {
-      return {
-        ...state,
-        queueIndex: Math.max(action.payload.queueIndex, 0),
-        queuePosition: !action.payload.play
-          ? 'pause'
-          : state.queueIndex < action.payload.queueIndex
-          ? 'forward'
-          : 'backward',
-        queueStart: action.payload.play ? performance.now() : -1,
-        selectedObjectIds: [],
-        selectionMode: 'normal',
-      };
-    });
+    builder.addCase(
+      SettingsActions.setQueueIndex,
+      (state, action): QueueDocumentSettings => {
+        return {
+          ...state,
+          queueIndex: Math.max(action.payload.queueIndex, 0),
+          queuePosition: !action.payload.play
+            ? 'pause'
+            : state.queueIndex < action.payload.queueIndex
+            ? 'forward'
+            : 'backward',
+          queueStart: action.payload.play ? performance.now() : -1,
+          selectedObjectIds: [],
+          selectionMode: 'normal',
+        };
+      },
+    );
   },
 });

@@ -28,7 +28,9 @@ export const EffectControllerFade = (): ReactElement => {
 
   const [firstFadeEffect] = effectsOfSelectedObjects;
 
-  const handleCurrentOpacityChange = (opacityValue: number | number[] | string): void => {
+  const handleCurrentOpacityChange = (
+    opacityValue: number | number[] | string,
+  ): void => {
     let opacity = 1;
 
     if (typeof opacityValue === 'number') {

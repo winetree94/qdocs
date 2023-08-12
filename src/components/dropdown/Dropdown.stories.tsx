@@ -34,17 +34,28 @@ export const Primary: Story = {
             <QueueDropdown.Separator />
 
             <QueueDropdown.Group label="checkbox group">
-              <QueueDropdown.CheckboxItem checked={itemChecked} onCheckedChange={setItemChecked}>
+              <QueueDropdown.CheckboxItem
+                checked={itemChecked}
+                onCheckedChange={setItemChecked}>
                 CheckboxItem 1
               </QueueDropdown.CheckboxItem>
-              <QueueDropdown.CheckboxItem checked={item2Checked} onCheckedChange={setItem2Checked}>
+              <QueueDropdown.CheckboxItem
+                checked={item2Checked}
+                onCheckedChange={setItem2Checked}>
                 CheckboxItem 2
               </QueueDropdown.CheckboxItem>
             </QueueDropdown.Group>
 
-            <QueueDropdown.RadioGroup label="radio group" value={radioValue} onValueChange={setRadioValue}>
-              <QueueDropdown.RadioItem value="radio1">RadioItem 1</QueueDropdown.RadioItem>
-              <QueueDropdown.RadioItem value="radio2">RadioItem 2</QueueDropdown.RadioItem>
+            <QueueDropdown.RadioGroup
+              label="radio group"
+              value={radioValue}
+              onValueChange={setRadioValue}>
+              <QueueDropdown.RadioItem value="radio1">
+                RadioItem 1
+              </QueueDropdown.RadioItem>
+              <QueueDropdown.RadioItem value="radio2">
+                RadioItem 2
+              </QueueDropdown.RadioItem>
             </QueueDropdown.RadioGroup>
 
             <QueueDropdown.Separator />

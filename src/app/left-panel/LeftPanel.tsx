@@ -21,12 +21,20 @@ export const LeftPanel: FunctionComponent = () => {
   return (
     <div className={clsx(styles.container, 'tw-flex', 'tw-flex-col')}>
       {hasSelectedObjects ? (
-        <QueueTabs.Root className="tw-h-full" defaultValue={PanelTabType.Styler}>
+        <QueueTabs.Root
+          className="tw-h-full"
+          defaultValue={PanelTabType.Styler}>
           <QueueTabs.List>
-            <QueueTabs.Trigger value={PanelTabType.Styler}>Effects</QueueTabs.Trigger>
-            <QueueTabs.Trigger value={PanelTabType.DefaultProp}>Default</QueueTabs.Trigger>
+            <QueueTabs.Trigger value={PanelTabType.Styler}>
+              Effects
+            </QueueTabs.Trigger>
+            <QueueTabs.Trigger value={PanelTabType.DefaultProp}>
+              Default
+            </QueueTabs.Trigger>
           </QueueTabs.List>
-          <QueueTabs.Content className="tw-h-full tw-overflow-hidden" value={PanelTabType.Styler}>
+          <QueueTabs.Content
+            className="tw-h-full tw-overflow-hidden"
+            value={PanelTabType.Styler}>
             <QueueScrollArea.Root className="tw-h-full">
               <QueueScrollArea.Viewport>
                 <EffectControllerBox />
@@ -36,7 +44,9 @@ export const LeftPanel: FunctionComponent = () => {
               </QueueScrollArea.Scrollbar>
             </QueueScrollArea.Root>
           </QueueTabs.Content>
-          <QueueTabs.Content className="tw-h-full tw-overflow-hidden" value={PanelTabType.DefaultProp}>
+          <QueueTabs.Content
+            className="tw-h-full tw-overflow-hidden"
+            value={PanelTabType.DefaultProp}>
             <DefaultPropPanel />
           </QueueTabs.Content>
         </QueueTabs.Root>

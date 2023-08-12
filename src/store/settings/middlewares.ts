@@ -29,7 +29,9 @@ settingsMiddleware.startListening({
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
     const pageId = settings.pageId;
-    const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.id));
+    const byEffects = pages.map((page) =>
+      EffectSelectors.allByPageAndEffectIndex(state, page.id),
+    );
     const pageIndex = pages.findIndex((page) => page.id === pageId);
     const queueIndex = settings.queueIndex;
 
@@ -73,7 +75,9 @@ settingsMiddleware.startListening({
     const settings = SettingSelectors.settings(state);
     const pages = PageSelectors.all(state);
     const pageId = settings.pageId;
-    const byEffects = pages.map((page) => EffectSelectors.allByPageAndEffectIndex(state, page.id));
+    const byEffects = pages.map((page) =>
+      EffectSelectors.allByPageAndEffectIndex(state, page.id),
+    );
     const pageIndex = pages.findIndex((page) => page.id === pageId);
     const queueIndex = settings.queueIndex;
 

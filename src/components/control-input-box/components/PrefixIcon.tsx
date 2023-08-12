@@ -4,10 +4,13 @@ import { QueueControlInputPrefixIconProps } from '../model';
 import styles from '../ControlInputBox.module.scss';
 import typeImg from '../images/type.png';
 
-const PrefixIcon = ({prefixType, prefixValue}: QueueControlInputPrefixIconProps ) => {
-  switch(prefixType) {
+const PrefixIcon = ({
+  prefixType,
+  prefixValue,
+}: QueueControlInputPrefixIconProps) => {
+  switch (prefixType) {
     case 'img':
-        return getImgElement(prefixValue);
+      return getImgElement(prefixValue);
     case 'class':
       return getClassElement(prefixValue);
     case 'svg':
@@ -17,7 +20,6 @@ const PrefixIcon = ({prefixType, prefixValue}: QueueControlInputPrefixIconProps 
       break;
   }
 };
-
 
 const getImgElement = (value: string) => {
   // 하고 싶은 것: 이미지이름을 받아서 바로 뿌리는건데. 안되나 보다?.
@@ -33,16 +35,14 @@ const getImgElement = (value: string) => {
   );
 };
 
+const getClassElement = (value: string) => {
+  // icon
 
-const getClassElement = (value: string) => { // icon
-
-  return (<div></div>);
+  return <div></div>;
 };
 
 const getSvgElement = (value: string) => {
-
-  return (<div></div>);
+  return <div></div>;
 };
-
 
 export default PrefixIcon;

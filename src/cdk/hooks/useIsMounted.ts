@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 
 export const useIsMounted = (): React.MutableRefObject<boolean> => {
@@ -15,7 +14,10 @@ export const useIsMounted = (): React.MutableRefObject<boolean> => {
   return isMounted;
 };
 
-export const useUpdateEffect = (effect: React.EffectCallback, dependencies: React.DependencyList | undefined): void => {
+export const useUpdateEffect = (
+  effect: React.EffectCallback,
+  dependencies: React.DependencyList | undefined,
+): void => {
   const isMounted = useIsMounted();
   const isInitialMount = React.useRef(true);
 

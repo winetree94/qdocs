@@ -20,7 +20,10 @@ export const ObjectStylerBackground = (): ReactElement => {
   const updateObjectFill = (fill: Partial<QueueFill>) => {
     dispatch(
       ObjectActions.updateObjects(
-        selectedObjects.map<{ id: EntityId; changes: Partial<NormalizedQueueObjectType> }>((object) => {
+        selectedObjects.map<{
+          id: EntityId;
+          changes: Partial<NormalizedQueueObjectType>;
+        }>((object) => {
           return {
             id: object.id,
             changes: {
@@ -39,7 +42,9 @@ export const ObjectStylerBackground = (): ReactElement => {
     updateObjectFill({ color: e.target.value });
   };
 
-  const handleOpacityChange = (opacityValue: number | number[] | string): void => {
+  const handleOpacityChange = (
+    opacityValue: number | number[] | string,
+  ): void => {
     let opacity = 0;
 
     if (typeof opacityValue === 'number') {
@@ -66,11 +71,20 @@ export const ObjectStylerBackground = (): ReactElement => {
         <div>
           <p className="tw-text-sm">color</p>
           <div className="tw-w-6 tw-h-6">
-            <Color displayColor={firstObject.fill.color} onChange={handleFillColorChange} />
+            <Color
+              displayColor={firstObject.fill.color}
+              onChange={handleFillColorChange}
+            />
           </div>
         </div>
         <div>
-          <input type="text" name="backgroundOpacity" value={firstObject.fill.opacity} readOnly hidden />
+          <input
+            type="text"
+            name="backgroundOpacity"
+            value={firstObject.fill.opacity}
+            readOnly
+            hidden
+          />
           <p className="tw-text-sm">opacity</p>
           <div className="tw-flex tw-items-center tw-gap-2">
             <div className="tw-w-1/3">

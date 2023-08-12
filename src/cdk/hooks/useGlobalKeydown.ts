@@ -11,7 +11,8 @@ export interface UseGlobalKeydownProps {
 }
 
 export const useGlobalKeydown = ({ keys = [] }: UseGlobalKeydownProps) => {
-  const metaKey = navigator.platform.indexOf('Mac') > -1 ? 'metaKey' : 'ctrlKey';
+  const metaKey =
+    navigator.platform.indexOf('Mac') > -1 ? 'metaKey' : 'ctrlKey';
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -20,7 +21,11 @@ export const useGlobalKeydown = ({ keys = [] }: UseGlobalKeydownProps) => {
       }
 
       keys.forEach((key) => {
-        if (key.keys.includes(event.key) && !!event[metaKey] === !!key.meta && !!event.shiftKey === !!key.shift) {
+        if (
+          key.keys.includes(event.key) &&
+          !!event[metaKey] === !!key.meta &&
+          !!event.shiftKey === !!key.shift
+        ) {
           key.callback(event);
         }
       });

@@ -51,7 +51,9 @@ export const EffectControllerRect = (): ReactElement => {
           className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.width}
-          onChange={(e): void => handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })}
+          onChange={(e): void =>
+            handleCurrentRectChange({ width: parseInt(e.currentTarget.value) })
+          }
         />
       </div>
       <p className="tw-text-sm">height</p>
@@ -60,7 +62,9 @@ export const EffectControllerRect = (): ReactElement => {
           className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.height}
-          onChange={(e): void => handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })}
+          onChange={(e): void =>
+            handleCurrentRectChange({ height: parseInt(e.currentTarget.value) })
+          }
         />
       </div>
       <p className="tw-text-sm">x</p>
@@ -69,7 +73,9 @@ export const EffectControllerRect = (): ReactElement => {
           className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.x}
-          onChange={(e): void => handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })}
+          onChange={(e): void =>
+            handleCurrentRectChange({ x: parseInt(e.currentTarget.value) })
+          }
         />
       </div>
       <p className="tw-text-sm">y</p>
@@ -78,7 +84,9 @@ export const EffectControllerRect = (): ReactElement => {
           className="tw-w-full"
           type="number"
           value={firstMoveEffect.prop.y}
-          onChange={(e): void => handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })}
+          onChange={(e): void =>
+            handleCurrentRectChange({ y: parseInt(e.currentTarget.value) })
+          }
         />
       </div>
     </div>

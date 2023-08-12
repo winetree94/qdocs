@@ -5,7 +5,8 @@ import styles from './Checkbox.module.scss';
 import clsx from 'clsx';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 
-export interface QueueCheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface QueueCheckboxProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   name: string;
   value: any;
@@ -43,7 +44,10 @@ const QueueCheckbox = ({
         <SvgRemixIcon
           icon="ri-checkbox-blank-line"
           size={checkboxSize}
-          color={(checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT, disabled && styles.Disabled)}
+          color={
+            (checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT,
+            disabled && styles.Disabled)
+          }
           className={clsx(styles.CheckboxIcon)}
         />
       ),
@@ -64,7 +68,12 @@ const QueueCheckbox = ({
       />
       <label
         htmlFor={id}
-        className={clsx(styles.QueueCheckbox, styles.CheckboxLabel, styles[checkboxSize], disabled && styles.Disabled)}>
+        className={clsx(
+          styles.QueueCheckbox,
+          styles.CheckboxLabel,
+          styles[checkboxSize],
+          disabled && styles.Disabled,
+        )}>
         {useIcon && checked ? Icon.on : Icon.off}
         <span className={clsx(styles.CheckboxChildren)}>{children}</span>
       </label>

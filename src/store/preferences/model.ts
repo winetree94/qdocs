@@ -4,4 +4,5 @@ export const SUPPORTED_LANGUAGE = {
   AUTO: 'auto',
 } as const;
 
-export type SUPPORTED_LANGUAGES = (typeof SUPPORTED_LANGUAGE)[keyof typeof SUPPORTED_LANGUAGE];
+export type SUPPORTED_LANGUAGES =
+  (typeof SUPPORTED_LANGUAGE)[keyof typeof SUPPORTED_LANGUAGE];

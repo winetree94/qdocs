@@ -16,7 +16,8 @@ export interface QueueControlInputPrefixIconProps {
   prefixValue: string;
 }
 
-export interface QueueControlInputBoxProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface QueueControlInputBoxProps
+  extends InputHTMLAttributes<HTMLInputElement> {
   padding?: string;
   unit: QueueControlInputBoxUnitType;
   maxValue?: number;

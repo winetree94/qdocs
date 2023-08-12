@@ -1,25 +1,34 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { getUnitSymbol, isValidateValue, isValidLimit } from '../utils';
 import styles from '../ControlInputBox.module.scss';
 import { QueueControlInputBoxProps } from '../model';
 
-const InputBox = ({placeholder, valueChangeEvent, minValue = 0, maxValue = 100, padding,  unit='percent', ...props}: Partial<QueueControlInputBoxProps>) => {
-    const [text, setText] = useState<string>('');
-    const [prevValue, setPrevValue] = useState<number>(0);
+const InputBox = ({
+  placeholder,
+  valueChangeEvent,
+  minValue = 0,
+  maxValue = 100,
+  padding,
+  unit = 'percent',
+  ...props
+}: Partial<QueueControlInputBoxProps>) => {
+  const [text, setText] = useState<string>('');
+  const [prevValue, setPrevValue] = useState<number>(0);
 
-    useEffect(() => {
-      // console.log('useEffect start');
+  useEffect(() => {
+    // console.log('useEffect start');
 
-      return () => {
-        // console.log('userEffect bye');
-      };
-    }, []);
+    return () => {
+      // console.log('userEffect bye');
+    };
+  }, []);
 
-    const unitSymbol = getUnitSymbol(unit);
+  const unitSymbol = getUnitSymbol(unit);
 
-    return (
-      <div className={clsx(styles.InputBox)} style={{padding: padding ?? 0 }}>
+  return (
+    <div className={clsx(styles.InputBox)} style={{ padding: padding ?? 0 }}>
       <input
         placeholder={placeholder ?? unitSymbol}
         value={text}
@@ -47,7 +56,7 @@ const InputBox = ({placeholder, valueChangeEvent, minValue = 0, maxValue = 100, 
           }
 
           if (e.key === 'ArrowDown') {
-            const next = prevValue  === 0 ? prevValue : prevValue - 1;
+            const next = prevValue === 0 ? prevValue : prevValue - 1;
             setText(next + unitSymbol);
             setPrevValue(next);
             valueChangeEvent(next);
@@ -55,7 +64,7 @@ const InputBox = ({placeholder, valueChangeEvent, minValue = 0, maxValue = 100, 
           }
 
           if (e.key === 'ArrowUp') {
-            const next = prevValue  === maxValue ? prevValue : prevValue + 1;
+            const next = prevValue === maxValue ? prevValue : prevValue + 1;
             setText(next + unitSymbol);
             setPrevValue(next);
             valueChangeEvent(next);
@@ -63,8 +72,8 @@ const InputBox = ({placeholder, valueChangeEvent, minValue = 0, maxValue = 100, 
           }
         }}
       />
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
-  export default InputBox;
+export default InputBox;

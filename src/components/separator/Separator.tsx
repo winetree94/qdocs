@@ -6,7 +6,10 @@ import styles from './Separator.module.scss';
 export const Root = forwardRef<HTMLDivElement, Separator.SeparatorProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <Separator.Root {...props} ref={ref} className={clsx(className, styles.SeparatorRoot)}>
+      <Separator.Root
+        {...props}
+        ref={ref}
+        className={clsx(className, styles.SeparatorRoot)}>
         {children}
       </Separator.Root>
     );

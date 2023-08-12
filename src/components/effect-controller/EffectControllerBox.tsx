@@ -1,5 +1,9 @@
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
-import { BaseQueueEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
+import {
+  BaseQueueEffect,
+  OBJECT_EFFECT_META,
+  QueueEffectType,
+} from 'model/effect';
 import { ReactElement, useState } from 'react';
 import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
 import { QueueButton, QueueIconButton } from 'components/buttons/button/Button';
@@ -10,7 +14,11 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import { EffectActions, getEffectEntityKey, NormalizedQueueEffect } from '../../store/effect';
+import {
+  EffectActions,
+  getEffectEntityKey,
+  NormalizedQueueEffect,
+} from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
@@ -21,7 +29,9 @@ type EffectControllerProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectController = ({ effectType }: EffectControllerProps): ReactElement => {
+export const EffectController = ({
+  effectType,
+}: EffectControllerProps): ReactElement => {
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -29,7 +39,11 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
 
   const existingEffectIdsOfSelectedObjects = selectedObjects.map((object) =>
-    getEffectEntityKey({ objectId: object.id, type: effectType, index: settings.queueIndex }),
+    getEffectEntityKey({
+      objectId: object.id,
+      type: effectType,
+      index: settings.queueIndex,
+    }),
   );
 
   const handleDeleteEffectButton = () => {
@@ -53,7 +67,10 @@ export const EffectController = ({ effectType }: EffectControllerProps): ReactEl
             className="tw-absolute tw-right-0"
             onClick={handleDeleteEffectButton}
             size={QUEUE_UI_SIZE.SMALL}>
-            <SvgRemixIcon icon="ri-delete-bin-5-line" size={QUEUE_UI_SIZE.SMALL} />
+            <SvgRemixIcon
+              icon="ri-delete-bin-5-line"
+              size={QUEUE_UI_SIZE.SMALL}
+            />
           </QueueIconButton>
         )}
       </div>
@@ -88,24 +105,34 @@ const createEffect = (
   switch (effectType) {
     case OBJECT_EFFECT_META.FADE: {
       const initialFade = effects.find(
-        (effect) => effect.index === queueIndex - 1 && effect.type === OBJECT_EFFECT_META.FADE,
+        (effect) =>
+          effect.index === queueIndex - 1 &&
+          effect.type === OBJECT_EFFECT_META.FADE,
       );
 
       return {
         ...baseQueueEffect,
         type: OBJECT_EFFECT_META.FADE,
-        prop: initialFade?.type === OBJECT_EFFECT_META.FADE ? initialFade.prop : queueObject.fade,
+        prop:
+          initialFade?.type === OBJECT_EFFECT_META.FADE
+            ? initialFade.prop
+            : queueObject.fade,
       };
     }
     case OBJECT_EFFECT_META.FILL: {
       const initialFill = effects.find(
-        (effect) => effect.index === queueIndex - 1 && effect.type === OBJECT_EFFECT_META.FILL,
+        (effect) =>
+          effect.index === queueIndex - 1 &&
+          effect.type === OBJECT_EFFECT_META.FILL,
       );
 
       return {
         ...baseQueueEffect,
         type: OBJECT_EFFECT_META.FILL,
-        prop: initialFill?.type === OBJECT_EFFECT_META.FILL ? initialFill.prop : queueObject.fill,
+        prop:
+          initialFill?.type === OBJECT_EFFECT_META.FILL
+            ? initialFill.prop
+            : queueObject.fill,
       };
     }
     case OBJECT_EFFECT_META.RECT: {
@@ -189,16 +216,26 @@ export const EffectControllerBox = (): ReactElement | null => {
   const hasSelectedObjects = selectedObjects.length > 0;
   const [firstObject] = selectedObjects;
 
-  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, firstObject.id));
+  const effects = useAppSelector((state) =>
+    EffectSelectors.byObjectId(state, firstObject.id),
+  );
 
-  const objectCurrentEffects = effects.filter((effect) => effect.index === settings.queueIndex);
-  const addableEffectTypes = Object.values(OBJECT_ADDABLE_EFFECTS[firstObject.type]);
+  const objectCurrentEffects = effects.filter(
+    (effect) => effect.index === settings.queueIndex,
+  );
+  const addableEffectTypes = Object.values(
+    OBJECT_ADDABLE_EFFECTS[firstObject.type],
+  );
   const currentQueueObjectEffectTypes = objectCurrentEffects.map(
     (currentQueueObjectEffect) => currentQueueObjectEffect.type,
   );
-  const createEffectIndex = effects.find((effect) => effect.type === OBJECT_EFFECT_META.CREATE).index;
+  const createEffectIndex = effects.find(
+    (effect) => effect.type === OBJECT_EFFECT_META.CREATE,
+  ).index;
 
-  const handleAddEffectItemClick = (effectType: QueueEffectType['type']): void => {
+  const handleAddEffectItemClick = (
+    effectType: QueueEffectType['type'],
+  ): void => {
     const models = selectedObjects.map((object) => {
       const newEffects = [...effects];
       return createEffect(
@@ -251,7 +288,9 @@ export const EffectControllerBox = (): ReactElement | null => {
                 }
 
                 return (
-                  <QueueDropdown.Item key={effectType} onClick={(): void => handleAddEffectItemClick(effectType)}>
+                  <QueueDropdown.Item
+                    key={effectType}
+                    onClick={(): void => handleAddEffectItemClick(effectType)}>
                     {effectType}
                   </QueueDropdown.Item>
                 );
@@ -261,7 +300,10 @@ export const EffectControllerBox = (): ReactElement | null => {
         </div>
         <div className="tw-flex tw-flex-col tw-gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
-            <EffectController key={`ec-${currentQueueObjectEffect.type}`} effectType={currentQueueObjectEffect.type} />
+            <EffectController
+              key={`ec-${currentQueueObjectEffect.type}`}
+              effectType={currentQueueObjectEffect.type}
+            />
           ))}
         </div>
       </div>

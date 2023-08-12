@@ -6,7 +6,10 @@ import clsx from 'clsx';
 export const Root = forwardRef<HTMLDivElement, Tabs.TabsProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <Tabs.Root ref={ref} {...props} className={clsx(styles.TabsRoot, className)}>
+      <Tabs.Root
+        ref={ref}
+        {...props}
+        className={clsx(styles.TabsRoot, className)}>
         {children}
       </Tabs.Root>
     );
@@ -16,7 +19,10 @@ export const Root = forwardRef<HTMLDivElement, Tabs.TabsProps>(
 export const List = forwardRef<HTMLDivElement, Tabs.TabsListProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <Tabs.List ref={ref} {...props} className={clsx(styles.TabsList, className)}>
+      <Tabs.List
+        ref={ref}
+        {...props}
+        className={clsx(styles.TabsList, className)}>
         {children}
       </Tabs.List>
     );
@@ -26,7 +32,10 @@ export const List = forwardRef<HTMLDivElement, Tabs.TabsListProps>(
 export const Trigger = forwardRef<HTMLButtonElement, Tabs.TabsTriggerProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <Tabs.Trigger ref={ref} {...props} className={clsx(styles.TabsTrigger, className)}>
+      <Tabs.Trigger
+        ref={ref}
+        {...props}
+        className={clsx(styles.TabsTrigger, className)}>
         {children}
       </Tabs.Trigger>
     );
@@ -36,7 +45,10 @@ export const Trigger = forwardRef<HTMLButtonElement, Tabs.TabsTriggerProps>(
 export const Content = forwardRef<HTMLDivElement, Tabs.TabsContentProps>(
   ({ children, className, ...props }, ref) => {
     return (
-      <Tabs.Content ref={ref} {...props} className={clsx(styles.TabsContent, className)}>
+      <Tabs.Content
+        ref={ref}
+        {...props}
+        className={clsx(styles.TabsContent, className)}>
         {children}
       </Tabs.Content>
     );

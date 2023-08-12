@@ -11,14 +11,19 @@ export interface EditPageNameProps {
   onSubmit: (pageName: string) => void;
 }
 
-export const EditPageNameDialog = ({ pageName, onSubmit }: EditPageNameProps) => {
+export const EditPageNameDialog = ({
+  pageName,
+  onSubmit,
+}: EditPageNameProps) => {
   const { t } = useTranslation();
   const renderedRef = useRef<QueueDialogRootRef>();
   const [currentPageName, setCurrentPageName] = useState(pageName);
 
   return (
     <QueueDialog.Root ref={renderedRef}>
-      <QueueDialog.Title>{t('edit-page-name-dialog.edit-page-name')}</QueueDialog.Title>
+      <QueueDialog.Title>
+        {t('edit-page-name-dialog.edit-page-name')}
+      </QueueDialog.Title>
       <form
         onSubmit={(event): void => {
           event.preventDefault();
@@ -42,7 +47,10 @@ export const EditPageNameDialog = ({ pageName, onSubmit }: EditPageNameProps) =>
             onClick={() => renderedRef.current.close()}>
             {t('global.cancel')}
           </QueueButton>
-          <QueueButton type="submit" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE}>
+          <QueueButton
+            type="submit"
+            size={QUEUE_UI_SIZE.MEDIUM}
+            color={QUEUE_UI_COLOR.BLUE}>
             {t('global.confirm')}
           </QueueButton>
         </QueueDialog.Footer>

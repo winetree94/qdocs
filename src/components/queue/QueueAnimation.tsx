@@ -1,14 +1,40 @@
 import { Animators } from 'cdk/animation/Animator';
-import { getAnimatableFill, getCurrentFill, getFillAnimation } from 'components/queue/animate/fill';
-import { QueueFade, QueueFill, QueueRect, QueueRotate, QueueScale } from 'model/property';
+import {
+  getAnimatableFill,
+  getCurrentFill,
+  getFillAnimation,
+} from 'components/queue/animate/fill';
+import {
+  QueueFade,
+  QueueFill,
+  QueueRect,
+  QueueRotate,
+  QueueScale,
+} from 'model/property';
 import { createContext, useContext } from 'react';
 import { EffectSelectors } from 'store/effect/selectors';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
-import { getAnimatableFade, getCurrentFade, getFadeAnimation } from './animate/fade';
-import { getAnimatableRect, getCurrentRect, getRectAnimation } from './animate/rect';
-import { getAnimatableRotate, getCurrentRotate, getRotateAnimation } from './animate/rotate';
-import { getAnimatableScale, getCurrentScale, getScaleAnimation } from './animate/scale';
+import {
+  getAnimatableFade,
+  getCurrentFade,
+  getFadeAnimation,
+} from './animate/fade';
+import {
+  getAnimatableRect,
+  getCurrentRect,
+  getRectAnimation,
+} from './animate/rect';
+import {
+  getAnimatableRotate,
+  getCurrentRotate,
+  getRotateAnimation,
+} from './animate/rotate';
+import {
+  getAnimatableScale,
+  getCurrentScale,
+  getScaleAnimation,
+} from './animate/scale';
 import { QueueObjectContainerContext } from './Container';
 
 export interface QueueAnimatableContextType {
@@ -19,27 +45,29 @@ export interface QueueAnimatableContextType {
   fill: QueueFill;
 }
 
-export const QueueAnimatableContext = createContext<QueueAnimatableContextType>({
-  rect: {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
+export const QueueAnimatableContext = createContext<QueueAnimatableContextType>(
+  {
+    rect: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
+    fade: {
+      opacity: 0,
+    },
+    rotate: {
+      degree: 0,
+    },
+    scale: {
+      scale: 0,
+    },
+    fill: {
+      color: '',
+      opacity: 0,
+    },
   },
-  fade: {
-    opacity: 0,
-  },
-  rotate: {
-    degree: 0,
-  },
-  scale: {
-    scale: 0,
-  },
-  fill: {
-    color: '',
-    opacity: 0,
-  },
-});
+);
 
 export interface ObjectAnimatableProps {
   queueStart: number;
@@ -48,20 +76,44 @@ export interface ObjectAnimatableProps {
   children: React.ReactNode;
 }
 
-export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart }: ObjectAnimatableProps) => {
+export const ObjectAnimator = ({
+  children,
+  queueIndex,
+  queuePosition,
+  queueStart,
+}: ObjectAnimatableProps) => {
   const { object } = useContext(QueueObjectContainerContext);
-  const effects = useAppSelector((state) => EffectSelectors.byObjectId(state, object.id));
-  const presentationMode = useAppSelector(SettingSelectors.settings).presentationMode;
+  const effects = useAppSelector((state) =>
+    EffectSelectors.byObjectId(state, object.id),
+  );
+  const presentationMode = useAppSelector(
+    SettingSelectors.settings,
+  ).presentationMode;
   const currentFade = getCurrentFade(object, effects, queueIndex);
-  const animatableFade = queueStart > 0 ? getFadeAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const animatableFade =
+    queueStart > 0
+      ? getFadeAnimation(object, effects, queueIndex, queuePosition)
+      : undefined;
   const currentRect = getCurrentRect(object, effects, queueIndex);
-  const animatableRect = queueStart > 0 ? getRectAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const animatableRect =
+    queueStart > 0
+      ? getRectAnimation(object, effects, queueIndex, queuePosition)
+      : undefined;
   const currentRotate = getCurrentRotate(object, effects, queueIndex);
-  const animatableRotate = queueStart > 0 ? getRotateAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const animatableRotate =
+    queueStart > 0
+      ? getRotateAnimation(object, effects, queueIndex, queuePosition)
+      : undefined;
   const currentScale = getCurrentScale(object, effects, queueIndex);
-  const animatableScale = queueStart > 0 ? getScaleAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const animatableScale =
+    queueStart > 0
+      ? getScaleAnimation(object, effects, queueIndex, queuePosition)
+      : undefined;
   const currentFill = getCurrentFill(object, effects, queueIndex);
-  const animatableFill = queueStart > 0 ? getFillAnimation(object, effects, queueIndex, queuePosition) : undefined;
+  const animatableFill =
+    queueStart > 0
+      ? getFillAnimation(object, effects, queueIndex, queuePosition)
+      : undefined;
 
   const animatorsProps = [
     {
@@ -93,15 +145,42 @@ export const ObjectAnimator = ({ children, queueIndex, queuePosition, queueStart
 
   return (
     <Animators start={queueStart} animations={animatorsProps}>
-      {([rectProgress, fadeProgress, scaleProgress, rotateProgress, fillProgress]) => {
+      {([
+        rectProgress,
+        fadeProgress,
+        scaleProgress,
+        rotateProgress,
+        fillProgress,
+      ]) => {
         return (
           <QueueAnimatableContext.Provider
             value={{
-              rect: getAnimatableRect(rectProgress, currentRect, animatableRect?.fromRect),
-              fade: getAnimatableFade(fadeProgress, currentFade, animatableFade?.fromFade, presentationMode ? 0 : 0.1),
-              rotate: getAnimatableRotate(rotateProgress, currentRotate, animatableRotate?.fromRotate),
-              scale: getAnimatableScale(scaleProgress, currentScale, animatableScale?.fromScale),
-              fill: getAnimatableFill(fillProgress, currentFill, animatableFill?.fromFill),
+              rect: getAnimatableRect(
+                rectProgress,
+                currentRect,
+                animatableRect?.fromRect,
+              ),
+              fade: getAnimatableFade(
+                fadeProgress,
+                currentFade,
+                animatableFade?.fromFade,
+                presentationMode ? 0 : 0.1,
+              ),
+              rotate: getAnimatableRotate(
+                rotateProgress,
+                currentRotate,
+                animatableRotate?.fromRotate,
+              ),
+              scale: getAnimatableScale(
+                scaleProgress,
+                currentScale,
+                animatableScale?.fromScale,
+              ),
+              fill: getAnimatableFill(
+                fillProgress,
+                currentFill,
+                animatableFill?.fromFill,
+              ),
             }}>
             {children}
           </QueueAnimatableContext.Provider>

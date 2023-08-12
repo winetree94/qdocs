@@ -1,4 +1,6 @@
-export const disableGlobalKeyDownElement = (element: HTMLElement | Element): boolean => {
+export const disableGlobalKeyDownElement = (
+  element: HTMLElement | Element,
+): boolean => {
   if (['INPUT', 'TEXTAREA'].includes(element.tagName)) {
     return true;
   }

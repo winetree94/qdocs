@@ -20,7 +20,8 @@ const PanelContext = React.createContext<PanelContextType>({
   setHeight: () => undefined,
 });
 
-export interface PanelResizerPaneProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PanelResizerPaneProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   panePosition: 'top' | 'right' | 'bottom' | 'left';
   paneWidth?: number;
 }
@@ -29,7 +30,12 @@ export interface PanelResizerPaneProps extends React.HTMLAttributes<HTMLDivEleme
  * @description
  * 패널에서 리사이징 할 수 있는 pane 을 생성
  */
-const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerPaneProps) => {
+const Pane = ({
+  children,
+  panePosition,
+  paneWidth = 8,
+  ...props
+}: PanelResizerPaneProps) => {
   const context = useContext(PanelContext);
   const [initEvent, setInitEvent] = useState<{
     event: React.MouseEvent<HTMLDivElement, MouseEvent>;
@@ -82,12 +88,16 @@ const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerP
     document.addEventListener('mousemove', onMousemove);
     document.addEventListener('mouseup', onMouseup);
     document.addEventListener('keydown', onKeydown);
-    document.body.classList.add(horizontal ? 'cursor-row-resize' : 'cursor-col-resize');
+    document.body.classList.add(
+      horizontal ? 'cursor-row-resize' : 'cursor-col-resize',
+    );
     return () => {
       document.removeEventListener('mousemove', onMousemove);
       document.removeEventListener('mouseup', onMouseup);
       document.removeEventListener('keydown', onKeydown);
-      document.body.classList.remove(horizontal ? 'cursor-row-resize' : 'cursor-col-resize');
+      document.body.classList.remove(
+        horizontal ? 'cursor-row-resize' : 'cursor-col-resize',
+      );
     };
   }, [context, horizontal, initEvent, panePosition]);
 
@@ -115,7 +125,8 @@ const Pane = ({ children, panePosition, paneWidth = 8, ...props }: PanelResizerP
   );
 };
 
-export interface PanelResizerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PanelResizerProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * @description
    * 패널의 너비 지정
@@ -149,7 +160,14 @@ export interface PanelResizerProps extends React.HTMLAttributes<HTMLDivElement> 
  *  <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
  * </PanelResizer.Panel>
  */
-const Panel = ({ children, width, minWidth, height, minHeight, ...props }: PanelResizerProps) => {
+const Panel = ({
+  children,
+  width,
+  minWidth,
+  height,
+  minHeight,
+  ...props
+}: PanelResizerProps) => {
   const [state, setState] = useState({
     active: false,
     width: width,
@@ -174,8 +192,12 @@ const Panel = ({ children, width, minWidth, height, minHeight, ...props }: Panel
         className={clsx('tw-relative', props.className)}
         style={{
           ...props.style,
-          width: state.width ? Math.max(state.width, state.minWidth) : undefined,
-          height: state.height ? Math.max(state.height, state.minHeight) : undefined,
+          width: state.width
+            ? Math.max(state.width, state.minWidth)
+            : undefined,
+          height: state.height
+            ? Math.max(state.height, state.minHeight)
+            : undefined,
         }}>
         {children}
       </div>

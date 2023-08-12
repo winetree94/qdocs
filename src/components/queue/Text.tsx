@@ -14,10 +14,18 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
   const { object, detail } = useContext(QueueObjectContainerContext);
 
   const verticalAlign =
-    object.text.verticalAlign === 'middle' ? 'center' : object.text.verticalAlign === 'top' ? 'flex-start' : 'flex-end';
+    object.text.verticalAlign === 'middle'
+      ? 'center'
+      : object.text.verticalAlign === 'top'
+      ? 'flex-start'
+      : 'flex-end';
 
   const textAlign =
-    object.text.horizontalAlign === 'center' ? 'center' : object.text.horizontalAlign === 'left' ? 'left' : 'right';
+    object.text.horizontalAlign === 'center'
+      ? 'center'
+      : object.text.horizontalAlign === 'left'
+      ? 'left'
+      : 'right';
 
   const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.nativeEvent.isComposing) {
@@ -39,14 +47,13 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
   };
 
   useEffect(() => {
-    ref.current!.innerHTML = object.text.text;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ref.current.innerHTML = object.text.text;
   }, []);
 
   const focus = () => {
     const selection = window.getSelection();
     const newRange = document.createRange();
-    newRange.selectNodeContents(ref.current!);
+    newRange.selectNodeContents(ref.current);
     newRange.collapse(false);
     selection?.removeAllRanges();
     selection?.addRange(newRange);

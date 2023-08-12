@@ -7,7 +7,12 @@ interface DragThrosholdDetectorProps {
   onMouseup: (event: MouseEvent) => void;
 }
 
-const GlobalDragThresholdDetector = ({ initEvent, threshold, onThreshold, onMouseup }: DragThrosholdDetectorProps) => {
+const GlobalDragThresholdDetector = ({
+  initEvent,
+  threshold,
+  onThreshold,
+  onMouseup,
+}: DragThrosholdDetectorProps) => {
   const hasThresholdReachedRef = useRef(false);
 
   const moveListener = useCallback(
@@ -16,7 +21,9 @@ const GlobalDragThresholdDetector = ({ initEvent, threshold, onThreshold, onMous
       const startY = initEvent.clientY;
       const targetX = event.clientX;
       const targetY = event.clientY;
-      const isChanged = Math.abs(startX - targetX) > threshold || Math.abs(startY - targetY) > threshold;
+      const isChanged =
+        Math.abs(startX - targetX) > threshold ||
+        Math.abs(startY - targetY) > threshold;
       if (!isChanged || hasThresholdReachedRef.current) {
         return;
       }
@@ -74,9 +81,18 @@ const GlobalDragDetector = ({ onMousemove, onMouseup }: DrawDetectorProps) => {
 export interface DraggableProps extends React.HTMLAttributes<HTMLDivElement> {
   threshold?: number;
   children?: React.ReactNode;
-  onActualDragStart?: (initialEvent: MouseEvent, currentEvent: MouseEvent) => void;
-  onActualDragMove?: (initialEvent: MouseEvent, currentEvent: MouseEvent) => void;
-  onActualDragEnd?: (initialEvent: MouseEvent, currentEvent: MouseEvent) => void;
+  onActualDragStart?: (
+    initialEvent: MouseEvent,
+    currentEvent: MouseEvent,
+  ) => void;
+  onActualDragMove?: (
+    initialEvent: MouseEvent,
+    currentEvent: MouseEvent,
+  ) => void;
+  onActualDragEnd?: (
+    initialEvent: MouseEvent,
+    currentEvent: MouseEvent,
+  ) => void;
 }
 
 /**
@@ -137,7 +153,9 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
             }}
           />
         )}
-        {detectMouseEvent && <GlobalDragDetector onMousemove={move} onMouseup={end} />}
+        {detectMouseEvent && (
+          <GlobalDragDetector onMousemove={move} onMouseup={end} />
+        )}
       </>
     );
   },

@@ -7,26 +7,37 @@ interface EventDispatcherContextType {
   dispatch: <P = void>(payload: EventPayloadAction<P>) => void;
 }
 
-export const EventDispatcherContext = createContext<EventDispatcherContextType>(null);
+export const EventDispatcherContext =
+  createContext<EventDispatcherContextType>(null);
 
 export type EventDispatcherProviderProps = {
   children: React.ReactNode;
 };
 
-export const EventDispatcherProvider = ({ children }: EventDispatcherProviderProps) => {
+export const EventDispatcherProvider = ({
+  children,
+}: EventDispatcherProviderProps) => {
   const listeners = useRef<Record<string, EventCallback<never>[]>>({});
 
-  const subscribe = <P = void,>(eventName: string, emitter: EventCallback<P>): void => {
+  const subscribe = <P = void,>(
+    eventName: string,
+    emitter: EventCallback<P>,
+  ): void => {
     listeners.current = {
       ...listeners.current,
       [eventName]: [...(listeners.current[eventName] || []), emitter],
     };
   };
 
-  const unsubscribe = <P = void,>(eventName: string, emitter: EventCallback<P>): void => {
+  const unsubscribe = <P = void,>(
+    eventName: string,
+    emitter: EventCallback<P>,
+  ): void => {
     listeners.current = {
       ...listeners.current,
-      [eventName]: (listeners.current[eventName] || []).filter((listener) => listener !== emitter),
+      [eventName]: (listeners.current[eventName] || []).filter(
+        (listener) => listener !== emitter,
+      ),
     };
   };
 
@@ -47,5 +58,9 @@ export const EventDispatcherProvider = ({ children }: EventDispatcherProviderPro
     [],
   );
 
-  return <EventDispatcherContext.Provider value={memoizedValue}>{children}</EventDispatcherContext.Provider>;
+  return (
+    <EventDispatcherContext.Provider value={memoizedValue}>
+      {children}
+    </EventDispatcherContext.Provider>
+  );
 };

@@ -10,21 +10,16 @@ export interface QueuePopoverRootProps {
 }
 
 const QueuePopoverRoot = ({ children, ...props }: QueuePopoverRootProps) => {
-  return (
-    <Popover.Root
-      {...props}
-    >
-      {children}
-    </Popover.Root>
-  );
+  return <Popover.Root {...props}>{children}</Popover.Root>;
 };
 
-const QueuePopoverAnchor = ({ children, className, ...props }: Popover.PopoverAnchorProps) => {
+const QueuePopoverAnchor = ({
+  children,
+  className,
+  ...props
+}: Popover.PopoverAnchorProps) => {
   return (
-    <Popover.Anchor
-      {...props}
-      className={clsx(styles.Anchor, className)}
-    >
+    <Popover.Anchor {...props} className={clsx(styles.Anchor, className)}>
       {children}
     </Popover.Anchor>
   );
@@ -35,7 +30,10 @@ export interface QueuePopoverContentProps {
   children?: React.ReactNode;
 }
 
-const QueuePopoverContent = ({ children, ...props }: QueuePopoverContentProps) => {
+const QueuePopoverContent = ({
+  children,
+  ...props
+}: QueuePopoverContentProps) => {
   return (
     <Popover.Portal>
       <Popover.Content className={clsx(styles.Content)}>

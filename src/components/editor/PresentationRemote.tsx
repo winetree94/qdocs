@@ -15,10 +15,14 @@ export const PresentationRemote = () => {
   return (
     <div className={styles.Container}>
       <div className={styles.ButtonGroup}>
-        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.rewind())}>
+        <QueueIconButton
+          size={QUEUE_UI_SIZE.MEDIUM}
+          onClick={() => dispatch(SettingsActions.rewind())}>
           <SvgRemixIcon icon={'ri-rewind-line'} />
         </QueueIconButton>
-        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.forward())}>
+        <QueueIconButton
+          size={QUEUE_UI_SIZE.MEDIUM}
+          onClick={() => dispatch(SettingsActions.forward())}>
           <SvgRemixIcon icon={'ri-speed-line'} />
         </QueueIconButton>
         <QueueIconButton
@@ -27,7 +31,9 @@ export const PresentationRemote = () => {
           onClick={() => dispatch(SettingsActions.pause())}>
           <SvgRemixIcon icon={'ri-pause-line'} />
         </QueueIconButton>
-        <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} onClick={() => dispatch(SettingsActions.play())}>
+        <QueueIconButton
+          size={QUEUE_UI_SIZE.MEDIUM}
+          onClick={() => dispatch(SettingsActions.play())}>
           <SvgRemixIcon icon={'ri-play-line'} />
         </QueueIconButton>
         <QueueToggle.Root

@@ -10,4 +10,9 @@ export * from './square';
 export * from './meta';
 export * from './image';
 
-export type QueueObjectType = QueueSquare | QueueCircle | QueueIcon | QueueLine | QueueImage;
+export type QueueObjectType =
+  | QueueSquare
+  | QueueCircle
+  | QueueIcon
+  | QueueLine
+  | QueueImage;

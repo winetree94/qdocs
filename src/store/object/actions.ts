@@ -1,5 +1,8 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import { NormalizedQueueImageObjectType, NormalizedQueueObjectType } from './model';
+import {
+  NormalizedQueueImageObjectType,
+  NormalizedQueueObjectType,
+} from './model';
 
 const addOne = createAction<{
   queueIndex?: number;

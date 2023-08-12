@@ -12,7 +12,9 @@ export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectControllerDuration = ({ effectType }: EffectControllerDurationProps): ReactElement => {
+export const EffectControllerDuration = ({
+  effectType,
+}: EffectControllerDurationProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -33,7 +35,9 @@ export const EffectControllerDuration = ({ effectType }: EffectControllerDuratio
   const convertedDuration = firstObjectEffect.duration / 1000;
   const convertedDelay = firstObjectEffect.delay / 1000;
 
-  const handleDurationChange = (durationValue: number | number[] | string): void => {
+  const handleDurationChange = (
+    durationValue: number | number[] | string,
+  ): void => {
     let duration = 1000;
 
     if (typeof durationValue === 'number') {

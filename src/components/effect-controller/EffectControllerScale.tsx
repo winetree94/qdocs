@@ -1,7 +1,11 @@
 import { Slider } from 'components/slider';
 import { OBJECT_EFFECT_META, ScaleEffect } from 'model/effect';
 import { ReactElement } from 'react';
-import { EffectActions, EffectSelectors, getEffectEntityKey } from 'store/effect';
+import {
+  EffectActions,
+  EffectSelectors,
+  getEffectEntityKey,
+} from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
@@ -26,7 +30,9 @@ export const EffectControllerScale = (): ReactElement => {
 
   const [firstScaleEffect] = effectsOfSelectedObjects;
 
-  const handleCurrentScaleChange = (scaleValue: number | number[] | string): void => {
+  const handleCurrentScaleChange = (
+    scaleValue: number | number[] | string,
+  ): void => {
     let scale = 1;
 
     if (typeof scaleValue === 'number') {
@@ -57,7 +63,12 @@ export const EffectControllerScale = (): ReactElement => {
 
   return (
     <div>
-      <input type="number" value={firstScaleEffect.prop.scale} hidden readOnly />
+      <input
+        type="number"
+        value={firstScaleEffect.prop.scale}
+        hidden
+        readOnly
+      />
       <p className="tw-text-sm">scale</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">

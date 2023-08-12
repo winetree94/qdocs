@@ -6,7 +6,10 @@ import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
-import { AnimatorTimingFunctionType, TIMING_FUNCTION_META } from 'cdk/animation/timing/meta';
+import {
+  AnimatorTimingFunctionType,
+  TIMING_FUNCTION_META,
+} from 'cdk/animation/timing/meta';
 import { QueueSelect } from 'components/select/Select';
 
 export type EffectControllerTimingFunctionProps = {
@@ -15,7 +18,9 @@ export type EffectControllerTimingFunctionProps = {
 
 const timingFunctions = Object.values(TIMING_FUNCTION_META);
 
-export const EffectControllerTimingFunction = ({ effectType }: EffectControllerTimingFunctionProps): ReactElement => {
+export const EffectControllerTimingFunction = ({
+  effectType,
+}: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -49,7 +54,9 @@ export const EffectControllerTimingFunction = ({ effectType }: EffectControllerT
   return (
     <div>
       <p className="tw-text-sm">timing function</p>
-      <QueueSelect defaultValue={firstObjectEffect.timing} onValueChange={handleTimingFunctionChange}>
+      <QueueSelect
+        defaultValue={firstObjectEffect.timing}
+        onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Group>
           {timingFunctions.map((timingFunction) => (
             <QueueSelect.Option value={timingFunction} key={timingFunction}>

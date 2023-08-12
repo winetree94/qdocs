@@ -6,7 +6,10 @@ export const composeEventHandlers = <E>(
   return (event: E): void => {
     originalEventHandler?.(event);
 
-    if (!checkForDefaultPrevented || !(event as unknown as Event).defaultPrevented) {
+    if (
+      !checkForDefaultPrevented ||
+      !(event as unknown as Event).defaultPrevented
+    ) {
       ourEventHandler?.(event);
     }
   };

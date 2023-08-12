@@ -69,10 +69,12 @@ export const ObjectStyleStroke = () => {
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.style')}</div>
         <div className={styles.SubInputContainer}>
-          <QueueSelect value={stroke.dasharray} onValueChange={(value): void => updateStroke({ dasharray: value })}>
-            <QueueSelect.Option value='solid'>-------</QueueSelect.Option>
-            <QueueSelect.Option value='dashed'>- - - -</QueueSelect.Option>
-            <QueueSelect.Option value='longDashed'>-- -- --</QueueSelect.Option>
+          <QueueSelect
+            value={stroke.dasharray}
+            onValueChange={(value): void => updateStroke({ dasharray: value })}>
+            <QueueSelect.Option value="solid">-------</QueueSelect.Option>
+            <QueueSelect.Option value="dashed">- - - -</QueueSelect.Option>
+            <QueueSelect.Option value="longDashed">-- -- --</QueueSelect.Option>
           </QueueSelect>
         </div>
       </div>

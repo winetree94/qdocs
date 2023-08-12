@@ -5,11 +5,15 @@ const addEffect = createAction<NormalizedQueueEffect>('effect/addEffect');
 
 const upsertEffect = createAction<NormalizedQueueEffect>('effect/upsertEffect');
 
-const upsertEffects = createAction<NormalizedQueueEffect[]>('effect/upsertEffects');
+const upsertEffects = createAction<NormalizedQueueEffect[]>(
+  'effect/upsertEffects',
+);
 
 const removeMany = createAction<EntityId[]>('effect/removeMany');
 
-const removeObjectOnQueue = createAction<{ ids: EntityId[] }>('effect/removeObjectOnQueue');
+const removeObjectOnQueue = createAction<{ ids: EntityId[] }>(
+  'effect/removeObjectOnQueue',
+);
 
 export const EffectActions = {
   addEffect,

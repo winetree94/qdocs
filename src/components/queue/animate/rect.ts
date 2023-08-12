@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { MoveEffect } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
@@ -34,7 +33,11 @@ export const getRectAnimation = (
     return null;
   }
 
-  const fromRect = getCurrentRect(object, effects, position === 'forward' ? index - 1 : index + 1);
+  const fromRect = getCurrentRect(
+    object,
+    effects,
+    position === 'forward' ? index - 1 : index + 1,
+  );
 
   const moveEffect = effects.find((effect): effect is MoveEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
@@ -61,7 +64,11 @@ export const getRectAnimation = (
   };
 };
 
-export const getAnimatableRect = (progress: number, targetRect: QueueRect, fromRect?: QueueRect): QueueRect => {
+export const getAnimatableRect = (
+  progress: number,
+  targetRect: QueueRect,
+  fromRect?: QueueRect,
+): QueueRect => {
   if (progress < 0 || !fromRect) {
     return targetRect;
   }

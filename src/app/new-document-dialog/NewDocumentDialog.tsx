@@ -19,7 +19,8 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
   const { t } = useTranslation();
   const dialogRef = useRef<QueueDialogRootRef>();
   const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
-  const [documentTemplate, setDocumentTemplate] = React.useState<string>('Empty');
+  const [documentTemplate, setDocumentTemplate] =
+    React.useState<string>('Empty');
 
   const [fetching, setFetching] = React.useState<boolean>(false);
 
@@ -30,7 +31,9 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
       return;
     }
     try {
-      const template = templates.find((template) => template.name === documentTemplate);
+      const template = templates.find(
+        (template) => template.name === documentTemplate,
+      );
       if (!template) {
         console.warn('Template not found: ', documentTemplate);
         return;
@@ -44,7 +47,9 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
     }
   };
 
-  const onDoubleClickItem = async (fetcher: () => Promise<QueueDocument>): Promise<void> => {
+  const onDoubleClickItem = async (
+    fetcher: () => Promise<QueueDocument>,
+  ): Promise<void> => {
     if (fetching) {
       return;
     }
@@ -60,15 +65,23 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
 
   return (
     <QueueDialog.Root ref={dialogRef}>
-      <QueueDialog.Title>{t('new-document.set-up-new-document-template')}</QueueDialog.Title>
+      <QueueDialog.Title>
+        {t('new-document.set-up-new-document-template')}
+      </QueueDialog.Title>
       <QueueDialog.Description>
         <div className={styles.Container}>
           <div className={styles.RatioContainer} style={{ display: 'none' }}>
             <h6>문서 크기 비율</h6>
-            <QueueSelect value={documentRatio} onValueChange={(value): void => setDocumentRatio(value)}>
+            <QueueSelect
+              value={documentRatio}
+              onValueChange={(value): void => setDocumentRatio(value)}>
               <QueueSelect.Group>
-                <QueueSelect.Option value="16:9">와이드 (16:9)</QueueSelect.Option>
-                <QueueSelect.Option value="16:10">와이드 (16:10)</QueueSelect.Option>
+                <QueueSelect.Option value="16:9">
+                  와이드 (16:9)
+                </QueueSelect.Option>
+                <QueueSelect.Option value="16:10">
+                  와이드 (16:10)
+                </QueueSelect.Option>
                 <QueueSelect.Option value="4:3">35mm (4:3)</QueueSelect.Option>
               </QueueSelect.Group>
             </QueueSelect>
@@ -77,14 +90,16 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
             <QueueToggleGroup.Root
               type="single"
               value={documentTemplate}
-              onValueChange={(value): void => value && setDocumentTemplate(value)}
+              onValueChange={(value): void =>
+                value && setDocumentTemplate(value)
+              }
               className={clsx(styles.TemplateGroup)}>
               {templates.map(({ name, getTemplate }) => (
                 <QueueToggleGroup.Item
                   key={name}
                   className={styles.TemplateItem}
                   value={name}
-                  onDoubleClick={(): Promise<void> => onDoubleClickItem(getTemplate)}>
+                  onDoubleClick={() => onDoubleClickItem(getTemplate)}>
                   {name}
                 </QueueToggleGroup.Item>
               ))}
@@ -100,7 +115,11 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
           onClick={(): void => dialogRef.current.close()}>
           {t('global.cancel')}
         </QueueButton>
-        <QueueButton type="button" size={QUEUE_UI_SIZE.MEDIUM} color={QUEUE_UI_COLOR.BLUE} onClick={onSubmitClick}>
+        <QueueButton
+          type="button"
+          size={QUEUE_UI_SIZE.MEDIUM}
+          color={QUEUE_UI_COLOR.BLUE}
+          onClick={onSubmitClick}>
           {t('global.create')}
         </QueueButton>
       </QueueDialog.Footer>

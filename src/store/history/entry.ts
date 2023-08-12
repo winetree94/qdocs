@@ -2,7 +2,10 @@ import { AnyAction, Reducer } from '@reduxjs/toolkit';
 import { HistoryActions } from './actions';
 import { HistoryActionTypes, HistoryOptions } from './model';
 
-export const withHistory = <T>(reducer: Reducer<T, AnyAction>, options?: HistoryOptions<T>): Reducer<T, AnyAction> => {
+export const withHistory = <T>(
+  reducer: Reducer<T, AnyAction>,
+  options?: HistoryOptions<T>,
+): Reducer<T, AnyAction> => {
   const previous: T[] = [];
   const future: T[] = [];
   return (state: T, action: AnyAction) => {
@@ -22,13 +25,19 @@ export const withHistory = <T>(reducer: Reducer<T, AnyAction>, options?: History
       return state;
     }
 
-    if (action.type === HistoryActionTypes[HistoryActions.Undo.type] && previous.length > 0) {
+    if (
+      action.type === HistoryActionTypes[HistoryActions.Undo.type] &&
+      previous.length > 0
+    ) {
       future.push(state);
       const target = previous.pop();
       return options?.beforeHistoryApplied?.(target, state) || target;
     }
 
-    if (action.type === HistoryActionTypes[HistoryActions.Redo.type] && future.length > 0) {
+    if (
+      action.type === HistoryActionTypes[HistoryActions.Redo.type] &&
+      future.length > 0
+    ) {
       previous.push(state);
       const target = future.pop();
       return options?.beforeHistoryApplied?.(target, state) || target;

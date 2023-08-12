@@ -11,9 +11,12 @@ const entities = selectors.selectEntities;
 const ids = selectors.selectIds;
 const total = selectors.selectTotal;
 
-const allByPageId = createSelector([all, (_: RootState, id: EntityId) => id], (objects, id) => {
-  return objects.filter((object) => object.pageId === id);
-});
+const allByPageId = createSelector(
+  [all, (_: RootState, id: EntityId) => id],
+  (objects, id) => {
+    return objects.filter((object) => object.pageId === id);
+  },
+);
 
 const idSetOfPageId = createSelector([allByPageId], (objects) => {
   return new Set<EntityId>(objects.map(({ id }) => id));

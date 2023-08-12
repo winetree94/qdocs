@@ -20,7 +20,14 @@ export interface DrawProps extends React.BaseHTMLAttributes<HTMLDivElement> {
   onDrawEnd?: (event: DrawEvent) => void;
 }
 
-export const Drawable = ({ threshold = 30, onDrawStart, onDrawMove, onDrawEnd, children, ...divProps }: DrawProps) => {
+export const Drawable = ({
+  threshold = 30,
+  onDrawStart,
+  onDrawMove,
+  onDrawEnd,
+  children,
+  ...divProps
+}: DrawProps) => {
   const container = useRef<HTMLDivElement>(null);
 
   const [selectorPosition, setSelectorPosition] = useState<{

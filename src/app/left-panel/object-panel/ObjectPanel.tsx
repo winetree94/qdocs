@@ -1,4 +1,11 @@
-import { FunctionComponent, memo, ReactNode, useCallback, useMemo, useState } from 'react';
+import {
+  FunctionComponent,
+  memo,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import clsx from 'clsx';
 import styles from './ObjectPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
@@ -25,7 +32,10 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { createDefaultImage } from 'model/object/image';
 import { nanoid } from '@reduxjs/toolkit';
-import { ImageEncodingMessage, IMAGE_ENCODING_STATUS } from 'workers/imageConversionWorker';
+import {
+  ImageEncodingMessage,
+  IMAGE_ENCODING_STATUS,
+} from 'workers/imageConversionWorker';
 
 export interface QueueObject {
   key: string;
@@ -65,46 +75,55 @@ export interface FlattenRowProps {
   };
 }
 
-export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(({ style, index, data }) => {
-  const flattenData = data.flattenData[index];
+export const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
+  ({ style, index, data }) => {
+    const flattenData = data.flattenData[index];
 
-  if (flattenData.type === 'group') {
+    if (flattenData.type === 'group') {
+      return (
+        <div
+          style={style}
+          onClick={() => data.toggleOpenedObjectGroup(flattenData.key)}
+          className={clsx(styles.objectGroupTitle)}>
+          <SvgRemixIcon
+            className={styles.objectGroupArrow}
+            icon={
+              data.closedObjectGroupKey[flattenData.key]
+                ? 'ri-arrow-right-s-line'
+                : 'ri-arrow-down-s-line'
+            }
+          />
+          {flattenData.title}
+        </div>
+      );
+    }
+
     return (
-      <div
-        style={style}
-        onClick={(e): void => data.toggleOpenedObjectGroup(flattenData.key)}
-        className={clsx(styles.objectGroupTitle)}>
-        <SvgRemixIcon
-          className={styles.objectGroupArrow}
-          icon={data.closedObjectGroupKey[flattenData.key] ? 'ri-arrow-right-s-line' : 'ri-arrow-down-s-line'}
-        />
-        {flattenData.title}
+      <div className={clsx('tw-flex')} style={style}>
+        {flattenData.objects.map((object) => (
+          <Tooltip.Provider key={object.key}>
+            <Tooltip.Root>
+              <Tooltip.Trigger asChild>
+                <div onClick={object.factory} className={clsx(styles.object)}>
+                  {object.preview}
+                </div>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  className={styles.TooltipContent}
+                  sideOffset={5}>
+                  {object.tooltip || object.key}
+                  <Tooltip.Arrow className={styles.TooltipArrow} />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        ))}
       </div>
     );
-  }
-
-  return (
-    <div className={clsx('tw-flex')} style={style}>
-      {flattenData.objects.map((object) => (
-        <Tooltip.Provider key={object.key}>
-          <Tooltip.Root>
-            <Tooltip.Trigger asChild>
-              <div onClick={object.factory} className={clsx(styles.object)}>
-                {object.preview}
-              </div>
-            </Tooltip.Trigger>
-            <Tooltip.Portal>
-              <Tooltip.Content className={styles.TooltipContent} sideOffset={5}>
-                {object.tooltip || object.key}
-                <Tooltip.Arrow className={styles.TooltipArrow} />
-              </Tooltip.Content>
-            </Tooltip.Portal>
-          </Tooltip.Root>
-        </Tooltip.Provider>
-      ))}
-    </div>
-  );
-}, areEqual);
+  },
+  areEqual,
+);
 
 // This helper function memoizes incoming props,
 // To avoid causing unnecessary re-renders pure Row components.
@@ -144,10 +163,18 @@ export const ObjectPanel: FunctionComponent = () => {
 
   const createFigure = useCallback(
     (
-      createDefaultShape: (documentRect: QueueDocumentRect, queueIndex: number, iconType?: string) => QueueObjectType,
+      createDefaultShape: (
+        documentRect: QueueDocumentRect,
+        queueIndex: number,
+        iconType?: string,
+      ) => QueueObjectType,
     ): ((iconClassName?: string) => void) => {
       return (iconClassName) => {
-        const figure = createDefaultShape(queueDocument!.documentRect, settings.queueIndex, iconClassName);
+        const figure = createDefaultShape(
+          queueDocument.documentRect,
+          settings.queueIndex,
+          iconClassName,
+        );
         const object = {
           pageId: settings.pageId,
           ...figure,
@@ -175,56 +202,61 @@ export const ObjectPanel: FunctionComponent = () => {
   const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
-  const createImage = createFigure((documentRect: QueueDocumentRect, queueIndex: number) => {
-    const objectId = nanoid();
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.multiple = false;
+  const createImage = createFigure(
+    (documentRect: QueueDocumentRect, queueIndex: number) => {
+      const objectId = nanoid();
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.multiple = false;
 
-    fileInput.addEventListener('change', () => {
-      const file = fileInput.files[0];
-      const worker = new Worker(
-        /* webpackChunkName: "image-encoding-worker" */ new URL(
-          '../../../workers/imageConversionWorker.ts',
-          import.meta.url,
-        ),
-      );
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        const worker = new Worker(
+          /* webpackChunkName: "image-encoding-worker" */ new URL(
+            '../../../workers/imageConversionWorker.ts',
+            import.meta.url,
+          ),
+        );
 
-      worker.addEventListener('message', (event: MessageEvent<ImageEncodingMessage>) => {
-        const { status, imageData } = event.data;
+        worker.addEventListener(
+          'message',
+          (event: MessageEvent<ImageEncodingMessage>) => {
+            const { status, imageData } = event.data;
 
-        switch (status) {
-          case IMAGE_ENCODING_STATUS.ENCODED:
-            dispatch(
-              ObjectActions.updateImageObject({
-                id: objectId,
-                changes: {
-                  image: {
-                    src: imageData.src,
-                    alt: imageData.fileName,
-                    assetId: nanoid(),
-                  },
-                },
-              }),
-            );
+            switch (status) {
+              case IMAGE_ENCODING_STATUS.ENCODED:
+                dispatch(
+                  ObjectActions.updateImageObject({
+                    id: objectId,
+                    changes: {
+                      image: {
+                        src: imageData.src,
+                        alt: imageData.fileName,
+                        assetId: nanoid(),
+                      },
+                    },
+                  }),
+                );
 
-            break;
-          case IMAGE_ENCODING_STATUS.ERROR:
-            dispatch(ObjectActions.removeMany([objectId]));
-            break;
-        }
+                break;
+              case IMAGE_ENCODING_STATUS.ERROR:
+                dispatch(ObjectActions.removeMany([objectId]));
+                break;
+            }
+          },
+        );
+
+        worker.postMessage(file);
       });
 
-      worker.postMessage(file);
-    });
+      fileInput.click();
 
-    fileInput.click();
-
-    // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
-    // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
-    return createDefaultImage(documentRect, queueIndex, objectId);
-  });
+      // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
+      // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
+      return createDefaultImage(documentRect, queueIndex, objectId);
+    },
+  );
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [
@@ -240,7 +272,13 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <rect width="30" height="30" stroke="black" strokeWidth="4" fill="transparent" />
+                  <rect
+                    width="30"
+                    height="30"
+                    stroke="black"
+                    strokeWidth="4"
+                    fill="transparent"
+                  />
                 </g>
               </svg>
             ),
@@ -253,7 +291,14 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <circle cx="15" cy="15" r="13" stroke="black" strokeWidth="2" fill="transparent" />
+                  <circle
+                    cx="15"
+                    cy="15"
+                    r="13"
+                    stroke="black"
+                    strokeWidth="2"
+                    fill="transparent"
+                  />
                 </g>
               </svg>
             ),
@@ -266,7 +311,15 @@ export const ObjectPanel: FunctionComponent = () => {
             preview: (
               <svg className={styles.canvas}>
                 <g>
-                  <line x1="0" y1="0" x2="42" y2="42" stroke="black" strokeWidth="2" fill="transparent" />
+                  <line
+                    x1="0"
+                    y1="0"
+                    x2="42"
+                    y2="42"
+                    stroke="black"
+                    strokeWidth="2"
+                    fill="transparent"
+                  />
                 </g>
               </svg>
             ),
@@ -282,7 +335,12 @@ export const ObjectPanel: FunctionComponent = () => {
             factory: () => createImage(),
             tooltip: 'image',
             keyword: ['image'],
-            preview: <SvgRemixIcon icon="ri-image-add-line" size={QUEUE_UI_SIZE.XLARGE} />,
+            preview: (
+              <SvgRemixIcon
+                icon="ri-image-add-line"
+                size={QUEUE_UI_SIZE.XLARGE}
+              />
+            ),
           },
         ],
       },
@@ -293,7 +351,9 @@ export const ObjectPanel: FunctionComponent = () => {
           key: iconClassName,
           factory: () => createIcon(iconClassName),
           keyword: [iconClassName],
-          preview: <SvgRemixIcon icon={iconClassName} size={QUEUE_UI_SIZE.XLARGE} />,
+          preview: (
+            <SvgRemixIcon icon={iconClassName} size={QUEUE_UI_SIZE.XLARGE} />
+          ),
         })),
       },
     ],
@@ -306,7 +366,9 @@ export const ObjectPanel: FunctionComponent = () => {
     }
     return models.reduce<QueueObjectGroup[]>((result, group) => {
       const filtered = group.children.filter((child) =>
-        child.keyword.some((keyword) => keyword.toLowerCase().includes(searchKeyword.toLowerCase())),
+        child.keyword.some((keyword) =>
+          keyword.toLowerCase().includes(searchKeyword.toLowerCase()),
+        ),
       );
       if (filtered.length === 0) {
         return result;
@@ -330,7 +392,10 @@ export const ObjectPanel: FunctionComponent = () => {
         return result;
       }
       const rows = group.children.reduce<QueueObject[][]>((result, child) => {
-        if (!result[result.length - 1] || result[result.length - 1].length >= 4) {
+        if (
+          !result[result.length - 1] ||
+          result[result.length - 1].length >= 4
+        ) {
           result.push([]);
         }
         const row = result[result.length - 1];
@@ -348,7 +413,11 @@ export const ObjectPanel: FunctionComponent = () => {
     }, []);
   }, [filteredGroups, closedObjectGroupKey]);
 
-  const memoizedItemData = createItemData(flattenItems, closedObjectGroupKey, toggleOpenedObjectGroup);
+  const memoizedItemData = createItemData(
+    flattenItems,
+    closedObjectGroupKey,
+    toggleOpenedObjectGroup,
+  );
 
   const handleScroll = (props: ListOnScrollProps): void => {
     setListScrollTopState(props.scrollOffset);

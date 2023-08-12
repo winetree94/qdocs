@@ -24,7 +24,12 @@ export const copy = (text: string): void => {
   }
 };
 
-export const copyObjects = (data: { object: NormalizedQueueObjectType; effects: NormalizedQueueEffect[] }[]): void => {
+export const copyObjects = (
+  data: {
+    object: NormalizedQueueObjectType;
+    effects: NormalizedQueueEffect[];
+  }[],
+): void => {
   const model: QueueObjectClipboardModel = {
     identity: QUEUE_CLIPBOARD_UNIQUE_ID,
     type: 'objects',

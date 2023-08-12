@@ -24,9 +24,13 @@ const increaseScale = createAction('settings/increaseScale');
 
 const decreaseScale = createAction('settings/decreaseScale');
 
-const movePage = createAction<{ pageIndex: string; pageId: number }>('settings/movePage');
+const movePage = createAction<{ pageIndex: string; pageId: number }>(
+  'settings/movePage',
+);
 
-const setSelection = createAction<DetailSelectionAction | NormalSelectionAction>('settings/setSelection');
+const setSelection = createAction<
+  DetailSelectionAction | NormalSelectionAction
+>('settings/setSelection');
 
 const addSelection = createAction<EntityId>('settings/addSelection');
 
@@ -34,9 +38,13 @@ const removeSelection = createAction<EntityId[]>('settings/removeSelection');
 
 const resetSelection = createAction('settings/resetSelection');
 
-const setPresentationMode = createAction<boolean>('settings/setPresentationMode');
+const setPresentationMode = createAction<boolean>(
+  'settings/setPresentationMode',
+);
 
-const setQueueIndex = createAction<{ queueIndex: number; play?: boolean }>('settings/setQueueIndex');
+const setQueueIndex = createAction<{ queueIndex: number; play?: boolean }>(
+  'settings/setQueueIndex',
+);
 
 export const SettingsActions = {
   rewind,

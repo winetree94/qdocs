@@ -31,7 +31,13 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
       disabled: true,
       checkboxColor: QUEUE_UI_COLOR.BLUE,
     },
-    { id: 'id3', name: 'testData', value: 'testValue3', checked: true, checkboxColor: QUEUE_UI_COLOR.RED },
+    {
+      id: 'id3',
+      name: 'testData',
+      value: 'testValue3',
+      checked: true,
+      checkboxColor: QUEUE_UI_COLOR.RED,
+    },
   ];
 
   const [checkboxOptions, setCheckboxOptions] = useState(testCheckboxData);

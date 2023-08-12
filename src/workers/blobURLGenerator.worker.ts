@@ -13,7 +13,8 @@ export const BLOB_URL_GENERATE_STATUS = {
   ERROR: 'ERROR',
 } as const;
 
-export type BlobURLGenerateStatusType = (typeof BLOB_URL_GENERATE_STATUS)[keyof typeof BLOB_URL_GENERATE_STATUS];
+export type BlobURLGenerateStatusType =
+  (typeof BLOB_URL_GENERATE_STATUS)[keyof typeof BLOB_URL_GENERATE_STATUS];
 
 export interface BlobURLGenerateMessage {
   status: BlobURLGenerateStatusType;

@@ -11,9 +11,9 @@ export interface QueueObjectContainerContextType<T extends QueueObjectType> {
   selected: boolean;
 }
 
-export const QueueObjectContainerContext = createContext<QueueObjectContainerContextType<any>>(
-  {} as QueueObjectContainerContextType<any>,
-);
+export const QueueObjectContainerContext = createContext<
+  QueueObjectContainerContextType<any>
+>({} as QueueObjectContainerContextType<any>);
 
 export interface QueueObjectContainerProps {
   documentScale: number;

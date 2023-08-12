@@ -1,7 +1,11 @@
 import { Slider } from 'components/slider';
 import { FillEffect, OBJECT_EFFECT_META } from 'model/effect';
 import { ChangeEvent, ReactElement } from 'react';
-import { EffectActions, EffectSelectors, getEffectEntityKey } from 'store/effect';
+import {
+  EffectActions,
+  EffectSelectors,
+  getEffectEntityKey,
+} from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
@@ -26,7 +30,9 @@ export const EffectControllerFill = (): ReactElement => {
 
   const [firstFillEffect] = effectsOfSelectedObjects;
 
-  const updateSelectedObjectsEffect = (nextFillEffectProp: Partial<FillEffect['prop']>): void => {
+  const updateSelectedObjectsEffect = (
+    nextFillEffectProp: Partial<FillEffect['prop']>,
+  ): void => {
     dispatch(HistoryActions.Capture());
     dispatch(
       EffectActions.upsertEffects(
@@ -47,7 +53,9 @@ export const EffectControllerFill = (): ReactElement => {
     });
   };
 
-  const handleCurrentOpacityChange = (opacityValue: number | number[] | string): void => {
+  const handleCurrentOpacityChange = (
+    opacityValue: number | number[] | string,
+  ): void => {
     let opacity = 1;
 
     if (typeof opacityValue === 'number') {
@@ -69,7 +77,11 @@ export const EffectControllerFill = (): ReactElement => {
     <div>
       <p className="text-sm">color</p>
       <div>
-        <input type="color" value={firstFillEffect.prop.color} onChange={handleCurrentColorChange} />
+        <input
+          type="color"
+          value={firstFillEffect.prop.color}
+          onChange={handleCurrentColorChange}
+        />
       </div>
       <p className="tw-text-sm">opacity</p>
       <div className="tw-flex tw-items-center tw-gap-2">

@@ -1,6 +1,12 @@
 import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
 import { isEqual } from 'lodash';
-import { createContext, useCallback, useLayoutEffect, useReducer, useRef } from 'react';
+import {
+  createContext,
+  useCallback,
+  useLayoutEffect,
+  useReducer,
+  useRef,
+} from 'react';
 import { getTimingFunction } from './timing';
 
 const AnimatorsContext = createContext<number[]>([]);
@@ -57,13 +63,15 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
 
   const calculateProgress = useCallback(
     (time: number) => {
-      const currentProgresses = animations.map(({ duration = 0, delay = 1000, timing = 'linear' }) => {
-        const delayedTimeFraction = (time - start) / delay;
-        if (delayedTimeFraction < 1) return 0;
-        const animationTimeFraction = (time - start - delay) / duration;
-        const progress = getTimingFunction(timing)(animationTimeFraction);
-        return Math.max(Math.min(1, progress), 0);
-      });
+      const currentProgresses = animations.map(
+        ({ duration = 0, delay = 1000, timing = 'linear' }) => {
+          const delayedTimeFraction = (time - start) / delay;
+          if (delayedTimeFraction < 1) return 0;
+          const animationTimeFraction = (time - start - delay) / duration;
+          const progress = getTimingFunction(timing)(animationTimeFraction);
+          return Math.max(Math.min(1, progress), 0);
+        },
+      );
       return currentProgresses;
     },
     [animations, start],
@@ -82,7 +90,11 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
 
   useLayoutEffect(() => {
     // requestAnimationFrame 이 렌더링 사이클보다 늦게 실행되기 때문에, 즉시 반영
-    setProgresses(calculateProgress(performance.now()).map((progress) => (progress === 1 ? 1 : 0)));
+    setProgresses(
+      calculateProgress(performance.now()).map((progress) =>
+        progress === 1 ? 1 : 0,
+      ),
+    );
     frameRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameRef.current);
   }, [animate, calculateProgress]);

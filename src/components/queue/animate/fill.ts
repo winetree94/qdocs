@@ -9,10 +9,16 @@ export interface FillAnimation {
   fillEffect: FillEffect;
 }
 
-export const getCurrentFill = (object: NormalizedQueueObjectType, effects: NormalizedQueueEffect[], index: number) => {
+export const getCurrentFill = (
+  object: NormalizedQueueObjectType,
+  effects: NormalizedQueueEffect[],
+  index: number,
+) => {
   return effects
     .filter((effect) => effect.index <= index)
-    .filter((effect): effect is FillEffect => effect.type === OBJECT_EFFECT_META.FILL)
+    .filter(
+      (effect): effect is FillEffect => effect.type === OBJECT_EFFECT_META.FILL,
+    )
     .reduce<QueueFill>((_, effect) => effect.prop, object.fill);
 };
 
@@ -26,11 +32,17 @@ export const getFillAnimation = (
     return null;
   }
 
-  const fromFill = getCurrentFill(object, effects, position === 'forward' ? index - 1 : index + 1);
+  const fromFill = getCurrentFill(
+    object,
+    effects,
+    position === 'forward' ? index - 1 : index + 1,
+  );
 
   const fillEffect = effects.find((effect): effect is FillEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
-    return effect.index === targetIndex && effect.type === OBJECT_EFFECT_META.FILL;
+    return (
+      effect.index === targetIndex && effect.type === OBJECT_EFFECT_META.FILL
+    );
   });
 
   if (!fillEffect) {
@@ -53,7 +65,11 @@ export const getFillAnimation = (
   };
 };
 
-export const getAnimatableFill = (progress: number, targetFill: QueueFill, fromFill?: QueueFill): QueueFill => {
+export const getAnimatableFill = (
+  progress: number,
+  targetFill: QueueFill,
+  fromFill?: QueueFill,
+): QueueFill => {
   if (progress < 0 || !fromFill) {
     return {
       ...targetFill,
@@ -70,6 +86,9 @@ export const getAnimatableFill = (progress: number, targetFill: QueueFill, fromF
 
   return {
     color: rgbToFullFormHex(r, g, b),
-    opacity: Math.max(fromFill.opacity + (targetFill.opacity - fromFill.opacity) * progress, 0.1),
+    opacity: Math.max(
+      fromFill.opacity + (targetFill.opacity - fromFill.opacity) * progress,
+      0.1,
+    ),
   };
 };

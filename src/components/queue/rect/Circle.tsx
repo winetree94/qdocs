@@ -12,10 +12,13 @@ export const Circle = ({ onRectMousedown }: RectProps) => {
 
   const rx = Math.abs(animation.rect.width) / 2;
   const ry = Math.abs(animation.rect.height) / 2;
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const strokeClipPathID = `stroke-alignment-inner-for-circle-${containerContext.object.id}`;
   const fill = convertHexWithOpacity(
     animation.fill.color,
-    containerContext.object.fill.opacity * animation.fade.opacity * animation.fill.opacity,
+    containerContext.object.fill.opacity *
+      animation.fade.opacity *
+      animation.fill.opacity,
   );
 
   return (
@@ -24,8 +27,16 @@ export const Circle = ({ onRectMousedown }: RectProps) => {
       width={Math.abs(animation.rect.width)}
       height={Math.abs(animation.rect.height)}
       style={{
-        top: `${animation.rect.height > 0 ? animation.rect.y : animation.rect.y + animation.rect.height}px`,
-        left: `${animation.rect.width > 0 ? animation.rect.x : animation.rect.x + animation.rect.width}px`,
+        top: `${
+          animation.rect.height > 0
+            ? animation.rect.y
+            : animation.rect.y + animation.rect.height
+        }px`,
+        left: `${
+          animation.rect.width > 0
+            ? animation.rect.x
+            : animation.rect.x + animation.rect.width
+        }px`,
         transformOrigin: 'center center',
         transform: `rotate(${animation.rotate.degree}deg) scale(${animation.scale.scale})`,
       }}

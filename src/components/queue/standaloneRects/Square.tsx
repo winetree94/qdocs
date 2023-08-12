@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { EntityId } from '@reduxjs/toolkit';
 import { convertHexWithOpacity } from 'components/queue/color/convertHex';
 
@@ -25,7 +27,10 @@ export const StandaloneSquare = ({
   fill,
 }: StandaloneSquareProps) => {
   const strokeClipPathID = `st-stroke-alignment-inner-for-rect-${objectId}`;
-  const calculatedFill = convertHexWithOpacity(fill.color, fill.opacity * fade.opacity * fill.opacity);
+  const calculatedFill = convertHexWithOpacity(
+    fill.color,
+    fill.opacity * fade.opacity * fill.opacity,
+  );
 
   return (
     <svg
@@ -41,7 +46,14 @@ export const StandaloneSquare = ({
       opacity={fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
-          <rect rx={0} ry={0} width={width} height={height} stroke={stroke.color} strokeWidth={stroke.width * 2} />
+          <rect
+            rx={0}
+            ry={0}
+            width={width}
+            height={height}
+            stroke={stroke.color}
+            strokeWidth={stroke.width * 2}
+          />
         </clipPath>
       </defs>
       <g>

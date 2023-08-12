@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
 import { QueueObject } from 'components/queue';
@@ -37,11 +43,15 @@ export const QueueEditor = () => {
   const queueDocument = useAppSelector(DocumentSelectors.document);
   const settings = useAppSelector(SettingSelectors.settings);
   const pageId = useAppSelector(SettingSelectors.pageId);
-  const objects = useAppSelector((state) => ObjectSelectors.allByPageId(state, pageId));
+  const objects = useAppSelector((state) =>
+    ObjectSelectors.allByPageId(state, pageId),
+  );
   const effects = useAppSelector(EffectSelectors.all);
   const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
 
-  const [capturedObjectProps, setCapturedObjectProps] = useState<{ [key: string]: NormalizedQueueObjectType }>({});
+  const [capturedObjectProps, setCapturedObjectProps] = useState<{
+    [key: string]: NormalizedQueueObjectType;
+  }>({});
 
   const effectsGroupByObjectId = effects.reduce<{
     [id: string]: NormalizedQueueEffect[];
@@ -54,8 +64,12 @@ export const QueueEditor = () => {
   }, {});
 
   const queueObjects = objects.filter((object) => {
-    const createEffect = (effectsGroupByObjectId[object.id] || []).find((effect) => effect.type === 'create');
-    const removeEffect = (effectsGroupByObjectId[object.id] || []).find((effect) => effect.type === 'remove');
+    const createEffect = (effectsGroupByObjectId[object.id] || []).find(
+      (effect) => effect.type === 'create',
+    );
+    const removeEffect = (effectsGroupByObjectId[object.id] || []).find(
+      (effect) => effect.type === 'remove',
+    );
     if (!createEffect) {
       return false;
     }
@@ -68,7 +82,9 @@ export const QueueEditor = () => {
     return true;
   });
 
-  const currentQueueEffects = effects.filter((effect) => effect.index === settings.queueIndex);
+  const currentQueueEffects = effects.filter(
+    (effect) => effect.index === settings.queueIndex,
+  );
 
   const queueEffectsGroupByObjectId = currentQueueEffects.reduce<{
     [id: string]: NormalizedQueueEffect[];
@@ -80,7 +96,10 @@ export const QueueEditor = () => {
     return result;
   }, {});
 
-  const maxEffectTime = Math.max(...currentQueueEffects.map((effect) => effect.duration + effect.delay), 0);
+  const maxEffectTime = Math.max(
+    ...currentQueueEffects.map((effect) => effect.duration + effect.delay),
+    0,
+  );
 
   const currentTick = useRef<number>(0);
 
@@ -104,10 +123,10 @@ export const QueueEditor = () => {
   }, [settings.queueStart, maxEffectTime, autoplay, settings.autoPlay]);
 
   const canvasSizeToFit = useCallback((): void => {
-    const root = rootRef.current!;
+    const root = rootRef.current;
     const targetScale = Math.min(
-      root.clientWidth / (queueDocument!.documentRect.width + 40),
-      root.clientHeight / (queueDocument!.documentRect.height + 40),
+      root.clientWidth / (queueDocument.documentRect.width + 40),
+      root.clientHeight / (queueDocument.documentRect.height + 40),
     );
     if (settings.scale === targetScale) {
       return;
@@ -116,7 +135,6 @@ export const QueueEditor = () => {
   }, [dispatch, queueDocument, settings]);
 
   // 최초 렌더링 시 스케일 계산
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => canvasSizeToFit(), [settings.documentId]);
 
   useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
@@ -179,7 +197,11 @@ export const QueueEditor = () => {
       effects: NormalizedQueueEffect[];
     }>(
       (result, id) => {
-        if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
+        if (
+          queueEffectsGroupByObjectId[id]?.find(
+            (effect) => effect.type === 'create',
+          )
+        ) {
           result.objects.push({
             id: id,
             changes: {
@@ -255,7 +277,12 @@ export const QueueEditor = () => {
 
     const rangeObjectIds = Object.entries(props)
       .filter(([_, { rect }]) => {
-        return rect.x >= x && rect.y >= y && rect.x + rect.width <= x + width && rect.y + rect.height <= y + height;
+        return (
+          rect.x >= x &&
+          rect.y >= y &&
+          rect.x + rect.width <= x + width &&
+          rect.y + rect.height <= y + height
+        );
       })
       .map(([id]) => id);
 
@@ -272,7 +299,11 @@ export const QueueEditor = () => {
   };
 
   const resizeObjectRect = (id: EntityId, rect: ResizerEvent): void => {
-    if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
+    if (
+      queueEffectsGroupByObjectId[id]?.find(
+        (effect) => effect.type === 'create',
+      )
+    ) {
       dispatch(
         ObjectActions.updateObject({
           id: id,
@@ -285,7 +316,9 @@ export const QueueEditor = () => {
         }),
       );
     } else {
-      const existRectEffect = queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'rect') as MoveEffect;
+      const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
+        (effect) => effect.type === 'rect',
+      ) as MoveEffect;
       dispatch(
         EffectActions.upsertEffect({
           type: 'rect',
@@ -305,7 +338,11 @@ export const QueueEditor = () => {
   };
 
   const updateObjectRotate = (id: EntityId, degree: number): void => {
-    if (queueEffectsGroupByObjectId[id]?.find((effect) => effect.type === 'create')) {
+    if (
+      queueEffectsGroupByObjectId[id]?.find(
+        (effect) => effect.type === 'create',
+      )
+    ) {
       dispatch(
         ObjectActions.updateObject({
           id: id,
@@ -339,8 +376,8 @@ export const QueueEditor = () => {
 
   const maximizeScale = useCallback(() => {
     const scale = Math.min(
-      document.body.clientWidth / queueDocument!.documentRect.width,
-      document.body.clientHeight / queueDocument!.documentRect.height,
+      document.body.clientWidth / queueDocument.documentRect.width,
+      document.body.clientHeight / queueDocument.documentRect.height,
     );
     if (settings.scale === scale) {
       return;
@@ -356,9 +393,18 @@ export const QueueEditor = () => {
     observer.observe(document.body);
     maximizeScale();
     return () => observer.disconnect();
-  }, [dispatch, maximizeScale, queueDocument, settings.presentationMode, settings.scale]);
+  }, [
+    dispatch,
+    maximizeScale,
+    queueDocument,
+    settings.presentationMode,
+    settings.scale,
+  ]);
 
-  const onTextEdit = (object: NormalizedQueueObjectType, text: string): void => {
+  const onTextEdit = (
+    object: NormalizedQueueObjectType,
+    text: string,
+  ): void => {
     dispatch(
       ObjectActions.updateObject({
         id: object.id,
@@ -386,56 +432,87 @@ export const QueueEditor = () => {
   return (
     <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
-        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)} onMouseDown={onRootMousedown}>
+        <QueueScrollArea.Root
+          className={clsx(styles.ScrollAreaRoot)}
+          onMouseDown={onRootMousedown}>
           <QueueScrollArea.Viewport className={clsx('tw-flex')}>
             <Drawable
               onDrawEnd={onDrawEnd}
-              className={clsx(styles.Drawable, settings.presentationMode ? styles.fullscreen : '')}>
+              className={clsx(
+                styles.Drawable,
+                settings.presentationMode ? styles.fullscreen : '',
+              )}>
               <Scaler
-                width={queueDocument!.documentRect.width}
-                height={queueDocument!.documentRect.height}
+                width={queueDocument.documentRect.width}
+                height={queueDocument.documentRect.height}
                 scale={settings.scale}
-                className={clsx(settings.presentationMode ? styles.scaleFull : '')}>
+                className={clsx(
+                  settings.presentationMode ? styles.scaleFull : '',
+                )}>
                 <div
                   ref={canvasDiv}
-                  className={clsx(styles.canvas, settings.presentationMode ? styles.fullscreen : '')}
+                  className={clsx(
+                    styles.canvas,
+                    settings.presentationMode ? styles.fullscreen : '',
+                  )}
                   style={{
-                    width: queueDocument!.documentRect.width,
-                    height: queueDocument!.documentRect.height,
-                    background: queueDocument!.documentRect.fill,
+                    width: queueDocument.documentRect.width,
+                    height: queueDocument.documentRect.height,
+                    background: queueDocument.documentRect.fill,
                   }}>
                   {queueObjects.map((object) => (
                     <QueueContextMenu.Root
                       key={object.id}
-                      onOpenChange={(open): void => onObjectContextMenuOpenChange(object.id, open)}>
+                      onOpenChange={(open): void =>
+                        onObjectContextMenuOpenChange(object.id, open)
+                      }>
                       <QueueContextMenu.Trigger>
                         <QueueObject.Container
                           object={object}
-                          detail={settings.selectionMode === 'detail' && settings.selectedObjectIds.includes(object.id)}
+                          detail={
+                            settings.selectionMode === 'detail' &&
+                            settings.selectedObjectIds.includes(object.id)
+                          }
                           documentScale={settings.scale}
-                          selected={settings.selectedObjectIds.includes(object.id)}>
+                          selected={settings.selectedObjectIds.includes(
+                            object.id,
+                          )}>
                           <QueueObject.Animator
                             queueIndex={settings.queueIndex}
                             queuePosition={settings.queuePosition}
                             queueStart={settings.queueStart}>
                             <Draggable
                               onMouseDown={(e) => onObjectMousedown(e, object)}
-                              onDoubleClick={(e) => onObjectDoubleClick(e, object)}
+                              onDoubleClick={(e) =>
+                                onObjectDoubleClick(e, object)
+                              }
                               onActualDragStart={() => onObjectDragStart()}
                               onActualDragMove={onObjectDragMove}
                               onActualDragEnd={onObjectDragEnd}>
                               <QueueObject.Rect></QueueObject.Rect>
-                              <QueueObject.Text onEdit={(e) => onTextEdit(object, e)} />
+                              <QueueObject.Text
+                                onEdit={(e) => onTextEdit(object, e)}
+                              />
                               <QueueObject.Resizer
                                 onResizeStart={(e) => {
                                   dispatch(HistoryActions.Capture());
                                   resizeObjectRect(object.id, e);
                                 }}
-                                onResizeMove={(e) => resizeObjectRect(object.id, e)}
-                                onResizeEnd={(e) => resizeObjectRect(object.id, e)}
-                                onRotateStart={(e) => dispatch(HistoryActions.Capture())}
-                                onRotateMove={(e) => updateObjectRotate(object.id, e.degree)}
-                                onRotateEnd={(e) => updateObjectRotate(object.id, e.degree)}
+                                onResizeMove={(e) =>
+                                  resizeObjectRect(object.id, e)
+                                }
+                                onResizeEnd={(e) =>
+                                  resizeObjectRect(object.id, e)
+                                }
+                                onRotateStart={(e) =>
+                                  dispatch(HistoryActions.Capture())
+                                }
+                                onRotateMove={(e) =>
+                                  updateObjectRotate(object.id, e.degree)
+                                }
+                                onRotateEnd={(e) =>
+                                  updateObjectRotate(object.id, e.degree)
+                                }
                               />
                             </Draggable>
                           </QueueObject.Animator>

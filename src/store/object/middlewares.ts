@@ -29,7 +29,9 @@ objectMiddleware.startListening({
   actionCreator: PageActions.copyPage,
   effect: (action, api) => {
     const state = api.getState();
-    const objects = ObjectSelectors.all(state).filter((object) => object.pageId === action.payload.fromId);
+    const objects = ObjectSelectors.all(state).filter(
+      (object) => object.pageId === action.payload.fromId,
+    );
     const newObjects = objects.map<NormalizedQueueObjectType>((object) => ({
       ...object,
       id: nanoid(),

@@ -6,7 +6,9 @@ import { easeInOut } from './ease-in-out';
 import { easeOut } from './ease-out';
 import { linear } from './linear';
 
-export const getTimingFunction = (type: AnimatorTimingFunctionType): ((timeFraction: number) => number) => {
+export const getTimingFunction = (
+  type: AnimatorTimingFunctionType,
+): ((timeFraction: number) => number) => {
   switch (type) {
     case 'linear':
       return linear;

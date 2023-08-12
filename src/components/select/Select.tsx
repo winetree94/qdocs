@@ -1,7 +1,11 @@
 import { forwardRef } from 'react';
 // import clsx from 'clsx';
 import * as Select from '@radix-ui/react-select';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from '@radix-ui/react-icons';
 import styles from './Select.module.scss';
 import { QUEUE_UI_SIZES, QUEUE_UI_SIZE } from 'styles/ui/Size';
 import clsx from 'clsx';
@@ -36,7 +40,9 @@ const SELECT_CONTENT_PROP_KEYS: Record<string, SelectContentPropsKeys> = {
 };
 
 // 올바른 타입이 맞는지 모르겠음...
-const getSelectContentProps = (props: QueueSelectProps): Select.SelectContentProps => {
+const getSelectContentProps = (
+  props: QueueSelectProps,
+): Select.SelectContentProps => {
   const selectContentProps: Select.SelectContentProps & {
     [key: string]: Select.SelectContentProps[keyof Select.SelectContentProps];
   } = {};
@@ -55,7 +61,12 @@ const getSelectContentProps = (props: QueueSelectProps): Select.SelectContentPro
 /**
  * Root === Root & Trigger & Value & Icon & Portal & Content & ScrollUpButton & Viewport & ScrollDownButton
  */
-const Root = ({ children, size = QUEUE_UI_SIZE.MEDIUM, placeholder, ...props }: QueueSelectProps) => {
+const Root = ({
+  children,
+  size = QUEUE_UI_SIZE.MEDIUM,
+  placeholder,
+  ...props
+}: QueueSelectProps) => {
   const selectContentProps = getSelectContentProps(props);
 
   return (
@@ -69,7 +80,9 @@ const Root = ({ children, size = QUEUE_UI_SIZE.MEDIUM, placeholder, ...props }: 
 
       {/* portal container 변경할 수 있도록 props 추가 필요 */}
       <Select.Portal>
-        <Select.Content {...selectContentProps} className={styles.SelectContent}>
+        <Select.Content
+          {...selectContentProps}
+          className={styles.SelectContent}>
           <Select.ScrollUpButton className={styles.SelectScrollButton}>
             <ChevronUpIcon />
           </Select.ScrollUpButton>
@@ -92,7 +105,11 @@ const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps>(
   ({ children, label, ...props }, forwardedRef) => {
     return (
       <Select.Group {...props} ref={forwardedRef}>
-        {label && <Select.Label className={styles.SelectGroupLabel}>{label}</Select.Label>}
+        {label && (
+          <Select.Label className={styles.SelectGroupLabel}>
+            {label}
+          </Select.Label>
+        )}
         {children}
       </Select.Group>
     );
@@ -105,7 +122,10 @@ const Group = forwardRef<HTMLDivElement, QueueSelectGroupProps>(
 const Option = forwardRef<HTMLDivElement, Select.SelectItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
-      <Select.Item className={clsx(styles.SelectItem, className)} {...props} ref={forwardedRef}>
+      <Select.Item
+        className={clsx(styles.SelectItem, className)}
+        {...props}
+        ref={forwardedRef}>
         <Select.ItemIndicator className={styles.SelectItemIndicator}>
           <CheckIcon />
         </Select.ItemIndicator>
@@ -117,7 +137,12 @@ const Option = forwardRef<HTMLDivElement, Select.SelectItemProps>(
 
 const Separator = forwardRef<HTMLDivElement, Select.SelectSeparatorProps>(
   ({ className, ...props }) => {
-    return <Select.Separator className={clsx(styles.SelectSeparator, className)} {...props} />;
+    return (
+      <Select.Separator
+        className={clsx(styles.SelectSeparator, className)}
+        {...props}
+      />
+    );
   },
 );
 

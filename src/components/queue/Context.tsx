@@ -56,12 +56,14 @@ export const QueueObjectContextContent = forwardRef<
    * @description
    * 오브젝트를 클립보드에 복사
    */
-  const copyToClipboard = (e: React.MouseEvent<HTMLDivElement, MouseEvent>): void => {
+  const copyToClipboard = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
     const models = selectedObjects.map((object) => ({
       object: object,
       effects: effects[object.id],
     }));
-    navigator.clipboard.writeText(
+    await navigator.clipboard.writeText(
       JSON.stringify({
         identity: QUEUE_CLIPBOARD_UNIQUE_ID,
         type: 'objects',
@@ -71,18 +73,25 @@ export const QueueObjectContextContent = forwardRef<
   };
 
   return (
-    <QueueContextMenu.Content onMouseDown={(e): void => e.stopPropagation()} ref={ref}>
+    <QueueContextMenu.Content
+      onMouseDown={(e): void => e.stopPropagation()}
+      ref={ref}>
       <QueueContextMenu.Item onClick={onRemoveObject}>
-        {t('object-context.delete-from-current-queue')} <div className={styles.RightSlot}>Backspace</div>
+        {t('object-context.delete-from-current-queue')}{' '}
+        <div className={styles.RightSlot}>Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Item onClick={onCompletelyRemoveClick}>
-        {t('object-context.delete-permanently')} <div className={styles.RightSlot}>{deviceMetaKey}+Backspace</div>
+        {t('object-context.delete-permanently')}{' '}
+        <div className={styles.RightSlot}>{deviceMetaKey}+Backspace</div>
       </QueueContextMenu.Item>
       <QueueContextMenu.Separator />
       <QueueContextMenu.Item onClick={copyToClipboard}>
-        {t('global.copy')} <div className={styles.RightSlot}>{deviceMetaKey}+C</div>
+        {t('global.copy')}{' '}
+        <div className={styles.RightSlot}>{deviceMetaKey}+C</div>
       </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={duplicate}>{t('global.duplicate')}</QueueContextMenu.Item>
+      <QueueContextMenu.Item onClick={duplicate}>
+        {t('global.duplicate')}
+      </QueueContextMenu.Item>
       {settings.selectedObjectIds.length === 1 && (
         <>
           <QueueContextMenu.Separator />

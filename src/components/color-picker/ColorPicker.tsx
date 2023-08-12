@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { SketchPicker } from 'react-color';
+import { SketchPicker, ColorResult, RGBColor } from 'react-color';
 import { clsx } from 'clsx';
-import { ColorResult, RGBColor } from 'react-color';
 import styles from './ColorPicker.module.scss';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
@@ -29,14 +28,17 @@ const QueueColorPicker = () => {
   };
 
   const rgbDynamicStyle = {
-    background: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+    background: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
   };
 
   return (
     <>
       <div className={styles.wrapper} onClick={handleClick}>
         <div className={clsx(styles.color)} style={rgbDynamicStyle} />
-        <ChevronDownIcon className={clsx(styles.chevron)} style={{color: arrowColor}}  />
+        <ChevronDownIcon
+          className={clsx(styles.chevron)}
+          style={{ color: arrowColor }}
+        />
       </div>
       {displayColorPicker ? (
         <div className={styles.popover}>
@@ -44,7 +46,7 @@ const QueueColorPicker = () => {
           <SketchPicker color={color} onChange={handleChange} />
         </div>
       ) : null}
-      </>
+    </>
   );
 };
 

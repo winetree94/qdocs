@@ -81,7 +81,9 @@ effectMiddleware.startListening({
   effect: (action, api) => {
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
-    const effects = EffectSelectors.all(state).reduce<{ [key: string]: NormalizedQueueEffect[] }>((result, effect) => {
+    const effects = EffectSelectors.all(state).reduce<{
+      [key: string]: NormalizedQueueEffect[];
+    }>((result, effect) => {
       if (!result[effect.objectId]) {
         result[effect.objectId] = [];
       }
@@ -108,7 +110,11 @@ effectMiddleware.startListening({
         type: 'remove',
       });
     });
-    api.dispatch(EffectActions.removeMany(pendingRemove.map((effect) => getEffectEntityKey(effect))));
+    api.dispatch(
+      EffectActions.removeMany(
+        pendingRemove.map((effect) => getEffectEntityKey(effect)),
+      ),
+    );
     api.dispatch(EffectActions.upsertEffects(pendingInsert));
   },
 });

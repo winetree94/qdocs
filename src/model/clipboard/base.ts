@@ -20,6 +20,10 @@ export interface QueueObjectClipboardModel
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isQueueObjectClipboardModel = (model: any): model is QueueObjectClipboardModel => {
-  return model?.type === 'objects' && model?.identity === QUEUE_CLIPBOARD_UNIQUE_ID;
+export const isQueueObjectClipboardModel = (
+  model: any,
+): model is QueueObjectClipboardModel => {
+  return (
+    model?.type === 'objects' && model?.identity === QUEUE_CLIPBOARD_UNIQUE_ID
+  );
 };

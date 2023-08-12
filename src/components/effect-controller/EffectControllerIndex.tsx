@@ -11,7 +11,9 @@ export type EffectControllerIndexProps = {
   effectType: QueueEffectType['type'];
 };
 
-export const EffectControllerIndex = ({ effectType }: EffectControllerIndexProps): ReactElement | null => {
+export const EffectControllerIndex = ({
+  effectType,
+}: EffectControllerIndexProps): ReactElement | null => {
   switch (effectType) {
     case OBJECT_PROPERTY_META.FADE:
       return <EffectControllerFade />;

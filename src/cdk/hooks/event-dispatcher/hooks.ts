@@ -6,10 +6,14 @@ export interface EventPayloadAction<P = void> {
   payload: P;
 }
 
-export type PayloadActionCreatorWithPrepared<P = void> = ((payload: P) => EventPayloadAction<P>) & { type: string };
+export type PayloadActionCreatorWithPrepared<P = void> = ((
+  payload: P,
+) => EventPayloadAction<P>) & { type: string };
 export type EventCallback<P = void> = (action: EventPayloadAction<P>) => void;
 
-export const createEvent = <P = void>(type: string): PayloadActionCreatorWithPrepared<P> => {
+export const createEvent = <P = void>(
+  type: string,
+): PayloadActionCreatorWithPrepared<P> => {
   function actionCreator(payload: P): EventPayloadAction<P> {
     return {
       type,
@@ -21,7 +25,9 @@ export const createEvent = <P = void>(type: string): PayloadActionCreatorWithPre
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useEventDispatch = (): ((payload: EventPayloadAction<any>) => void) => {
+export const useEventDispatch = (): ((
+  payload: EventPayloadAction<any>,
+) => void) => {
   const context = useContext(EventDispatcherContext);
   return context.dispatch;
 };

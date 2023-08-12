@@ -22,7 +22,10 @@ const meta: Meta<typeof QueueDialog.Root> = {
 export const Basic: Story = {
   render: (props: Partial<QueueDialogRootProps>) => {
     return (
-      <QueueDialog.Root open={props.open} defaultOpen={props.open} onOpenChange={props.onOpenChange}>
+      <QueueDialog.Root
+        open={props.open}
+        defaultOpen={props.open}
+        onOpenChange={props.onOpenChange}>
         <QueueDialog.Title>Dialog Title</QueueDialog.Title>
         <QueueDialog.Description>Dialog Description</QueueDialog.Description>
         <QueueDialog.Footer>

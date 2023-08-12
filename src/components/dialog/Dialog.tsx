@@ -49,13 +49,17 @@ export const QueueDialogRoot = forwardRef<
 >(({ children, ...props }, ref) => {
   const context = useRootRenderedContext();
 
-  useImperativeHandle(ref, () => {
-    return {
-      close: (): void => {
-        context.close();
-      },
-    };
-  }, [context]);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        close: (): void => {
+          context.close();
+        },
+      };
+    },
+    [context],
+  );
 
   return (
     <Dialog.Root
@@ -64,8 +68,7 @@ export const QueueDialogRoot = forwardRef<
       onOpenChange={(opened) => {
         !opened && context.close();
         props.onOpenChange?.(opened);
-      }}
-    >
+      }}>
       <Dialog.Portal>
         <Dialog.Overlay className={clsx(styles.DialogOverlay)}></Dialog.Overlay>
         <Dialog.Content className={clsx(styles.DialogContent)}>
@@ -86,7 +89,10 @@ export const QueueDialogTitle = forwardRef<
   Dialog.DialogTitleProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <Dialog.Title ref={ref} {...props} className={clsx(styles.DialogTitle, className)}>
+    <Dialog.Title
+      ref={ref}
+      {...props}
+      className={clsx(styles.DialogTitle, className)}>
       {children}
     </Dialog.Title>
   );
@@ -97,13 +103,17 @@ export const QueueDialogDescription = forwardRef<
   Dialog.DialogDescriptionProps
 >(({ children, className, ...props }, ref) => {
   return (
-    <div ref={ref} {...props} className={clsx(styles.DialogDescription, className)}>
+    <div
+      ref={ref}
+      {...props}
+      className={clsx(styles.DialogDescription, className)}>
       {children}
     </div>
   );
 });
 
-export interface QueueDialogFooterProps extends React.BaseHTMLAttributes<HTMLDivElement> {
+export interface QueueDialogFooterProps
+  extends React.BaseHTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
 }
 
