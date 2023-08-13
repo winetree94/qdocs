@@ -5,6 +5,7 @@ import { QueueButton } from 'components/buttons/button/Button';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
+import QueueTab from 'components/tabs/Tab';
 
 export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
@@ -57,6 +58,11 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
     <>
       <div {...props}>
         우측 패널임
+        <QueueTab
+          tabs={[
+            { name: 'tab1', content: <div>tab1</div> },
+            { name: 'tab2', content: <div>tab2</div> },
+          ]}></QueueTab>
         <div className="tw-flex">
           <QueueControlInputBoxComponent.Wrapper color="grey" variant="filled">
             <QueueControlInputBoxComponent.InputBox

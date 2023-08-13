@@ -191,12 +191,14 @@ export const ObjectResizer = ({
     ): ResizerEvent => {
       const delta = getDelta(initEvent, targetEvent, scale);
 
+      // 스케일링된 포인트
       const qp_x: number = startPositionToResize.qp0_x + delta.x;
       const qp_y: number = startPositionToResize.qp0_y + delta.y;
 
       const cp_x: number = (qp_x + startPositionToResize.pp_x) / 2.0;
       const cp_y: number = (qp_y + startPositionToResize.pp_y) / 2.0;
 
+      // 역 회전 변환 완료
       const mtheta: number = (-1 * Math.PI * 2 * rotate) / 360;
       const cos_mt: number = Math.cos(mtheta);
       const sin_mt: number = Math.sin(mtheta);
