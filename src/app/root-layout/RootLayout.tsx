@@ -291,7 +291,7 @@ export const RootLayout = () => {
             {!settings.presentationMode && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
                 <PanelResizer.Panel
-                  className="tw-w-full tw-px-[10px]"
+                  className="tw-w-full"
                   height={200}
                   minHeight={30}>
                   <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
