@@ -1,4 +1,4 @@
-import { BaseHTMLAttributes, useState } from 'react';
+import { BaseHTMLAttributes, useLayoutEffect, useRef, useState } from 'react';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
@@ -22,6 +22,7 @@ import { QueueContextMenu } from 'components/context-menu/Context';
 import { ObjectSelectors } from 'store/object';
 import { EffectSelectors } from 'store/effect';
 import { StandaloneRect } from 'components/queue/standaloneRects';
+import { Scaler } from 'components/scaler/Scaler';
 
 const PagePanelRoot = ({
   className,
@@ -76,7 +77,6 @@ const PageBox = ({
         'tw-flex',
         'tw-justify-end',
         'tw-gap-1',
-        'tw-h-[90px]',
         'tw-p-2',
         'tw-rounded-lg',
         'hover:tw-bg-[var(--gray-5)]',
@@ -94,6 +94,7 @@ export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
 }
 
 const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
+  const queueDocument = useAppSelector(DocumentSelectors.document);
   const objects = useAppSelector((state) =>
     ObjectSelectors.allByPageId(state, page.id),
   );
@@ -105,42 +106,59 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
   const firstQueueEffectObjectIds = firstQueueEffects.map(
     (effect) => effect.objectId,
   );
-
   const firstQueueObjects = objects.filter((object) =>
     firstQueueEffectObjectIds.includes(object.id),
   );
 
+  const pagePreviewRef = useRef<HTMLDivElement>(null);
+  const pagePreviewScale = useRef(0);
+
+  useLayoutEffect(() => {
+    if (!pagePreviewRef.current) {
+      return;
+    }
+
+    pagePreviewScale.current =
+      pagePreviewRef.current.offsetWidth / queueDocument.documentRect.width;
+  }, []);
+
   return (
     <div
+      ref={pagePreviewRef}
       className={clsx(
+        'tw-relative',
         'tw-w-full',
-        'tw-h-full',
+        'tw-h-auto',
         'tw-border',
         'tw-border-[var(--blue-10)]',
         'tw-rounded-[4px]',
         'tw-bg-[var(--gray-1)]',
         'tw-overflow-hidden',
+        'tw-pointer-events-none',
+        // document 비율의 설정대로 변경이 필요
+        'tw-aspect-[16/9]',
         className,
       )}
       {...props}>
-      {firstQueueObjects.map((firstQueueObject, index) => (
-        <StandaloneRect
-          key={index}
-          type="rect"
-          objectId={firstQueueObject.id}
-          width={firstQueueObject.rect.width}
-          height={firstQueueObject.rect.height}
-          position={{
-            x: firstQueueObject.rect.x,
-            y: firstQueueObject.rect.y,
-          }}
-          stroke={firstQueueObject.stroke}
-          rotate={firstQueueObject.rotate}
-          fade={firstQueueObject.fade}
-          scale={firstQueueObject.scale}
-          fill={firstQueueObject.fill}
-        />
-      ))}
+      <Scaler
+        className="tw-p-0"
+        width={queueDocument.documentRect.width}
+        height={queueDocument.documentRect.height}
+        scale={pagePreviewScale.current}>
+        {firstQueueObjects.map((firstQueueObject, index) => (
+          <StandaloneRect
+            key={index}
+            type={firstQueueObject.type}
+            objectId={firstQueueObject.id}
+            rect={firstQueueObject.rect}
+            stroke={firstQueueObject.stroke}
+            rotate={firstQueueObject.rotate}
+            fade={firstQueueObject.fade}
+            scale={firstQueueObject.scale}
+            fill={firstQueueObject.fill}
+          />
+        ))}
+      </Scaler>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { EntityId } from '@reduxjs/toolkit';
 import { convertHexWithOpacity } from 'components/queue/color/convertHex';
-import {
+import type {
   QueueFade,
   QueueFill,
   QueueRect,
@@ -9,7 +9,7 @@ import {
   QueueStroke,
 } from 'model/property';
 
-export interface StandaloneSquareProps {
+export interface StandaloneCircleProps {
   objectId: EntityId;
   rect: QueueRect;
   stroke: QueueStroke;
@@ -19,7 +19,7 @@ export interface StandaloneSquareProps {
   fill: QueueFill;
 }
 
-export const StandaloneSquare = ({
+export const StandaloneCircle = ({
   objectId,
   rect,
   stroke,
@@ -27,8 +27,10 @@ export const StandaloneSquare = ({
   fade,
   scale,
   fill,
-}: StandaloneSquareProps) => {
-  const strokeClipPathID = `st-stroke-alignment-inner-for-rect-${objectId}`;
+}: StandaloneCircleProps) => {
+  const strokeClipPathID = `st-stroke-alignment-inner-for-circle-${objectId}`;
+  const rx = Math.abs(rect.width) / 2;
+  const ry = Math.abs(rect.height) / 2;
   const calculatedFill = convertHexWithOpacity(
     fill.color,
     fill.opacity * fade.opacity * fill.opacity,
@@ -36,38 +38,40 @@ export const StandaloneSquare = ({
 
   return (
     <svg
-      className="tw-absolute"
-      width={rect.width}
-      height={rect.height}
+      className="object-circle tw-absolute"
+      width={Math.abs(rect.width)}
+      height={Math.abs(rect.height)}
       style={{
         top: `${rect.height > 0 ? rect.y : rect.y + rect.height}px`,
         left: `${rect.width > 0 ? rect.x : rect.x + rect.width}px`,
         transformOrigin: 'center center',
         transform: `rotate(${rotate.degree}deg) scale(${scale.scale})`,
       }}
-      viewBox={`0 0 ${rect.width} ${rect.height}`}
       opacity={fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
-          <rect
-            rx={0}
-            ry={0}
-            width={rect.width}
-            height={rect.height}
+          <ellipse
+            cx={rx}
+            cy={ry}
+            rx={rx}
+            ry={ry}
             stroke={stroke.color}
             strokeWidth={stroke.width * 2}
           />
         </clipPath>
       </defs>
       <g>
-        <rect
-          width={rect.width}
-          height={rect.height}
-          fill={calculatedFill}
+        <ellipse
+          cx={rx}
+          cy={ry}
+          rx={rx}
+          ry={ry}
           stroke={stroke.color}
           strokeWidth={stroke.width * 2}
           strokeDasharray={stroke.dasharray}
-          clipPath={`url(#${strokeClipPathID})`}></rect>
+          fill={calculatedFill}
+          clipPath={`url(#${strokeClipPathID})`}
+        />
       </g>
     </svg>
   );
