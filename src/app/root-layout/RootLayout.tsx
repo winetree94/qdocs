@@ -267,7 +267,7 @@ export const RootLayout = () => {
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
             <div className="tw-flex tw-flex-col tw-h-full">
-              <div className="tw-h-[50%]">
+              <div className="tw-h-full">
                 <PanelResizer.Panel
                   className="tw-h-full"
                   width={279}
