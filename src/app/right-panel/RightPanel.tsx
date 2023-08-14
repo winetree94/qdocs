@@ -6,6 +6,7 @@ import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
 import QueueTab from 'components/tabs/Tab';
+import { LeftPanel } from 'app/left-panel/LeftPanel';
 
 export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
@@ -57,74 +58,87 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
   return (
     <>
       <div {...props}>
-        우측 패널임
         <QueueTab
           tabs={[
-            { name: 'tab1', content: <div>tab1</div> },
-            { name: 'tab2', content: <div>tab2</div> },
-          ]}></QueueTab>
-        <div className="tw-flex">
-          <QueueControlInputBoxComponent.Wrapper color="grey" variant="filled">
-            <QueueControlInputBoxComponent.InputBox
-              unit="percent"
-              valueChangeEvent={inputValueChanges}
-              {...props}></QueueControlInputBoxComponent.InputBox>
-          </QueueControlInputBoxComponent.Wrapper>
+            {
+              name: 'tab1',
+              content: <LeftPanel />,
+            },
+            {
+              name: 'tab2',
+              content: (
+                <>
+                  <div className="tw-flex">
+                    <QueueControlInputBoxComponent.Wrapper
+                      color="grey"
+                      variant="filled">
+                      <QueueControlInputBoxComponent.InputBox
+                        unit="percent"
+                        valueChangeEvent={inputValueChanges}
+                        {...props}></QueueControlInputBoxComponent.InputBox>
+                    </QueueControlInputBoxComponent.Wrapper>
 
-          <QueueControlInputBoxComponent.Wrapper color="grey" variant="filled">
-            <QueueControlInputBoxComponent.PrefixIcon
-              prefixType="img"
-              prefixValue="type"></QueueControlInputBoxComponent.PrefixIcon>
-            <QueueControlInputBoxComponent.InputBox
-              unit="percent"
-              valueChangeEvent={inputValueChanges}
-              {...props}></QueueControlInputBoxComponent.InputBox>
-          </QueueControlInputBoxComponent.Wrapper>
-        </div>
-        <QueueButtonGroup>
-          <QueueButton
-            type="button"
-            size={QUEUE_UI_SIZE.MEDIUM}
-            color={QUEUE_UI_COLOR.RED}
-            onClick={() => console.log(1)}>
-            btn1
-          </QueueButton>
-          <QueueButton
-            type="button"
-            size={QUEUE_UI_SIZE.MEDIUM}
-            color={QUEUE_UI_COLOR.BLUE}
-            onClick={() => console.log(2)}>
-            btn2
-          </QueueButton>
-          <QueueButton
-            type="button"
-            size={QUEUE_UI_SIZE.MEDIUM}
-            color={QUEUE_UI_COLOR.DEFAULT}
-            onClick={() => console.log(3)}>
-            btn3
-          </QueueButton>
-          <QueueButton
-            type="button"
-            size={QUEUE_UI_SIZE.MEDIUM}
-            color={QUEUE_UI_COLOR.RED}
-            onClick={() => console.log(4)}>
-            btn4
-          </QueueButton>
-        </QueueButtonGroup>
-        {checkboxOptions.map((option) => (
-          <QueueCheckbox
-            key={option.id}
-            id={option.id}
-            name={option.name}
-            value={option.value}
-            checked={option.checked}
-            disabled={option.disabled}
-            checkboxColor={option.checkboxColor}
-            checkboxSize={QUEUE_UI_SIZE.LARGE}
-            onchange={checkboxOnChange}>
-            {option.value}
-          </QueueCheckbox>
-        ))}
+                    <QueueControlInputBoxComponent.Wrapper
+                      color="grey"
+                      variant="filled">
+                      <QueueControlInputBoxComponent.PrefixIcon
+                        prefixType="img"
+                        prefixValue="type"></QueueControlInputBoxComponent.PrefixIcon>
+                      <QueueControlInputBoxComponent.InputBox
+                        unit="percent"
+                        valueChangeEvent={inputValueChanges}
+                        {...props}></QueueControlInputBoxComponent.InputBox>
+                    </QueueControlInputBoxComponent.Wrapper>
+                  </div>
+
+                  <QueueButtonGroup>
+                    <QueueButton
+                      type="button"
+                      size={QUEUE_UI_SIZE.MEDIUM}
+                      color={QUEUE_UI_COLOR.RED}
+                      onClick={() => console.log(1)}>
+                      btn1
+                    </QueueButton>
+                    <QueueButton
+                      type="button"
+                      size={QUEUE_UI_SIZE.MEDIUM}
+                      color={QUEUE_UI_COLOR.BLUE}
+                      onClick={() => console.log(2)}>
+                      btn2
+                    </QueueButton>
+                    <QueueButton
+                      type="button"
+                      size={QUEUE_UI_SIZE.MEDIUM}
+                      color={QUEUE_UI_COLOR.DEFAULT}
+                      onClick={() => console.log(3)}>
+                      btn3
+                    </QueueButton>
+                    <QueueButton
+                      type="button"
+                      size={QUEUE_UI_SIZE.MEDIUM}
+                      color={QUEUE_UI_COLOR.RED}
+                      onClick={() => console.log(4)}>
+                      btn4
+                    </QueueButton>
+                  </QueueButtonGroup>
+                  {checkboxOptions.map((option) => (
+                    <QueueCheckbox
+                      key={option.id}
+                      id={option.id}
+                      name={option.name}
+                      value={option.value}
+                      checked={option.checked}
+                      disabled={option.disabled}
+                      checkboxColor={option.checkboxColor}
+                      checkboxSize={QUEUE_UI_SIZE.LARGE}
+                      onchange={checkboxOnChange}>
+                      {option.value}
+                    </QueueCheckbox>
+                  ))}
+                </>
+              ),
+            },
+          ]}></QueueTab>
       </div>
     </>
   );

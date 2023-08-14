@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { QueueEditor } from '../../components/editor/Editor';
-import { LeftPanel } from '../left-panel/LeftPanel';
+// import { LeftPanel } from '../left-panel/LeftPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
@@ -267,14 +267,6 @@ export const RootLayout = () => {
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
             <div className="tw-flex tw-flex-col tw-h-full">
-              <PanelResizer.Panel
-                className="tw-flex-1 tw-flex-shrink-0 tw-h-full"
-                width={200}
-                minWidth={30}>
-                <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
-                <LeftPanel />
-              </PanelResizer.Panel>
-
               <div className="tw-h-[50%]">
                 <PanelResizer.Panel
                   className="tw-h-full"
