@@ -12,7 +12,7 @@ export interface QueueCheckboxProps
   value: any;
   checked?: boolean;
   disabled?: boolean;
-  onchange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  checkBoxOnChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   checkboxSize?: QUEUE_UI_SIZES;
   checkboxColor?: QUEUE_UI_COLORS;
   useIcon?: boolean;
@@ -24,7 +24,7 @@ const QueueCheckbox = ({
   value,
   checked,
   disabled = false,
-  onchange,
+  checkBoxOnChange,
   checkboxSize = QUEUE_UI_SIZE.MEDIUM,
   checkboxColor = QUEUE_UI_COLOR.DEFAULT,
   useIcon = true,
@@ -60,7 +60,7 @@ const QueueCheckbox = ({
         value={value}
         checked={checked}
         disabled={disabled}
-        onChange={onchange}
+        onChange={checkBoxOnChange}
         className={clsx(styles.QueueCheckbox, styles.CheckboxInput)}
       />
       <label

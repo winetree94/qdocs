@@ -172,7 +172,7 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
                       disabled={option.disabled}
                       checkboxColor={option.checkboxColor}
                       checkboxSize={QUEUE_UI_SIZE.LARGE}
-                      onchange={checkboxOnChange}>
+                      checkBoxOnChange={checkboxOnChange}>
                       {option.value}
                     </QueueCheckbox>
                   ))}
