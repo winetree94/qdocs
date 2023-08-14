@@ -1,7 +1,6 @@
 import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { ObjectSelectors } from 'store/object/selectors';
-import { PageSelectors } from 'store/page/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { effectEntityAdapter } from './reducer';
 import { NormalizedQueueObjectType } from '../object/model';
@@ -15,6 +14,11 @@ const ids = selectors.selectIds;
 const byId = selectors.selectById;
 const entities = selectors.selectEntities;
 
+/**
+ * @description
+ * Effect 의 id(복합키) 로 Effect 를 조회
+ * 이펙트 id 를 정확히 알고 있는 경우 사용
+ */
 const byIds = createSelector(
   [entities, (_: RootState, ids: EntityId[]) => ids],
   (state, ids) => {
@@ -22,6 +26,11 @@ const byIds = createSelector(
   },
 );
 
+/**
+ * @description
+ * Object Id 로 Object 의 Effect 목록을 조회
+ * 오브젝트의 이펙트 목록을 조회할 경우 사용
+ */
 const byObjectId = createSelector(
   [entities, (_: RootState, id: EntityId) => id],
   (state, id) => {
@@ -29,13 +38,11 @@ const byObjectId = createSelector(
   },
 );
 
-const allOfObjectId = createSelector(
-  [all, (_: RootState, id: EntityId) => id],
-  (effects, id) => {
-    return effects.filter(({ objectId }) => objectId === id);
-  },
-);
-
+/**
+ * @description
+ * Page Id 로 Page 의 Effect 목록을 조회
+ * 페이지의 이펙트 목록을 조회할 경우 사용
+ */
 const allByPageId = createSelector(
   [all, ObjectSelectors.idSetOfPageId],
   (effects, ids) => {
@@ -43,6 +50,11 @@ const allByPageId = createSelector(
   },
 );
 
+/**
+ * @description
+ * 전체 이펙트를 object id 로 그룹화하여 Map 형태로 조회
+ * 오브젝트의 이펙트 목록을 조회할 경우 사용
+ */
 const groupByObjectId = createSelector([all], (effects) => {
   return effects.reduce<Record<EntityId, NormalizedQueueEffect[]>>(
     (result, effect) => {
@@ -56,6 +68,11 @@ const groupByObjectId = createSelector([all], (effects) => {
   );
 });
 
+/**
+ * @description
+ * Page Id 로 Effect Index 로 그룹화된 이펙트 목록을 조회
+ * Effect Index 별로 Effect 의 존재 여부를 확인할 때 사용
+ */
 const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
   const map = effects.reduce<NormalizedQueueEffect[][]>((result, effect) => {
     if (!result[effect.index]) {
@@ -73,17 +90,13 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
 });
 
 /**
- * @todo
- * 루트부터의 탐색을 피할 수 없는가?
+ * @description
+ * 현재 Page, 현재 Index 의 오브젝트의 상태(크기, 좌표 등)를 조회
+ * 에디터에서 현재 위치의 오브젝트들을 화면에 표시하기 위해 사용
  */
 const allEffectedObjects = createSelector(
-  [
-    SettingSelectors.settings,
-    PageSelectors.all,
-    ObjectSelectors.all,
-    groupByObjectId,
-  ],
-  (settings, pages, objects, effects) => {
+  [SettingSelectors.settings, ObjectSelectors.all, groupByObjectId],
+  (settings, objects, effects) => {
     const pageId = settings.pageId;
     return objects
       .filter((object) => object.pageId === pageId)
@@ -123,6 +136,10 @@ const allEffectedObjects = createSelector(
   },
 );
 
+/**
+ * @description
+ * allEffectedObjects 를 Map 형태로 변환
+ */
 const allEffectedObjectsMap = createSelector(
   [allEffectedObjects],
   (objects) => {
@@ -144,7 +161,6 @@ export const EffectSelectors = {
   byIds,
   byObjectId,
   groupByObjectId,
-  allOfObjectId,
   allByPageId,
   allByPageAndEffectIndex,
   allEffectedObjects,
