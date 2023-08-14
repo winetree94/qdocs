@@ -74,7 +74,7 @@ const QueueCheckbox = ({
           styles[checkboxSize],
           disabled && styles.Disabled,
         )}>
-        {useIcon && checked ? Icon.on : Icon.off}
+        {useIcon ? (checked ? Icon.on : Icon.off) : null}
         <span className={clsx(styles.CheckboxChildren)}>{children}</span>
       </label>
     </>
