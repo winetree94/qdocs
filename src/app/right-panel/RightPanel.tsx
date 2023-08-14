@@ -7,6 +7,9 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
 import QueueTab from 'components/tabs/Tab';
 import { LeftPanel } from 'app/left-panel/LeftPanel';
+import QueueRadio from '../../components/buttons/radio/Radio';
+import QueueRadioGroup from '../../components/buttons/radio/RadioGroup';
+import { QueueRadioProps } from '../../components/buttons/radio/Radio.model';
 
 export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
@@ -39,6 +42,44 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
       value: 'testValue3',
       checked: true,
       checkboxColor: QUEUE_UI_COLOR.RED,
+    },
+  ];
+
+  const testRadioData: QueueRadioProps[] = [
+    {
+      id: 'id1-1',
+      name: 'testDataRadio',
+      value: 'testValue1testValue1testValue1',
+      label: 'testValue1testValue1testValue1',
+      checked: true,
+      initialChecked: false,
+      radioColor: QUEUE_UI_COLOR.DEFAULT,
+      radioOnChange: (e) => {
+        console.log(e.target.value);
+      },
+    },
+    {
+      id: 'id2-2',
+      name: 'testDataRadio',
+      value: 'testValue2',
+      label: 'testValue2',
+      checked: false,
+      disabled: true,
+      radioColor: QUEUE_UI_COLOR.BLUE,
+      radioOnChange: (e) => {
+        console.log(e.target.value);
+      },
+    },
+    {
+      id: 'id3-3',
+      name: 'testDataRadio',
+      value: 'testValue3',
+      label: 'testValue3',
+      checked: false,
+      radioColor: QUEUE_UI_COLOR.RED,
+      radioOnChange: (e) => {
+        console.log(e.target.value);
+      },
     },
   ];
 
@@ -135,6 +176,7 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
                       {option.value}
                     </QueueCheckbox>
                   ))}
+                  <QueueRadioGroup radioData={testRadioData}></QueueRadioGroup>
                 </>
               ),
             },
