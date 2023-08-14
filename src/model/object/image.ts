@@ -1,6 +1,17 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
-import { WithEffects } from 'model/effect';
+import {
+  WithEffects,
+  FadeEffect,
+  FillEffect,
+  MoveEffect,
+  RotateEffect,
+  ScaleEffect,
+  CreateEffect,
+  RemoveEffect,
+  StrokeEffect,
+  TextEffect,
+} from 'model/effect';
 import {
   WithRect,
   WithFade,
@@ -13,15 +24,25 @@ import {
 import { WithImage } from 'model/property/image';
 
 export interface QueueImage
-  extends WithEffects,
-    WithRect,
+  extends WithRect,
     WithFade,
     WithFill,
     WithRotation,
     WithScale,
     WithStroke,
     WithText,
-    WithImage {
+    WithImage,
+    WithEffects<
+      | CreateEffect
+      | FadeEffect
+      | FillEffect
+      | MoveEffect
+      | RemoveEffect
+      | RotateEffect
+      | StrokeEffect
+      | ScaleEffect
+      | TextEffect
+    > {
   type: 'image';
   index: number;
   id: EntityId;

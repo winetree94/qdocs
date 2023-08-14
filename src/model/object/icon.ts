@@ -1,6 +1,17 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
-import { WithEffects } from 'model/effect';
+import {
+  WithEffects,
+  FadeEffect,
+  FillEffect,
+  MoveEffect,
+  RotateEffect,
+  ScaleEffect,
+  CreateEffect,
+  RemoveEffect,
+  StrokeEffect,
+  TextEffect,
+} from 'model/effect';
 import {
   WithFade,
   WithFill,
@@ -12,14 +23,24 @@ import {
 } from 'model/property';
 
 export interface QueueIcon
-  extends WithEffects,
-    WithRect,
+  extends WithRect,
     WithFade,
     WithFill,
     WithScale,
     WithRotation,
     WithStroke,
-    WithText {
+    WithText,
+    WithEffects<
+      | CreateEffect
+      | FadeEffect
+      | FillEffect
+      | MoveEffect
+      | RemoveEffect
+      | RotateEffect
+      | StrokeEffect
+      | ScaleEffect
+      | TextEffect
+    > {
   type: 'icon';
   iconType: string;
   index: number;

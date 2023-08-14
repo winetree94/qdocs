@@ -1,6 +1,17 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
-import { WithEffects } from 'model/effect';
+import {
+  CreateEffect,
+  FadeEffect,
+  FillEffect,
+  MoveEffect,
+  RemoveEffect,
+  RotateEffect,
+  ScaleEffect,
+  StrokeEffect,
+  TextEffect,
+  WithEffects,
+} from 'model/effect';
 import {
   WithFade,
   WithFill,
@@ -12,14 +23,24 @@ import {
 } from 'model/property';
 
 export interface QueueCircle
-  extends WithEffects,
-    WithRect,
+  extends WithRect,
     WithFade,
     WithFill,
     WithRotation,
     WithScale,
     WithStroke,
-    WithText {
+    WithText,
+    WithEffects<
+      | CreateEffect
+      | FadeEffect
+      | FillEffect
+      | MoveEffect
+      | RemoveEffect
+      | RotateEffect
+      | StrokeEffect
+      | ScaleEffect
+      | TextEffect
+    > {
   type: 'circle';
   index: number;
   id: EntityId;

@@ -31,6 +31,6 @@ export type QueueEffectType =
   | ScaleEffect
   | TextEffect;
 
-export interface WithEffects {
-  effects: QueueEffectType[];
+export interface WithEffects<T> {
+  effects: T[];
 }
