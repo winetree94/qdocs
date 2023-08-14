@@ -36,7 +36,7 @@ const QueueCheckbox = ({
         <SvgRemixIcon
           icon="ri-checkbox-fill"
           size={checkboxSize}
-          color={checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT}
+          color={disabled ? styles.Disabled : checkboxColor}
           className={clsx(styles.CheckboxIcon, disabled && styles.Disabled)}
         />
       ),
@@ -44,10 +44,7 @@ const QueueCheckbox = ({
         <SvgRemixIcon
           icon="ri-checkbox-blank-line"
           size={checkboxSize}
-          color={
-            (checked ? checkboxColor : QUEUE_UI_COLOR.DEFAULT,
-            disabled && styles.Disabled)
-          }
+          color={disabled ? styles.Disabled : checkboxColor}
           className={clsx(styles.CheckboxIcon)}
         />
       ),
