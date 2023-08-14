@@ -6,3 +6,4 @@ export * from './scale';
 export * from './stroke';
 export * from './text';
 export * from '../meta';
+export * from './image';

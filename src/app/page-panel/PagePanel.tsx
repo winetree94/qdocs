@@ -23,6 +23,7 @@ import { ObjectSelectors } from 'store/object';
 import { EffectSelectors } from 'store/effect';
 import { StandaloneRect } from 'components/queue/standaloneRects';
 import { Scaler } from 'components/scaler/Scaler';
+import { StandaloneText } from 'components/queue/standaloneRects/Text';
 
 const PagePanelRoot = ({
   className,
@@ -146,17 +147,10 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         height={queueDocument.documentRect.height}
         scale={pagePreviewScale.current}>
         {firstQueueObjects.map((firstQueueObject, index) => (
-          <StandaloneRect
-            key={index}
-            type={firstQueueObject.type}
-            objectId={firstQueueObject.id}
-            rect={firstQueueObject.rect}
-            stroke={firstQueueObject.stroke}
-            rotate={firstQueueObject.rotate}
-            fade={firstQueueObject.fade}
-            scale={firstQueueObject.scale}
-            fill={firstQueueObject.fill}
-          />
+          <>
+            <StandaloneRect key={index} object={firstQueueObject} />
+            <StandaloneText key={index} {...firstQueueObject} />
+          </>
         ))}
       </Scaler>
     </div>

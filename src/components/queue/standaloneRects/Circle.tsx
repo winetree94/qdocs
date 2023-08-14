@@ -1,23 +1,5 @@
-import { EntityId } from '@reduxjs/toolkit';
 import { convertHexWithOpacity } from 'components/queue/color/convertHex';
-import type {
-  QueueFade,
-  QueueFill,
-  QueueRect,
-  QueueRotate,
-  QueueScale,
-  QueueStroke,
-} from 'model/property';
-
-export interface StandaloneCircleProps {
-  objectId: EntityId;
-  rect: QueueRect;
-  stroke: QueueStroke;
-  rotate: QueueRotate;
-  fade: QueueFade;
-  scale: QueueScale;
-  fill: QueueFill;
-}
+import { StandaloneCircleObject } from 'model/standalone-object';
 
 export const StandaloneCircle = ({
   objectId,
@@ -27,7 +9,7 @@ export const StandaloneCircle = ({
   fade,
   scale,
   fill,
-}: StandaloneCircleProps) => {
+}: StandaloneCircleObject) => {
   const strokeClipPathID = `st-stroke-alignment-inner-for-circle-${objectId}`;
   const rx = Math.abs(rect.width) / 2;
   const ry = Math.abs(rect.height) / 2;

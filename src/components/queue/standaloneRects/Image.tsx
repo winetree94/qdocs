@@ -1,55 +1,50 @@
-import { convertHexWithOpacity } from 'components/queue/color/convertHex';
-import { StandaloneSquareObject } from 'model/standalone-object';
+import { StandaloneImageObject } from 'model/standalone-object';
 
-export const StandaloneSquare = ({
+export const StandaloneImage = ({
   objectId,
   rect,
   stroke,
   rotate,
   fade,
   scale,
-  fill,
-}: StandaloneSquareObject) => {
-  const strokeClipPathID = `st-stroke-alignment-inner-for-rect-${objectId}`;
-  const calculatedFill = convertHexWithOpacity(
-    fill.color,
-    fill.opacity * fade.opacity * fill.opacity,
-  );
+  image,
+}: StandaloneImageObject) => {
+  const strokeClipPathID = `st-stroke-alignment-inner-for-image-${objectId}`;
 
   return (
     <svg
       className="tw-absolute"
-      width={rect.width}
-      height={rect.height}
+      width={Math.abs(rect.width)}
+      height={Math.abs(rect.height)}
       style={{
         top: `${rect.height > 0 ? rect.y : rect.y + rect.height}px`,
         left: `${rect.width > 0 ? rect.x : rect.x + rect.width}px`,
         transformOrigin: 'center center',
         transform: `rotate(${rotate.degree}deg) scale(${scale.scale})`,
       }}
-      viewBox={`0 0 ${rect.width} ${rect.height}`}
+      viewBox={`0 0 ${Math.abs(rect.width)} ${Math.abs(rect.height)}`}
       opacity={fade.opacity}>
       <defs>
         <clipPath id={strokeClipPathID}>
           <rect
             rx={0}
             ry={0}
-            width={rect.width}
-            height={rect.height}
+            width={Math.abs(rect.width)}
+            height={Math.abs(rect.height)}
             stroke={stroke.color}
             strokeWidth={stroke.width * 2}
           />
         </clipPath>
       </defs>
       <g>
-        <rect
-          width={rect.width}
-          height={rect.height}
-          fill={calculatedFill}
+        <image
+          href={image.src}
+          width={Math.abs(rect.width)}
+          height={Math.abs(rect.height)}
           stroke={stroke.color}
           strokeWidth={stroke.width * 2}
           strokeDasharray={stroke.dasharray}
-          clipPath={`url(#${strokeClipPathID})`}></rect>
+          clipPath={`url(#${strokeClipPathID})`}></image>
       </g>
     </svg>
   );

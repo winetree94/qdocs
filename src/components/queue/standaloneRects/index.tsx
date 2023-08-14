@@ -1,22 +1,47 @@
+import { OBJECT_META } from 'model/object';
 import { StandaloneCircle } from 'components/queue/standaloneRects/Circle';
+import { StandaloneIcon } from 'components/queue/standaloneRects/Icon';
+import { StandaloneImage } from 'components/queue/standaloneRects/Image';
+import { StandaloneLine } from 'components/queue/standaloneRects/Line';
+import { StandaloneSquare } from 'components/queue/standaloneRects/Square';
 import {
-  StandaloneSquareProps,
-  StandaloneSquare,
-} from 'components/queue/standaloneRects/Square';
-import { OBJECT_META, OBJECT_TYPES } from 'model/object';
+  isNormalizedQueueIconObjectType,
+  isNormalizedQueueImageObjectType,
+  NormalizedQueueImageObjectType,
+  NormalizedQueueObjectType,
+} from 'store/object';
 
-export const StandaloneRect = ({
-  type,
-  ...props
-}: StandaloneSquareProps & { type: OBJECT_TYPES }) => {
-  switch (type) {
+export interface StandaloneRectProps {
+  object: NormalizedQueueObjectType | NormalizedQueueImageObjectType;
+}
+
+export const StandaloneRect = ({ object }: StandaloneRectProps) => {
+  switch (object.type) {
     case OBJECT_META.RECT:
-      return <StandaloneSquare {...props} />;
+      return <StandaloneSquare objectId={object.id} {...object} />;
     case OBJECT_META.CIRCLE:
-      return <StandaloneCircle {...props} />;
+      return <StandaloneCircle objectId={object.id} {...object} />;
     case OBJECT_META.LINE:
-    case OBJECT_META.ICON:
-    case OBJECT_META.IMAGE:
+      return <StandaloneLine objectId={object.id} {...object} />;
+    case OBJECT_META.ICON: {
+      const isIconObject = isNormalizedQueueIconObjectType(object);
+
+      if (!isIconObject) {
+        return null;
+      }
+
+      return <StandaloneIcon iconType={object.iconType} {...object} />;
+    }
+
+    case OBJECT_META.IMAGE: {
+      const isImageObject = isNormalizedQueueImageObjectType(object);
+
+      if (!isImageObject) {
+        return null;
+      }
+
+      return <StandaloneImage objectId={object.id} {...object} />;
+    }
     default:
       return <></>;
   }
