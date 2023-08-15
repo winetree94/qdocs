@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { FadeEffect, OBJECT_EFFECT_META } from 'model/effect';
+import { FadeEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { Slider } from 'components/slider';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
@@ -20,7 +20,7 @@ export const EffectControllerFade = (): ReactElement => {
         getEffectEntityKey({
           index: settings.queueIndex,
           objectId: object.id,
-          type: OBJECT_EFFECT_META.FADE,
+          type: OBJECT_EFFECT_TYPE.FADE,
         }),
       ),
     ),

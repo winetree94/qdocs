@@ -1,5 +1,5 @@
 import { Slider } from 'components/slider';
-import { OBJECT_EFFECT_META, ScaleEffect } from 'model/effect';
+import { OBJECT_EFFECT_TYPE, ScaleEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import {
   EffectActions,
@@ -22,7 +22,7 @@ export const EffectControllerScale = (): ReactElement => {
         getEffectEntityKey({
           index: settings.queueIndex,
           objectId: object.id,
-          type: OBJECT_EFFECT_META.SCALE,
+          type: OBJECT_EFFECT_TYPE.SCALE,
         }),
       ),
     ),

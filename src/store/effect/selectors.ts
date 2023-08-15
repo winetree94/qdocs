@@ -3,8 +3,8 @@ import { RootState } from 'store';
 import { ObjectSelectors } from 'store/object/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { effectEntityAdapter } from './reducer';
-import { NormalizedQueueObjectType } from '../object/model';
-import { QueueEffectType } from 'model/effect';
+import { QueueEffectType, OBJECT_EFFECT_TYPE } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -100,7 +100,7 @@ const allEffectedObjects = createSelector(
     const pageId = settings.pageId;
     return objects
       .filter((object) => object.pageId === pageId)
-      .reduce<NormalizedQueueObjectType[]>((result, current) => {
+      .reduce<QueueObjectType[]>((result, current) => {
         const object = { ...current };
         (effects[current.id] || [])
           .filter(({ index }) => index <= settings.queueIndex)
@@ -108,25 +108,25 @@ const allEffectedObjects = createSelector(
             (effect) => effect.type !== 'create' && effect.type !== 'remove',
           )
           .forEach((effect) => {
-            if (effect.type === 'rect') {
+            if (effect.type === OBJECT_EFFECT_TYPE.RECT) {
               object.rect = effect.prop;
             }
-            if (effect.type === 'fade') {
+            if (effect.type === OBJECT_EFFECT_TYPE.FADE) {
               object.fade = effect.prop;
             }
-            if (effect.type === 'fill') {
+            if (effect.type === OBJECT_EFFECT_TYPE.FILL) {
               object.fill = effect.prop;
             }
-            if (effect.type === 'stroke') {
+            if (effect.type === OBJECT_EFFECT_TYPE.STROKE) {
               object.stroke = effect.prop;
             }
-            if (effect.type === 'rotate') {
+            if (effect.type === OBJECT_EFFECT_TYPE.ROTATE) {
               object.rotate = effect.prop;
             }
-            if (effect.type === 'scale') {
+            if (effect.type === OBJECT_EFFECT_TYPE.SCALE) {
               object.scale = effect.prop;
             }
-            if (effect.type === 'text') {
+            if (effect.type === OBJECT_EFFECT_TYPE.TEXT) {
               object.text = effect.prop;
             }
           });
@@ -143,13 +143,10 @@ const allEffectedObjects = createSelector(
 const allEffectedObjectsMap = createSelector(
   [allEffectedObjects],
   (objects) => {
-    return objects.reduce<Record<string, NormalizedQueueObjectType>>(
-      (result, object) => {
-        result[object.id] = object;
-        return result;
-      },
-      {},
-    );
+    return objects.reduce<Record<string, QueueObjectType>>((result, object) => {
+      result[object.id] = object;
+      return result;
+    }, {});
   },
 );
 

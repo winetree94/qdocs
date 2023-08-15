@@ -1,5 +1,5 @@
 import { EntityId } from '@reduxjs/toolkit';
-import { QueueObjectType } from './object';
+import { QueueObjectType } from '../object';
 
 export interface QueueDocumentRect {
   fill: string;

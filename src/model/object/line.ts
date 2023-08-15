@@ -1,5 +1,7 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
+import { OBJECT_TYPE } from './meta';
+import { BaseObject } from './base';
 import {
   WithFade,
   WithFill,
@@ -11,17 +13,15 @@ import {
 } from 'model/property';
 
 export interface QueueLine
-  extends WithRect,
+  extends BaseObject,
+    WithRect,
     WithFade,
     WithFill,
     WithRotation,
     WithScale,
     WithStroke,
     WithText {
-  type: 'line';
-  index: number;
-  id: EntityId;
-  pageId: EntityId;
+  type: typeof OBJECT_TYPE.LINE;
 }
 
 export const createDefaultLine = (
@@ -32,7 +32,7 @@ export const createDefaultLine = (
   const height = 300;
   const objectId = nanoid();
   return {
-    type: 'line',
+    type: OBJECT_TYPE.LINE,
     id: objectId,
     pageId: pageId,
     index: 0,

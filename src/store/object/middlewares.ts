@@ -1,11 +1,11 @@
 import { nanoid } from '@reduxjs/toolkit';
 import { createTypedListenerMiddleware } from 'middleware';
 import { ObjectSelectors } from './selectors';
-import { NormalizedQueueObjectType } from './model';
 import { PageActions } from '../page';
 import { ObjectActions } from './actions';
 import { SettingsActions, SettingSelectors } from '../settings';
 import { EffectSelectors } from '../effect';
+import { QueueObjectType } from 'model/object';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 
@@ -32,7 +32,7 @@ objectMiddleware.startListening({
     const objects = ObjectSelectors.all(state).filter(
       (object) => object.pageId === action.payload.fromId,
     );
-    const newObjects = objects.map<NormalizedQueueObjectType>((object) => ({
+    const newObjects = objects.map<QueueObjectType>((object) => ({
       ...object,
       id: nanoid(),
       pageId: action.payload.newId,
@@ -51,7 +51,7 @@ objectMiddleware.startListening({
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
     const effects = EffectSelectors.allEffectedObjectsMap(state);
-    const models = action.payload.ids.map<NormalizedQueueObjectType>((id) => ({
+    const models = action.payload.ids.map<QueueObjectType>((id) => ({
       ...effects[id],
       rect: {
         ...effects[id].rect,

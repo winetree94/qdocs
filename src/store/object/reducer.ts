@@ -1,13 +1,12 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { NormalizedQueueObjectType } from './model';
+import { QueueObjectType } from 'model/object';
 import { DocumentActions } from '../document';
 import { ObjectActions } from './actions';
 
-export const objectEntityAdapter =
-  createEntityAdapter<NormalizedQueueObjectType>({
-    selectId: (object) => object.id,
-    sortComparer: (a, b) => a.index - b.index,
-  });
+export const objectEntityAdapter = createEntityAdapter<QueueObjectType>({
+  selectId: (object) => object.id,
+  sortComparer: (a, b) => a.index - b.index,
+});
 
 export const objectsSlice = createSlice({
   name: 'objects',
@@ -40,7 +39,7 @@ export const objectsSlice = createSlice({
      * 오브젝트 다중 추가
      */
     builder.addCase(ObjectActions.addMany, (state, action) => {
-      const objects = action.payload.objects.map<NormalizedQueueObjectType>(
+      const objects = action.payload.objects.map<QueueObjectType>(
         (object, index, self) => {
           const previous = self
             .slice(0, index)

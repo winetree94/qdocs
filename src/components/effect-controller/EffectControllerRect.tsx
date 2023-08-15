@@ -1,4 +1,4 @@
-import { MoveEffect, OBJECT_EFFECT_META } from 'model/effect';
+import { RectEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -20,11 +20,11 @@ export const EffectControllerRect = (): ReactElement => {
         getEffectEntityKey({
           index: settings.queueIndex,
           objectId: object.id,
-          type: OBJECT_EFFECT_META.RECT,
+          type: OBJECT_EFFECT_TYPE.RECT,
         }),
       ),
     ),
-  ) as MoveEffect[];
+  ) as RectEffect[];
 
   const [firstMoveEffect] = effectsOfSelectedObjects;
 

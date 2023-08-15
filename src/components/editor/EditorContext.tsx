@@ -4,13 +4,14 @@ import { deviceMetaKey } from 'cdk/device/meta';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { EffectActions } from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
+import { ObjectActions } from 'store/object';
 import { SettingsActions, SettingSelectors } from 'store/settings';
 import styles from './EditorContext.module.scss';
 
@@ -28,7 +29,7 @@ export const EditorContext = forwardRef<
       const raw = await navigator.clipboard.readText();
       const clipboardData = JSON.parse(raw);
       if (isQueueObjectClipboardModel(clipboardData)) {
-        const pendingObjects: NormalizedQueueObjectType[] = [];
+        const pendingObjects: QueueObjectType[] = [];
         const pendingEffects: QueueEffectType[] = [];
         clipboardData.data.forEach((data) => {
           const objectId = nanoid();

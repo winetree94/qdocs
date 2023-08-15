@@ -1,7 +1,7 @@
 import { CreateEffect } from './create';
 import { FadeEffect } from './fade';
 import { FillEffect } from './fill';
-import { MoveEffect } from './rect';
+import { RectEffect } from './rect';
 import { RemoveEffect } from './remove';
 import { RotateEffect } from './rotate';
 import { ScaleEffect } from './scale';
@@ -24,13 +24,9 @@ export type QueueEffectType =
   | CreateEffect
   | FadeEffect
   | FillEffect
-  | MoveEffect
+  | RectEffect
   | RemoveEffect
   | RotateEffect
   | StrokeEffect
   | ScaleEffect
   | TextEffect;
-
-export interface WithEffects<T> {
-  effects: T[];
-}

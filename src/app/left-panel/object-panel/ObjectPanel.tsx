@@ -16,7 +16,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { areEqual, FixedSizeList, ListOnScrollProps } from 'react-window';
 import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
 import { QueueObjectType } from 'model/object';
 import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';

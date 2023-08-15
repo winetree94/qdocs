@@ -1,5 +1,5 @@
 import { EntityId } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
 import {
   WithRect,
   WithFade,
@@ -10,9 +10,12 @@ import {
   WithText,
 } from 'model/property';
 import { WithImage } from 'model/property/image';
+import { OBJECT_TYPE } from './meta';
+import { BaseObject } from './base';
 
 export interface QueueImage
-  extends WithRect,
+  extends BaseObject,
+    WithRect,
     WithFade,
     WithFill,
     WithRotation,
@@ -20,23 +23,19 @@ export interface QueueImage
     WithStroke,
     WithText,
     WithImage {
-  type: 'image';
-  index: number;
-  id: EntityId;
-  pageId: EntityId;
+  type: typeof OBJECT_TYPE.IMAGE;
 }
 
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
   objectId: string,
-  // assetId: string,
 ): QueueImage => {
   const width = 300;
   const height = 300;
 
   return {
-    type: 'image',
+    type: OBJECT_TYPE.IMAGE,
     id: objectId,
     pageId: pageId,
     index: 0,

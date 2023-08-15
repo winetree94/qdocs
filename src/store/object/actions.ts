@@ -1,22 +1,19 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import {
-  NormalizedQueueImageObjectType,
-  NormalizedQueueObjectType,
-} from './model';
+import { QueueImage, QueueObjectType } from 'model/object';
 
 const addOne = createAction<{
   queueIndex?: number;
-  object: Omit<NormalizedQueueObjectType, 'index'>;
+  object: Omit<QueueObjectType, 'index'>;
 }>('objects/addOne');
 
 const addMany = createAction<{
   queueIndex?: number;
-  objects: Omit<NormalizedQueueObjectType, 'index'>[];
+  objects: Omit<QueueObjectType, 'index'>[];
 }>('objects/addMany');
 
 const updateObject = createAction<{
   id: EntityId;
-  changes: Partial<Omit<NormalizedQueueObjectType, 'index'>>;
+  changes: Partial<Omit<QueueObjectType, 'index'>>;
 }>('objects/updateObject');
 
 /**
@@ -25,7 +22,7 @@ const updateObject = createAction<{
  */
 const updateImageObject = createAction<{
   id: EntityId;
-  changes: Partial<Omit<NormalizedQueueImageObjectType, 'index'>>;
+  changes: Partial<Omit<QueueImage, 'index'>>;
 }>('objects/updateObject');
 
 const duplicate = createAction<{
@@ -35,7 +32,7 @@ const duplicate = createAction<{
 const updateObjects = createAction<
   {
     id: EntityId;
-    changes: Partial<Omit<NormalizedQueueObjectType, 'index'>>;
+    changes: Partial<Omit<QueueObjectType, 'index'>>;
   }[]
 >('objects/updateObjects');
 

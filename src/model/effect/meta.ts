@@ -1,4 +1,5 @@
-export const OBJECT_EFFECT_META = {
+// TODO as const 붙여야함
+export const OBJECT_EFFECT_TYPE = {
   CREATE: 'create',
   FADE: 'fade',
   FILL: 'fill',
@@ -10,5 +11,5 @@ export const OBJECT_EFFECT_META = {
   TEXT: 'text',
 } as const;
 
-export type OBJECT_EFFECTS =
-  (typeof OBJECT_EFFECT_META)[keyof typeof OBJECT_EFFECT_META];
+export type OBJECT_EFFECT_TYPES =
+  (typeof OBJECT_EFFECT_TYPE)[keyof typeof OBJECT_EFFECT_TYPE];

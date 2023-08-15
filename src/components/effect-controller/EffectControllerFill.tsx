@@ -1,5 +1,5 @@
 import { Slider } from 'components/slider';
-import { FillEffect, OBJECT_EFFECT_META } from 'model/effect';
+import { FillEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { ChangeEvent, ReactElement } from 'react';
 import {
   EffectActions,
@@ -22,7 +22,7 @@ export const EffectControllerFill = (): ReactElement => {
         getEffectEntityKey({
           index: settings.queueIndex,
           objectId: object.id,
-          type: OBJECT_EFFECT_META.FILL,
+          type: OBJECT_EFFECT_TYPE.FILL,
         }),
       ),
     ),

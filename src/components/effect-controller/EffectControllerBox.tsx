@@ -1,11 +1,11 @@
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import {
   BaseQueueEffect,
-  OBJECT_EFFECT_META,
+  OBJECT_EFFECT_TYPE,
   QueueEffectType,
 } from 'model/effect';
 import { ReactElement, useState } from 'react';
-import { OBJECT_ADDABLE_EFFECTS } from 'model/object';
+import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
 import { QueueButton, QueueIconButton } from 'components/buttons/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
@@ -13,7 +13,6 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
-import { NormalizedQueueObjectType } from '../../store/object/model';
 import { EffectActions, getEffectEntityKey } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
@@ -55,10 +54,10 @@ export const EffectController = ({
           type="button"
           size={QUEUE_UI_SIZE.SMALL}
           onClick={(): void => setOpen((prev) => !prev)}
-          disabled={effectType === OBJECT_EFFECT_META.CREATE}>
+          disabled={effectType === OBJECT_EFFECT_TYPE.CREATE}>
           <span>{effectType}</span>
         </QueueButton>
-        {effectType !== OBJECT_EFFECT_META.CREATE && (
+        {effectType !== OBJECT_EFFECT_TYPE.CREATE && (
           <QueueIconButton
             className="tw-absolute tw-right-0"
             onClick={handleDeleteEffectButton}
@@ -84,7 +83,7 @@ export const EffectController = ({
 const createEffect = (
   effectType: QueueEffectType['type'],
   queueIndex: QueueEffectType['index'],
-  queueObject: NormalizedQueueObjectType,
+  queueObject: QueueObjectType,
   effects: QueueEffectType[],
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect<void> = {
@@ -99,46 +98,46 @@ const createEffect = (
   };
 
   switch (effectType) {
-    case OBJECT_EFFECT_META.FADE: {
+    case OBJECT_EFFECT_TYPE.FADE: {
       const initialFade = effects.find(
         (effect) =>
           effect.index === queueIndex - 1 &&
-          effect.type === OBJECT_EFFECT_META.FADE,
+          effect.type === OBJECT_EFFECT_TYPE.FADE,
       );
 
       return {
         ...baseQueueEffect,
-        type: OBJECT_EFFECT_META.FADE,
+        type: OBJECT_EFFECT_TYPE.FADE,
         prop:
-          initialFade?.type === OBJECT_EFFECT_META.FADE
+          initialFade?.type === OBJECT_EFFECT_TYPE.FADE
             ? initialFade.prop
             : queueObject.fade,
       };
     }
-    case OBJECT_EFFECT_META.FILL: {
+    case OBJECT_EFFECT_TYPE.FILL: {
       const initialFill = effects.find(
         (effect) =>
           effect.index === queueIndex - 1 &&
-          effect.type === OBJECT_EFFECT_META.FILL,
+          effect.type === OBJECT_EFFECT_TYPE.FILL,
       );
 
       return {
         ...baseQueueEffect,
-        type: OBJECT_EFFECT_META.FILL,
+        type: OBJECT_EFFECT_TYPE.FILL,
         prop:
-          initialFill?.type === OBJECT_EFFECT_META.FILL
+          initialFill?.type === OBJECT_EFFECT_TYPE.FILL
             ? initialFill.prop
             : queueObject.fill,
       };
     }
-    case OBJECT_EFFECT_META.RECT: {
+    case OBJECT_EFFECT_TYPE.RECT: {
       const initialRect = effects.reduce(
         (rect, effect) => {
           if (effect.index > queueIndex) {
             return rect;
           }
 
-          if (effect.type === OBJECT_EFFECT_META.RECT) {
+          if (effect.type === OBJECT_EFFECT_TYPE.RECT) {
             return {
               width: rect.width + effect.prop.width,
               height: rect.height + effect.prop.height,
@@ -155,17 +154,17 @@ const createEffect = (
       );
       return {
         ...baseQueueEffect,
-        type: OBJECT_EFFECT_META.RECT,
+        type: OBJECT_EFFECT_TYPE.RECT,
         prop: initialRect,
       };
     }
-    case OBJECT_EFFECT_META.ROTATE: {
+    case OBJECT_EFFECT_TYPE.ROTATE: {
       const initialDegree = effects.reduce((degree, effect) => {
         if (effect.index > queueIndex) {
           return degree;
         }
 
-        if (effect.type === OBJECT_EFFECT_META.ROTATE) {
+        if (effect.type === OBJECT_EFFECT_TYPE.ROTATE) {
           return degree + effect.prop.degree;
         }
 
@@ -174,19 +173,19 @@ const createEffect = (
 
       return {
         ...baseQueueEffect,
-        type: OBJECT_EFFECT_META.ROTATE,
+        type: OBJECT_EFFECT_TYPE.ROTATE,
         prop: {
           degree: initialDegree,
         },
       };
     }
-    case OBJECT_EFFECT_META.SCALE: {
+    case OBJECT_EFFECT_TYPE.SCALE: {
       const initialScale = effects.reduce((scale, effect) => {
         if (effect.index > queueIndex) {
           return scale;
         }
 
-        if (effect.type === OBJECT_EFFECT_META.SCALE) {
+        if (effect.type === OBJECT_EFFECT_TYPE.SCALE) {
           return scale + effect.prop.scale;
         }
 
@@ -195,7 +194,7 @@ const createEffect = (
 
       return {
         ...baseQueueEffect,
-        type: OBJECT_EFFECT_META.SCALE,
+        type: OBJECT_EFFECT_TYPE.SCALE,
         prop: {
           scale: initialScale,
         },
@@ -226,7 +225,7 @@ export const EffectControllerBox = (): ReactElement | null => {
     (currentQueueObjectEffect) => currentQueueObjectEffect.type,
   );
   const createEffectIndex = effects.find(
-    (effect) => effect.type === OBJECT_EFFECT_META.CREATE,
+    (effect) => effect.type === OBJECT_EFFECT_TYPE.CREATE,
   ).index;
 
   const handleAddEffectItemClick = (

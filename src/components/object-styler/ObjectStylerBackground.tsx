@@ -1,10 +1,11 @@
 import { EntityId } from '@reduxjs/toolkit';
 import { Color } from 'components/object-styler/color/Color';
 import { Slider } from 'components/slider';
+import { QueueObjectType } from 'model/object';
 import { QueueFill } from 'model/property';
 import { ChangeEvent, ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
+import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 
 /**
@@ -22,7 +23,7 @@ export const ObjectStylerBackground = (): ReactElement => {
       ObjectActions.updateObjects(
         selectedObjects.map<{
           id: EntityId;
-          changes: Partial<NormalizedQueueObjectType>;
+          changes: Partial<QueueObjectType>;
         }>((object) => {
           return {
             id: object.id,

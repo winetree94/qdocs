@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from '../meta';
+import { OBJECT_PROPERTY_META } from 'model/property/meta';
 
 export interface QueueFill {
   color: string;

@@ -1,5 +1,7 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
+import { OBJECT_TYPE } from './meta';
+import { BaseObject } from './base';
 import {
   WithFade,
   WithFill,
@@ -11,18 +13,16 @@ import {
 } from 'model/property';
 
 export interface QueueIcon
-  extends WithRect,
+  extends BaseObject,
+    WithRect,
     WithFade,
     WithFill,
     WithScale,
     WithRotation,
     WithStroke,
     WithText {
-  type: 'icon';
+  type: typeof OBJECT_TYPE.ICON;
   iconType: string;
-  index: number;
-  id: EntityId;
-  pageId: EntityId;
 }
 
 export const createDefaultIcon = (
@@ -34,7 +34,7 @@ export const createDefaultIcon = (
   const height = 300;
   const objectId = nanoid();
   return {
-    type: 'icon',
+    type: OBJECT_TYPE.ICON,
     iconType: iconType,
     id: objectId,
     pageId: pageId,

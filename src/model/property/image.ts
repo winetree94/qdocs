@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/meta';
+import { OBJECT_PROPERTY_META } from 'model/property/meta';
 
 export interface QueueImage {
   assetId: string;

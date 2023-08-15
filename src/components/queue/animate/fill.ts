@@ -1,7 +1,7 @@
 import { hexToRgb, rgbToFullFormHex } from 'components/queue/color/convertHex';
-import { FillEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
+import { FillEffect, OBJECT_EFFECT_TYPE, QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import { QueueFill } from 'model/property';
-import { NormalizedQueueObjectType } from 'store/object';
 
 export interface FillAnimation {
   fromFill: QueueFill;
@@ -9,20 +9,20 @@ export interface FillAnimation {
 }
 
 export const getCurrentFill = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
 ) => {
   return effects
     .filter((effect) => effect.index <= index)
     .filter(
-      (effect): effect is FillEffect => effect.type === OBJECT_EFFECT_META.FILL,
+      (effect): effect is FillEffect => effect.type === OBJECT_EFFECT_TYPE.FILL,
     )
     .reduce<QueueFill>((_, effect) => effect.prop, object.fill);
 };
 
 export const getFillAnimation = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
@@ -40,7 +40,7 @@ export const getFillAnimation = (
   const fillEffect = effects.find((effect): effect is FillEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
     return (
-      effect.index === targetIndex && effect.type === OBJECT_EFFECT_META.FILL
+      effect.index === targetIndex && effect.type === OBJECT_EFFECT_TYPE.FILL
     );
   });
 

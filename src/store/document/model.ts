@@ -1,4 +1,4 @@
-import { QueueDocumentRect } from '../../model/document';
+import { QueueDocumentRect } from '../../model/document/document';
 import { EntityId } from '@reduxjs/toolkit';
 
 export interface QueueDocument {

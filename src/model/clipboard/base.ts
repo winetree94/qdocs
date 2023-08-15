@@ -1,5 +1,5 @@
 import { QueueEffectType } from 'model/effect';
-import { NormalizedQueueObjectType } from 'store/object';
+import { QueueObjectType } from 'model/object';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from './constants';
 
 export interface QueueClipboardModel<T> {
@@ -11,7 +11,7 @@ export interface QueueClipboardModel<T> {
 export interface QueueObjectClipboardModel
   extends QueueClipboardModel<
     {
-      object: NormalizedQueueObjectType;
+      object: QueueObjectType;
       effects: QueueEffectType[];
     }[]
   > {

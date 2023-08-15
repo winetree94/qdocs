@@ -1,4 +1,4 @@
-import { OBJECT_EFFECT_META, RotateEffect } from 'model/effect';
+import { OBJECT_EFFECT_TYPE, RotateEffect } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -20,7 +20,7 @@ export const EffectControllerRotate = (): ReactElement => {
         getEffectEntityKey({
           index: settings.queueIndex,
           objectId: object.id,
-          type: OBJECT_EFFECT_META.ROTATE,
+          type: OBJECT_EFFECT_TYPE.ROTATE,
         }),
       ),
     ),

@@ -23,9 +23,8 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
 import { EffectSelectors } from 'store/effect/selectors';
-import { MoveEffect, RotateEffect, QueueEffectType } from 'model/effect';
+import { RectEffect, RotateEffect, QueueEffectType } from 'model/effect';
 import { ObjectSelectors } from 'store/object/selectors';
-import { NormalizedQueueObjectType } from '../../store/object/model';
 import { EffectActions } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
@@ -33,6 +32,7 @@ import { ObjectActions } from '../../store/object';
 import { Draggable } from 'cdk/drag/Drag';
 import { isEqual } from 'lodash';
 import { HistoryActions } from 'store/history';
+import { QueueObjectType } from 'model/object';
 
 export const QueueEditor = () => {
   const dispatch = useAppDispatch();
@@ -50,7 +50,7 @@ export const QueueEditor = () => {
   const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
-    [key: string]: NormalizedQueueObjectType;
+    [key: string]: QueueObjectType;
   }>({});
 
   const effectsGroupByObjectId = effects.reduce<{
@@ -152,7 +152,7 @@ export const QueueEditor = () => {
 
   const onObjectMousedown = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: NormalizedQueueObjectType,
+    object: QueueObjectType,
   ): void => {
     event.stopPropagation();
     const selected = settings.selectedObjectIds.includes(object.id);
@@ -171,7 +171,7 @@ export const QueueEditor = () => {
 
   const onObjectDoubleClick = (
     event: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
-    object: NormalizedQueueObjectType,
+    object: QueueObjectType,
   ): void => {
     event.stopPropagation();
     dispatch(
@@ -215,7 +215,7 @@ export const QueueEditor = () => {
         } else {
           const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
             (effect) => effect.type === 'rect',
-          ) as MoveEffect;
+          ) as RectEffect;
           result.effects.push({
             type: 'rect',
             duration: 1000,
@@ -318,7 +318,7 @@ export const QueueEditor = () => {
     } else {
       const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
         (effect) => effect.type === 'rect',
-      ) as MoveEffect;
+      ) as RectEffect;
       dispatch(
         EffectActions.upsertEffect({
           type: 'rect',
@@ -401,10 +401,7 @@ export const QueueEditor = () => {
     settings.scale,
   ]);
 
-  const onTextEdit = (
-    object: NormalizedQueueObjectType,
-    text: string,
-  ): void => {
+  const onTextEdit = (object: QueueObjectType, text: string): void => {
     dispatch(
       ObjectActions.updateObject({
         id: object.id,

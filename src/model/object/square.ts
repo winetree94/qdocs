@@ -1,4 +1,4 @@
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
 import {
   WithFade,
   WithFill,
@@ -9,19 +9,19 @@ import {
   WithText,
 } from 'model/property';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
+import { OBJECT_TYPE } from './meta';
+import { BaseObject } from './base';
 
 export interface QueueSquare
-  extends WithRect,
+  extends BaseObject,
+    WithRect,
     WithFade,
     WithFill,
     WithRotation,
     WithScale,
     WithStroke,
     WithText {
-  type: 'rect';
-  index: number;
-  id: EntityId;
-  pageId: EntityId;
+  type: typeof OBJECT_TYPE.RECT;
 }
 
 export const createDefaultSquare = (
@@ -32,7 +32,7 @@ export const createDefaultSquare = (
   const height = 300;
   const objectId = nanoid();
   return {
-    type: 'rect',
+    type: OBJECT_TYPE.RECT,
     id: objectId,
     pageId: pageId,
     index: 0,

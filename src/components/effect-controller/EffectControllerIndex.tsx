@@ -4,7 +4,7 @@ import { EffectControllerRect } from 'components/effect-controller/EffectControl
 import { EffectControllerRotate } from 'components/effect-controller/EffectControllerRotate';
 import { EffectControllerScale } from 'components/effect-controller/EffectControllerScale';
 import { QueueEffectType } from 'model/effect';
-import { OBJECT_PROPERTY_META } from 'model/meta';
+import { OBJECT_PROPERTY_META } from 'model/property';
 import { ReactElement } from 'react';
 
 export type EffectControllerIndexProps = {

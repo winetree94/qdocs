@@ -1,10 +1,10 @@
-import { MoveEffect, QueueEffectType } from 'model/effect';
+import { RectEffect, QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import { QueueRect } from 'model/property';
-import { NormalizedQueueObjectType } from '../../../store/object/model';
 
 export interface RectAnimation {
   fromRect: QueueRect;
-  moveEffect: MoveEffect;
+  moveEffect: RectEffect;
 }
 
 /**
@@ -12,18 +12,18 @@ export interface RectAnimation {
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환
  */
 export const getCurrentRect = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
 ): QueueRect => {
   return effects
     .filter((effect) => effect.index <= index)
-    .filter((effect): effect is MoveEffect => effect.type === 'rect')
+    .filter((effect): effect is RectEffect => effect.type === 'rect')
     .reduce<QueueRect>((_, effect) => effect.prop, object.rect);
 };
 
 export const getRectAnimation = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
@@ -38,7 +38,7 @@ export const getRectAnimation = (
     position === 'forward' ? index - 1 : index + 1,
   );
 
-  const moveEffect = effects.find((effect): effect is MoveEffect => {
+  const moveEffect = effects.find((effect): effect is RectEffect => {
     const targetIndex = position === 'forward' ? index : index + 1;
     return effect.index === targetIndex && effect.type === 'rect';
   });
@@ -47,7 +47,7 @@ export const getRectAnimation = (
     return null;
   }
 
-  const slicedEffect: MoveEffect =
+  const slicedEffect: RectEffect =
     position === 'backward'
       ? {
           ...moveEffect,

@@ -1,6 +1,6 @@
 import { ScaleEffect, QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 import { QueueScale } from 'model/property';
-import { NormalizedQueueObjectType } from '../../../store/object/model';
 
 export interface ScaleAnimation {
   fromScale: QueueScale;
@@ -8,7 +8,7 @@ export interface ScaleAnimation {
 }
 
 export const getCurrentScale = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
 ): QueueScale => {
@@ -19,7 +19,7 @@ export const getCurrentScale = (
 };
 
 export const getScaleAnimation = (
-  object: NormalizedQueueObjectType,
+  object: QueueObjectType,
   effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',

@@ -1,5 +1,7 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from 'model/document/document';
+import { OBJECT_TYPE } from './meta';
+import { BaseObject } from './base';
 import {
   WithFade,
   WithFill,
@@ -11,17 +13,15 @@ import {
 } from 'model/property';
 
 export interface QueueCircle
-  extends WithRect,
+  extends BaseObject,
+    WithRect,
     WithFade,
     WithFill,
     WithRotation,
     WithScale,
     WithStroke,
     WithText {
-  type: 'circle';
-  index: number;
-  id: EntityId;
-  pageId: EntityId;
+  type: typeof OBJECT_TYPE.CIRCLE;
 }
 
 export const createDefaultCircle = (
@@ -32,7 +32,7 @@ export const createDefaultCircle = (
   const height = 300;
   const objectId = nanoid();
   return {
-    type: 'circle',
+    type: OBJECT_TYPE.CIRCLE,
     pageId: pageId,
     id: objectId,
     index: 0,

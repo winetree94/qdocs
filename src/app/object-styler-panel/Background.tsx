@@ -5,9 +5,10 @@ import { QueueFill } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
+import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import styles from './Background.module.scss';
+import { QueueObjectType } from 'model/object';
 
 export const ObjectStyleBackground = () => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export const ObjectStyleBackground = () => {
       ObjectActions.updateObjects(
         selectedObjects.map<{
           id: EntityId;
-          changes: Partial<NormalizedQueueObjectType>;
+          changes: Partial<QueueObjectType>;
         }>((object) => {
           return {
             id: object.id,

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { QueueEditor } from '../../components/editor/Editor';
-// import { LeftPanel } from '../left-panel/LeftPanel';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
 import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
@@ -13,7 +12,7 @@ import { SettingsActions } from '../../store/settings';
 import { useGlobalKeydown } from 'cdk/hooks/useGlobalKeydown';
 import { EffectActions, EffectSelectors } from 'store/effect';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
-import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
+import { ObjectActions } from 'store/object';
 import { nanoid } from '@reduxjs/toolkit';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
@@ -23,6 +22,7 @@ import { RightPanel } from 'app/right-panel/RightPanel';
 import { PagePanel } from 'app/page-panel/PagePanel';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueEffectType } from 'model/effect';
+import { QueueObjectType } from 'model/object';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -86,7 +86,7 @@ export const RootLayout = () => {
             const raw = await navigator.clipboard.readText();
             const clipboardData = JSON.parse(raw) as ClipboardItemData;
             if (isQueueObjectClipboardModel(clipboardData)) {
-              const pendingObjects: NormalizedQueueObjectType[] = [];
+              const pendingObjects: QueueObjectType[] = [];
               const pendingEffects: QueueEffectType[] = [];
               clipboardData.data.forEach((data) => {
                 const objectId = nanoid();
