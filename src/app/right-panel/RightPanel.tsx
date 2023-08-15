@@ -52,7 +52,6 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
       value: 'testValue1testValue1testValue1',
       label: 'testValue1testValue1testValue1',
       checked: true,
-      initialChecked: false,
       radioColor: QUEUE_UI_COLOR.DEFAULT,
       radioOnChange: (e) => {
         console.log(e.target.value);

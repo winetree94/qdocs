@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useMemo } from 'react';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
@@ -12,23 +12,12 @@ const QueueRadio = ({
   value,
   label,
   checked,
-  initialChecked,
   disabled = false,
   radioOnChange,
   radioSize = QUEUE_UI_SIZE.MEDIUM,
   radioColor = QUEUE_UI_COLOR.DEFAULT,
   useIcon = true,
 }: QueueRadioProps) => {
-  const [isChecked, setIsChecked] = useState<boolean>(!!initialChecked);
-
-  useEffect(() => {
-    setIsChecked(!!initialChecked);
-  }, []);
-
-  useLayoutEffect(() => {
-    setIsChecked(checked);
-  }, [checked]);
-
   const Icon = useMemo(() => {
     return {
       on: (
@@ -48,16 +37,16 @@ const QueueRadio = ({
         />
       ),
     };
-  }, [isChecked, radioSize, radioColor, useIcon]);
+  }, [checked, radioSize, radioColor, useIcon]);
 
   return (
     <>
       <input
-        type="checkbox"
+        type="radio"
         id={id}
         name={name}
         value={value}
-        checked={isChecked}
+        checked={checked}
         disabled={disabled}
         onChange={radioOnChange}
         className={clsx(styles.RadioLabel, styles.RadioInput)}
@@ -70,7 +59,7 @@ const QueueRadio = ({
           styles[radioSize],
           disabled && styles.Disabled,
         )}>
-        {useIcon ? (isChecked ? Icon.on : Icon.off) : null}
+        {useIcon ? (checked ? Icon.on : Icon.off) : null}
         <span className={clsx(styles.RadioChildren)}>{label}</span>
       </label>
     </>

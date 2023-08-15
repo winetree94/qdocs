@@ -9,7 +9,6 @@ export interface QueueRadioProps
   value: any;
   label: any;
   checked?: boolean;
-  initialChecked?: boolean;
   disabled?: boolean;
   radioOnChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   radioSize?: QUEUE_UI_SIZES;

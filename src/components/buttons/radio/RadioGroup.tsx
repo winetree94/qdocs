@@ -27,9 +27,6 @@ const QueueRadioGroup = (prop: { radioData: QueueRadioProps[] }) => {
           name={option.name}
           value={option.value}
           label={option.label}
-          initialChecked={
-            option.initialChecked ? option.initialChecked : !index
-          }
           checked={option.checked}
           disabled={option.disabled}
           radioColor={option.radioColor}
