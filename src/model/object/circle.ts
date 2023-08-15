@@ -44,10 +44,12 @@ export interface QueueCircle
   type: 'circle';
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }
 
 export const createDefaultCircle = (
   documentRect: QueueDocumentRect,
+  pageId: EntityId,
   queueIndex: number,
 ): QueueCircle => {
   const width = 300;
@@ -55,6 +57,7 @@ export const createDefaultCircle = (
   const objectId = nanoid();
   return {
     type: 'circle',
+    pageId: pageId,
     id: objectId,
     index: 0,
     rect: {

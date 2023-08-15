@@ -46,10 +46,12 @@ export interface QueueImage
   type: 'image';
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }
 
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
+  pageId: EntityId,
   queueIndex: number,
   objectId: string,
   // assetId: string,
@@ -60,6 +62,7 @@ export const createDefaultImage = (
   return {
     type: 'image',
     id: objectId,
+    pageId: pageId,
     index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,

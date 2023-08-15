@@ -76,6 +76,10 @@ effectMiddleware.startListening({
   },
 });
 
+/**
+ * @description
+ * 특정 인덱스에서 오브젝트를 제거한 경우 그 이후의 이펙트를 모두 제거하고 delete 이펙트를 삽입
+ */
 effectMiddleware.startListening({
   actionCreator: EffectActions.removeObjectOnQueue,
   effect: (action, api) => {

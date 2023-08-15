@@ -44,10 +44,12 @@ export interface QueueSquare
   type: 'rect';
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }
 
 export const createDefaultSquare = (
   documentRect: QueueDocumentRect,
+  pageId: EntityId,
   queueIndex: number,
 ): QueueSquare => {
   const width = 300;
@@ -56,6 +58,7 @@ export const createDefaultSquare = (
   return {
     type: 'rect',
     id: objectId,
+    pageId: pageId,
     index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,

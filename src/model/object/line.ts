@@ -44,10 +44,12 @@ export interface QueueLine
   type: 'line';
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }
 
 export const createDefaultLine = (
   documentRect: QueueDocumentRect,
+  pageId: EntityId,
   queueIndex: number,
 ): QueueLine => {
   const width = 300;
@@ -56,6 +58,7 @@ export const createDefaultLine = (
   return {
     type: 'line',
     id: objectId,
+    pageId: pageId,
     index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,

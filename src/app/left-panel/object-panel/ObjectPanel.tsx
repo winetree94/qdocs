@@ -31,7 +31,7 @@ import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { createDefaultImage } from 'model/object/image';
-import { nanoid } from '@reduxjs/toolkit';
+import { nanoid, EntityId } from '@reduxjs/toolkit';
 import {
   ImageEncodingMessage,
   IMAGE_ENCODING_STATUS,
@@ -165,6 +165,7 @@ export const ObjectPanel: FunctionComponent = () => {
     (
       createDefaultShape: (
         documentRect: QueueDocumentRect,
+        pageId: EntityId,
         queueIndex: number,
         iconType?: string,
       ) => QueueObjectType,
@@ -172,6 +173,7 @@ export const ObjectPanel: FunctionComponent = () => {
       return (iconClassName) => {
         const figure = createDefaultShape(
           queueDocument.documentRect,
+          settings.pageId,
           settings.queueIndex,
           iconClassName,
         );
@@ -203,7 +205,7 @@ export const ObjectPanel: FunctionComponent = () => {
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
   const createImage = createFigure(
-    (documentRect: QueueDocumentRect, queueIndex: number) => {
+    (documentRect: QueueDocumentRect, pageId: EntityId, queueIndex: number) => {
       const objectId = nanoid();
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
@@ -254,7 +256,7 @@ export const ObjectPanel: FunctionComponent = () => {
 
       // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
       // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
-      return createDefaultImage(documentRect, queueIndex, objectId);
+      return createDefaultImage(documentRect, pageId, queueIndex, objectId);
     },
   );
 

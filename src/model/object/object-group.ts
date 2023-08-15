@@ -43,4 +43,5 @@ export interface QueueObjectGroup
   type: 'objectGroup';
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }

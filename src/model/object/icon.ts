@@ -45,10 +45,12 @@ export interface QueueIcon
   iconType: string;
   index: number;
   id: EntityId;
+  pageId: EntityId;
 }
 
 export const createDefaultIcon = (
   documentRect: QueueDocumentRect,
+  pageId: EntityId,
   queueIndex: number,
   iconType: string,
 ): QueueIcon => {
@@ -59,6 +61,7 @@ export const createDefaultIcon = (
     type: 'icon',
     iconType: iconType,
     id: objectId,
+    pageId: pageId,
     index: 0,
     rect: {
       x: documentRect.width / 2 - width / 2,
