@@ -3,17 +3,17 @@ import { QueueImage, QueueObjectType } from 'model/object';
 
 const addOne = createAction<{
   queueIndex?: number;
-  object: Omit<QueueObjectType, 'index'>;
+  object: QueueObjectType;
 }>('objects/addOne');
 
 const addMany = createAction<{
   queueIndex?: number;
-  objects: Omit<QueueObjectType, 'index'>[];
+  objects: QueueObjectType[];
 }>('objects/addMany');
 
 const updateObject = createAction<{
   id: EntityId;
-  changes: Partial<Omit<QueueObjectType, 'index'>>;
+  changes: Partial<QueueObjectType>;
 }>('objects/updateObject');
 
 /**
@@ -22,7 +22,7 @@ const updateObject = createAction<{
  */
 const updateImageObject = createAction<{
   id: EntityId;
-  changes: Partial<Omit<QueueImage, 'index'>>;
+  changes: Partial<QueueImage>;
 }>('objects/updateObject');
 
 const duplicate = createAction<{
@@ -32,7 +32,7 @@ const duplicate = createAction<{
 const updateObjects = createAction<
   {
     id: EntityId;
-    changes: Partial<Omit<QueueObjectType, 'index'>>;
+    changes: Partial<QueueObjectType>;
   }[]
 >('objects/updateObjects');
 

@@ -1,4 +1,3 @@
-// TODO as const 붙여야함
 export const OBJECT_EFFECT_TYPE = {
   CREATE: 'create',
   FADE: 'fade',

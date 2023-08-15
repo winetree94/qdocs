@@ -7,7 +7,7 @@ export const OBJECT_TYPE = {
   ICON: 'icon',
   LINE: 'line',
   IMAGE: 'image',
-};
+} as const;
 
 export type OBJECT_TYPES = (typeof OBJECT_TYPE)[keyof typeof OBJECT_TYPE];
 
