@@ -1,4 +1,10 @@
-import { BaseHTMLAttributes, useLayoutEffect, useRef, useState } from 'react';
+import {
+  BaseHTMLAttributes,
+  Fragment,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
@@ -147,10 +153,10 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         height={queueDocument.documentRect.height}
         scale={pagePreviewScale.current}>
         {firstQueueObjects.map((firstQueueObject, index) => (
-          <>
-            <StandaloneRect key={index} object={firstQueueObject} />
-            <StandaloneText key={index} {...firstQueueObject} />
-          </>
+          <Fragment key={index}>
+            <StandaloneRect object={firstQueueObject} />
+            <StandaloneText {...firstQueueObject} />
+          </Fragment>
         ))}
       </Scaler>
     </div>
@@ -184,6 +190,7 @@ export const PagePanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
+  console.log(pages);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 

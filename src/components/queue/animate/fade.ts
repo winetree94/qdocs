@@ -1,7 +1,6 @@
-import { FadeEffect } from 'model/effect';
+import { FadeEffect, QueueEffectType } from 'model/effect';
 import { QueueFade } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
-import { NormalizedQueueEffect } from '../../../store/effect';
 
 export interface FadeAnimation {
   fromFade: QueueFade;
@@ -10,7 +9,7 @@ export interface FadeAnimation {
 
 export const getCurrentFade = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
 ): QueueFade => {
   return effects
@@ -21,7 +20,7 @@ export const getCurrentFade = (
 
 export const getFadeAnimation = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): FadeAnimation | null => {

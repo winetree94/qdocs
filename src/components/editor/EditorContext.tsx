@@ -3,9 +3,10 @@ import { nanoid } from '@reduxjs/toolkit';
 import { deviceMetaKey } from 'cdk/device/meta';
 import { QueueContextMenu } from 'components/context-menu/Context';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
+import { QueueEffectType } from 'model/effect';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EffectActions, NormalizedQueueEffect } from 'store/effect';
+import { EffectActions } from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -28,7 +29,7 @@ export const EditorContext = forwardRef<
       const clipboardData = JSON.parse(raw);
       if (isQueueObjectClipboardModel(clipboardData)) {
         const pendingObjects: NormalizedQueueObjectType[] = [];
-        const pendingEffects: NormalizedQueueEffect[] = [];
+        const pendingEffects: QueueEffectType[] = [];
         clipboardData.data.forEach((data) => {
           const objectId = nanoid();
           pendingObjects.push({

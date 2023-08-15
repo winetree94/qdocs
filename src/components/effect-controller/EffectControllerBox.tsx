@@ -14,11 +14,7 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { EffectSelectors } from 'store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import {
-  EffectActions,
-  getEffectEntityKey,
-  NormalizedQueueEffect,
-} from '../../store/effect';
+import { EffectActions, getEffectEntityKey } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
@@ -89,7 +85,7 @@ const createEffect = (
   effectType: QueueEffectType['type'],
   queueIndex: QueueEffectType['index'],
   queueObject: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
 ): QueueEffectType => {
   const baseQueueEffect: BaseQueueEffect<void> = {
     id: nanoid(),

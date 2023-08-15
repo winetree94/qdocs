@@ -1,7 +1,6 @@
-import { RotateEffect } from 'model/effect';
+import { RotateEffect, QueueEffectType } from 'model/effect';
 import { QueueRotate } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
-import { NormalizedQueueEffect } from '../../../store/effect';
 
 export interface RotateAnimation {
   fromRotate: QueueRotate;
@@ -10,7 +9,7 @@ export interface RotateAnimation {
 
 export const getCurrentRotate = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
 ): QueueRotate => {
   return effects
@@ -21,7 +20,7 @@ export const getCurrentRotate = (
 
 export const getRotateAnimation = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): RotateAnimation | null => {

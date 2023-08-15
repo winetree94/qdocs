@@ -166,22 +166,19 @@ export const ObjectPanel: FunctionComponent = () => {
       createDefaultShape: (
         documentRect: QueueDocumentRect,
         pageId: EntityId,
-        queueIndex: number,
         iconType?: string,
       ) => QueueObjectType,
     ): ((iconClassName?: string) => void) => {
       return (iconClassName) => {
         const figure = createDefaultShape(
-          queueDocument.documentRect,
+          queueDocument.document.documentRect,
           settings.pageId,
-          settings.queueIndex,
           iconClassName,
         );
         const object = {
           pageId: settings.pageId,
           ...figure,
         };
-        delete object.effects; // 불필요한 값 스토어에 들어가는 것 방지, create 함수들이 스토어 모델을 반환하도록 개선 필요
         dispatch(HistoryActions.Capture());
         dispatch(
           ObjectActions.addOne({
@@ -205,7 +202,7 @@ export const ObjectPanel: FunctionComponent = () => {
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
   const createImage = createFigure(
-    (documentRect: QueueDocumentRect, pageId: EntityId, queueIndex: number) => {
+    (documentRect: QueueDocumentRect, pageId: EntityId) => {
       const objectId = nanoid();
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
@@ -256,7 +253,7 @@ export const ObjectPanel: FunctionComponent = () => {
 
       // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
       // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
-      return createDefaultImage(documentRect, pageId, queueIndex, objectId);
+      return createDefaultImage(documentRect, pageId, objectId);
     },
   );
 

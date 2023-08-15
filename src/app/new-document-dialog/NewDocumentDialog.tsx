@@ -5,14 +5,14 @@ import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
-import { QueueDocument } from 'model/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { QueueSelect } from 'components/select/Select';
+import { RootState } from 'store';
 
 export interface NewDocumentDialogProps {
-  onSubmit?: (document: QueueDocument) => void;
+  onSubmit?: (document: RootState) => void;
 }
 
 export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
@@ -48,7 +48,7 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
   };
 
   const onDoubleClickItem = async (
-    fetcher: () => Promise<QueueDocument>,
+    fetcher: () => Promise<RootState>,
   ): Promise<void> => {
     if (fetching) {
       return;

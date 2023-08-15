@@ -1,7 +1,6 @@
-import { MoveEffect } from 'model/effect';
+import { MoveEffect, QueueEffectType } from 'model/effect';
 import { QueueRect } from 'model/property';
 import { NormalizedQueueObjectType } from '../../../store/object/model';
-import { NormalizedQueueEffect } from '../../../store/effect';
 
 export interface RectAnimation {
   fromRect: QueueRect;
@@ -14,7 +13,7 @@ export interface RectAnimation {
  */
 export const getCurrentRect = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
 ): QueueRect => {
   return effects
@@ -25,7 +24,7 @@ export const getCurrentRect = (
 
 export const getRectAnimation = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): RectAnimation | null => {

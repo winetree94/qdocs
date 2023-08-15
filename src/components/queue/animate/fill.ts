@@ -1,7 +1,6 @@
 import { hexToRgb, rgbToFullFormHex } from 'components/queue/color/convertHex';
-import { FillEffect, OBJECT_EFFECT_META } from 'model/effect';
+import { FillEffect, OBJECT_EFFECT_META, QueueEffectType } from 'model/effect';
 import { QueueFill } from 'model/property';
-import { NormalizedQueueEffect } from 'store/effect';
 import { NormalizedQueueObjectType } from 'store/object';
 
 export interface FillAnimation {
@@ -11,7 +10,7 @@ export interface FillAnimation {
 
 export const getCurrentFill = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
 ) => {
   return effects
@@ -24,7 +23,7 @@ export const getCurrentFill = (
 
 export const getFillAnimation = (
   object: NormalizedQueueObjectType,
-  effects: NormalizedQueueEffect[],
+  effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',
 ): FillAnimation | null => {

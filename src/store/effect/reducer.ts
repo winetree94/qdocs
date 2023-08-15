@@ -1,13 +1,13 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { NormalizedQueueEffect } from './model';
+import { QueueEffectType } from 'model/effect';
 import { DocumentActions } from '../document';
 import { EffectActions } from './actions';
 
 export const getEffectEntityKey = (
-  effect: Pick<NormalizedQueueEffect, 'index' | 'objectId' | 'type'>,
+  effect: Pick<QueueEffectType, 'index' | 'objectId' | 'type'>,
 ) => `${effect.objectId}-${effect.index}-${effect.type}`;
 
-export const effectEntityAdapter = createEntityAdapter<NormalizedQueueEffect>({
+export const effectEntityAdapter = createEntityAdapter<QueueEffectType>({
   selectId: getEffectEntityKey,
 });
 
@@ -20,26 +20,7 @@ export const effectSlice = createSlice({
       if (!action.payload) {
         return effectSlice.getInitialState();
       }
-      const normalized = action.payload.pages.reduce<NormalizedQueueEffect[]>(
-        (result, page) => {
-          page.objects.forEach((object) => {
-            object.effects.forEach((effect) => {
-              result.push({
-                objectId: object.id,
-                duration: effect.duration,
-                index: effect.index,
-                prop: effect.prop,
-                timing: effect.timing,
-                type: effect.type,
-                ...effect,
-              });
-            });
-          });
-          return result;
-        },
-        [],
-      );
-      return effectEntityAdapter.setAll(state, normalized);
+      return action.payload.effects;
     });
 
     builder.addCase(EffectActions.addEffect, (state, action) => {

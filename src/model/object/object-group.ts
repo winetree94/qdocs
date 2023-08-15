@@ -1,16 +1,4 @@
 import {
-  WithEffects,
-  FadeEffect,
-  FillEffect,
-  MoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  CreateEffect,
-  RemoveEffect,
-  StrokeEffect,
-  TextEffect,
-} from 'model/effect';
-import {
   WithFade,
   WithFill,
   WithRect,
@@ -28,18 +16,7 @@ export interface QueueObjectGroup
     WithRotation,
     WithScale,
     WithText,
-    WithImage,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithImage {
   type: 'objectGroup';
   index: number;
   id: EntityId;

@@ -1,18 +1,6 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import {
-  WithEffects,
-  FadeEffect,
-  FillEffect,
-  MoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  CreateEffect,
-  RemoveEffect,
-  StrokeEffect,
-  TextEffect,
-} from 'model/effect';
-import {
   WithFade,
   WithFill,
   WithRect,
@@ -29,18 +17,7 @@ export interface QueueIcon
     WithScale,
     WithRotation,
     WithStroke,
-    WithText,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithText {
   type: 'icon';
   iconType: string;
   index: number;
@@ -51,7 +28,6 @@ export interface QueueIcon
 export const createDefaultIcon = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  queueIndex: number,
   iconType: string,
 ): QueueIcon => {
   const width = 300;
@@ -95,17 +71,5 @@ export const createDefaultIcon = (
       dasharray: '',
       width: 0,
     },
-    effects: [
-      {
-        id: nanoid(),
-        type: 'create',
-        timing: 'linear',
-        objectId: objectId,
-        duration: 0,
-        delay: 0,
-        index: queueIndex,
-        prop: undefined,
-      },
-    ],
   };
 };

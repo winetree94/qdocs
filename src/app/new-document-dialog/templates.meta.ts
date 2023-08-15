@@ -1,4 +1,3 @@
-import { QueueDocument } from 'model/document';
 import animatedTextUrl from 'assets/templates/animated-text.que';
 import playUrl from 'assets/templates/play.que';
 import colorSampleUrl from 'assets/templates/color-sample.que';
@@ -6,34 +5,52 @@ import uxFlowUrl from 'assets/templates/ux-flow.que';
 import wave from 'assets/templates/wave.que';
 import imageTest from 'assets/templates/image-test.que';
 import { nanoid } from '@reduxjs/toolkit';
+import { RootState } from 'store';
 
 export interface TemplateMeta {
   name: string;
   preview: string;
-  getTemplate(): Promise<QueueDocument>;
+  getTemplate(): Promise<RootState>;
 }
 
 export const TEMPLATES: TemplateMeta[] = [
   {
     name: 'Empty',
     preview: '',
-    getTemplate: () =>
-      Promise.resolve({
-        id: nanoid(),
-        documentName: 'Untitled Document',
-        documentRect: {
-          width: 1920,
-          height: 1080,
-          fill: '#ffffff',
-        },
-        pages: [
-          {
-            id: nanoid(),
-            pageName: 'Page-1',
-            objects: [],
+    getTemplate: () => {
+      const documentId = nanoid();
+      const initPageId = nanoid();
+      return Promise.resolve({
+        document: {
+          id: documentId,
+          documentName: 'Untitled Document',
+          documentRect: {
+            width: 1920,
+            height: 1080,
+            fill: '#ffffff',
           },
-        ],
-      }),
+        },
+        pages: {
+          ids: [initPageId],
+          entities: {
+            [initPageId]: {
+              id: initPageId,
+              documentId: documentId,
+              pageName: 'Page-1',
+              index: 0,
+            },
+          },
+        },
+        objects: {
+          entities: {},
+          ids: [],
+        },
+        effects: {
+          entities: {},
+          ids: [],
+        },
+      });
+    },
   },
   {
     name: 'UX Flow',

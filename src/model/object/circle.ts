@@ -1,18 +1,6 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import {
-  CreateEffect,
-  FadeEffect,
-  FillEffect,
-  MoveEffect,
-  RemoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  StrokeEffect,
-  TextEffect,
-  WithEffects,
-} from 'model/effect';
-import {
   WithFade,
   WithFill,
   WithRect,
@@ -29,18 +17,7 @@ export interface QueueCircle
     WithRotation,
     WithScale,
     WithStroke,
-    WithText,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithText {
   type: 'circle';
   index: number;
   id: EntityId;
@@ -50,7 +27,6 @@ export interface QueueCircle
 export const createDefaultCircle = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  queueIndex: number,
 ): QueueCircle => {
   const width = 300;
   const height = 300;
@@ -92,17 +68,5 @@ export const createDefaultCircle = (
       horizontalAlign: 'center',
       verticalAlign: 'middle',
     },
-    effects: [
-      {
-        id: nanoid(),
-        type: 'create',
-        timing: 'linear',
-        objectId: objectId,
-        duration: 0,
-        delay: 0,
-        index: queueIndex,
-        prop: undefined,
-      },
-    ],
   };
 };

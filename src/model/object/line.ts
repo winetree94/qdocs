@@ -1,18 +1,6 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import {
-  WithEffects,
-  FadeEffect,
-  FillEffect,
-  MoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  CreateEffect,
-  RemoveEffect,
-  StrokeEffect,
-  TextEffect,
-} from 'model/effect';
-import {
   WithFade,
   WithFill,
   WithRect,
@@ -29,18 +17,7 @@ export interface QueueLine
     WithRotation,
     WithScale,
     WithStroke,
-    WithText,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithText {
   type: 'line';
   index: number;
   id: EntityId;
@@ -50,7 +27,6 @@ export interface QueueLine
 export const createDefaultLine = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  queueIndex: number,
 ): QueueLine => {
   const width = 300;
   const height = 300;
@@ -92,17 +68,5 @@ export const createDefaultLine = (
       horizontalAlign: 'center',
       verticalAlign: 'middle',
     },
-    effects: [
-      {
-        id: nanoid(),
-        type: 'create',
-        timing: 'linear',
-        objectId,
-        duration: 0,
-        delay: 0,
-        index: queueIndex,
-        prop: undefined,
-      },
-    ],
   };
 };

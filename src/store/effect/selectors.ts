@@ -4,7 +4,7 @@ import { ObjectSelectors } from 'store/object/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { effectEntityAdapter } from './reducer';
 import { NormalizedQueueObjectType } from '../object/model';
-import { NormalizedQueueEffect } from './model';
+import { QueueEffectType } from 'model/effect';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -56,7 +56,7 @@ const allByPageId = createSelector(
  * 오브젝트의 이펙트 목록을 조회할 경우 사용
  */
 const groupByObjectId = createSelector([all], (effects) => {
-  return effects.reduce<Record<EntityId, NormalizedQueueEffect[]>>(
+  return effects.reduce<Record<EntityId, QueueEffectType[]>>(
     (result, effect) => {
       if (!result[effect.objectId]) {
         result[effect.objectId] = [];
@@ -74,7 +74,7 @@ const groupByObjectId = createSelector([all], (effects) => {
  * Effect Index 별로 Effect 의 존재 여부를 확인할 때 사용
  */
 const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
-  const map = effects.reduce<NormalizedQueueEffect[][]>((result, effect) => {
+  const map = effects.reduce<QueueEffectType[][]>((result, effect) => {
     if (!result[effect.index]) {
       result[effect.index] = [];
     }

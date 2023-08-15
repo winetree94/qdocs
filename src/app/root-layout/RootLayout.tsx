@@ -11,11 +11,7 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { SettingsActions } from '../../store/settings';
 import { useGlobalKeydown } from 'cdk/hooks/useGlobalKeydown';
-import {
-  EffectActions,
-  EffectSelectors,
-  NormalizedQueueEffect,
-} from 'store/effect';
+import { EffectActions, EffectSelectors } from 'store/effect';
 import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { NormalizedQueueObjectType, ObjectActions } from 'store/object';
 import { nanoid } from '@reduxjs/toolkit';
@@ -26,6 +22,7 @@ import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
 import { RightPanel } from 'app/right-panel/RightPanel';
 import { PagePanel } from 'app/page-panel/PagePanel';
 import { Timeline } from 'components/timeline/Timeline';
+import { QueueEffectType } from 'model/effect';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -90,7 +87,7 @@ export const RootLayout = () => {
             const clipboardData = JSON.parse(raw) as ClipboardItemData;
             if (isQueueObjectClipboardModel(clipboardData)) {
               const pendingObjects: NormalizedQueueObjectType[] = [];
-              const pendingEffects: NormalizedQueueEffect[] = [];
+              const pendingEffects: QueueEffectType[] = [];
               clipboardData.data.forEach((data) => {
                 const objectId = nanoid();
                 pendingObjects.push({

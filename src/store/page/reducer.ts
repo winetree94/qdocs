@@ -74,14 +74,7 @@ export const pagesSlice = createSlice({
         return pagesSlice.getInitialState();
       }
 
-      return pageEntityAdapter.setAll(state, {
-        ...action.payload.pages.map((page, index) => ({
-          documentId: action.payload.id,
-          pageName: page.pageName,
-          index: index,
-          id: page.id,
-        })),
-      });
+      return action.payload.pages;
     });
   },
 });

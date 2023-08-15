@@ -53,7 +53,24 @@ export const store = configureStore({
     ),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+/**
+ * @description
+ * 루트 스토어 모델
+ */
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
+/**
+ * @description
+ * 루트 스토어에서 사용자 데이터가 없는 모델
+ * 문서 저장 시 사용되는 모델입니다.
+ */
+export type DocumentState = Omit<
+  RootState,
+  'history' | 'preferences' | 'settings'
+>;
+
+/**
+ * @description
+ * Dispatch 를 위한 모델
+ */
 export type AppDispatch = typeof store.dispatch;

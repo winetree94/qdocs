@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import styles from './Toolbar.module.scss';
 import clsx from 'clsx';
-import { QueueDocument } from 'model/document';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { useAlertDialog } from 'components/alert-dialog/AlertDialog';
@@ -21,6 +20,7 @@ import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
+import { RootState } from 'store';
 
 export interface ToolbarModel {
   key: string;
@@ -90,7 +90,7 @@ export const QueueToolbar = () => {
         const fileReader = new FileReader();
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
-          const document = JSON.parse(result) as QueueDocument;
+          const document = JSON.parse(result) as RootState;
           dispatch(DocumentActions.loadDocument(document));
         };
         fileReader.readAsText(file);
@@ -132,7 +132,7 @@ export const QueueToolbar = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${serializedDocumentModel.documentName}.que`;
+    a.download = `${serializedDocumentModel.document.documentName}.que`;
     a.click();
     URL.revokeObjectURL(url);
   };

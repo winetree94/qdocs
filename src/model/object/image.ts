@@ -1,17 +1,5 @@
-import { EntityId, nanoid } from '@reduxjs/toolkit';
+import { EntityId } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
-import {
-  WithEffects,
-  FadeEffect,
-  FillEffect,
-  MoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  CreateEffect,
-  RemoveEffect,
-  StrokeEffect,
-  TextEffect,
-} from 'model/effect';
 import {
   WithRect,
   WithFade,
@@ -31,18 +19,7 @@ export interface QueueImage
     WithScale,
     WithStroke,
     WithText,
-    WithImage,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithImage {
   type: 'image';
   index: number;
   id: EntityId;
@@ -52,7 +29,6 @@ export interface QueueImage
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  queueIndex: number,
   objectId: string,
   // assetId: string,
 ): QueueImage => {
@@ -101,17 +77,5 @@ export const createDefaultImage = (
       src: '',
       alt: '',
     },
-    effects: [
-      {
-        id: nanoid(),
-        type: 'create',
-        timing: 'linear',
-        objectId: objectId,
-        duration: 0,
-        delay: 0,
-        index: queueIndex,
-        prop: undefined,
-      },
-    ],
   };
 };

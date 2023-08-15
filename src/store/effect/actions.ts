@@ -1,13 +1,11 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import { NormalizedQueueEffect } from './model';
+import { QueueEffectType } from 'model/effect';
 
-const addEffect = createAction<NormalizedQueueEffect>('effect/addEffect');
+const addEffect = createAction<QueueEffectType>('effect/addEffect');
 
-const upsertEffect = createAction<NormalizedQueueEffect>('effect/upsertEffect');
+const upsertEffect = createAction<QueueEffectType>('effect/upsertEffect');
 
-const upsertEffects = createAction<NormalizedQueueEffect[]>(
-  'effect/upsertEffects',
-);
+const upsertEffects = createAction<QueueEffectType[]>('effect/upsertEffects');
 
 const removeMany = createAction<EntityId[]>('effect/removeMany');
 

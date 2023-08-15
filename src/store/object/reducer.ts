@@ -18,22 +18,7 @@ export const objectsSlice = createSlice({
       if (!action.payload) {
         return objectsSlice.getInitialState();
       }
-      const normalized = action.payload.pages.reduce<
-        NormalizedQueueObjectType[]
-      >((result, page) => {
-        page.objects
-          .sort((a, b) => a.index - b.index)
-          .forEach((object) => {
-            const normalizedObject = {
-              pageId: page.id,
-              ...object,
-            };
-            delete normalizedObject.effects; // 레거시 셀렉터에 의해서 값이 들어가는 것을 방지
-            result.push(normalizedObject);
-          });
-        return result;
-      }, []);
-      return objectEntityAdapter.setAll(state, normalized);
+      return action.payload.objects;
     });
 
     /**

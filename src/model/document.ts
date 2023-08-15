@@ -12,10 +12,3 @@ export interface QueueDocumentPage {
   pageName: string;
   objects: QueueObjectType[];
 }
-
-export interface QueueDocument {
-  id: EntityId;
-  documentName: string;
-  documentRect: QueueDocumentRect;
-  pages: QueueDocumentPage[];
-}

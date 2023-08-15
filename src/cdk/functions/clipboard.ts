@@ -1,7 +1,7 @@
 import { QueueObjectClipboardModel } from 'model/clipboard/base';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
-import { NormalizedQueueEffect } from 'store/effect';
 import { NormalizedQueueObjectType } from 'store/object';
+import { QueueEffectType } from 'model/effect';
 
 export const copy = (text: string): void => {
   const el = document.createElement('textarea'); // Create a <textarea> element
@@ -27,7 +27,7 @@ export const copy = (text: string): void => {
 export const copyObjects = (
   data: {
     object: NormalizedQueueObjectType;
-    effects: NormalizedQueueEffect[];
+    effects: QueueEffectType[];
   }[],
 ): void => {
   const model: QueueObjectClipboardModel = {

@@ -5,7 +5,7 @@ import { EffectSelectors } from './selectors';
 import { ObjectActions } from '../object';
 import { EffectActions } from './actions';
 import { SettingSelectors } from 'store/settings';
-import { NormalizedQueueEffect } from './model';
+import { QueueEffectType } from 'model/effect';
 
 export const effectMiddleware = createTypedListenerMiddleware();
 
@@ -86,7 +86,7 @@ effectMiddleware.startListening({
     const state = api.getState();
     const settings = SettingSelectors.settings(state);
     const effects = EffectSelectors.all(state).reduce<{
-      [key: string]: NormalizedQueueEffect[];
+      [key: string]: QueueEffectType[];
     }>((result, effect) => {
       if (!result[effect.objectId]) {
         result[effect.objectId] = [];
@@ -94,8 +94,8 @@ effectMiddleware.startListening({
       result[effect.objectId].push(effect);
       return result;
     }, {});
-    const pendingInsert: NormalizedQueueEffect[] = [];
-    const pendingRemove: NormalizedQueueEffect[] = [];
+    const pendingInsert: QueueEffectType[] = [];
+    const pendingRemove: QueueEffectType[] = [];
     action.payload.ids.forEach((id) => {
       const objectEffects = effects[id];
       objectEffects.forEach((effect) => {

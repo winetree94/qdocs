@@ -13,15 +13,7 @@ export const documentSlice = createSlice({
         if (!action.payload) {
           return null;
         }
-        return {
-          id: action.payload.id,
-          documentName: action.payload.documentName,
-          documentRect: {
-            fill: action.payload.documentRect.fill,
-            width: action.payload.documentRect.width,
-            height: action.payload.documentRect.height,
-          },
-        };
+        return action.payload.document;
       },
     );
 

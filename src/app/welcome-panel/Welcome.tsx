@@ -2,13 +2,13 @@ import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import clsx from 'clsx';
 import { QueueButton } from 'components/buttons/button/Button';
 import { QueueH2 } from 'components/head/Head';
-import { QueueDocument } from 'model/document';
 import { useAppDispatch } from 'store/hooks';
 import styles from './Welcome.module.scss';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
+import { RootState } from 'store';
 
 export const Welcome = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ export const Welcome = () => {
         const fileReader = new FileReader();
         fileReader.onload = (e): void => {
           const result = e.target?.result as string;
-          const document = JSON.parse(result) as QueueDocument;
+          const document = JSON.parse(result) as RootState;
           dispatch(DocumentActions.loadDocument(document));
         };
         fileReader.readAsText(file);

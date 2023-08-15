@@ -41,13 +41,14 @@ export const documentSettingsSlice = createSlice({
     builder.addCase(
       DocumentActions.loadDocument,
       (state, action): QueueDocumentSettings => {
+        console.log(action);
         if (!action.payload) {
           return { ...initialState };
         }
         return {
           ...initialState,
-          documentId: action.payload.id,
-          pageId: action.payload.pages[0].id,
+          documentId: action.payload.document.id,
+          pageId: action.payload.pages.ids[0],
         };
       },
     );

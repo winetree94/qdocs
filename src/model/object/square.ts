@@ -1,17 +1,5 @@
 import { QueueDocumentRect } from 'model/document';
 import {
-  CreateEffect,
-  FadeEffect,
-  WithEffects,
-  FillEffect,
-  MoveEffect,
-  RotateEffect,
-  ScaleEffect,
-  RemoveEffect,
-  StrokeEffect,
-  TextEffect,
-} from 'model/effect';
-import {
   WithFade,
   WithFill,
   WithRect,
@@ -29,18 +17,7 @@ export interface QueueSquare
     WithRotation,
     WithScale,
     WithStroke,
-    WithText,
-    WithEffects<
-      | CreateEffect
-      | FadeEffect
-      | FillEffect
-      | MoveEffect
-      | RemoveEffect
-      | RotateEffect
-      | StrokeEffect
-      | ScaleEffect
-      | TextEffect
-    > {
+    WithText {
   type: 'rect';
   index: number;
   id: EntityId;
@@ -50,7 +27,6 @@ export interface QueueSquare
 export const createDefaultSquare = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  queueIndex: number,
 ): QueueSquare => {
   const width = 300;
   const height = 300;
@@ -92,17 +68,5 @@ export const createDefaultSquare = (
       horizontalAlign: 'center',
       verticalAlign: 'middle',
     },
-    effects: [
-      {
-        id: nanoid(),
-        type: 'create',
-        timing: 'linear',
-        objectId: objectId,
-        duration: 0,
-        delay: 0,
-        index: queueIndex,
-        prop: undefined,
-      },
-    ],
   };
 };

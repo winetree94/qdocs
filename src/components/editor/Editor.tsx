@@ -23,10 +23,10 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
 import { EffectSelectors } from 'store/effect/selectors';
-import { MoveEffect, RotateEffect } from 'model/effect';
+import { MoveEffect, RotateEffect, QueueEffectType } from 'model/effect';
 import { ObjectSelectors } from 'store/object/selectors';
 import { NormalizedQueueObjectType } from '../../store/object/model';
-import { EffectActions, NormalizedQueueEffect } from '../../store/effect';
+import { EffectActions } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
 import { ObjectActions } from '../../store/object';
@@ -54,7 +54,7 @@ export const QueueEditor = () => {
   }>({});
 
   const effectsGroupByObjectId = effects.reduce<{
-    [id: string]: NormalizedQueueEffect[];
+    [id: string]: QueueEffectType[];
   }>((result, effect) => {
     if (!result[effect.objectId]) {
       result[effect.objectId] = [];
@@ -87,7 +87,7 @@ export const QueueEditor = () => {
   );
 
   const queueEffectsGroupByObjectId = currentQueueEffects.reduce<{
-    [id: string]: NormalizedQueueEffect[];
+    [id: string]: QueueEffectType[];
   }>((result, effect) => {
     if (!result[effect.objectId]) {
       result[effect.objectId] = [];
@@ -194,7 +194,7 @@ export const QueueEditor = () => {
 
     const updateModel = settings.selectedObjectIds.reduce<{
       objects: { id: EntityId; changes: { rect: QueueRect } }[];
-      effects: NormalizedQueueEffect[];
+      effects: QueueEffectType[];
     }>(
       (result, id) => {
         if (
