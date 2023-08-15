@@ -1,13 +1,9 @@
 import { EntityId } from '@reduxjs/toolkit';
 import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
-import { QueueObjectType } from 'model/object';
 
 export interface BaseQueueEffect<T> {
   id: EntityId;
-  type:
-    | keyof Omit<QueueObjectType, 'effects' | 'type' | 'id'>
-    | 'create'
-    | 'remove';
+  type: string;
   objectId: EntityId;
   index: number;
   delay: number;
