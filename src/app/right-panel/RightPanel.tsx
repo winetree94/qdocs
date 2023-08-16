@@ -7,9 +7,11 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
 import QueueTab from 'components/tabs/Tab';
 import { LeftPanel } from 'app/left-panel/LeftPanel';
-import QueueRadio from '../../components/buttons/radio/Radio';
 import QueueRadioGroup from '../../components/buttons/radio/RadioGroup';
 import { QueueRadioProps } from '../../components/buttons/radio/Radio.model';
+import { useAppSelector } from 'store/hooks';
+import { SettingSelectors } from 'store/settings';
+import { supportImageAll, supportRectAll } from 'model/support';
 
 export interface RightPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   hello?: 'world';
@@ -20,6 +22,8 @@ const inputValueChanges = (e: number) => {
 };
 
 export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
+  const objects = useAppSelector(SettingSelectors.selectedObjects);
+
   const testCheckboxData = [
     {
       id: 'id1',
@@ -109,6 +113,20 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
               content: (
                 <>
                   <div className="tw-flex">
+                    {supportImageAll(objects) && (
+                      <div>
+                        <div>Image 지원</div>
+                        <div>{objects[0].image.alt}</div>
+                      </div>
+                    )}
+
+                    {supportRectAll(objects) && (
+                      <div>
+                        <div>Rect 지원</div>
+                        <div>{objects[0].rect.height}</div>
+                      </div>
+                    )}
+
                     <QueueControlInputBoxComponent.Wrapper
                       color="grey"
                       variant="filled">
