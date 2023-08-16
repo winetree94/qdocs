@@ -1,4 +1,4 @@
-import { OBJECT_TYPE, QueueImage, QueueObjectType } from 'model/object';
+import { QueueObjectType } from 'model/object';
 import { StandaloneCircle } from 'components/queue/standaloneRects/Circle';
 import { StandaloneIcon } from 'components/queue/standaloneRects/Icon';
 import { StandaloneImage } from 'components/queue/standaloneRects/Image';
@@ -10,18 +10,18 @@ import {
 } from 'store/object';
 
 export interface StandaloneRectProps {
-  object: QueueObjectType | QueueImage;
+  object: QueueObjectType;
 }
 
 export const StandaloneRect = ({ object }: StandaloneRectProps) => {
   switch (object.type) {
-    case OBJECT_TYPE.RECT:
+    case 'rect':
       return <StandaloneSquare objectId={object.id} {...object} />;
-    case OBJECT_TYPE.CIRCLE:
+    case 'circle':
       return <StandaloneCircle objectId={object.id} {...object} />;
-    case OBJECT_TYPE.LINE:
+    case 'line':
       return <StandaloneLine objectId={object.id} {...object} />;
-    case OBJECT_TYPE.ICON: {
+    case 'icon': {
       const isIconObject = isNormalizedQueueIconObjectType(object);
 
       if (!isIconObject) {
@@ -31,7 +31,7 @@ export const StandaloneRect = ({ object }: StandaloneRectProps) => {
       return <StandaloneIcon iconType={object.iconType} {...object} />;
     }
 
-    case OBJECT_TYPE.IMAGE: {
+    case 'image': {
       const isImageObject = isNormalizedQueueImageObjectType(object);
 
       if (!isImageObject) {

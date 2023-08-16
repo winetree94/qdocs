@@ -1,13 +1,14 @@
 import {
   BaseHTMLAttributes,
   Fragment,
-  useLayoutEffect,
+  useEffect,
   useRef,
   useState,
 } from 'react';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
+import { throttle } from 'lodash';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
 import {
@@ -118,15 +119,31 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
   );
 
   const pagePreviewRef = useRef<HTMLDivElement>(null);
-  const pagePreviewScale = useRef(0);
 
-  useLayoutEffect(() => {
+  const [pagePreviewScale, setPagePreviewScale] = useState(
+    (pagePreviewRef.current?.offsetWidth || 1) /
+      (queueDocument.documentRect.width || 1),
+  );
+
+  const throttled = useRef(
+    throttle<ResizeObserverCallback>(() => {
+      setPagePreviewScale(
+        pagePreviewRef.current.offsetWidth / queueDocument.documentRect.width,
+      );
+    }, 33),
+  );
+
+  useEffect(() => {
     if (!pagePreviewRef.current) {
       return;
     }
 
-    pagePreviewScale.current =
-      pagePreviewRef.current.offsetWidth / queueDocument.documentRect.width;
+    const resizeObserver = new ResizeObserver(throttled.current);
+    resizeObserver.observe(pagePreviewRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   return (
@@ -151,7 +168,7 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         className="tw-p-0"
         width={queueDocument.documentRect.width}
         height={queueDocument.documentRect.height}
-        scale={pagePreviewScale.current}>
+        scale={pagePreviewScale}>
         {firstQueueObjects.map((firstQueueObject, index) => (
           <Fragment key={index}>
             <StandaloneRect object={firstQueueObject} />
@@ -190,7 +207,6 @@ export const PagePanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
-  console.log(pages);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
