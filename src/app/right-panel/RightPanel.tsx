@@ -116,14 +116,14 @@ export const RightPanel = ({ hello, ...props }: RightPanelProps) => {
                     {supportImageAll(objects) && (
                       <div>
                         <div>Image 지원</div>
-                        <div>{objects[0].image.alt}</div>
+                        <div>{objects[0]?.image?.alt}</div>
                       </div>
                     )}
 
                     {supportRectAll(objects) && (
                       <div>
                         <div>Rect 지원</div>
-                        <div>{objects[0].rect.height}</div>
+                        <div>{objects[0]?.rect?.height}</div>
                       </div>
                     )}
 
