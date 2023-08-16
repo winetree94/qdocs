@@ -1,4 +1,4 @@
-export const OBJECT_PROPERTY_META = {
+export const OBJECT_PROPERTY_TYPE = {
   FADE: 'fade',
   FILL: 'fill',
   RECT: 'rect',
@@ -8,3 +8,6 @@ export const OBJECT_PROPERTY_META = {
   TEXT: 'text',
   IMAGE: 'image',
 } as const;
+
+export type OBJECT_PROPERTY_TYPES =
+  (typeof OBJECT_PROPERTY_TYPE)[keyof typeof OBJECT_PROPERTY_TYPE];

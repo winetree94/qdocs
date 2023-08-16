@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
 
 export type QueueRect = {
   x: number;
@@ -8,5 +8,5 @@ export type QueueRect = {
 };
 
 export interface WithRect {
-  [OBJECT_PROPERTY_META.RECT]: QueueRect;
+  [OBJECT_PROPERTY_TYPE.RECT]: QueueRect;
 }

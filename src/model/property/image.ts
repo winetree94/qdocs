@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
 
 export interface QueueImage {
   assetId: string;
@@ -8,5 +8,5 @@ export interface QueueImage {
 }
 
 export interface WithImage {
-  [OBJECT_PROPERTY_META.IMAGE]: QueueImage;
+  [OBJECT_PROPERTY_TYPE.IMAGE]: QueueImage;
 }

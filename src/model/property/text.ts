@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
 
 export interface QueueText {
   text: string;
@@ -10,5 +10,5 @@ export interface QueueText {
 }
 
 export interface WithText {
-  [OBJECT_PROPERTY_META.TEXT]: QueueText;
+  [OBJECT_PROPERTY_TYPE.TEXT]: QueueText;
 }

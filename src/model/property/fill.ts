@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
 
 export interface QueueFill {
   color: string;
@@ -6,5 +6,5 @@ export interface QueueFill {
 }
 
 export interface WithFill {
-  [OBJECT_PROPERTY_META.FILL]: QueueFill;
+  [OBJECT_PROPERTY_TYPE.FILL]: QueueFill;
 }

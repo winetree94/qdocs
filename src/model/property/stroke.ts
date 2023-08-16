@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_META } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
 
 export type QueueStroke = {
   dasharray: string;
@@ -7,5 +7,5 @@ export type QueueStroke = {
 };
 
 export interface WithStroke {
-  [OBJECT_PROPERTY_META.STROKE]: QueueStroke;
+  [OBJECT_PROPERTY_TYPE.STROKE]: QueueStroke;
 }

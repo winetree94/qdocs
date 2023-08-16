@@ -4,7 +4,7 @@ import { EffectControllerRect } from 'components/effect-controller/EffectControl
 import { EffectControllerRotate } from 'components/effect-controller/EffectControllerRotate';
 import { EffectControllerScale } from 'components/effect-controller/EffectControllerScale';
 import { QueueEffectType } from 'model/effect';
-import { OBJECT_PROPERTY_META } from 'model/property';
+import { OBJECT_PROPERTY_TYPE } from 'model/property';
 import { ReactElement } from 'react';
 
 export type EffectControllerIndexProps = {
@@ -15,15 +15,15 @@ export const EffectControllerIndex = ({
   effectType,
 }: EffectControllerIndexProps): ReactElement | null => {
   switch (effectType) {
-    case OBJECT_PROPERTY_META.FADE:
+    case OBJECT_PROPERTY_TYPE.FADE:
       return <EffectControllerFade />;
-    case OBJECT_PROPERTY_META.FILL:
+    case OBJECT_PROPERTY_TYPE.FILL:
       return <EffectControllerFill />;
-    case OBJECT_PROPERTY_META.RECT:
+    case OBJECT_PROPERTY_TYPE.RECT:
       return <EffectControllerRect />;
-    case OBJECT_PROPERTY_META.ROTATE:
+    case OBJECT_PROPERTY_TYPE.ROTATE:
       return <EffectControllerRotate />;
-    case OBJECT_PROPERTY_META.SCALE:
+    case OBJECT_PROPERTY_TYPE.SCALE:
       return <EffectControllerScale />;
     default:
       return null;
