@@ -71,5 +71,6 @@
   "page-panel.move-page-to-before": "Move to slide to the top",
   "page-panel.move-page-to-after": "Move to slide to the bottom",
   "page-panel.add-page-to-before": "Add slide to top",
-  "bottom-panel.add-page-to-after": "Add slide to bottom"
+  "page-panel.add-page-to-after": "Add slide to bottom",
+  "page-panel.duplicate-slide-and-content": "Duplicate Slide and Content"
 }

@@ -7,6 +7,10 @@ export const StandaloneText = ({
   scale,
   text,
 }: StandaloneTextObject) => {
+  if (!text) {
+    return null;
+  }
+
   const verticalAlign =
     text.verticalAlign === 'middle'
       ? 'center'

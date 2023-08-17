@@ -74,3 +74,26 @@ objectMiddleware.startListening({
     );
   },
 });
+
+objectMiddleware.startListening({
+  actionCreator: PageActions.duplicatePageWithLastQueueObjects,
+  effect: (action, api) => {
+    const state = api.getState();
+    const effects = EffectSelectors.allEffectedObjectsMap(state);
+
+    const newModels = action.payload.objectIds.map<QueueObjectType>(
+      (objectId) => ({
+        ...effects[objectId],
+        id: nanoid(),
+        pageId: action.payload.newId,
+      }),
+    );
+
+    api.dispatch(
+      ObjectActions.addMany({
+        objects: newModels,
+        queueIndex: 0,
+      }),
+    );
+  },
+});

@@ -26,11 +26,12 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueButton } from 'components/buttons/button/Button';
 import { QueueContextMenu } from 'components/context-menu/Context';
-import { ObjectSelectors } from 'store/object';
+import { ObjectActions, ObjectSelectors } from 'store/object';
 import { EffectSelectors } from 'store/effect';
 import { StandaloneRect } from 'components/queue/standaloneRects';
 import { Scaler } from 'components/scaler/Scaler';
 import { StandaloneText } from 'components/queue/standaloneRects/Text';
+import { OBJECT_EFFECT_TYPE } from 'model/effect';
 
 const PagePanelRoot = ({
   className,
@@ -207,6 +208,8 @@ export const PagePanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
+  const objects = useAppSelector(ObjectSelectors.all);
+  const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
@@ -257,7 +260,36 @@ export const PagePanel = () => {
     );
   };
 
-  const copyPage = (index: number): void => {
+  const duplicatePageWithLastQueue = (pageId: EntityId, index: number) => {
+    const newId = nanoid();
+
+    // effects를 순회하면서 OBJECT_EFFECT_TYPE.REMOVE가 없는 effects를 찾는다.
+    const queueObjectIdsWithoutRemoveEffect = Object.entries(effects).reduce<
+      EntityId[]
+    >((ids, [objectId, effectsValue]) => {
+      if (
+        effectsValue.every(
+          (effect) => effect.type !== OBJECT_EFFECT_TYPE.REMOVE,
+        )
+      ) {
+        ids.push(objectId);
+      }
+
+      return ids;
+    }, []);
+
+    dispatch(HistoryActions.Capture());
+    dispatch(
+      PageActions.duplicatePageWithLastQueueObjects({
+        objectIds: queueObjectIdsWithoutRemoveEffect,
+        index: index,
+        fromId: pageId,
+        newId,
+      }),
+    );
+  };
+
+  const duplicatePageAndContent = (index: number): void => {
     const newId = nanoid();
 
     dispatch(HistoryActions.Capture());
@@ -369,7 +401,9 @@ export const PagePanel = () => {
                       <div className="tw-flex">
                         <button
                           className="tw-text-[var(--gray-10)] tw-cursor-pointer"
-                          onClick={() => copyPage(index)}>
+                          onClick={() =>
+                            duplicatePageWithLastQueue(page.id, index)
+                          }>
                           <SvgRemixIcon
                             icon="ri-file-copy-line"
                             size={QUEUE_UI_SIZE.MEDIUM}
@@ -408,11 +442,12 @@ export const PagePanel = () => {
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Item
                       onClick={() => createPage(Math.min(index, self.length))}>
-                      {t('bottom-panel.add-page-to-after')}
+                      {t('page-panel.add-page-to-after')}
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Separator />
-                    <QueueContextMenu.Item onClick={() => copyPage(index)}>
-                      {t('global.duplicate')}
+                    <QueueContextMenu.Item
+                      onClick={() => duplicatePageAndContent(index)}>
+                      {t('page-panel.duplicate-slide-and-content')}
                     </QueueContextMenu.Item>
                     {pages.length >= 2 && (
                       <>

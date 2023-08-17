@@ -12,6 +12,13 @@ const copyPage = createAction<{
   index: number;
 }>('Page/copyPage');
 
+const duplicatePageWithLastQueueObjects = createAction<{
+  fromId: EntityId;
+  newId: string;
+  index: number;
+  objectIds: EntityId[];
+}>('Page/duplicatePageWithLastQueueObjects');
+
 const addPage = createAction<NormalizedQueueDocumentPage>('Page/addPage');
 
 const removePage = createAction<EntityId>('Page/removePage');
@@ -31,6 +38,7 @@ const updatePages = createAction<
 export const PageActions = {
   switchPageIndex,
   copyPage,
+  duplicatePageWithLastQueueObjects,
   addPage,
   removePage,
   updatePage,

@@ -69,6 +69,28 @@ export const pagesSlice = createSlice({
       return pageEntityAdapter.addOne(state, newPage);
     });
 
+    builder.addCase(
+      PageActions.duplicatePageWithLastQueueObjects,
+      (state, action) => {
+        const page = state.entities[action.payload.fromId];
+
+        if (!page) {
+          console.error(`${action.type} - page not found`);
+
+          return state;
+        }
+
+        const newPage: NormalizedQueueDocumentPage = {
+          ...page,
+          id: action.payload.newId,
+          index: action.payload.index,
+          pageName: `${page.pageName} (copy)`,
+        };
+
+        return pageEntityAdapter.addOne(state, newPage);
+      },
+    );
+
     builder.addCase(DocumentActions.loadDocument, (state, action) => {
       if (!action.payload) {
         return pagesSlice.getInitialState();
