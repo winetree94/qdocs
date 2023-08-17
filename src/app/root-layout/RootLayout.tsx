@@ -23,6 +23,7 @@ import { PagePanel } from 'app/page-panel/PagePanel';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
+import { LeftPanel } from 'app/left-panel/LeftPanel';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -289,6 +290,7 @@ export const RootLayout = () => {
               </div>
             )}
           </div>
+          <LeftPanel></LeftPanel>
           <PanelResizer.Panel width={200} minWidth={50}>
             <PanelResizer.Pane panePosition="left"></PanelResizer.Pane>
             <RightPanel className="tw-h-full"></RightPanel>
