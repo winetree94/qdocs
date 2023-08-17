@@ -4,6 +4,7 @@ import colorSampleUrl from 'assets/templates/color-sample.que';
 import uxFlowUrl from 'assets/templates/ux-flow.que';
 import wave from 'assets/templates/wave.que';
 import imageTest from 'assets/templates/image-test.que';
+import groupTest from 'assets/templates/object-group.que';
 import { nanoid } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 
@@ -81,5 +82,10 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Image test',
     preview: '',
     getTemplate: () => fetch(imageTest).then((r) => r.json()),
+  },
+  {
+    name: 'Group test',
+    preview: '',
+    getTemplate: () => fetch(groupTest).then((r) => r.json()),
   },
 ];

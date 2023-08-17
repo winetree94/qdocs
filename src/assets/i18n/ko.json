@@ -72,5 +72,7 @@
   "page-panel.move-page-to-after": "슬라이드를 아래로 이동",
   "page-panel.add-page-to-before": "위쪽에 슬라이드 추가",
   "page-panel.add-page-to-after": "아래쪽에 슬라이드 추가",
-  "page-panel.duplicate-slide-and-content": "슬라이드 및 내용 복제"
+  "page-panel.duplicate-slide-and-content": "슬라이드 및 내용 복제",
+  "object-context.group": "그룹",
+  "object-context.ungroup": "그룹 해제"
 }

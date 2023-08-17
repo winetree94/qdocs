@@ -72,5 +72,7 @@
   "page-panel.move-page-to-after": "Move to slide to the bottom",
   "page-panel.add-page-to-before": "Add slide to top",
   "page-panel.add-page-to-after": "Add slide to bottom",
-  "page-panel.duplicate-slide-and-content": "Duplicate Slide and Content"
+  "page-panel.duplicate-slide-and-content": "Duplicate Slide and Content",
+  "object-context.group": "Group",
+  "object-context.ungroup": "Ungroup"
 }

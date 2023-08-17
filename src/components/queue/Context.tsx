@@ -141,6 +141,18 @@ export const QueueObjectContextContent = forwardRef<
           </QueueContextMenu.Item>
         </>
       )}
+      <QueueContextMenu.Item
+        onClick={() => {
+          console.log('hello world!');
+        }}>
+        {t('object-context.group')}
+      </QueueContextMenu.Item>
+      <QueueContextMenu.Item
+        onClick={() => {
+          console.log('hello world!');
+        }}>
+        {t('object-context.ungroup')}
+      </QueueContextMenu.Item>
     </QueueContextMenu.Content>
   );
 });
