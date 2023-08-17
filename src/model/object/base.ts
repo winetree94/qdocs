@@ -16,6 +16,12 @@ export interface BaseObject {
 
   /**
    * @description
+   * 그룹 id
+   */
+  groupId?: EntityId;
+
+  /**
+   * @description
    * 오브젝트의 우선 순위, 겹쳐진 문체는 index 우선 순위로 정렬
    */
   index: number;
