@@ -4,8 +4,12 @@ import { center } from 'cdk/math/center';
 import clsx from 'clsx';
 import { QueueObjectContainerContext } from 'components/queue/Container';
 import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
+import { OBJECT_TYPE, OBJECT_TYPES } from 'model/object';
 import { QueueRect } from 'model/property';
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import { useAppSelector } from 'store/hooks';
+import { ObjectSelectors } from 'store/object';
+import { SettingSelectors } from 'store/settings';
 import styles from './Resizer.module.scss';
 
 interface ResizeMatrix {
@@ -43,6 +47,72 @@ export type ResizerPosition =
   | 'bottom-middle'
   | 'bottom-right';
 
+export const objectResizerMatrix: Record<
+  OBJECT_TYPES | 'group',
+  Record<ResizerPosition, boolean>
+> = {
+  [OBJECT_TYPE.RECT]: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': true,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': true,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+  [OBJECT_TYPE.CIRCLE]: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': true,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': true,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+  [OBJECT_TYPE.ICON]: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': true,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': true,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+  [OBJECT_TYPE.IMAGE]: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': true,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': true,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+  [OBJECT_TYPE.LINE]: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': false,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': false,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+  group: {
+    'top-left': true,
+    'top-middle': false,
+    'top-right': true,
+    'middle-left': false,
+    'middle-right': false,
+    'bottom-left': true,
+    'bottom-middle': false,
+    'bottom-right': true,
+  },
+};
+
 export const ObjectResizer = ({
   onResizeStart,
   onResizeMove,
@@ -56,6 +126,12 @@ export const ObjectResizer = ({
   // shorthands
   const { selected, documentScale } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
+  const selectedObjectIds = useAppSelector(
+    SettingSelectors.settings,
+  ).selectedObjectIds.join('');
+  const currentObject =
+    useAppSelector((state) => ObjectSelectors.byId(state, selectedObjectIds))
+      ?.type || 'group';
 
   const rect = animation.rect;
   const rotate = animation.rotate.degree;
@@ -475,123 +551,145 @@ export const ObjectResizer = ({
         width={actualWidth}
         height={actualHeight}>
         {/* top left */}
-        <rect
-          className={clsx(styles.resizer, styles.topLeft)}
-          x={
-            rect.width > 0
-              ? margin - distance
-              : actualWidth - margin - (strokeWidth - distance)
-          }
-          y={
-            rect.height > 0
-              ? margin - distance
-              : actualHeight - margin - (strokeWidth - distance)
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}></rect>
+        {objectResizerMatrix[currentObject]['top-left'] && (
+          <rect
+            className={clsx(styles.resizer, styles.topLeft)}
+            x={
+              rect.width > 0
+                ? margin - distance
+                : actualWidth - margin - (strokeWidth - distance)
+            }
+            y={
+              rect.height > 0
+                ? margin - distance
+                : actualHeight - margin - (strokeWidth - distance)
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void => onResizeMousedown(e, 'top-left')}></rect>
+        )}
         {/* top middle */}
-        <rect
-          className={clsx(styles.resizer, styles.topMiddle)}
-          x={actualWidth / 2 - strokeWidth / 2}
-          y={
-            rect.height > 0
-              ? margin - distance
-              : actualHeight - margin - (strokeWidth - distance)
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-middle')}></rect>
+        {objectResizerMatrix[currentObject]['top-middle'] && (
+          <rect
+            className={clsx(styles.resizer, styles.topMiddle)}
+            x={actualWidth / 2 - strokeWidth / 2}
+            y={
+              rect.height > 0
+                ? margin - distance
+                : actualHeight - margin - (strokeWidth - distance)
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'top-middle')
+            }></rect>
+        )}
         {/* top right */}
-        <rect
-          className={clsx(styles.resizer, styles.topRight)}
-          x={
-            rect.width > 0
-              ? actualWidth - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          y={
-            rect.height > 0
-              ? margin - distance
-              : actualHeight - margin - (strokeWidth - distance)
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}></rect>
+        {objectResizerMatrix[currentObject]['top-right'] && (
+          <rect
+            className={clsx(styles.resizer, styles.topRight)}
+            x={
+              rect.width > 0
+                ? actualWidth - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            y={
+              rect.height > 0
+                ? margin - distance
+                : actualHeight - margin - (strokeWidth - distance)
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void => onResizeMousedown(e, 'top-right')}></rect>
+        )}
         {/* middle right */}
-        <rect
-          className={clsx(styles.resizer, styles.middleRight)}
-          x={
-            rect.width > 0
-              ? actualWidth - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          y={actualHeight / 2 - strokeWidth / 2}
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void =>
-            onResizeMousedown(e, 'middle-right')
-          }></rect>
+        {objectResizerMatrix[currentObject]['middle-right'] && (
+          <rect
+            className={clsx(styles.resizer, styles.middleRight)}
+            x={
+              rect.width > 0
+                ? actualWidth - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            y={actualHeight / 2 - strokeWidth / 2}
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'middle-right')
+            }></rect>
+        )}
         {/* bottom right */}
-        <rect
-          className={clsx(styles.resizer, styles.bottomRight)}
-          x={
-            rect.width > 0
-              ? actualWidth - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          y={
-            rect.height > 0
-              ? actualHeight - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void =>
-            onResizeMousedown(e, 'bottom-right')
-          }></rect>
+        {objectResizerMatrix[currentObject]['bottom-right'] && (
+          <rect
+            className={clsx(styles.resizer, styles.bottomRight)}
+            x={
+              rect.width > 0
+                ? actualWidth - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            y={
+              rect.height > 0
+                ? actualHeight - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'bottom-right')
+            }></rect>
+        )}
         {/* bottom middle */}
-        <rect
-          className={clsx(styles.resizer, styles.bottomMiddle)}
-          x={actualWidth / 2 - strokeWidth / 2}
-          y={
-            rect.height > 0
-              ? actualHeight - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void =>
-            onResizeMousedown(e, 'bottom-middle')
-          }></rect>
+        {objectResizerMatrix[currentObject]['bottom-middle'] && (
+          <rect
+            className={clsx(styles.resizer, styles.bottomMiddle)}
+            x={actualWidth / 2 - strokeWidth / 2}
+            y={
+              rect.height > 0
+                ? actualHeight - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'bottom-middle')
+            }></rect>
+        )}
         {/* bottom left */}
-        <rect
-          className={clsx(styles.resizer, styles.bottomLeft)}
-          x={
-            rect.width > 0
-              ? margin - distance
-              : actualWidth - margin - (strokeWidth - distance)
-          }
-          y={
-            rect.height > 0
-              ? actualHeight - margin - (strokeWidth - distance)
-              : margin - distance
-          }
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'bottom-left')}></rect>
+        {objectResizerMatrix[currentObject]['bottom-left'] && (
+          <rect
+            className={clsx(styles.resizer, styles.bottomLeft)}
+            x={
+              rect.width > 0
+                ? margin - distance
+                : actualWidth - margin - (strokeWidth - distance)
+            }
+            y={
+              rect.height > 0
+                ? actualHeight - margin - (strokeWidth - distance)
+                : margin - distance
+            }
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'bottom-left')
+            }></rect>
+        )}
         {/* middle left */}
-        <rect
-          className={clsx(styles.resizer, styles.middleLeft)}
-          x={
-            rect.width > 0
-              ? margin - distance
-              : actualWidth - margin - (strokeWidth - distance)
-          }
-          y={actualHeight / 2 - strokeWidth / 2}
-          width={strokeWidth}
-          height={strokeWidth}
-          onMouseDown={(e): void => onResizeMousedown(e, 'middle-left')}></rect>
+        {objectResizerMatrix[currentObject]['middle-left'] && (
+          <rect
+            className={clsx(styles.resizer, styles.middleLeft)}
+            x={
+              rect.width > 0
+                ? margin - distance
+                : actualWidth - margin - (strokeWidth - distance)
+            }
+            y={actualHeight / 2 - strokeWidth / 2}
+            width={strokeWidth}
+            height={strokeWidth}
+            onMouseDown={(e): void =>
+              onResizeMousedown(e, 'middle-left')
+            }></rect>
+        )}
         {/* rotation */}
         <rect
           className={clsx(styles.resizer, styles.rotation)}
