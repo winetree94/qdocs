@@ -5,6 +5,15 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { effectEntityAdapter } from './reducer';
 import { QueueEffectType, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { QueueObjectType } from 'model/object';
+import {
+  supportFade,
+  supportFill,
+  supportRect,
+  supportRotation,
+  supportScale,
+  supportStroke,
+  supportText,
+} from 'model/support';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -108,25 +117,46 @@ const allEffectedObjects = createSelector(
             (effect) => effect.type !== 'create' && effect.type !== 'remove',
           )
           .forEach((effect) => {
-            if (effect.type === OBJECT_EFFECT_TYPE.RECT) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.RECT &&
+              supportRect(object)
+            ) {
               object.rect = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.FADE) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.FADE &&
+              supportFade(object)
+            ) {
               object.fade = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.FILL) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.FILL &&
+              supportFill(object)
+            ) {
               object.fill = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.STROKE) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.STROKE &&
+              supportStroke(object)
+            ) {
               object.stroke = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.ROTATE) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.ROTATE &&
+              supportRotation(object)
+            ) {
               object.rotate = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.SCALE) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.SCALE &&
+              supportScale(object)
+            ) {
               object.scale = effect.prop;
             }
-            if (effect.type === OBJECT_EFFECT_TYPE.TEXT) {
+            if (
+              effect.type === OBJECT_EFFECT_TYPE.TEXT &&
+              supportText(object)
+            ) {
               object.text = effect.prop;
             }
           });

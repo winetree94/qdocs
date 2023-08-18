@@ -127,7 +127,7 @@ const createEffect = (
         prop:
           initialFill?.type === OBJECT_EFFECT_TYPE.FILL
             ? initialFill.prop
-            : queueObject.fill,
+            : (queueObject as any).fill,
       };
     }
     case OBJECT_EFFECT_TYPE.RECT: {

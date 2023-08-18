@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice, nanoid } from '@reduxjs/toolkit';
 import { QueueObjectType } from 'model/object';
 import { DocumentActions } from '../document';
 import { ObjectActions } from './actions';
@@ -208,6 +208,26 @@ export const objectsSlice = createSlice({
         });
       });
       return objectEntityAdapter.removeMany(state, action.payload);
+    });
+
+    builder.addCase(ObjectActions.Group, (state, action) => {
+      const groupId = nanoid();
+
+      objectEntityAdapter.updateMany(
+        state,
+        action.payload.ids.map((id) => {
+          return {
+            id: id,
+            changes: {},
+          };
+        }),
+      );
+
+      return state;
+    });
+
+    builder.addCase(ObjectActions.Ungroup, (state, action) => {
+      return state;
     });
   },
 });

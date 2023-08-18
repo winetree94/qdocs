@@ -3,6 +3,7 @@ import { Color } from 'components/object-styler/color/Color';
 import { Slider } from 'components/slider';
 import { QueueObjectType } from 'model/object';
 import { QueueFill } from 'model/property';
+import { supportFill, supportFillAll, supportRectAll } from 'model/support';
 import { ChangeEvent, ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -16,6 +17,11 @@ export const ObjectStylerBackground = (): ReactElement => {
   const dispatch = useAppDispatch();
 
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+
+  if (!supportFillAll(selectedObjects)) {
+    return <></>;
+  }
+
   const [firstObject] = selectedObjects;
 
   const updateObjectFill = (fill: Partial<QueueFill>) => {

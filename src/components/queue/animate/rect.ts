@@ -1,6 +1,6 @@
 import { RectEffect, QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
-import { QueueRect } from 'model/property';
+import { QueueRect, WithRect } from 'model/property';
 
 export interface RectAnimation {
   fromRect: QueueRect;
@@ -12,7 +12,7 @@ export interface RectAnimation {
  * 특정 오브젝트의 특정 큐 인덱스에 해당하는 크기 반환
  */
 export const getCurrentRect = (
-  object: QueueObjectType,
+  object: QueueObjectType & WithRect,
   effects: QueueEffectType[],
   index: number,
 ): QueueRect => {
@@ -23,7 +23,7 @@ export const getCurrentRect = (
 };
 
 export const getRectAnimation = (
-  object: QueueObjectType,
+  object: QueueObjectType & WithRect,
   effects: QueueEffectType[],
   index: number,
   position: 'forward' | 'backward' | 'pause',

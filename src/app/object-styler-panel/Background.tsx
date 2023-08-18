@@ -9,12 +9,18 @@ import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import styles from './Background.module.scss';
 import { QueueObjectType } from 'model/object';
+import { supportFillAll } from 'model/support';
 
 export const ObjectStyleBackground = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+
+  if (!supportFillAll(selectedObjects)) {
+    return <></>;
+  }
+
   const [firstObject] = selectedObjects;
   const fill = firstObject.fill;
 

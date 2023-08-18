@@ -1,13 +1,18 @@
-import { OBJECT_EFFECT_TYPE } from 'model/effect';
-import { OBJECT_TYPE, QueueObjectType } from 'model/object';
+import { OBJECT_EFFECT_TYPE, OBJECT_EFFECT_TYPES } from 'model/effect';
+import { OBJECT_TYPE, OBJECT_TYPES, QueueObjectType } from 'model/object';
 
-const EFFECT_SUPPORTED_MAP = {
+const EFFECT_SUPPORTED_MAP: {
+  [key in OBJECT_EFFECT_TYPES]: {
+    [key in OBJECT_TYPES]: boolean;
+  };
+} = {
   [OBJECT_EFFECT_TYPE.CREATE]: {
     [OBJECT_TYPE.CIRCLE]: true,
     [OBJECT_TYPE.ICON]: true,
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.REMOVE]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -15,6 +20,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.FADE]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -22,6 +28,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.FILL]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -29,6 +36,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: false,
   },
   [OBJECT_EFFECT_TYPE.RECT]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -36,6 +44,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.ROTATE]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -43,6 +52,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.SCALE]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -50,6 +60,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_EFFECT_TYPE.STROKE]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -57,6 +68,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: false,
   },
   [OBJECT_EFFECT_TYPE.TEXT]: {
     [OBJECT_TYPE.CIRCLE]: true,
@@ -64,6 +76,7 @@ const EFFECT_SUPPORTED_MAP = {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.RECT]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
 };
 

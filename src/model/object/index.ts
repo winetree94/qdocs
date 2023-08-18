@@ -3,6 +3,7 @@ import { QueueIcon } from './icon';
 import { QueueLine } from './line';
 import { QueueSquare } from './square';
 import { QueueImage } from './image';
+import { QueueGroupObject } from './group';
 
 export * from './circle';
 export * from './icon';
@@ -15,4 +16,5 @@ export type QueueObjectType =
   | QueueCircle
   | QueueIcon
   | QueueLine
-  | QueueImage;
+  | QueueImage
+  | QueueGroupObject;

@@ -8,11 +8,17 @@ import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import styles from './Stroke.module.scss';
 import { QueueSelect } from 'components/select/Select';
+import { supportStrokeAll } from 'model/support';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+
+  if (!supportStrokeAll(selectedObjects)) {
+    return <></>;
+  }
+
   const [firstObject] = selectedObjects;
 
   const stroke = firstObject.stroke;

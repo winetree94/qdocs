@@ -23,6 +23,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_PROPERTY_TYPE.STROKE]: {
     [OBJECT_TYPE.RECT]: true,
@@ -30,6 +31,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: false,
   },
   [OBJECT_PROPERTY_TYPE.FADE]: {
     [OBJECT_TYPE.RECT]: true,
@@ -37,6 +39,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_PROPERTY_TYPE.FILL]: {
     [OBJECT_TYPE.RECT]: true,
@@ -44,6 +47,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: false,
   },
   [OBJECT_PROPERTY_TYPE.IMAGE]: {
     [OBJECT_TYPE.RECT]: false,
@@ -51,6 +55,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: false,
     [OBJECT_TYPE.CIRCLE]: false,
+    [OBJECT_TYPE.GROUP]: false,
   },
   [OBJECT_PROPERTY_TYPE.ROTATE]: {
     [OBJECT_TYPE.RECT]: true,
@@ -58,6 +63,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_PROPERTY_TYPE.SCALE]: {
     [OBJECT_TYPE.RECT]: true,
@@ -65,6 +71,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
   [OBJECT_PROPERTY_TYPE.TEXT]: {
     [OBJECT_TYPE.RECT]: true,
@@ -72,6 +79,7 @@ const SUPPPORTED_PROPERTY_MAP: {
     [OBJECT_TYPE.IMAGE]: true,
     [OBJECT_TYPE.LINE]: true,
     [OBJECT_TYPE.CIRCLE]: true,
+    [OBJECT_TYPE.GROUP]: true,
   },
 } as const;
 
