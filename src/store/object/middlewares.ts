@@ -76,17 +76,23 @@ objectMiddleware.startListening({
 });
 
 objectMiddleware.startListening({
-  actionCreator: PageActions.duplicatePageWithLastQueueObjects,
+  actionCreator: PageActions.duplicatePageWithQueueObjectIds,
   effect: (action, api) => {
     const state = api.getState();
+    // 아래 셀렉터는 setting의 pageId를 가리키므로 수정이 필요함
     const effects = EffectSelectors.allEffectedObjectsMap(state);
 
     const newModels = action.payload.objectIds.map<QueueObjectType>(
-      (objectId) => ({
-        ...effects[objectId],
-        id: nanoid(),
-        pageId: action.payload.newId,
-      }),
+      (objectId) => {
+        console.log('effects', effects);
+        console.log('objectId', objectId, effects[objectId]);
+
+        return {
+          ...effects[objectId],
+          id: nanoid(),
+          pageId: action.payload.newId,
+        };
+      },
     );
 
     api.dispatch(

@@ -26,7 +26,7 @@ import { QueueSeparator } from 'components/separator/Separator';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueButton } from 'components/buttons/button/Button';
 import { QueueContextMenu } from 'components/context-menu/Context';
-import { ObjectActions, ObjectSelectors } from 'store/object';
+import { ObjectSelectors } from 'store/object';
 import { EffectSelectors } from 'store/effect';
 import { StandaloneRect } from 'components/queue/standaloneRects';
 import { Scaler } from 'components/scaler/Scaler';
@@ -208,8 +208,8 @@ export const PagePanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
-  const objects = useAppSelector(ObjectSelectors.all);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
+  const objects = useAppSelector(ObjectSelectors.all);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
@@ -261,15 +261,24 @@ export const PagePanel = () => {
   };
 
   const duplicatePageWithLastQueue = (pageId: EntityId, index: number) => {
+    console.log('duplicatePageWithLastQueue', pageId);
+
     const newId = nanoid();
 
-    // effects를 순회하면서 OBJECT_EFFECT_TYPE.REMOVE가 없는 effects를 찾는다.
+    // 선택된 페이지의 objectIds
+    const currentPageObjectIds = objects
+      .map((object) => object.pageId === pageId && object.id)
+      .filter(Boolean);
+
+    // effects를 순회하면서 OBJECT_EFFECT_TYPE.REMOVE가 없는 effects를 찾아 objectIds를 가져옴 (선택된 페이지의 objects)
     const queueObjectIdsWithoutRemoveEffect = Object.entries(effects).reduce<
       EntityId[]
     >((ids, [objectId, effectsValue]) => {
       if (
         effectsValue.every(
-          (effect) => effect.type !== OBJECT_EFFECT_TYPE.REMOVE,
+          (effect) =>
+            effect.type !== OBJECT_EFFECT_TYPE.REMOVE &&
+            currentPageObjectIds.includes(effect.objectId),
         )
       ) {
         ids.push(objectId);
@@ -280,7 +289,7 @@ export const PagePanel = () => {
 
     dispatch(HistoryActions.Capture());
     dispatch(
-      PageActions.duplicatePageWithLastQueueObjects({
+      PageActions.duplicatePageWithQueueObjectIds({
         objectIds: queueObjectIdsWithoutRemoveEffect,
         index: index,
         fromId: pageId,

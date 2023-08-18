@@ -14,7 +14,7 @@ pageMiddleware.startListening({
   matcher: isAnyOf(
     PageActions.removePage,
     PageActions.copyPage,
-    PageActions.duplicatePageWithLastQueueObjects,
+    PageActions.duplicatePageWithQueueObjectIds,
     PageActions.addPage,
   ),
   effect: (_, api) => {

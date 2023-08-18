@@ -70,7 +70,7 @@ export const pagesSlice = createSlice({
     });
 
     builder.addCase(
-      PageActions.duplicatePageWithLastQueueObjects,
+      PageActions.duplicatePageWithQueueObjectIds,
       (state, action) => {
         const page = state.entities[action.payload.fromId];
 
