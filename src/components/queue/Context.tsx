@@ -143,13 +143,23 @@ export const QueueObjectContextContent = forwardRef<
       )}
       <QueueContextMenu.Item
         onClick={() => {
-          console.log('hello world!');
+          dispatch(HistoryActions.Capture());
+          dispatch(
+            ObjectActions.Group({
+              ids: settings.selectedObjectIds,
+            }),
+          );
         }}>
         {t('object-context.group')}
       </QueueContextMenu.Item>
       <QueueContextMenu.Item
         onClick={() => {
-          console.log('hello world!');
+          dispatch(HistoryActions.Capture());
+          dispatch(
+            ObjectActions.Ungroup({
+              ids: settings.selectedObjectIds,
+            }),
+          );
         }}>
         {t('object-context.ungroup')}
       </QueueContextMenu.Item>

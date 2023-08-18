@@ -70,6 +70,22 @@ const SendBackward = createAction<{
 
 /**
  * @description
+ * 그룹화
+ */
+const Group = createAction<{
+  ids: EntityId[];
+}>('objects/Group');
+
+/**
+ * @description
+ * 그룹화 해제
+ */
+const Ungroup = createAction<{
+  ids: EntityId[];
+}>('objects/Ungroup');
+
+/**
+ * @description
  * 오브젝트 다수 제거
  */
 const removeMany = createAction<EntityId[]>('objects/removeMany');
@@ -84,6 +100,8 @@ export const ObjectActions = {
   removeMany,
   toFront,
   toBack,
+  Group,
+  Ungroup,
   BringForward,
   SendBackward,
 };
