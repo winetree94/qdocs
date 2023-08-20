@@ -19,7 +19,7 @@
   "toolbar.help.check-update": "Check Update",
   "toolbar.help.about": "About",
   "welcome.new-document": "New Document",
-  "welcome.open-document": "Open Document",
+  "welcome.open-document": "Open Document (.Qdocs)",
   "new-document.set-up-new-document-template": "Set up a new document form",
   "global.cancel": "Cancel",
   "global.create": "Create",
@@ -74,5 +74,6 @@
   "page-panel.add-page-to-after": "Add page to bottom",
   "page-panel.duplicate-page-and-content": "Duplicate page and every content",
   "object-context.group": "Group",
-  "object-context.ungroup": "Ungroup"
+  "object-context.ungroup": "Ungroup",
+  "welcome.image-alt": "Image displaying shapes from left to right: circle, pentagon, rectangle. Shapes are filled with light purple background and outlined with dark purple lines."
 }

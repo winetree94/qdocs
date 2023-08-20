@@ -256,8 +256,12 @@ export const RootLayout = () => {
     <div className={styles.container}>
       {!settings.presentationMode ? (
         <>
-          <QueueToolbar />
-          {docs && <QueueSubtoolbar />}
+          {docs && (
+            <>
+              <QueueToolbar />
+              <QueueSubtoolbar />
+            </>
+          )}
         </>
       ) : null}
 
@@ -304,8 +308,8 @@ export const RootLayout = () => {
       )}
 
       {!docs && (
-        <div className={clsx(styles.Content)}>
-          <Welcome></Welcome>
+        <div className={clsx('tw-flex', 'tw-flex-1', 'tw-min-h-0')}>
+          <Welcome />
         </div>
       )}
     </div>

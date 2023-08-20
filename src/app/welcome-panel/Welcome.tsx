@@ -1,14 +1,11 @@
 import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import clsx from 'clsx';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueH2 } from 'components/head/Head';
 import { useAppDispatch } from 'store/hooks';
-import styles from './Welcome.module.scss';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
+import welcomeImage from './welcome.svg';
 
 export const Welcome = () => {
   const dispatch = useAppDispatch();
@@ -53,21 +50,42 @@ export const Welcome = () => {
   };
 
   return (
-    <div className={clsx(styles.Container)}>
-      <QueueH2 className={clsx(styles.Header)}>The Queue</QueueH2>
-      <div className={styles.ButtonGroup}>
-        <QueueButton
-          className={clsx(styles.ActionButton)}
-          size={QUEUE_UI_SIZE.LARGE}
-          onClick={onNewDocumentClick}>
-          {t('welcome.new-document')}
-        </QueueButton>
-        <QueueButton
-          className={clsx(styles.ActionButton)}
-          size={QUEUE_UI_SIZE.LARGE}
-          onClick={startFileChooser}>
-          {t('welcome.open-document')}
-        </QueueButton>
+    <div
+      className={clsx(
+        'tw-flex-auto',
+        'tw-flex',
+        'tw-flex-col',
+        'tw-justify-center',
+        'tw-items-center',
+      )}>
+      <div className="tw-relative tw-overflow-hidden tw-flex tw-flex-col tw-justify-between tw-w-[350px] tw-h-[500px] tw-px-9 tw-pt-[64px] tw-pb-4 tw-border tw-border-queue-500 tw-rounded-[36px]">
+        <div>
+          <h1 className="tw-font-ibm tw-text-[36px] tw-leading-none tw-text-queue-500 tw-text-center">
+            .Qdocs
+          </h1>
+          <p className="tw-mt-2 tw-font-ibm tw-font-normal tw-leading-none tw-text-queue-500 tw-text-center">
+            Play documents
+          </p>
+        </div>
+        <div className="tw-flex tw-flex-col tw-gap-2">
+          {/* TODO button component 사용할 지 살펴보기 */}
+          <button
+            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-rounded-full tw-bg-queue-500 tw-text-white tw-leading-none tw-text-sm tw-font-medium"
+            onClick={onNewDocumentClick}>
+            {t('welcome.new-document')}
+          </button>
+          <button
+            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-text-queue-500 tw-text-sm tw-font-medium"
+            onClick={startFileChooser}>
+            {t('welcome.open-document')}
+          </button>
+        </div>
+
+        <img
+          className="tw-absolute tw-top-[76px] tw-left-0 tw-select-none tw-pointer-events-none"
+          src={welcomeImage}
+          alt={t('welcome.image-alt')}
+        />
       </div>
     </div>
   );
