@@ -98,7 +98,7 @@ objectMiddleware.startListening({
     }>(
       (acc, objectId) => {
         const newObjectId = nanoid();
-        const newModels = [
+        let newModels = [
           ...acc.newModels,
           {
             ...copyTargetObjects.find(
@@ -109,6 +109,22 @@ objectMiddleware.startListening({
           },
         ];
         let newEffects = acc.newEffects;
+
+        if (!action.payload.withEffect) {
+          // 이펙트를 가져가지 않는다면 마지막 큐 까지의 이펙트를 모두 합친 후 object 기본 속성으로 만들어야 함 -> 마지막 큐의 오브젝트만 가지고 복제되어야 하기 때문임
+
+          // TODO 아래는 아직 반영되지 않은 코드임...
+          newModels = [
+            ...acc.newModels,
+            {
+              ...copyTargetObjects.find(
+                (copyTargetObject) => copyTargetObject.id === objectId,
+              ),
+              id: newObjectId,
+              pageId: action.payload.newId,
+            },
+          ];
+        }
 
         if (action.payload.withEffect) {
           newEffects = [
