@@ -4,8 +4,9 @@ import { ObjectSelectors } from './selectors';
 import { PageActions } from '../page';
 import { ObjectActions } from './actions';
 import { SettingsActions, SettingSelectors } from '../settings';
-import { EffectSelectors } from '../effect';
+import { EffectActions, EffectSelectors } from '../effect';
 import { QueueObjectType } from 'model/object';
+import { QueueEffectType } from 'model/effect';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 
@@ -79,27 +80,72 @@ objectMiddleware.startListening({
   actionCreator: PageActions.duplicatePageWithQueueObjectIds,
   effect: (action, api) => {
     const state = api.getState();
-    // 아래 셀렉터는 setting의 pageId를 가리키므로 수정이 필요함
-    const effects = EffectSelectors.allEffectedObjectsMap(state);
+    const currentPageObjects = ObjectSelectors.allByPageId(
+      state,
+      action.payload.fromId,
+    );
+    const currentPageEffects = EffectSelectors.allByPageId(
+      state,
+      action.payload.fromId,
+    );
+    const copyTargetObjects = currentPageObjects.filter((object) =>
+      action.payload.objectIds.includes(object.id),
+    );
 
-    const newModels = action.payload.objectIds.map<QueueObjectType>(
-      (objectId) => {
-        console.log('effects', effects);
-        console.log('objectId', objectId, effects[objectId]);
+    const { newModels, newEffects } = action.payload.objectIds.reduce<{
+      newModels: QueueObjectType[];
+      newEffects: QueueEffectType[];
+    }>(
+      (acc, objectId) => {
+        const newObjectId = nanoid();
+        const newModels = [
+          ...acc.newModels,
+          {
+            ...copyTargetObjects.find(
+              (copyTargetObject) => copyTargetObject.id === objectId,
+            ),
+            id: newObjectId,
+            pageId: action.payload.newId,
+          },
+        ];
+        let newEffects = acc.newEffects;
+
+        if (action.payload.withEffect) {
+          newEffects = [
+            ...acc.newEffects,
+            ...currentPageEffects
+              .filter(
+                (currentPageEffect) => currentPageEffect.objectId === objectId,
+              )
+              .map((currentPageEffect) => ({
+                ...currentPageEffect,
+                id: nanoid(),
+                objectId: newObjectId,
+              })),
+          ];
+        }
 
         return {
-          ...effects[objectId],
-          id: nanoid(),
-          pageId: action.payload.newId,
+          newModels,
+          newEffects,
         };
+      },
+      {
+        newModels: [],
+        newEffects: [],
       },
     );
 
     api.dispatch(
       ObjectActions.addMany({
         objects: newModels,
-        queueIndex: 0,
+        queueIndex:
+          action.payload.withEffect && newEffects.length > 0 ? undefined : 0,
       }),
     );
+
+    if (action.payload.withEffect && newEffects.length > 0) {
+      api.dispatch(EffectActions.upsertEffects(newEffects));
+    }
   },
 });

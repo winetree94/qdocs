@@ -17,6 +17,7 @@ const duplicatePageWithQueueObjectIds = createAction<{
   newId: string;
   index: number;
   objectIds: EntityId[];
+  withEffect?: boolean;
 }>('Page/duplicatePageWithQueueObjectIds');
 
 const addPage = createAction<NormalizedQueueDocumentPage>('Page/addPage');

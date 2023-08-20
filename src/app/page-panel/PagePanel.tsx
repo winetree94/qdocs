@@ -300,15 +300,20 @@ export const PagePanel = () => {
     );
   };
 
-  const duplicatePageAndContent = (index: number): void => {
+  const duplicatePageAndContent = (pageId: EntityId, index: number): void => {
     const newId = nanoid();
+    const currentPageObjectIds = objects
+      .map((object) => object.pageId === pageId && object.id)
+      .filter(Boolean);
 
     dispatch(HistoryActions.Capture());
     dispatch(
-      PageActions.copyPage({
-        fromId: pages[index].id,
+      PageActions.duplicatePageWithQueueObjectIds({
+        objectIds: currentPageObjectIds,
         index: index,
-        newId: newId,
+        fromId: pageId,
+        withEffect: true,
+        newId,
       }),
     );
   };
@@ -457,7 +462,7 @@ export const PagePanel = () => {
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Separator />
                     <QueueContextMenu.Item
-                      onClick={() => duplicatePageAndContent(index)}>
+                      onClick={() => duplicatePageAndContent(page.id, index)}>
                       {t('page-panel.duplicate-page-and-content')}
                     </QueueContextMenu.Item>
                     {pages.length >= 2 && (
