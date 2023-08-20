@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import styles from './Toolbar.module.scss';
 import clsx from 'clsx';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
@@ -13,7 +13,7 @@ import { HistorySelectors } from 'store/history/selectors';
 import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { PreferencesSelectors } from 'store/preferences/selectors';
 import { PreferencesActions } from 'store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
@@ -21,6 +21,7 @@ import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
+import { QueueDropdown } from 'components/dropdown/Dropdown';
 
 export interface ToolbarModel {
   key: string;
@@ -38,6 +39,7 @@ export const QueueToolbar = () => {
   const preferences = useAppSelector(PreferencesSelectors.all);
   const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
   const rootRenderer = useRootRenderer();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const openNewDocumentDialog = () => {
     rootRenderer.render(
@@ -167,153 +169,164 @@ export const QueueToolbar = () => {
 
   return (
     <div className={clsx(styles.Container)}>
-      <div className={clsx(styles.LogoContainer)}>
-        <SvgRemixIcon icon="ri-file-ppt-line" size={QUEUE_UI_SIZE.XLARGE} />
+      <QueueDropdown open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+        <QueueDropdown.Trigger className="tw-flex tw-items-center tw-p-3 tw-gap-1">
+          <div className={clsx(styles.LogoContainer)}>.Qdocs</div>
+          <ChevronDownIcon
+            className={clsx(
+              'tw-w-5',
+              'tw-h-5',
+              'tw-transition-all',
+              'tw-duration-500',
+              {
+                'tw-scale-y-[1]': !isDropdownOpen,
+                'tw-scale-y-[-1]': isDropdownOpen,
+              },
+            )}
+          />
+        </QueueDropdown.Trigger>
+
+        <QueueDropdown.Content align="end">
+          <QueueDropdown.Sub>
+            <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+              {t('toolbar.file')}
+            </QueueDropdown.SubTrigger>
+            <QueueDropdown.SubContent>
+              <QueueDropdown.Item onClick={onNewDocumentClick}>
+                {t('toolbar.file.new-document')}
+              </QueueDropdown.Item>
+              <QueueMenubar.Separator />
+              <QueueDropdown.Item onClick={onOpenDocumentClick}>
+                {t('toolbar.file.open-document')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Item
+                onClick={onSaveDocumentClick}
+                disabled={!docs}>
+                {t('toolbar.file.save-document')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Separator />
+              <QueueDropdown.Item
+                onClick={onCloseDocumentClick}
+                disabled={!docs}>
+                {t('toolbar.file.close-document')}
+              </QueueDropdown.Item>
+            </QueueDropdown.SubContent>
+          </QueueDropdown.Sub>
+
+          <QueueDropdown.Sub>
+            <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+              {t('toolbar.edit')}
+            </QueueDropdown.SubTrigger>
+            <QueueDropdown.SubContent>
+              <QueueDropdown.Item
+                disabled={!docs || history.previous.length === 0}
+                onClick={() => dispatch(HistoryActions.Undo())}>
+                {t('global.undo')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Item
+                disabled={!docs || history.future.length === 0}
+                onClick={() => dispatch(HistoryActions.Redo())}>
+                {t('global.redo')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Separator />
+              <QueueDropdown.Item disabled={!docs || true}>
+                {t('toolbar.edit.edit-title')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Item disabled={!docs || true}>
+                {t('toolbar.edit.page-settings')}
+              </QueueDropdown.Item>
+            </QueueDropdown.SubContent>
+          </QueueDropdown.Sub>
+
+          <QueueDropdown.Sub>
+            <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+              {t('toolbar.view')}
+            </QueueDropdown.SubTrigger>
+            <QueueDropdown.SubContent>
+              <QueueDropdown.Item
+                disabled={!docs}
+                onClick={() =>
+                  dispatch(SettingsActions.setPresentationMode(true))
+                }>
+                {t('toolbar.view.start-presentation-mode')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Separator />
+              <QueueDropdown.Item disabled>
+                {t('toolbar.view.full-screen')}
+              </QueueDropdown.Item>
+            </QueueDropdown.SubContent>
+          </QueueDropdown.Sub>
+
+          <QueueDropdown.Sub>
+            <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+              {t('toolbar.extra')}
+            </QueueDropdown.SubTrigger>
+            <QueueDropdown.SubContent>
+              <QueueDropdown.Sub>
+                <QueueDropdown.SubTrigger className="tw-flex tw-items-center tw-gap-1 tw-py-2 tw-px-6">
+                  {t('toolbar.extra.language')}
+                  <ChevronRightIcon />
+                </QueueDropdown.SubTrigger>
+                <QueueDropdown.SubContent alignOffset={-5}>
+                  <QueueDropdown.RadioGroup
+                    value={preferences.language}
+                    onValueChange={async (rawValue) => {
+                      const value = rawValue as SUPPORTED_LANGUAGES;
+                      await i18n.changeLanguage(
+                        value !== 'auto' ? value : null,
+                      );
+                      dispatch(
+                        PreferencesActions.changeLanguage({
+                          language: value,
+                        }),
+                      );
+                    }}>
+                    <QueueDropdown.RadioItem value="auto">
+                      {t('toolbar.extra.language-auth')}
+                      <QueueDropdown.ItemIndicator />
+                    </QueueDropdown.RadioItem>
+                    <QueueDropdown.RadioItem value="ko">
+                      한국어
+                      <QueueDropdown.ItemIndicator />
+                    </QueueDropdown.RadioItem>
+                    <QueueDropdown.RadioItem value="en">
+                      English
+                      <QueueDropdown.ItemIndicator />
+                    </QueueDropdown.RadioItem>
+                  </QueueDropdown.RadioGroup>
+                </QueueDropdown.SubContent>
+              </QueueDropdown.Sub>
+            </QueueDropdown.SubContent>
+          </QueueDropdown.Sub>
+
+          <QueueDropdown.Sub>
+            <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+              {t('toolbar.help')}
+            </QueueDropdown.SubTrigger>
+            <QueueDropdown.SubContent>
+              <QueueDropdown.Item disabled>
+                {t('toolbar.help.keyboard-shortcut')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Item disabled>
+                {t('toolbar.help.web-site')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Separator />
+              <QueueDropdown.Item disabled>
+                {t('toolbar.help.check-update')}
+              </QueueDropdown.Item>
+              <QueueDropdown.Separator />
+              <QueueDropdown.Item disabled>
+                {t('toolbar.help.about')}
+              </QueueDropdown.Item>
+            </QueueDropdown.SubContent>
+          </QueueDropdown.Sub>
+        </QueueDropdown.Content>
+      </QueueDropdown>
+      <div className={clsx('tw-h-full', styles['title-container'])}>
+        {docs?.documentName}
       </div>
-      <div className={clsx(styles.ContentContainer)}>
-        <div className={clsx(styles.TitleContainer)}>
-          <QueueH6>{docs?.documentName}</QueueH6>
-        </div>
-        <QueueMenubar.Root>
-          <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>{t('toolbar.file')}</QueueMenubar.Trigger>
-            <QueueMenubar.Portal>
-              <QueueMenubar.Content align="start">
-                <QueueMenubar.Item onClick={onNewDocumentClick}>
-                  {t('toolbar.file.new-document')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item onClick={onOpenDocumentClick}>
-                  {t('toolbar.file.open-document')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Item
-                  onClick={onSaveDocumentClick}
-                  disabled={!docs}>
-                  {t('toolbar.file.save-document')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item
-                  onClick={onCloseDocumentClick}
-                  disabled={!docs}>
-                  {t('toolbar.file.close-document')}
-                </QueueMenubar.Item>
-              </QueueMenubar.Content>
-            </QueueMenubar.Portal>
-          </QueueMenubar.Menu>
 
-          <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>{t('toolbar.edit')}</QueueMenubar.Trigger>
-            <QueueMenubar.Portal>
-              <QueueMenubar.Content align="start">
-                <QueueMenubar.Item
-                  disabled={!docs || history.previous.length === 0}
-                  onClick={() => dispatch(HistoryActions.Undo())}>
-                  {t('global.undo')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Item
-                  disabled={!docs || history.future.length === 0}
-                  onClick={() => dispatch(HistoryActions.Redo())}>
-                  {t('global.redo')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled={!docs || true}>
-                  {t('toolbar.edit.edit-title')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Item disabled={!docs || true}>
-                  {t('toolbar.edit.page-settings')}
-                </QueueMenubar.Item>
-              </QueueMenubar.Content>
-            </QueueMenubar.Portal>
-          </QueueMenubar.Menu>
-
-          <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>{t('toolbar.view')}</QueueMenubar.Trigger>
-            <QueueMenubar.Portal>
-              <QueueMenubar.Content align="start">
-                <QueueMenubar.Item
-                  disabled={!docs}
-                  onClick={() =>
-                    dispatch(SettingsActions.setPresentationMode(true))
-                  }>
-                  {t('toolbar.view.start-presentation-mode')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>
-                  {t('toolbar.view.full-screen')}
-                </QueueMenubar.Item>
-              </QueueMenubar.Content>
-            </QueueMenubar.Portal>
-          </QueueMenubar.Menu>
-
-          <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>{t('toolbar.extra')}</QueueMenubar.Trigger>
-            <QueueMenubar.Portal>
-              <QueueMenubar.Content align="start">
-                <QueueMenubar.Sub>
-                  <QueueMenubar.SubTrigger>
-                    {t('toolbar.extra.language')}
-                    <QueueMenubar.RightSlot>
-                      <ChevronRightIcon />
-                    </QueueMenubar.RightSlot>
-                  </QueueMenubar.SubTrigger>
-                  <QueueMenubar.Portal>
-                    <QueueMenubar.SubContent alignOffset={-5}>
-                      <QueueMenubar.RadioGroup
-                        value={preferences.language}
-                        onValueChange={async (rawValue) => {
-                          const value = rawValue as SUPPORTED_LANGUAGES;
-                          await i18n.changeLanguage(
-                            value !== 'auto' ? value : null,
-                          );
-                          dispatch(
-                            PreferencesActions.changeLanguage({
-                              language: value,
-                            }),
-                          );
-                        }}>
-                        <QueueMenubar.RadioItem value="auto">
-                          {t('toolbar.extra.language-auth')}
-                          <QueueMenubar.ItemIndicator />
-                        </QueueMenubar.RadioItem>
-                        <QueueMenubar.RadioItem value="ko">
-                          한국어
-                          <QueueMenubar.ItemIndicator />
-                        </QueueMenubar.RadioItem>
-                        <QueueMenubar.RadioItem value="en">
-                          English
-                          <QueueMenubar.ItemIndicator />
-                        </QueueMenubar.RadioItem>
-                      </QueueMenubar.RadioGroup>
-                    </QueueMenubar.SubContent>
-                  </QueueMenubar.Portal>
-                </QueueMenubar.Sub>
-              </QueueMenubar.Content>
-            </QueueMenubar.Portal>
-          </QueueMenubar.Menu>
-
-          <QueueMenubar.Menu>
-            <QueueMenubar.Trigger>{t('toolbar.help')}</QueueMenubar.Trigger>
-            <QueueMenubar.Portal>
-              <QueueMenubar.Content align="start">
-                <QueueMenubar.Item disabled>
-                  {t('toolbar.help.keyboard-shortcut')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Item disabled>
-                  {t('toolbar.help.web-site')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>
-                  {t('toolbar.help.check-update')}
-                </QueueMenubar.Item>
-                <QueueMenubar.Separator />
-                <QueueMenubar.Item disabled>
-                  {t('toolbar.help.about')}
-                </QueueMenubar.Item>
-              </QueueMenubar.Content>
-            </QueueMenubar.Portal>
-          </QueueMenubar.Menu>
-        </QueueMenubar.Root>
-      </div>
+      <div> 아이콘</div>
     </div>
   );
 };

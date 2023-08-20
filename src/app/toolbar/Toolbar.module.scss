@@ -1,19 +1,28 @@
 .Container {
   @apply tw-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  height: 48px;
   border-bottom: 1px solid var(--gray-5);
   background-color: var(--gray-1);
-  height: 70px;
 }
 
 .LogoContainer {
   @apply tw-flex tw-justify-center tw-items-center;
-  width: 74px;
+  font-family: IBM Plex Serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #533BB1;
 }
 
 .ContentContainer {
   @apply tw-flex tw-flex-col tw-flex-auto;
 }
 
-.TitleContainer {
-  @apply tw-mt-2.5 tw-ml-2.5 tw-h-full;
+.title-container {
+  font-size: 14px;
+font-weight: 500;
+line-height: 100%;
 }

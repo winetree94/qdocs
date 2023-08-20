@@ -169,6 +169,22 @@ const SubContent = forwardRef<HTMLDivElement, Dropdown.MenuSubContentProps>(
   },
 );
 
+const ItemIndicator = forwardRef<
+  HTMLDivElement,
+  Dropdown.MenuItemIndicatorProps
+>(({ className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.ItemIndicator
+      className={clsx(
+        'tw-absolute tw-left-0 tw-top-0 tw-w-6 tw-h-full tw-flex tw-items-center tw-justify-center',
+        className,
+      )}
+      {...props}
+      ref={forwardedRef}
+    />
+  );
+});
+
 export const QueueDropdown = Object.assign(Dropdown.Root, {
   Content,
   Group,
@@ -181,4 +197,5 @@ export const QueueDropdown = Object.assign(Dropdown.Root, {
   Trigger: Dropdown.Trigger,
   Sub: Dropdown.Sub,
   SubTrigger: Dropdown.SubTrigger,
+  ItemIndicator,
 });
