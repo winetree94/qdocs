@@ -22,6 +22,7 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
 import { QueueDropdown } from 'components/dropdown/Dropdown';
+import { QueueIconButton } from 'components/buttons/button/Button';
 
 export interface ToolbarModel {
   key: string;
@@ -125,6 +126,10 @@ export const QueueToolbar = () => {
       return;
     }
     startFileChooser();
+  };
+
+  const onPresentationStartClick = (): void => {
+    dispatch(SettingsActions.setPresentationMode(true));
   };
 
   const onSaveDocumentClick = (): void => {
@@ -322,11 +327,16 @@ export const QueueToolbar = () => {
           </QueueDropdown.Sub>
         </QueueDropdown.Content>
       </QueueDropdown>
-      <div className={clsx('tw-h-full', styles['title-container'])}>
+      <div className={clsx(styles['title-container'])}>
         {docs?.documentName}
       </div>
 
-      <div> 아이콘</div>
+      {/* presentation mode */}
+      <QueueIconButton
+        size={QUEUE_UI_SIZE.MEDIUM}
+        onClick={onPresentationStartClick}>
+        <SvgRemixIcon icon={'ri-slideshow-3-line'} />
+      </QueueIconButton>
     </div>
   );
 };
