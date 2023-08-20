@@ -269,7 +269,7 @@ export const RootLayout = () => {
                 <PanelResizer.Panel
                   className="tw-h-full"
                   width={279}
-                  minWidth={30}>
+                  minWidth={160}>
                   <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
                   <PagePanel />
                 </PanelResizer.Panel>
