@@ -264,11 +264,11 @@ export const RootLayout = () => {
       {docs && (
         <div className={clsx(styles.Content)}>
           {!settings.presentationMode && (
-            <div className="tw-flex tw-flex-col tw-h-full">
+            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
               <div className="tw-h-full">
                 <PanelResizer.Panel
                   className="tw-h-full"
-                  width={279}
+                  width={200}
                   minWidth={160}>
                   <PanelResizer.Pane panePosition="right"></PanelResizer.Pane>
                   <PagePanel />
@@ -276,7 +276,12 @@ export const RootLayout = () => {
               </div>
             </div>
           )}
-          <div className={clsx(styles.Right)}>
+          <div
+            className={clsx(
+              styles.Right,
+              'tw-px-2.5',
+              'tw-bg-[var(--gray-3)]',
+            )}>
             <QueueEditor />
             {!settings.presentationMode && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">

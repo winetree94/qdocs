@@ -104,6 +104,7 @@ export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
 
 const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
   const queueDocument = useAppSelector(DocumentSelectors.document);
+  const settings = useAppSelector(SettingSelectors.settings);
   const objects = useAppSelector((state) =>
     ObjectSelectors.allByPageId(state, page.id),
   );
@@ -155,13 +156,16 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         'tw-w-full',
         'tw-h-auto',
         'tw-border',
-        'tw-border-[var(--blue-10)]',
+        'tw-border-[var(--gray-8)]',
         'tw-rounded-[4px]',
         'tw-bg-[var(--gray-1)]',
         'tw-overflow-hidden',
         'tw-pointer-events-none',
         // document 비율의 설정대로 변경이 필요
         'tw-aspect-[16/9]',
+        {
+          'tw-border-[var(--violet-9)]': settings.pageId === page.id,
+        },
         className,
       )}
       {...props}>
@@ -261,8 +265,6 @@ export const PagePanel = () => {
   };
 
   const duplicatePageWithLastQueue = (pageId: EntityId, index: number) => {
-    console.log('duplicatePageWithLastQueue', pageId);
-
     const newId = nanoid();
 
     // 선택된 페이지의 objectIds
@@ -404,7 +406,7 @@ export const PagePanel = () => {
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}>
                     <div className="tw-shrink-0 tw-flex tw-flex-col tw-justify-between tw-items-end">
-                      <div className="tw-text-xs tw-cursor-default">
+                      <div className="tw-font-normal tw-text-xs tw-cursor-default">
                         {page.index + 1}
                       </div>
                       <div className="tw-flex">
