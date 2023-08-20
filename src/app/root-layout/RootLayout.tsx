@@ -42,7 +42,7 @@ export const RootLayout = () => {
     keys: [
       {
         keys: ['Escape'],
-        callback: (e) => {
+        callback: () => {
           if (settings.presentationMode) {
             dispatch(
               SettingsActions.setSettings({
@@ -56,9 +56,9 @@ export const RootLayout = () => {
       {
         keys: ['c'],
         meta: true,
-        callback: async (e) => {
+        callback: async (event) => {
           if (settings.selectionMode === 'detail') return;
-          e.preventDefault();
+          event.preventDefault();
           try {
             const models = selectedObjects.map((object) => {
               return {
@@ -81,7 +81,7 @@ export const RootLayout = () => {
       {
         keys: ['v'],
         meta: true,
-        callback: async (e) => {
+        callback: async () => {
           if (settings.selectionMode === 'detail') return;
           try {
             const raw = await navigator.clipboard.readText();
@@ -138,7 +138,7 @@ export const RootLayout = () => {
       {
         keys: ['a'],
         meta: true,
-        callback: (e) => {
+        callback: () => {
           if (settings.selectionMode === 'detail') return;
           dispatch(
             SettingsActions.setSelection({
@@ -151,10 +151,10 @@ export const RootLayout = () => {
       {
         keys: ['z'],
         meta: true,
-        callback: (e) => {
+        callback: (event) => {
           if (settings.selectionMode === 'detail') return;
           if (history.previous.length === 0) return;
-          e.preventDefault();
+          event.preventDefault();
           dispatch(HistoryActions.Undo());
         },
       },
@@ -162,16 +162,16 @@ export const RootLayout = () => {
         keys: ['z', 'Z'],
         meta: true,
         shift: true,
-        callback: (e) => {
+        callback: (event) => {
           if (settings.selectionMode === 'detail') return;
           if (history.future.length === 0) return;
-          e.preventDefault();
+          event.preventDefault();
           dispatch(HistoryActions.Redo());
         },
       },
       {
         keys: ['Escape'],
-        callback: (e) => {
+        callback: () => {
           dispatch(
             SettingsActions.setSelection({
               selectionMode: 'normal',
@@ -183,7 +183,7 @@ export const RootLayout = () => {
       {
         keys: ['Delete', 'Backspace'],
         meta: false,
-        callback: (e) => {
+        callback: () => {
           if (
             settings.selectedObjectIds.length === 0 ||
             settings.selectionMode !== 'normal'
@@ -201,7 +201,7 @@ export const RootLayout = () => {
       {
         keys: ['Delete', 'Backspace'],
         meta: true,
-        callback: (e) => {
+        callback: () => {
           if (
             settings.selectedObjectIds.length === 0 ||
             settings.selectionMode !== 'normal'
