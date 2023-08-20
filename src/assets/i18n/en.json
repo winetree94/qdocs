@@ -67,12 +67,12 @@
   "global.icon": "Icon",
   "effect-panel.all-effects": "All Effects",
   "effect-panel.current-effects": "Current Effects",
-  "page-panel.add-slide": "Add slide",
-  "page-panel.move-page-to-before": "Move to slide to the top",
-  "page-panel.move-page-to-after": "Move to slide to the bottom",
-  "page-panel.add-page-to-before": "Add slide to top",
-  "page-panel.add-page-to-after": "Add slide to bottom",
-  "page-panel.duplicate-slide-and-content": "Duplicate Slide and Content",
+  "page-panel.add-page": "Add page",
+  "page-panel.move-page-to-before": "Move to page to the top",
+  "page-panel.move-page-to-after": "Move to page to the bottom",
+  "page-panel.add-page-to-before": "Add page to top",
+  "page-panel.add-page-to-after": "Add page to bottom",
+  "page-panel.duplicate-page-and-content": "Duplicate page and every content",
   "object-context.group": "Group",
   "object-context.ungroup": "Ungroup"
 }

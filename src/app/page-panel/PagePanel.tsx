@@ -456,7 +456,7 @@ export const PagePanel = () => {
                     <QueueContextMenu.Separator />
                     <QueueContextMenu.Item
                       onClick={() => duplicatePageAndContent(index)}>
-                      {t('page-panel.duplicate-slide-and-content')}
+                      {t('page-panel.duplicate-page-and-content')}
                     </QueueContextMenu.Item>
                     {pages.length >= 2 && (
                       <>
@@ -486,7 +486,7 @@ export const PagePanel = () => {
           color={QUEUE_UI_COLOR.DEFAULT}
           onClick={() => createPage(pages.length)}>
           <SvgRemixIcon icon="ri-add-box-line" size={QUEUE_UI_SIZE.MEDIUM} />
-          <span className="tw-ml-1">{t('page-panel.add-slide')}</span>
+          <span className="tw-ml-1">{t('page-panel.add-page')}</span>
         </QueueButton>
       </PageAddBox>
     </PagePanelRoot>

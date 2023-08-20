@@ -67,12 +67,12 @@
   "global.icon": "아이콘",
   "effect-panel.all-effects": "전체 이펙트",
   "effect-panel.current-effects": "현재 이펙트",
-  "page-panel.add-slide": "슬라이드 추가",
-  "page-panel.move-page-to-before": "슬라이드를 위로 이동",
-  "page-panel.move-page-to-after": "슬라이드를 아래로 이동",
-  "page-panel.add-page-to-before": "위쪽에 슬라이드 추가",
-  "page-panel.add-page-to-after": "아래쪽에 슬라이드 추가",
-  "page-panel.duplicate-slide-and-content": "슬라이드 및 내용 복제",
+  "page-panel.add-page": "페이지 추가",
+  "page-panel.move-page-to-before": "페이지를 위로 이동",
+  "page-panel.move-page-to-after": "페이지를 아래로 이동",
+  "page-panel.add-page-to-before": "위쪽에 페이지 추가",
+  "page-panel.add-page-to-after": "아래쪽에 페이지 추가",
+  "page-panel.duplicate-page-and-content": "페이지 및 모든 내용 복제",
   "object-context.group": "그룹",
   "object-context.ungroup": "그룹 해제"
 }
