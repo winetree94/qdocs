@@ -264,7 +264,10 @@ export const PagePanel = () => {
     );
   };
 
-  const duplicatePageWithLastQueue = (pageId: EntityId, index: number) => {
+  const duplicatePageWithLastQueueSnapshot = (
+    pageId: EntityId,
+    index: number,
+  ) => {
     const newId = nanoid();
 
     // 선택된 페이지의 objectIds
@@ -418,7 +421,7 @@ export const PagePanel = () => {
                         <button
                           className="tw-text-[var(--gray-10)] tw-cursor-pointer"
                           onClick={() =>
-                            duplicatePageWithLastQueue(page.id, index)
+                            duplicatePageWithLastQueueSnapshot(page.id, index)
                           }>
                           <SvgRemixIcon
                             icon="ri-file-copy-line"

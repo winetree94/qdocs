@@ -6,7 +6,8 @@ import { ObjectActions } from './actions';
 import { SettingsActions, SettingSelectors } from '../settings';
 import { EffectActions, EffectSelectors } from '../effect';
 import { QueueObjectType } from 'model/object';
-import { QueueEffectType } from 'model/effect';
+import { OBJECT_EFFECT_TYPES, QueueEffectType } from 'model/effect';
+import { supportCreateEffect, supportRect } from 'model/support';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 
@@ -112,14 +113,44 @@ objectMiddleware.startListening({
 
         if (!action.payload.withEffect) {
           // 이펙트를 가져가지 않는다면 마지막 큐 까지의 이펙트를 모두 합친 후 object 기본 속성으로 만들어야 함 -> 마지막 큐의 오브젝트만 가지고 복제되어야 하기 때문임
+          const myEffects = currentPageEffects
+            .filter((effect) => effect.objectId === objectId)
+            .slice()
+            .sort((a, b) => a.index - b.index);
 
-          // TODO 아래는 아직 반영되지 않은 코드임...
+          const myLastQueueEffects = myEffects.reduce<
+            Partial<Record<OBJECT_EFFECT_TYPES, QueueEffectType>>
+          >((acc, effect) => {
+            acc[effect.type] = effect;
+
+            return acc;
+          }, {});
+
+          console.log(myLastQueueEffects);
+
+          let targetObject = copyTargetObjects.find(
+            (copyTargetObject) => copyTargetObject.id === objectId,
+          );
+
+          if (supportCreateEffect(targetObject)) {
+            targetObject = {
+              ...targetObject,
+            };
+          }
+
+          if (supportRect(targetObject)) {
+            targetObject.rect = {
+              ...targetObject.rect,
+              ...(myLastQueueEffects.rect?.prop || {}),
+            };
+          }
+
+          // TODO 나머지 이펙트 추가
+
           newModels = [
             ...acc.newModels,
             {
-              ...copyTargetObjects.find(
-                (copyTargetObject) => copyTargetObject.id === objectId,
-              ),
+              ...targetObject,
               id: newObjectId,
               pageId: action.payload.newId,
             },
