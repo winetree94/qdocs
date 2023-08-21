@@ -6,7 +6,7 @@ import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { QueueIconButton } from 'components/buttons/button/Button';
-import styles from './Subtoolbar.module.scss';
+import styles from './SubHeader.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { EffectSelectors } from 'store/effect/selectors';
@@ -16,7 +16,7 @@ import { HistorySelectors } from 'store/history/selectors';
 import { ObjectActions } from 'store/object';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
-export const QueueSubtoolbar = () => {
+export const QueueSubHeader = () => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
 
@@ -85,58 +85,6 @@ export const QueueSubtoolbar = () => {
           </div>
 
           <div className={styles.ItemGroup}>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => changeQueueIndex(settings.queueIndex - 1, true)}>
-              <SvgRemixIcon icon={'ri-arrow-left-line'} />
-            </QueueIconButton>
-            {ranges.map((queue) => (
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                className={clsx(
-                  styles.QueueIndicator,
-                  byEffectIndex?.[queue] ? styles.HasEffect : '',
-                  queue === settings.queueIndex ? styles.Current : '',
-                )}
-                key={queue}
-                onClick={(): void => changeQueueIndex(queue, false)}>
-                {queue + 1}
-              </QueueIconButton>
-            ))}
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => changeQueueIndex(settings.queueIndex + 1, true)}>
-              <SvgRemixIcon icon={'ri-arrow-right-line'} />
-            </QueueIconButton>
-          </div>
-
-          <div className={styles.ItemGroup}>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.rewind())}>
-              <SvgRemixIcon icon={'ri-rewind-line'} />
-            </QueueIconButton>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.forward())}>
-              <SvgRemixIcon icon={'ri-speed-line'} />
-            </QueueIconButton>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.pause())}>
-              <SvgRemixIcon icon={'ri-pause-line'} />
-            </QueueIconButton>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.play())}>
-              <SvgRemixIcon icon={'ri-play-line'} />
-            </QueueIconButton>
-            <QueueToggle.Root
-              pressed={settings.autoPlayRepeat}
-              onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
-              <SvgRemixIcon icon={'ri-repeat-line'} />
-            </QueueToggle.Root>
-
             <QueueSeparator.Root
               orientation="vertical"
               decorative

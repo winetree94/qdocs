@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import styles from './Toolbar.module.scss';
+import styles from 'app/header/Header.module.scss';
 import clsx from 'clsx';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
@@ -22,7 +22,7 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
 import { QueueDropdown } from 'components/dropdown/Dropdown';
-import { QueueIconButton } from 'components/buttons/button/Button';
+import { QueueIconButton, QueueButton } from 'components/buttons/button/Button';
 
 export interface ToolbarModel {
   key: string;
@@ -31,7 +31,7 @@ export interface ToolbarModel {
   children: ToolbarModel[];
 }
 
-export const QueueToolbar = () => {
+export const QueueHeader = () => {
   const { t, i18n } = useTranslation();
   const history = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
@@ -191,7 +191,7 @@ export const QueueToolbar = () => {
           />
         </QueueDropdown.Trigger>
 
-        <QueueDropdown.Content align="end">
+        <QueueDropdown.Content align="center">
           <QueueDropdown.Sub>
             <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
               {t('toolbar.file')}
@@ -332,11 +332,17 @@ export const QueueToolbar = () => {
       </div>
 
       {/* presentation mode */}
-      <QueueIconButton
-        size={QUEUE_UI_SIZE.MEDIUM}
-        onClick={onPresentationStartClick}>
-        <SvgRemixIcon icon={'ri-slideshow-3-line'} />
-      </QueueIconButton>
+      {docs && (
+        <QueueButton
+          className={clsx(
+            styles['slide-button'],
+            'tw-flex tw-items-center tw-gap-1',
+          )}
+          onClick={onPresentationStartClick}>
+          <SvgRemixIcon icon={'ri-play-line'} size={QUEUE_UI_SIZE.MEDIUM} />
+          <span className="tw-text-sm tw-font-medium">Present</span>
+        </QueueButton>
+      )}
     </div>
   );
 };

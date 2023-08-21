@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { QueueEditor } from '../../components/editor/Editor';
 import { QueueSubtoolbar } from '../subtoolbar/Subtoolbar';
-import { QueueToolbar } from '../toolbar/Toolbar';
 import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
 import { Welcome } from 'app/welcome-panel/Welcome';
@@ -24,6 +23,8 @@ import { Timeline } from 'components/timeline/Timeline';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
 import { LeftPanel } from 'app/left-panel/LeftPanel';
+import { QueueSubHeader } from 'app/sub-header/SubHeader';
+import { QueueHeader } from 'app/header/Header';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -256,8 +257,8 @@ export const RootLayout = () => {
     <div className={styles.container}>
       {!settings.presentationMode ? (
         <>
-          <QueueToolbar />
-          {docs && <QueueSubtoolbar />}
+          <QueueHeader />
+          {docs && <QueueSubHeader />}
         </>
       ) : null}
 

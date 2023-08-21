@@ -5,7 +5,6 @@
   padding: 0 8px;
   height: 48px;
   border-bottom: 1px solid var(--gray-5);
-  background-color: var(--gray-1);
 }
 
 .LogoContainer {
@@ -25,4 +24,16 @@
   font-size: 14px;
 font-weight: 500;
 line-height: 100%;
+}
+
+.slide-button {
+  box-sizing: border-box;
+  padding: 8px 12px !important;
+  height: 30px !important;
+  background-color: #E7E6EB !important;
+  border-radius: 100px;
+
+  &:hover {
+    border-bottom: 0 !important;
+  }
 }
