@@ -257,8 +257,12 @@ export const RootLayout = () => {
     <div className={styles.container}>
       {!settings.presentationMode ? (
         <>
-          <QueueHeader />
-          {docs && <QueueSubHeader />}
+          {docs && (
+            <>
+              <QueueHeader />
+              <QueueSubHeader />
+            </>
+          )}
         </>
       ) : null}
 

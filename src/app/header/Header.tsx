@@ -8,7 +8,6 @@ import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { DocumentActions } from '../../store/document';
-import { QueueH6 } from 'components/head/Head';
 import { HistorySelectors } from 'store/history/selectors';
 import { HistoryActions } from 'store/history';
 import { SettingsActions } from 'store/settings';

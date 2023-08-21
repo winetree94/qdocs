@@ -60,12 +60,6 @@ const TimeRange = () => {
 
         <Handles>
           {({ handles, getHandleProps }) => {
-            console.log(
-              'handles: ',
-              handles,
-              ' getHandleProps: ',
-              getHandleProps,
-            );
             return (
               <>
                 {handles.map((handle) => (

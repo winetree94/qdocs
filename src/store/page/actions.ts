@@ -12,11 +12,16 @@ const copyPage = createAction<{
   index: number;
 }>('Page/copyPage');
 
+/**
+ * @description
+ * 복제할 오브젝트 id와 함께 페이지 복제할 때 사용
+ */
 const duplicatePageWithQueueObjectIds = createAction<{
   fromId: EntityId;
   newId: string;
   index: number;
   objectIds: EntityId[];
+  withEffect?: boolean;
 }>('Page/duplicatePageWithQueueObjectIds');
 
 const addPage = createAction<NormalizedQueueDocumentPage>('Page/addPage');
