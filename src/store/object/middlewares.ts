@@ -7,7 +7,20 @@ import { SettingsActions, SettingSelectors } from '../settings';
 import { EffectActions, EffectSelectors } from '../effect';
 import { QueueObjectType } from 'model/object';
 import { OBJECT_EFFECT_TYPES, QueueEffectType } from 'model/effect';
-import { supportCreateEffect, supportRect } from 'model/support';
+import {
+  supportCreateEffect,
+  supportFade,
+  supportFadeEffect,
+  supportFill,
+  supportRect,
+  supportRectEffect,
+  supportRotateEffect,
+  supportRotation,
+  supportScale,
+  supportScaleEffect,
+  supportStroke,
+  supportStrokeEffect,
+} from 'model/support';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 
@@ -126,8 +139,6 @@ objectMiddleware.startListening({
             return acc;
           }, {});
 
-          console.log(myLastQueueEffects);
-
           let targetObject = copyTargetObjects.find(
             (copyTargetObject) => copyTargetObject.id === objectId,
           );
@@ -138,14 +149,53 @@ objectMiddleware.startListening({
             };
           }
 
-          if (supportRect(targetObject)) {
+          if (supportRect(targetObject) && supportRectEffect(targetObject)) {
             targetObject.rect = {
               ...targetObject.rect,
               ...(myLastQueueEffects.rect?.prop || {}),
             };
           }
 
-          // TODO 나머지 이펙트 추가
+          if (
+            supportStroke(targetObject) &&
+            supportStrokeEffect(targetObject)
+          ) {
+            targetObject.stroke = {
+              ...targetObject.stroke,
+              ...(myLastQueueEffects.stroke?.prop || {}),
+            };
+          }
+
+          if (supportFade(targetObject) && supportFadeEffect(targetObject)) {
+            targetObject.fade = {
+              ...targetObject.fade,
+              ...(myLastQueueEffects.fade?.prop || {}),
+            };
+          }
+
+          if (supportFill(targetObject) && supportFadeEffect(targetObject)) {
+            targetObject.fill = {
+              ...targetObject.fill,
+              ...(myLastQueueEffects.fill?.prop || {}),
+            };
+          }
+
+          if (
+            supportRotation(targetObject) &&
+            supportRotateEffect(targetObject)
+          ) {
+            targetObject.rotate = {
+              ...targetObject.rotate,
+              ...(myLastQueueEffects.rotate?.prop || {}),
+            };
+          }
+
+          if (supportScale(targetObject) && supportScaleEffect(targetObject)) {
+            targetObject.scale = {
+              ...targetObject.scale,
+              ...(myLastQueueEffects.scale?.prop || {}),
+            };
+          }
 
           newModels = [
             ...acc.newModels,
