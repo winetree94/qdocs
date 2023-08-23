@@ -36,6 +36,12 @@ module.exports = {
     "@typescript-eslint"
   ],
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     /**
      * @description
      * Javascript 에서 react 사용할 때 유용한 룰이지만 typescript 에서는 필요없는 룰 해제
