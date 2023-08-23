@@ -1,19 +1,21 @@
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import {
-  createContext,
-  forwardRef,
-  FunctionComponent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, FunctionComponent, useRef } from 'react';
+
+export interface GridHeaderCellRendererProps<T extends object> {
+  columnDef: GridColumnDef<T>;
+}
+
+export interface GridCellRendererProps<T extends object> {
+  columnDef: GridColumnDef<T>;
+  rowData: T;
+}
 
 export interface GridColumnDef<T extends object> {
   field: string;
   width: number;
-  headerRenderer?: FunctionComponent<GridColumnDef<T>>;
-  renderer?: FunctionComponent<T>;
+  headerRenderer?: FunctionComponent<GridHeaderCellRendererProps<T>>;
+  renderer?: FunctionComponent<GridCellRendererProps<T>>;
 }
 
 export interface GridRootProps {
@@ -137,7 +139,6 @@ export interface GridProps<T extends object> {
 export const Grid = <T extends object>(props: GridProps<T>) => {
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  console.log('grid rerender');
 
   const onScrollHeader = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
     bodyRef.current.scrollLeft = event.currentTarget.scrollLeft;
@@ -154,7 +155,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           {props.columnDefs.map((columnDef, index) => (
             <GridHeaderCell key={columnDef.field} width={columnDef.width}>
               {columnDef.headerRenderer ? (
-                <columnDef.headerRenderer {...columnDef} />
+                <columnDef.headerRenderer columnDef={columnDef} />
               ) : (
                 columnDef.field
               )}
@@ -167,7 +168,9 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           <GridRow key={index}>
             {props.columnDefs.map((columnDef, index) => (
               <GridCell key={columnDef.field} width={columnDef.width}>
-                {columnDef.renderer ? <columnDef.renderer {...row} /> : null}
+                {columnDef.renderer ? (
+                  <columnDef.renderer columnDef={columnDef} rowData={row} />
+                ) : null}
               </GridCell>
             ))}
           </GridRow>

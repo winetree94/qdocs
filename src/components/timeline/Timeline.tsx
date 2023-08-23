@@ -1,6 +1,11 @@
 import { QueueSubtoolbar } from 'app/subtoolbar/Subtoolbar';
 import clsx from 'clsx';
-import { Grid, GridColumnDef } from 'components/grid/Grid';
+import {
+  Grid,
+  GridCellRendererProps,
+  GridColumnDef,
+  GridHeaderCellRendererProps,
+} from 'components/grid/Grid';
 import { useMemo } from 'react';
 
 interface DataType {
@@ -9,19 +14,22 @@ interface DataType {
 
 export const Timeline = () => {
   const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
-    console.log('get value');
     return [
       {
         field: 'objectName',
         width: 100,
         headerRenderer: () => <div>/</div>,
-        renderer: (data: DataType) => <div>{data.objectName}</div>,
+        renderer: (props: GridCellRendererProps<DataType>) => (
+          <div>{props.rowData.objectName}</div>
+        ),
       },
       ...Array.from(new Array(50)).map((_, index) => ({
         field: `${index}`,
         width: 30,
-        headerRenderer: (prop: GridColumnDef<DataType>) => <>{prop.field}</>,
-        renderer: (data: DataType) => <></>,
+        headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
+          <>{props.columnDef.field}</>
+        ),
+        renderer: (props: GridCellRendererProps<DataType>) => <></>,
       })),
     ];
   }, []);
