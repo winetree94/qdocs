@@ -1,12 +1,45 @@
-import TimeRange from '../timeline-slider/index';
-import styles from './Timeline.module.scss';
+import { QueueSubtoolbar } from 'app/subtoolbar/Subtoolbar';
 import clsx from 'clsx';
+import { Grid, GridColumnDef } from 'components/grid/Grid';
+import { useMemo } from 'react';
+
+interface DataType {
+  objectName: string;
+}
 
 export const Timeline = () => {
+  const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
+    console.log('get value');
+    return [
+      {
+        field: 'objectName',
+        width: 100,
+        headerRenderer: () => <div>/</div>,
+        renderer: (data: DataType) => <div>{data.objectName}</div>,
+      },
+      ...Array.from(new Array(50)).map((_, index) => ({
+        field: `${index}`,
+        width: 30,
+        headerRenderer: (prop: GridColumnDef<DataType>) => <>{prop.field}</>,
+        renderer: (data: DataType) => <></>,
+      })),
+    ];
+  }, []);
+
+  const rowData: DataType[] = useMemo(() => {
+    return Array.from(new Array(100)).map((_, index) => ({
+      objectName: `Object ${index}`,
+    }));
+  }, []);
+
   return (
-    <>
-      <div className="tw-h-full">
-        <div
+    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
+      <QueueSubtoolbar />
+      <Grid
+        className={clsx('tw-flex-1')}
+        columnDefs={columnDefs}
+        rowData={rowData}></Grid>
+      {/* <div
           className={clsx(
             'tw-flex',
             'tw-h-[40px]',
@@ -23,8 +56,7 @@ export const Timeline = () => {
         </div>
         <div className={styles.content}>
           <TimeRange />
-        </div>
-      </div>
-    </>
+        </div> */}
+    </div>
   );
 };

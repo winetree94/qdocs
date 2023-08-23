@@ -20,4 +20,5 @@ html {
 // disable gesture / swipe history back
 body {
   overscroll-behavior: none;
+  overflow: hidden;
 }
