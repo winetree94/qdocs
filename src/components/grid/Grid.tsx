@@ -48,11 +48,13 @@ export interface GridHeaderProps {
 
 const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
   return (
-    <QueueScrollArea.Root className={clsx('tw-flex-shrink-0')}>
+    <QueueScrollArea.Root
+      className={clsx('tw-flex-shrink-0', 'tw-pb-2')}
+      type="always">
       <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
         {props.children}
       </QueueScrollArea.Viewport>
-      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
+      <QueueScrollArea.Scrollbar orientation="horizontal">
         <QueueScrollArea.Thumb />
       </QueueScrollArea.Scrollbar>
     </QueueScrollArea.Root>
@@ -96,7 +98,7 @@ const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
       <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
         {props.children}
       </QueueScrollArea.Viewport>
-      <QueueScrollArea.Scrollbar orientation="horizontal">
+      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
         <QueueScrollArea.Thumb />
       </QueueScrollArea.Scrollbar>
       <QueueScrollArea.Scrollbar orientation="vertical">
