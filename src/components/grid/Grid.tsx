@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import {
   createContext,
+  forwardRef,
   FunctionComponent,
   useEffect,
   useRef,
@@ -39,24 +40,19 @@ const GridRoot = (props: GridRootProps) => {
 
 export interface GridHeaderProps {
   children?: React.ReactNode;
-  scrollLeft: number;
+  onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }
 
-const GridHeader = (props: GridHeaderProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    ref.current.scrollLeft = props.scrollLeft;
-  }, [props.scrollLeft]);
-
+const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
   return (
     <div
       ref={ref}
-      className={clsx('grid-header', 'tw-overflow-x-auto', 'no-scrollbar')}>
+      className={clsx('grid-header', 'tw-overflow-x-auto', 'no-scrollbar')}
+      onScroll={props.onScroll}>
       {props.children}
     </div>
   );
-};
+});
 
 export interface GridHeaderRowProps {
   children?: React.ReactNode;
@@ -87,11 +83,10 @@ const GridHeaderCell = ({ width = 50, ...props }: GridHeaderCellProps) => {
 export interface GridBodyProps {
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }
 
-const GridBody = (props: GridBodyProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-
+const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
   return (
     <div
       ref={ref}
@@ -101,11 +96,12 @@ const GridBody = (props: GridBodyProps) => {
         'tw-relative',
         'tw-overflow-y-auto',
       )}
-      style={props.style}>
+      style={props.style}
+      onScroll={props.onScroll}>
       {props.children}
     </div>
   );
-};
+});
 
 export interface GridRowProps {
   children?: React.ReactNode;
@@ -138,13 +134,21 @@ export interface GridProps<T extends object> {
 }
 
 export const Grid = <T extends object>(props: GridProps<T>) => {
-  const [scrollLeft, setScrollLeft] = useState(0);
-
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   console.log('grid rerender');
+
+  const onScrollHeader = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    bodyRef.current.scrollLeft = event.currentTarget.scrollLeft;
+  };
+
+  const onScrollBody = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    headerRef.current.scrollLeft = event.currentTarget.scrollLeft;
+  };
 
   return (
     <GridRoot>
-      <GridHeader scrollLeft={scrollLeft}>
+      <GridHeader ref={headerRef} onScroll={onScrollHeader}>
         <GridHeaderRow>
           {props.columnDefs.map((columnDef, index) => (
             <GridHeaderCell key={columnDef.field} width={columnDef.width}>
@@ -157,7 +161,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           ))}
         </GridHeaderRow>
       </GridHeader>
-      <GridBody>
+      <GridBody ref={bodyRef} onScroll={onScrollBody}>
         {props.rowData.map((row, index) => (
           <GridRow key={index}>
             {props.columnDefs.map((columnDef, index) => (
