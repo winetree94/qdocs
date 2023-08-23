@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import {
   createContext,
   forwardRef,
@@ -45,12 +46,14 @@ export interface GridHeaderProps {
 
 const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
   return (
-    <div
-      ref={ref}
-      className={clsx('grid-header', 'tw-overflow-x-auto', 'no-scrollbar')}
-      onScroll={props.onScroll}>
-      {props.children}
-    </div>
+    <QueueScrollArea.Root className={clsx('tw-flex-shrink-0')}>
+      <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
+        {props.children}
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
   );
 });
 
@@ -82,24 +85,22 @@ const GridHeaderCell = ({ width = 50, ...props }: GridHeaderCellProps) => {
 
 export interface GridBodyProps {
   children?: React.ReactNode;
-  style?: React.CSSProperties;
   onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }
 
 const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
   return (
-    <div
-      ref={ref}
-      className={clsx(
-        'grid-body',
-        'tw-flex-1',
-        'tw-relative',
-        'tw-overflow-y-auto',
-      )}
-      style={props.style}
-      onScroll={props.onScroll}>
-      {props.children}
-    </div>
+    <QueueScrollArea.Root>
+      <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
+        {props.children}
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar orientation="horizontal">
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+      <QueueScrollArea.Scrollbar orientation="vertical">
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
   );
 });
 

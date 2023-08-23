@@ -34,7 +34,7 @@ export const Timeline = () => {
 
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
-      <QueueSubtoolbar />
+      <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
       <Grid
         className={clsx('tw-flex-1')}
         columnDefs={columnDefs}

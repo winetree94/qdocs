@@ -16,7 +16,11 @@ import { HistorySelectors } from 'store/history/selectors';
 import { ObjectActions } from 'store/object';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
-export const QueueSubtoolbar = () => {
+export interface QueueSubtoolbarProps {
+  className?: string;
+}
+
+export const QueueSubtoolbar = (props: QueueSubtoolbarProps) => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
 
@@ -44,7 +48,7 @@ export const QueueSubtoolbar = () => {
   };
 
   return (
-    <QueueScrollArea.Root className={styles.Container}>
+    <QueueScrollArea.Root className={clsx(styles.Container, props.className)}>
       <QueueScrollArea.Viewport>
         <div className={styles.ItemRoot}>
           <div className={styles.ItemGroup}>
