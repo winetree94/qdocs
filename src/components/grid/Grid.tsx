@@ -143,7 +143,12 @@ export interface GridCellProps {
 const GridCell = (props: GridCellProps) => {
   return (
     <div
-      className={clsx(styles.GridBodyCell, 'grid-cell', 'tw-flex-shrink-0')}
+      className={clsx(
+        styles.GridBodyCell,
+        'grid-cell',
+        'tw-flex-shrink-0',
+        'tw-relative',
+      )}
       style={{ width: props.width }}>
       {props.children}
     </div>

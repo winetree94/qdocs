@@ -7,8 +7,8 @@ export interface TimeLineTrack {
   title?: string;
   objectId?: EntityId;
 }
-export interface TimelineRail {
-  rangeStart?: number;
-  rangeEnd?: number;
-  tracks?: TimeLineTrack[];
+
+export interface TimeLineTracks {
+  rowIds: EntityId[];
+  tracks: TimeLineTrack[];
 }

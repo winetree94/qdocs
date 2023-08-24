@@ -7,12 +7,21 @@ import {
   GridHeaderCellRendererProps,
 } from 'components/grid/Grid';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { SettingSelectors } from 'store/settings/selectors';
+import { TimeLineTrack, TimeLineTracks } from '../../model/timeline/timeline';
+import styles from './Timeline.module.scss';
+import { getTimelineTracks } from './timeline-data';
 
 interface DataType {
   objectName: string;
+  objectContents: TimeLineTrack;
 }
 
 export const Timeline = () => {
+  const currnetPageId = useSelector(SettingSelectors.pageId);
+  const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(currnetPageId);
+
   const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
     return [
       {
@@ -29,7 +38,30 @@ export const Timeline = () => {
             {props.columnDef.field}
           </div>
         ),
-        cellRenderer: (props: GridCellRendererProps<DataType>) => <>1</>,
+        cellRenderer: (props: GridCellRendererProps<DataType>) => {
+          const {
+            startQueueIndex: start,
+            endQueueIndex: end,
+            queueList,
+          } = props.rowData.objectContents;
+
+          return (
+            <div
+              className={clsx(
+                start <= index && index <= end
+                  ? 'tw-bg-purple-500'
+                  : 'tw-bg-white',
+                'tw-text-white',
+                'tw-text-center',
+                'tw-my-1',
+                queueList.includes(index) ? styles.queueDot : styles.gridDot,
+                index === 0 && 'tw-rounded-l-lg',
+                index === end && 'tw-rounded-r-lg',
+              )}>
+              <span>&nbsp;</span>
+            </div>
+          );
+        },
       })),
       {
         field: 'right-margin',
@@ -45,8 +77,9 @@ export const Timeline = () => {
   };
 
   const rowData: DataType[] = useMemo(() => {
-    return Array.from(new Array(100)).map((_, index) => ({
-      objectName: `Object ${index}`,
+    return Array.from(rowIds).map((id, index) => ({
+      objectName: `timeline ${id} ${index}`,
+      objectContents: tracks[0],
     }));
   }, []);
 

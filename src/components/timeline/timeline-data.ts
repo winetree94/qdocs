@@ -1,10 +1,9 @@
 import { useAppSelector } from 'store/hooks';
-import { TimelineRail, TimeLineTrack } from '../../model/timeline/timeline';
+import { TimeLineTrack, TimeLineTracks } from '../../model/timeline/timeline';
+import { EntityId } from '@reduxjs/toolkit';
 
-export const getTimelineTracks = (pageId: string): TimelineRail => {
-  let rangeStart = 99999;
-  let rangeEnd = 0;
-  const objectIds = [];
+export const getTimelineTracks = (pageId: EntityId): TimeLineTracks => {
+  const objectIds: EntityId[] = [];
   const tracks = useAppSelector((state) =>
     Object.values(state.objects.entities)
       .filter((value) => value.pageId === pageId)
@@ -14,16 +13,7 @@ export const getTimelineTracks = (pageId: string): TimelineRail => {
           (entity) => entity.objectId === object.id,
         );
 
-        const filtered = effects.map((effect) => {
-          if (effect.index < rangeStart) {
-            rangeStart = effect.index;
-          }
-
-          if (effect.index > rangeEnd) {
-            rangeEnd = effect.index;
-          }
-          return effect.index;
-        });
+        const filtered = effects.map((effect) => effect.index);
 
         const item: TimeLineTrack = {
           objectId: object.id,
@@ -37,14 +27,10 @@ export const getTimelineTracks = (pageId: string): TimelineRail => {
       }, [] as TimeLineTrack[]),
   );
 
-  const rail: TimelineRail = {
-    rangeEnd,
-    rangeStart,
+  const timelineData = {
+    rowIds: objectIds,
     tracks,
   };
 
-  console.log('tracks: ', tracks);
-  console.log('rail: ', rail);
-
-  return rail;
+  return timelineData;
 };
