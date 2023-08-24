@@ -11,7 +11,7 @@ export const Root = React.forwardRef<
     <ScrollArea.Root
       {...props}
       ref={ref}
-      className={clsx(className, styles.ScrollAreaRoot)}>
+      className={clsx(styles.ScrollAreaRoot, className)}>
       {children}
     </ScrollArea.Root>
   );
@@ -25,7 +25,7 @@ export const Viewport = React.forwardRef<
     <ScrollArea.Viewport
       {...props}
       ref={ref}
-      className={clsx(className, styles.ScrollAreaViewport)}>
+      className={clsx(styles.ScrollAreaViewport, className)}>
       {children}
     </ScrollArea.Viewport>
   );
@@ -39,7 +39,7 @@ export const Scrollbar = React.forwardRef<
     <ScrollArea.Scrollbar
       {...props}
       ref={ref}
-      className={clsx(className, styles.ScrollAreaScrollbar)}>
+      className={clsx(styles.ScrollAreaScrollbar, className)}>
       {children}
     </ScrollArea.Scrollbar>
   );
@@ -53,7 +53,7 @@ export const Thumb = React.forwardRef<
     <ScrollArea.Thumb
       {...props}
       ref={ref}
-      className={clsx(className, styles.ScrollAreaThumb)}>
+      className={clsx(styles.ScrollAreaThumb, className)}>
       {children}
     </ScrollArea.Thumb>
   );
@@ -67,7 +67,7 @@ export const Corner = React.forwardRef<
     <ScrollArea.Corner
       {...props}
       ref={ref}
-      className={clsx(className, styles.ScrollAreaCorner)}>
+      className={clsx(styles.ScrollAreaCorner, className)}>
       {children}
     </ScrollArea.Corner>
   );

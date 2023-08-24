@@ -3,28 +3,21 @@
 @import '@radix-ui/colors/violet.css';
 
 .ScrollAreaRoot {
-  overflow: hidden;
+  @apply tw-overflow-hidden;
   --scrollbar-size: 10px;
 }
 
 .ScrollAreaViewport {
-  width: 100%;
-  height: 100%;
+  @apply tw-w-full tw-h-full;
 }
 
 .ScrollAreaScrollbar {
-  display: flex;
-  /* ensures no selection */
-  user-select: none;
-  /* disable browser handling of all panning and zooming gestures on touch devices */
-  touch-action: none;
-  padding: 2px;
-  background: var(--black-a6);
+  @apply tw-flex tw-select-none tw-touch-none tw-p-0.5;
   transition: background 160ms ease-out;
 }
 
 .ScrollAreaScrollbar:hover {
-  background: var(--black-a8);
+  background: var(--black-a6);
 }
 
 .ScrollAreaScrollbar[data-orientation='vertical'] {

@@ -16,23 +16,33 @@ export const Timeline = () => {
   const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
     return [
       {
-        field: 'objectName',
-        width: 100,
-        headerRenderer: () => <div>/</div>,
-        renderer: (props: GridCellRendererProps<DataType>) => (
-          <div>{props.rowData.objectName}</div>
-        ),
+        field: 'left-margin',
+        width: 20,
+        headerRenderer: () => <></>,
+        cellRenderer: (props: GridCellRendererProps<DataType>) => <></>,
       },
       ...Array.from(new Array(50)).map((_, index) => ({
         field: `${index}`,
-        width: 30,
+        width: 40,
         headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
-          <>{props.columnDef.field}</>
+          <div className={clsx('tw-text-12', 'tw-flex', 'tw-justify-center')}>
+            {props.columnDef.field}
+          </div>
         ),
-        renderer: (props: GridCellRendererProps<DataType>) => <></>,
+        cellRenderer: (props: GridCellRendererProps<DataType>) => <>1</>,
       })),
+      {
+        field: 'right-margin',
+        width: 20,
+        headerRenderer: () => <></>,
+        cellRenderer: (props: GridCellRendererProps<DataType>) => <></>,
+      },
     ];
   }, []);
+
+  const colSpanGetter = (data: DataType): number => {
+    return 1;
+  };
 
   const rowData: DataType[] = useMemo(() => {
     return Array.from(new Array(100)).map((_, index) => ({
@@ -44,7 +54,7 @@ export const Timeline = () => {
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
       <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
       <Grid
-        className={clsx('tw-flex-1')}
+        className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}></Grid>
       {/* <div
