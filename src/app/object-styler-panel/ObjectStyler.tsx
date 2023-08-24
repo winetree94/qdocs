@@ -18,6 +18,8 @@ export const ObjectStylerPanel = (): ReactElement | null => {
       <div className="tw-flex tw-flex-col tw-gap-3">
         <ObjectStyleRect />
         <QueueSeparator.Root />
+        <ObjectStyleText />
+        <QueueSeparator.Root />
         <ObjectStyleBackground />
         <QueueSeparator.Root />
         <ObjectStyleScale />
@@ -32,7 +34,6 @@ export const ObjectStylerPanel = (): ReactElement | null => {
         )}
         <ObjectStyleOpacity />
         <QueueSeparator.Root />
-        <ObjectStyleText />
       </div>
     </div>
   );

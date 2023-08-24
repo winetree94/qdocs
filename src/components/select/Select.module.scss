@@ -5,43 +5,43 @@
 @import 'styles/list/List.module.scss';
 @import 'components/buttons/button/Button.module.scss';
 
+@mixin queue-select-trigger-color-default {
+  &.default {
+    background-color: #e7e6eb;
+    color: var(--gray-12);
+
+    &[data-disabled] {
+      background-color: var(--gray-2);
+      color: var(--gray-8);
+    }
+  }
+}
+
 button {
   all: unset;
 }
 
 .SelectTrigger {
-  // base
-  @include queue-button-base;
+  @apply tw-flex tw-items-center tw-justify-between tw-rounded-md tw-outline-none tw-cursor-pointer tw-box-border tw-w-full;
 
   // sizing
   @include queue-ui-x-padding;
   @include queue-ui-fixed-height;
 
-  // font
-  @include queue-ui-fixed-font-size;
+  @include queue-ui-size-medium {
+    @apply tw-h-[28px] tw-px-2 tw-py-1.5 tw-text-xs tw-leading-none tw-font-normal;
+  }
 
   // theme
-  @include queue-button-color-default;
-  @include queue-button-color-blue;
-  @include queue-button-color-red;
-  @apply tw-justify-between;
-  gap: 4px;
-}
+  @include queue-select-trigger-color-default;
 
-.SelectTrigger:hover {
-  background-color: var(--mauve-3);
-}
+  &[data-placeholder] {
+    @apply tw-text-[var(--gray-8)];
+  }
 
-.SelectTrigger:focus {
-  box-shadow: 0 0 0 2px var(--mauve-12);
-}
-
-.SelectTrigger[data-placeholder] {
-  color: var(--mauve-9);
-}
-
-.SelectIcon {
-  color: var(--mauve-12);
+  &[data-disabled] {
+    @apply tw-cursor-not-allowed;
+  }
 }
 
 .SelectContent {

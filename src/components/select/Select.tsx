@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-// import clsx from 'clsx';
 import * as Select from '@radix-ui/react-select';
 import {
   CheckIcon,
@@ -9,11 +8,13 @@ import {
 import styles from './Select.module.scss';
 import { QUEUE_UI_SIZES, QUEUE_UI_SIZE } from 'styles/ui/Size';
 import clsx from 'clsx';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
 
 export type QueueSelectProps = Select.SelectProps &
   Select.SelectContentProps &
   Select.SelectValueProps & {
     size?: QUEUE_UI_SIZES;
+    color?: QUEUE_UI_COLORS;
   };
 
 export interface QueueSelectGroupProps extends Select.SelectGroupProps {
@@ -64,6 +65,7 @@ const getSelectContentProps = (
 const Root = ({
   children,
   size = QUEUE_UI_SIZE.MEDIUM,
+  color = QUEUE_UI_COLOR.DEFAULT,
   placeholder,
   ...props
 }: QueueSelectProps) => {
@@ -71,9 +73,10 @@ const Root = ({
 
   return (
     <Select.Root {...props}>
-      <Select.Trigger className={styles.SelectTrigger}>
+      <Select.Trigger
+        className={clsx(styles.SelectTrigger, styles[color], styles[size])}>
         <Select.Value placeholder={placeholder} />
-        <Select.Icon className={styles.SelectIcon}>
+        <Select.Icon>
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>

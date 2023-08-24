@@ -1,5 +1,4 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { QueueH6 } from 'components/head/Head';
 import { QueueInput } from 'components/input/Input';
 import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueText } from 'model/property';
@@ -38,37 +37,40 @@ export const ObjectStyleText = () => {
   };
 
   return (
-    <div className={styles.ItemContainer}>
-      <QueueH6>{t('global.text')}</QueueH6>
-      <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.font-family')}</div>
-        <div className={styles.SubInputContainer}>
-          <QueueSelect
-            value={text.fontFamily}
-            onValueChange={(value): void => updateText({ fontFamily: value })}>
-            <QueueSelect.Group>
-              <QueueSelect.Option value="Arial">Arial</QueueSelect.Option>
-              <QueueSelect.Option value="Inter">Inter</QueueSelect.Option>
-              <QueueSelect.Option value="Roboto">Roboto</QueueSelect.Option>
-            </QueueSelect.Group>
-          </QueueSelect>
-        </div>
+    <div className="tw-flex tw-flex-wrap tw-gap-2">
+      <div className="tw-flex-1 tw-basis-full">
+        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">Text</h2>
       </div>
-      <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.font-size')}</div>
-        <div className={styles.SubInputContainer}>
-          <QueueInput
-            value={text.fontSize}
-            type="number"
-            onChange={(e): void =>
-              updateText({ fontSize: Number(e.target.value) })
-            }
-          />
-        </div>
+      <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
+        <QueueSelect
+          value={text.fontFamily}
+          onValueChange={(value): void => updateText({ fontFamily: value })}>
+          <QueueSelect.Group>
+            <QueueSelect.Option value="Arial">Arial</QueueSelect.Option>
+            <QueueSelect.Option value="Inter">Inter</QueueSelect.Option>
+            <QueueSelect.Option value="Roboto">Roboto</QueueSelect.Option>
+          </QueueSelect.Group>
+        </QueueSelect>
       </div>
+      <div className="tw-flex-1">
+        <QueueSelect value="Bold" disabled>
+          <QueueSelect.Option value="Bold">Bold</QueueSelect.Option>
+        </QueueSelect>
+      </div>
+      <div className="tw-flex-1">
+        <QueueInput
+          value={text.fontSize}
+          type="number"
+          variant="filled"
+          onChange={(e): void =>
+            updateText({ fontSize: Number(e.target.value) })
+          }
+        />
+      </div>
+
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.horizontal-align')}</div>
-        <div className={styles.SubInputContainer}>
+        <div>
           <QueueToggleGroup.Root
             type="single"
             value={text.horizontalAlign}
@@ -91,7 +93,7 @@ export const ObjectStyleText = () => {
       </div>
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.vertical-align')}</div>
-        <div className={styles.SubInputContainer}>
+        <div>
           <QueueToggleGroup.Root
             type="single"
             value={text.verticalAlign}
@@ -114,7 +116,7 @@ export const ObjectStyleText = () => {
       </div>
       <div className={styles.SubItemContainer}>
         <div className={styles.SubTitle}>{t('global.color')}</div>
-        <div className={styles.SubInputContainer}>
+        <div>
           <input
             id="text-color"
             className="tw-input-color"
