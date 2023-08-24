@@ -21,6 +21,7 @@ interface DataType {
 export const Timeline = () => {
   const currnetPageId = useSelector(SettingSelectors.pageId);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(currnetPageId);
+  console.log(rowIds, tracks);
 
   const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
     return [
