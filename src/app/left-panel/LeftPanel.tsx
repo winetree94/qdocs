@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import styles from './LeftPanel.module.scss';
 import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
-import { DefaultPropPanel } from './default-prop-panel/DefaultPropPanel';
 import { EffectControllerBox } from 'components';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
@@ -28,9 +27,6 @@ export const LeftPanel: FunctionComponent = () => {
             <QueueTabs.Trigger value={PanelTabType.Styler}>
               Effects
             </QueueTabs.Trigger>
-            <QueueTabs.Trigger value={PanelTabType.DefaultProp}>
-              Default
-            </QueueTabs.Trigger>
           </QueueTabs.List>
           <QueueTabs.Content
             className="tw-h-full tw-overflow-hidden"
@@ -43,11 +39,6 @@ export const LeftPanel: FunctionComponent = () => {
                 <QueueScrollArea.Thumb />
               </QueueScrollArea.Scrollbar>
             </QueueScrollArea.Root>
-          </QueueTabs.Content>
-          <QueueTabs.Content
-            className="tw-h-full tw-overflow-hidden"
-            value={PanelTabType.DefaultProp}>
-            <DefaultPropPanel />
           </QueueTabs.Content>
         </QueueTabs.Root>
       ) : (

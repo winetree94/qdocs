@@ -1,13 +1,11 @@
 import { QueueInput } from 'components/input/Input';
 import { QueueRect } from 'model/property';
-import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 
 export const ObjectStyleRect = () => {
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const [firstObject] = selectedObjects;

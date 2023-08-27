@@ -18,10 +18,8 @@ import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
 import { RightPanel } from 'app/right-panel/RightPanel';
 import { PagePanel } from 'app/page-panel/PagePanel';
-import { Timeline } from 'components/timeline/Timeline';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
-import { LeftPanel } from 'app/left-panel/LeftPanel';
 import { QueueSubHeader } from 'app/sub-header/SubHeader';
 import { QueueHeader } from 'app/header/Header';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
@@ -300,11 +298,16 @@ export const RootLayout = () => {
               </div>
             )}
           </div>
-          <LeftPanel></LeftPanel>
-          <PanelResizer.Panel width={200} minWidth={50}>
-            <PanelResizer.Pane panePosition="left"></PanelResizer.Pane>
-            <RightPanel className="tw-h-full"></RightPanel>
-          </PanelResizer.Panel>
+
+          <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
+            <PanelResizer.Panel
+              className="tw-h-full"
+              width={240}
+              minWidth={200}>
+              <PanelResizer.Pane panePosition="left" />
+              <RightPanel className="tw-h-full" />
+            </PanelResizer.Panel>
+          </div>
         </div>
       )}
 

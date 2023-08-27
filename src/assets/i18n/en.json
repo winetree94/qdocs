@@ -76,5 +76,6 @@
   "page-panel.duplicate-page-and-content": "Duplicate page and every content",
   "object-context.group": "Group",
   "object-context.ungroup": "Ungroup",
-  "welcome.image-alt": "Image displaying shapes from left to right: circle, pentagon, rectangle. Shapes are filled with light purple background and outlined with dark purple lines."
+  "welcome.image-alt": "Image displaying shapes from left to right: circle, pentagon, rectangle. Shapes are filled with light purple background and outlined with dark purple lines.",
+  "global.design": "Design"
 }
