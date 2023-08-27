@@ -16,6 +16,15 @@ export const BottomPanel = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
+  const changeQueueIndex = (targetIndex: number, play: boolean): void => {
+    dispatch(
+      SettingsActions.setQueueIndex({
+        queueIndex: targetIndex,
+        play: play,
+      }),
+    );
+  };
+
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-flex-1')}>
       {/*
@@ -42,14 +51,6 @@ export const BottomPanel = () => {
             )}>
             {t('global.timeline')}
           </p>
-
-          <span className={clsx('tw-my-3', 'tw-mx-2', 'tw-h-full')}>
-            <QueueSeparator.Root
-              orientation="vertical"
-              decorative></QueueSeparator.Root>
-          </span>
-
-          <p className={clsx('tw-text-14', 'tw-ml-2')}>00m : 13s : 00ms</p>
         </div>
 
         {/* center */}
@@ -61,8 +62,18 @@ export const BottomPanel = () => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
+            onClick={() => changeQueueIndex(settings.queueIndex - 1, false)}>
+            <SvgRemixIcon icon={'ri-skip-back-line'} />
+          </QueueIconButton>
+          <QueueIconButton
+            size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.play())}>
             <SvgRemixIcon icon={'ri-play-line'} />
+          </QueueIconButton>
+          <QueueIconButton
+            size={QUEUE_UI_SIZE.MEDIUM}
+            onClick={() => changeQueueIndex(settings.queueIndex + 1, false)}>
+            <SvgRemixIcon icon={'ri-skip-forward-line'} />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
