@@ -116,6 +116,7 @@ export interface GridBodyProps {
   className?: string;
   children?: React.ReactNode;
   onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
+  scrollWidth?: number;
 }
 
 const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
@@ -124,6 +125,10 @@ const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
       className={clsx(styles.GridBody, 'tw-flex-1', props.className)}>
       <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
         {props.children}
+
+        <div
+          className={clsx('tw-h-0')}
+          style={{ width: props.scrollWidth }}></div>
       </QueueScrollArea.Viewport>
       <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
         <QueueScrollArea.Thumb />
@@ -326,7 +331,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           ))}
         </GridHeaderRow>
       </GridHeader>
-      <GridBody ref={bodyRef} onScroll={onScrollBody}>
+      <GridBody ref={bodyRef} onScroll={onScrollBody} scrollWidth={totalWidth}>
         {props.rowData.map((row, index) => (
           <GridRow key={index}>
             {internalColumnDefs.map((columnDef) => (
