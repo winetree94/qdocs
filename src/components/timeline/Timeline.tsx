@@ -41,7 +41,7 @@ export const Timeline = () => {
             'tw-items-center',
             index === settings.queueIndex && 'tw-text-purple-500',
           )}>
-          {props.columnDef.field}
+          {Number(props.columnDef.field) + 1}
         </div>
       ),
       cellRenderer: (props: GridCellRendererProps<DataType>) => {
