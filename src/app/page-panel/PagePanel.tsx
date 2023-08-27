@@ -2,6 +2,7 @@ import {
   BaseHTMLAttributes,
   Fragment,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -108,16 +109,18 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
   const objects = useAppSelector((state) =>
     ObjectSelectors.allByPageId(state, page.id),
   );
-  const effects = useAppSelector((state) =>
-    EffectSelectors.allByPageId(state, page.id),
+  const firstQueueEffects = useAppSelector((state) =>
+    EffectSelectors.firstQueueByPageId(state, page.id),
   );
 
-  const firstQueueEffects = effects.filter((effect) => effect.index === 0);
-  const firstQueueEffectObjectIds = firstQueueEffects.map(
-    (effect) => effect.objectId,
+  const firstQueueEffectObjectIds = useMemo(
+    () => firstQueueEffects.map((effect) => effect.objectId),
+    [firstQueueEffects],
   );
-  const firstQueueObjects = objects.filter((object) =>
-    firstQueueEffectObjectIds.includes(object.id),
+  const firstQueueObjects = useMemo(
+    () =>
+      objects.filter((object) => firstQueueEffectObjectIds.includes(object.id)),
+    [objects, firstQueueEffectObjectIds],
   );
 
   const pagePreviewRef = useRef<HTMLDivElement>(null);
@@ -175,7 +178,7 @@ const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
         height={queueDocument.documentRect.height}
         scale={pagePreviewScale}>
         {firstQueueObjects.map((firstQueueObject, index) => (
-          <Fragment key={index}>
+          <Fragment key={`preview-${firstQueueObject.id}-${index}`}>
             <StandaloneRect object={firstQueueObject} />
             <StandaloneText {...firstQueueObject} />
           </Fragment>

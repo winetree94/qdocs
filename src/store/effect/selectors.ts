@@ -61,6 +61,19 @@ const allByPageId = createSelector(
 
 /**
  * @description
+ * 첫번째 큐의 이펙트 목록을 페이지 아이디로 조회
+ * 페이지의 첫번째 큐의 이펙트 목록을 조회할 경우 사용
+ *
+ * createSelector를 사용하여 메모이제이션을 시도
+ */
+const firstQueueByPageId = createSelector(
+  [all, ObjectSelectors.idSetOfPageId],
+  (effects, ids) =>
+    effects.filter(({ index, objectId }) => index === 0 && ids.has(objectId)),
+);
+
+/**
+ * @description
  * 전체 이펙트를 object id 로 그룹화하여 Map 형태로 조회
  * 오브젝트의 이펙트 목록을 조회할 경우 사용
  */
@@ -189,6 +202,7 @@ export const EffectSelectors = {
   byObjectId,
   groupByObjectId,
   allByPageId,
+  firstQueueByPageId,
   allByPageAndEffectIndex,
   allEffectedObjects,
   allEffectedObjectsMap,
