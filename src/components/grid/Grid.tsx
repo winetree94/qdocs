@@ -175,6 +175,8 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
     headerRef.current.scrollLeft = event.currentTarget.scrollLeft;
   };
 
+  console.log(props.rowData);
+
   return (
     <GridRoot>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>

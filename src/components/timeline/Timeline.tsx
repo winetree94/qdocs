@@ -21,7 +21,6 @@ interface DataType {
 export const Timeline = () => {
   const currnetPageId = useSelector(SettingSelectors.pageId);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(currnetPageId);
-  console.log(rowIds, tracks);
 
   const columnDefs: GridColumnDef<DataType>[] = useMemo(() => {
     return [
@@ -68,7 +67,7 @@ export const Timeline = () => {
         field: 'right-margin',
         width: 20,
         headerRenderer: () => <></>,
-        cellRenderer: (props: GridCellRendererProps<DataType>) => <></>,
+        cellRenderer: () => <></>,
       },
     ];
   }, []);
@@ -86,29 +85,10 @@ export const Timeline = () => {
 
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
-      <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
       <Grid
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}></Grid>
-      {/* <div
-          className={clsx(
-            'tw-flex',
-            'tw-h-[40px]',
-            'tw-box-border',
-            styles.header,
-          )}>
-          <div className="tw-text-[14px] tw-p-[12px]">
-            <span className="tw-font-extrabold">Timeline</span>
-          </div>
-          <div className={styles.divider}></div>
-          <div className="tw-text-[12px] tw-p-[12px]">
-            <span>00m : 13s : 00m</span>
-          </div>
-        </div>
-        <div className={styles.content}>
-          <TimeRange />
-        </div> */}
     </div>
   );
 };

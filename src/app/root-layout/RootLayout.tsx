@@ -24,6 +24,7 @@ import { QueueObjectType } from 'model/object';
 import { LeftPanel } from 'app/left-panel/LeftPanel';
 import { QueueSubHeader } from 'app/sub-header/SubHeader';
 import { QueueHeader } from 'app/header/Header';
+import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
@@ -294,7 +295,7 @@ export const RootLayout = () => {
                   height={200}
                   minHeight={30}>
                   <PanelResizer.Pane panePosition="top"></PanelResizer.Pane>
-                  <Timeline />
+                  <BottomPanel />
                 </PanelResizer.Panel>
               </div>
             )}

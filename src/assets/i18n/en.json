@@ -65,6 +65,7 @@
   "global.circle": "Circle",
   "global.line": "Line",
   "global.icon": "Icon",
+  "global.timeline": "Timeline",
   "effect-panel.all-effects": "All Effects",
   "effect-panel.current-effects": "Current Effects",
   "page-panel.add-page": "Add page",

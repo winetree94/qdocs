@@ -65,6 +65,7 @@
   "global.circle": "원",
   "global.line": "선",
   "global.icon": "아이콘",
+  "global.timeline": "타임라인",
   "effect-panel.all-effects": "전체 이펙트",
   "effect-panel.current-effects": "현재 이펙트",
   "page-panel.add-page": "페이지 추가",
