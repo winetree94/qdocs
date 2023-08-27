@@ -28,7 +28,7 @@ export const Timeline = () => {
       cellRenderer: (props: GridCellRendererProps<DataType>) => <></>,
     },
     ...Array.from(new Array(50)).map((_, index) => ({
-      field: `${index + 1}`,
+      field: `${index}`,
       width: 40,
       headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
         <div
@@ -89,6 +89,7 @@ export const Timeline = () => {
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
+        cursorField={settings.queueIndex.toString()}
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}></Grid>

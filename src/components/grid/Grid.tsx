@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { forwardRef, FunctionComponent, useRef } from 'react';
+import { forwardRef, FunctionComponent, useMemo, useRef } from 'react';
 import styles from './Grid.module.scss';
 
 export interface GridHeaderCellRendererProps<T extends object> {
@@ -14,6 +14,14 @@ export interface GridCellRendererProps<T extends object> {
 
 export interface GridColumnDef<T extends object> {
   field: string;
+  width: number;
+  headerRenderer?: FunctionComponent<GridHeaderCellRendererProps<T>>;
+  cellRenderer?: FunctionComponent<GridCellRendererProps<T>>;
+}
+
+export interface GridInternalColumnDef<T extends object> {
+  field: string;
+  left: number;
   width: number;
   headerRenderer?: FunctionComponent<GridHeaderCellRendererProps<T>>;
   cellRenderer?: FunctionComponent<GridCellRendererProps<T>>;
@@ -237,6 +245,7 @@ export const GridCursor = (props: GridCursorProps) => {
 export interface GridProps<T extends object> {
   className?: string;
   children?: React.ReactNode;
+  cursorField?: string;
   columnDefs: GridColumnDef<T>[];
   headerHeight?: number;
   colSpanGetter?: (params: T) => number;
@@ -248,10 +257,46 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  const totalWidth = props.columnDefs.reduce(
-    (acc, columnDef) => acc + columnDef.width,
-    0,
-  );
+  const internalColumnDefs = useMemo(() => {
+    return props.columnDefs.reduce<GridInternalColumnDef<T>[]>(
+      (result, def) => {
+        const last = result[result.length - 1];
+        const left = last ? last.left + last.width : 0;
+        result.push({
+          ...def,
+          left,
+        });
+        return result;
+      },
+      [],
+    );
+  }, [props.columnDefs]);
+
+  const internalColumnDefsMap = useMemo(() => {
+    return internalColumnDefs.reduce<Record<string, GridInternalColumnDef<T>>>(
+      (result, def) => {
+        result[def.field] = def;
+        return result;
+      },
+      {},
+    );
+  }, [internalColumnDefs]);
+
+  const cursorDefLeft = useMemo(() => {
+    const cursorDef = internalColumnDefsMap[props.cursorField];
+    if (!cursorDef) {
+      return 0;
+    }
+    const cursorWidth = 19;
+    const cursorHalfWidth = cursorWidth / 2;
+    const cursorCenter = cursorDef.left + cursorDef.width / 2;
+    return cursorCenter - cursorHalfWidth;
+  }, [internalColumnDefsMap, props.cursorField]);
+
+  const totalWidth = useMemo(() => {
+    const last = internalColumnDefs[internalColumnDefs.length - 1];
+    return last ? last.left + last.width : 0;
+  }, [internalColumnDefs]);
 
   const onScrollHeader = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
     overlayRef.current.scrollLeft = event.currentTarget.scrollLeft;
@@ -270,7 +315,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           style={{
             height: props.headerHeight || 24,
           }}>
-          {props.columnDefs.map((columnDef) => (
+          {internalColumnDefs.map((columnDef) => (
             <GridHeaderCell key={columnDef.field} width={columnDef.width}>
               {columnDef.headerRenderer ? (
                 <columnDef.headerRenderer columnDef={columnDef} />
@@ -284,7 +329,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       <GridBody ref={bodyRef} onScroll={onScrollBody}>
         {props.rowData.map((row, index) => (
           <GridRow key={index}>
-            {props.columnDefs.map((columnDef) => (
+            {internalColumnDefs.map((columnDef) => (
               <GridCell key={columnDef.field} width={columnDef.width}>
                 {columnDef.cellRenderer ? (
                   <columnDef.cellRenderer columnDef={columnDef} rowData={row} />
@@ -295,7 +340,8 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
         ))}
       </GridBody>
       <GridOverlay ref={overlayRef} scrollWidth={totalWidth}>
-        <GridCursor style={{ marginTop: 18 }}></GridCursor>
+        <GridCursor
+          style={{ marginTop: 18, marginLeft: cursorDefLeft }}></GridCursor>
       </GridOverlay>
     </GridRoot>
   );
