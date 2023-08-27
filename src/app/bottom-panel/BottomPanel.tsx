@@ -1,8 +1,6 @@
-import { QueueSubtoolbar } from 'app/subtoolbar/Subtoolbar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/buttons/button/Button';
-import { QueueSeparator } from 'components/separator/Separator';
 import CustomSlider from 'components/slider/Slider';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueToggle } from 'components/toggle/Toggle';
@@ -62,7 +60,7 @@ export const BottomPanel = () => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(settings.queueIndex - 1, false)}>
+            onClick={() => changeQueueIndex(settings.queueIndex - 1, true)}>
             <SvgRemixIcon icon={'ri-skip-back-line'} />
           </QueueIconButton>
           <QueueIconButton
@@ -72,7 +70,7 @@ export const BottomPanel = () => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(settings.queueIndex + 1, false)}>
+            onClick={() => changeQueueIndex(settings.queueIndex + 1, true)}>
             <SvgRemixIcon icon={'ri-skip-forward-line'} />
           </QueueIconButton>
           <QueueIconButton
