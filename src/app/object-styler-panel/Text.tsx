@@ -1,15 +1,57 @@
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { SvgRemixIcon, SvgRemixIconProps } from 'cdk/icon/SvgRemixIcon';
 import { QueueInput } from 'components/input/Input';
-import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
 import { QueueText } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QueueSelect } from 'components/select/Select';
-import styles from './Text.module.scss';
+import QueueButtonGroup from 'components/buttons/button-group/ButtonGroup';
+import { QueueButton } from 'components/buttons/button/Button';
+import { QueueSeparator } from 'components/separator/Separator';
+import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import QueueColorPicker from 'components/color-picker/ColorPicker';
+
+const textHorizontalAlignButtonGroup: {
+  value: 'left' | 'center' | 'right' | 'justify';
+  icon: SvgRemixIconProps['icon'];
+}[] = [
+  {
+    value: 'left',
+    icon: 'ri-align-left',
+  },
+  {
+    value: 'center',
+    icon: 'ri-align-center',
+  },
+  {
+    value: 'right',
+    icon: 'ri-align-right',
+  },
+  {
+    value: 'justify',
+    icon: 'ri-align-justify',
+  },
+];
+
+const textVerticalAlignButtonGroup: {
+  value: 'top' | 'middle' | 'bottom';
+  icon: SvgRemixIconProps['icon'];
+}[] = [
+  {
+    value: 'top',
+    icon: 'ri-align-top',
+  },
+  {
+    value: 'middle',
+    icon: 'ri-align-vertically',
+  },
+  {
+    value: 'bottom',
+    icon: 'ri-align-bottom',
+  },
+];
 
 export const ObjectStyleText = () => {
   const { t } = useTranslation();
@@ -39,7 +81,9 @@ export const ObjectStyleText = () => {
   return (
     <div className="tw-flex tw-flex-wrap tw-gap-2">
       <div className="tw-flex-1 tw-basis-full">
-        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">Text</h2>
+        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">
+          {t('global.text')}
+        </h2>
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
         <QueueSelect
@@ -68,62 +112,75 @@ export const ObjectStyleText = () => {
         />
       </div>
 
-      <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.horizontal-align')}</div>
-        <div>
-          <QueueToggleGroup.Root
-            type="single"
-            value={text.horizontalAlign}
-            onValueChange={(value: 'left' | 'center' | 'right'): void =>
-              updateText({
-                horizontalAlign: value || text.horizontalAlign,
-              })
-            }>
-            <QueueToggleGroup.Item value="left" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-left'} />
-            </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="center" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-center'} />
-            </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="right" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-right'} />
-            </QueueToggleGroup.Item>
-          </QueueToggleGroup.Root>
-        </div>
+      <div className="tw-flex-1 tw-basis-full">
+        <QueueButtonGroup>
+          <QueueButton className="tw-w-full" disabled>
+            <SvgRemixIcon icon="ri-bold" />
+          </QueueButton>
+          <QueueButton className="tw-w-full" disabled>
+            <SvgRemixIcon icon="ri-italic" />
+          </QueueButton>
+          <QueueButton className="tw-w-full" disabled>
+            <SvgRemixIcon icon="ri-underline" />
+          </QueueButton>
+          <QueueButton className="tw-w-full" disabled>
+            <SvgRemixIcon icon="ri-strikethrough" />
+          </QueueButton>
+        </QueueButtonGroup>
       </div>
-      <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.vertical-align')}</div>
-        <div>
-          <QueueToggleGroup.Root
-            type="single"
-            value={text.verticalAlign}
-            onValueChange={(value: 'top' | 'middle' | 'bottom'): void =>
-              updateText({
-                verticalAlign: value || text.verticalAlign,
-              })
-            }>
-            <QueueToggleGroup.Item value="top" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-top'} />
-            </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="middle" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-vertically'} />
-            </QueueToggleGroup.Item>
-            <QueueToggleGroup.Item value="bottom" size={QUEUE_UI_SIZE.SMALL}>
-              <SvgRemixIcon icon={'ri-align-bottom'} />
-            </QueueToggleGroup.Item>
-          </QueueToggleGroup.Root>
-        </div>
+
+      <QueueSeparator.Root className="tw-my-2" />
+
+      <div className="tw-flex-1 tw-basis-full">
+        <QueueButtonGroup>
+          {textHorizontalAlignButtonGroup.map((button) => (
+            <QueueButton
+              className="tw-w-full tw-max-w-[50px] tw-box-border"
+              data-state={text.horizontalAlign === button.value && 'on'}
+              color={QUEUE_UI_COLOR.DEFAULT}
+              key={`textHorizontalAlignButtonGroup-${button.value}`}
+              onClick={() => {
+                updateText({ horizontalAlign: button.value });
+              }}>
+              <SvgRemixIcon icon={button.icon} />
+            </QueueButton>
+          ))}
+        </QueueButtonGroup>
       </div>
-      <div className={styles.SubItemContainer}>
-        <div className={styles.SubTitle}>{t('global.color')}</div>
-        <div>
-          <input
-            id="text-color"
-            className="tw-input-color"
-            type="color"
-            value={text.fontColor}
-            onChange={(e): void => updateText({ fontColor: e.target.value })}
+
+      <div className="tw-flex-1 tw-basis-full">
+        <QueueButtonGroup>
+          {textVerticalAlignButtonGroup.map((button) => (
+            <QueueButton
+              className="tw-w-full tw-max-w-[50px] tw-box-border"
+              data-state={text.verticalAlign === button.value && 'on'}
+              color={QUEUE_UI_COLOR.DEFAULT}
+              key={`textVerticalAlignButtonGroup-${button.value}`}
+              onClick={() => {
+                updateText({ verticalAlign: button.value });
+              }}>
+              <SvgRemixIcon icon={button.icon} />
+            </QueueButton>
+          ))}
+        </QueueButtonGroup>
+      </div>
+
+      <QueueSeparator.Root className="tw-my-2" />
+
+      <div className="tw-flex-1 tw-basis-full">
+        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">
+          {t('global.color')}
+        </h2>
+      </div>
+      <div className="tw-flex-1 tw-basis-full">
+        <div className="tw-flex tw-gap-2 tw-items-center tw-px-2 tw-py-1.5 tw-box-border tw-bg-[#E7E6EB] tw-leading-none tw-text-xs tw-font-normal tw-rounded-lg">
+          <QueueColorPicker
+            color={text.fontColor}
+            onChange={(color) => {
+              updateText({ fontColor: color.hex });
+            }}
           />
+          <div>{text.fontColor.replace('#', '')}</div>
         </div>
       </div>
     </div>

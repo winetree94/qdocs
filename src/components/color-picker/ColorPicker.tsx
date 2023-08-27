@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
-import { SketchPicker, ColorResult, RGBColor } from 'react-color';
+import { ChangeEvent, useEffect, useState } from 'react';
+import {
+  SketchPicker,
+  ColorResult,
+  SketchPickerProps,
+  ColorChangeHandler,
+} from 'react-color';
 import { clsx } from 'clsx';
 import styles from './ColorPicker.module.scss';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
-const QueueColorPicker = () => {
+const QueueColorPicker = ({ onChange, ...props }: SketchPickerProps) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
-  const [color, setColor] = useState<RGBColor>({
-    r: 241,
-    g: 112,
-    b: 19,
-    a: 1,
+  const [color, setColor] = useState<Partial<ColorResult>>({
+    hex: props.color as string,
   });
-  const brightness = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+  const brightness =
+    0.299 * color.rgb?.r + 0.587 * color.rgb?.g + 0.114 * color.rgb?.b;
   const arrowColor = brightness > 127.5 ? '#000' : '#fff';
 
   const handleClick = () => {
@@ -23,18 +26,28 @@ const QueueColorPicker = () => {
     setDisplayColorPicker(false);
   };
 
-  const handleChange = (color: ColorResult) => {
-    setColor(color.rgb);
+  const handleChange: ColorChangeHandler = (
+    color: ColorResult,
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    setColor(color);
+    onChange?.(color, event);
   };
 
-  const rgbDynamicStyle = {
-    background: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
-  };
+  useEffect(() => {
+    setColor({
+      ...color,
+      hex: props.color as string,
+    });
+  }, [props.color]);
 
   return (
     <>
       <div className={styles.wrapper} onClick={handleClick}>
-        <div className={clsx(styles.color)} style={rgbDynamicStyle} />
+        <div
+          className={clsx(styles.color)}
+          style={{ backgroundColor: color.hex }}
+        />
         <ChevronDownIcon
           className={clsx(styles.chevron)}
           style={{ color: arrowColor }}
@@ -43,7 +56,11 @@ const QueueColorPicker = () => {
       {displayColorPicker ? (
         <div className={styles.popover}>
           <div className={styles.cover} onClick={handleClose} />
-          <SketchPicker color={color} onChange={handleChange} />
+          <SketchPicker
+            color={props.color}
+            onChange={handleChange}
+            {...props}
+          />
         </div>
       ) : null}
     </>

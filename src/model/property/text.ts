@@ -6,7 +6,7 @@ export interface QueueText {
   fontFamily: string;
   fontColor: string;
   verticalAlign: 'top' | 'middle' | 'bottom';
-  horizontalAlign: 'left' | 'center' | 'right';
+  horizontalAlign: 'left' | 'center' | 'right' | 'justify';
 }
 
 export interface WithText {

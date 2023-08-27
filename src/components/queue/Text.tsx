@@ -25,7 +25,9 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
       ? 'center'
       : object.text.horizontalAlign === 'left'
       ? 'left'
-      : 'right';
+      : object.text.horizontalAlign === 'right'
+      ? 'right'
+      : 'justify';
 
   const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.nativeEvent.isComposing) {
