@@ -5,7 +5,6 @@ import {
   GridColumnDef,
   GridHeaderCellRendererProps,
 } from 'components/grid/Grid';
-import { useMemo } from 'react';
 import { SettingSelectors } from 'store/settings/selectors';
 import { TimeLineTrack, TimeLineTracks } from '../../model/timeline/timeline';
 import styles from './Timeline.module.scss';
@@ -34,6 +33,7 @@ export const Timeline = () => {
       headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
         <div
           className={clsx(
+            'tw-relative',
             'tw-text-12',
             'tw-flex',
             'tw-justify-center',
@@ -87,7 +87,7 @@ export const Timeline = () => {
   }));
 
   return (
-    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
+    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}

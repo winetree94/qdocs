@@ -158,6 +158,44 @@ const GridCell = (props: GridCellProps) => {
   );
 };
 
+export interface GridCursorProps {
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+export const GridCursor = (props: GridCursorProps) => {
+  return (
+    <div
+      className={clsx('tw-relative', 'tw-z-10', 'tw-h-0', props.className)}
+      style={props.style}>
+      <div
+        className={clsx(
+          'tw-absolute',
+          'tw-flex',
+          'tw-flex-col',
+          'tw-h-screen',
+          'tw-items-center',
+          'tw-cursor-none',
+        )}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="19"
+          height="24"
+          fill="none">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M19 4C19 1.79086 17.2091 0 15 0H4C1.79086 0 0 1.79086 0 4V15.9555C0 15.9801 0.0199334 16 0.0445225 16H0.0703165C0.119558 16 0.127809 16.0705 0.0798983 16.0819C0.046782 16.0897 0.0366819 16.1319 0.0626481 16.1539L6.91398 21.9599C8.40613 23.2244 10.5939 23.2244 12.086 21.9599L18.9374 16.1539C18.9633 16.1319 18.9532 16.0897 18.9201 16.0819C18.8722 16.0705 18.8804 16 18.9297 16H18.9555C18.9801 16 19 15.9801 19 15.9555V4Z"
+            fill="#2C2C2C"
+          />
+        </svg>
+        <div
+          className={clsx('tw-border', 'tw-h-full', 'tw-border-black')}></div>
+      </div>
+    </div>
+  );
+};
+
 export interface GridProps<T extends object> {
   className?: string;
   children?: React.ReactNode;
@@ -179,8 +217,6 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
     headerRef.current.scrollLeft = event.currentTarget.scrollLeft;
   };
 
-  console.log(props.rowData);
-
   return (
     <GridRoot>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>
@@ -188,7 +224,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           style={{
             height: props.headerHeight || 24,
           }}>
-          {props.columnDefs.map((columnDef, index) => (
+          {props.columnDefs.map((columnDef) => (
             <GridHeaderCell key={columnDef.field} width={columnDef.width}>
               {columnDef.headerRenderer ? (
                 <columnDef.headerRenderer columnDef={columnDef} />
@@ -199,10 +235,11 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           ))}
         </GridHeaderRow>
       </GridHeader>
+      <GridCursor style={{ top: -16 }}></GridCursor>
       <GridBody ref={bodyRef} onScroll={onScrollBody}>
         {props.rowData.map((row, index) => (
           <GridRow key={index}>
-            {props.columnDefs.map((columnDef, index) => (
+            {props.columnDefs.map((columnDef) => (
               <GridCell key={columnDef.field} width={columnDef.width}>
                 {columnDef.cellRenderer ? (
                   <columnDef.cellRenderer columnDef={columnDef} rowData={row} />

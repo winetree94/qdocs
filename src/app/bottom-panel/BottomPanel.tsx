@@ -24,7 +24,7 @@ export const BottomPanel = () => {
   };
 
   return (
-    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-flex-1')}>
+    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-flex-1', 'tw-h-full')}>
       {/*
 
       <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
