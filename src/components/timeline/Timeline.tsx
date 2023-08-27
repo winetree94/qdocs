@@ -34,7 +34,14 @@ export const Timeline = () => {
         field: `${index}`,
         width: 40,
         headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
-          <div className={clsx('tw-text-12', 'tw-flex', 'tw-justify-center')}>
+          <div
+            className={clsx(
+              'tw-text-12',
+              'tw-flex',
+              'tw-justify-center',
+              'tw-h-full',
+              'tw-items-center',
+            )}>
             {props.columnDef.field}
           </div>
         ),

@@ -70,11 +70,14 @@ const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
 
 export interface GridHeaderRowProps {
   children?: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
 const GridHeaderRow = (props: GridHeaderRowProps) => {
   return (
-    <div className={clsx(styles.GridHeaderRow, 'grid-header-row', 'tw-flex')}>
+    <div
+      className={clsx(styles.GridHeaderRow, 'grid-header-row', 'tw-flex')}
+      style={props.style}>
       {props.children}
     </div>
   );
@@ -159,6 +162,7 @@ export interface GridProps<T extends object> {
   className?: string;
   children?: React.ReactNode;
   columnDefs: GridColumnDef<T>[];
+  headerHeight?: number;
   colSpanGetter?: (params: T) => number;
   rowData: T[];
 }
@@ -180,7 +184,10 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   return (
     <GridRoot>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>
-        <GridHeaderRow>
+        <GridHeaderRow
+          style={{
+            height: props.headerHeight || 24,
+          }}>
           {props.columnDefs.map((columnDef, index) => (
             <GridHeaderCell key={columnDef.field} width={columnDef.width}>
               {columnDef.headerRenderer ? (
