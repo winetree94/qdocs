@@ -341,7 +341,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       </GridBody>
       <GridOverlay ref={overlayRef} scrollWidth={totalWidth}>
         <GridCursor
-          style={{ marginTop: 18, marginLeft: cursorDefLeft }}></GridCursor>
+          style={{ marginTop: 20, marginLeft: cursorDefLeft }}></GridCursor>
       </GridOverlay>
     </GridRoot>
   );
