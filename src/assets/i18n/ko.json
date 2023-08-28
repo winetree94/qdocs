@@ -77,5 +77,6 @@
   "object-context.group": "그룹",
   "object-context.ungroup": "그룹 해제",
   "welcome.image-alt": "왼쪽부터 차례대로 원, 오각형, 사각형이 나열된 이미지입니다. 도형들은 연한 보라색 배경으로 채워져 있으며, 진한 보라색 선으로 테두리가 그려져 있습니다.",
-  "global.design": "디자인"
+  "global.design": "디자인",
+  "global.fill-color": "채우기 색상"
 }

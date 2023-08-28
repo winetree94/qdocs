@@ -21,23 +21,23 @@ export const ObjectStylerPanel = (): ReactElement | null => {
     <div className="tw-px-5 tw-py-4">
       <div className="tw-flex tw-flex-col tw-gap-3">
         <ObjectStyleRect />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
         <ObjectStyleText />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
         <ObjectStyleBackground />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
         <ObjectStyleScale />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
         <ObjectStyleRotate />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
         {selectedObjects[0].type !== 'icon' && (
           <>
             <ObjectStyleStroke />
-            <QueueSeparator.Root />
+            <QueueSeparator.Root className="tw-my-2" />
           </>
         )}
         <ObjectStyleOpacity />
-        <QueueSeparator.Root />
+        <QueueSeparator.Root className="tw-my-2" />
       </div>
     </div>
   );
