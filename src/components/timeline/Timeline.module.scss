@@ -13,6 +13,11 @@
     padding: 10px 0;
 }
 
+.Cell {
+    height: 30px;
+    width: 100%;
+}
+
 .queueDot {
     &::before {
         content: '•';

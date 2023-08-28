@@ -20,12 +20,14 @@ export const Timeline = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
 
+  const rowHeight = 38;
+
   const columnDefs: GridColumnDef<DataType>[] = [
     {
       field: 'left-margin',
       width: 20,
       headerRenderer: () => <></>,
-      cellRenderer: (props: GridCellRendererProps<DataType>) => <></>,
+      cellRenderer: () => <></>,
     },
     ...Array.from(new Array(50)).map((_, index) => ({
       field: `${index}`,
@@ -54,19 +56,16 @@ export const Timeline = () => {
         return (
           <div
             className={clsx(
+              styles.Cell,
               start <= index && index <= end
                 ? 'tw-bg-purple-500'
                 : 'tw-bg-white',
               'tw-text-white',
               'tw-text-center',
-              'tw-my-1',
-              'tw-h-full',
               queueList.includes(index) ? styles.queueDot : styles.gridDot,
               index === 0 && 'tw-rounded-l-lg',
               index === end && 'tw-rounded-r-lg',
-            )}>
-            <span>&nbsp;</span>
-          </div>
+            )}></div>
         );
       },
     })),
@@ -83,6 +82,8 @@ export const Timeline = () => {
     objectContents: tracks[0],
   }));
 
+  const rowHeightGetter = () => rowHeight;
+
   const colspanGetter = (params: DataType, field: string) => {
     if (field === 'left-margin' || field === 'right-margin') {
       return 1;
@@ -98,7 +99,7 @@ export const Timeline = () => {
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}
-        rowHeightGetter={() => 38}
+        rowHeightGetter={rowHeightGetter}
         colSpanGetter={colspanGetter}></Grid>
     </div>
   );

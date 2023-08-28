@@ -206,6 +206,8 @@ const GridCell = (props: GridBodyCellProps) => {
         'grid-cell',
         'tw-absolute',
         'tw-h-full',
+        'tw-flex',
+        'tw-items-center',
       )}
       style={{ left: props.left, width: props.width }}>
       {props.children}
