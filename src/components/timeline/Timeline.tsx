@@ -60,6 +60,7 @@ export const Timeline = () => {
               'tw-text-white',
               'tw-text-center',
               'tw-my-1',
+              'tw-h-full',
               queueList.includes(index) ? styles.queueDot : styles.gridDot,
               index === 0 && 'tw-rounded-l-lg',
               index === end && 'tw-rounded-r-lg',
@@ -77,10 +78,6 @@ export const Timeline = () => {
     },
   ];
 
-  const colSpanGetter = (data: DataType): number => {
-    return 1;
-  };
-
   const rowData: DataType[] = Array.from(rowIds).map((id, index) => ({
     objectName: `timeline ${id} ${index}`,
     objectContents: tracks[0],
@@ -92,7 +89,8 @@ export const Timeline = () => {
         cursorField={settings.queueIndex.toString()}
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
-        rowData={rowData}></Grid>
+        rowData={rowData}
+        rowHeightGetter={() => 38}></Grid>
     </div>
   );
 };

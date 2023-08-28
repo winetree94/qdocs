@@ -69,7 +69,10 @@ const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
     <QueueScrollArea.Root
       className={clsx(styles.GridHeader, 'tw-flex-shrink-0', 'tw-pb-2.5')}
       type="always">
-      <QueueScrollArea.Viewport ref={ref} onScroll={props.onScroll}>
+      <QueueScrollArea.Viewport
+        ref={ref}
+        onScroll={props.onScroll}
+        className={clsx('tw-relative')}>
         {props.children}
       </QueueScrollArea.Viewport>
       <QueueScrollArea.Scrollbar
@@ -85,14 +88,18 @@ const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
 
 export interface GridHeaderRowProps {
   children?: React.ReactNode;
-  style?: React.CSSProperties;
+  top: number;
+  height: number;
 }
 
 const GridHeaderRow = (props: GridHeaderRowProps) => {
   return (
     <div
       className={clsx(styles.GridHeaderRow, 'grid-header-row', 'tw-relative')}
-      style={props.style}>
+      style={{
+        top: props.top,
+        height: props.height,
+      }}>
       {props.children}
     </div>
   );
@@ -157,6 +164,7 @@ const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
 export interface GridBodyRowProps {
   children?: React.ReactNode;
   top: number;
+  height: number;
 }
 
 const GridRow = (props: GridBodyRowProps) => {
@@ -168,7 +176,7 @@ const GridRow = (props: GridBodyRowProps) => {
         'tw-absolute',
         'tw-left-0',
       )}
-      style={{ top: props.top }}>
+      style={{ top: props.top, height: props.height }}>
       {props.children}
     </div>
   );
@@ -276,9 +284,9 @@ export interface GridProps<T extends object> {
   cursorField?: string;
   columnDefs: GridColumnDef<T>[];
   headerHeight?: number;
-  colSpanGetter?: (params: T) => number;
   rowData: T[];
   rowHeightGetter?: (params: T) => number;
+  colSpanGetter?: (params: T) => number;
 }
 
 export const Grid = <T extends object>(props: GridProps<T>) => {
@@ -354,10 +362,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   return (
     <GridRoot>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>
-        <GridHeaderRow
-          style={{
-            height: props.headerHeight || 24,
-          }}>
+        <GridHeaderRow top={0} height={props.headerHeight || 24}>
           {internalColumnDefs.map((columnDef) => (
             <GridHeaderCell
               key={columnDef.field}
@@ -374,7 +379,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       </GridHeader>
       <GridBody ref={bodyRef} onScroll={onScrollBody} scrollWidth={totalWidth}>
         {internalRowData.map((row, index) => (
-          <GridRow key={index} top={row.top}>
+          <GridRow key={index} top={row.top} height={row.height}>
             {internalColumnDefs.map((columnDef) => (
               <GridCell
                 key={columnDef.field}
@@ -392,8 +397,10 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
         ))}
       </GridBody>
       <GridOverlay ref={overlayRef} scrollWidth={totalWidth}>
-        <GridCursor
-          style={{ marginTop: 20, marginLeft: cursorDefLeft }}></GridCursor>
+        {props.cursorField && (
+          <GridCursor
+            style={{ marginTop: 20, marginLeft: cursorDefLeft }}></GridCursor>
+        )}
       </GridOverlay>
     </GridRoot>
   );
