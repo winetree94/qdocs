@@ -83,6 +83,14 @@ export const Timeline = () => {
     objectContents: tracks[0],
   }));
 
+  const colspanGetter = (params: DataType, field: string) => {
+    if (field === 'left-margin' || field === 'right-margin') {
+      return 1;
+    }
+    // TODO colspan 계산해야 함
+    return 2;
+  };
+
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
@@ -90,7 +98,8 @@ export const Timeline = () => {
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}
-        rowHeightGetter={() => 38}></Grid>
+        rowHeightGetter={() => 38}
+        colSpanGetter={colspanGetter}></Grid>
     </div>
   );
 };

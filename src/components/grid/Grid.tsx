@@ -27,10 +27,20 @@ export interface GridInternalColumnDef<T extends object> {
   cellRenderer?: FunctionComponent<GridCellRendererProps<T>>;
 }
 
-export interface GridInternalRowData<T> {
+export interface GridInternalRowData<T extends object> {
   top: number;
   height: number;
   data: T;
+  cells: GridInternalField<T>[];
+}
+
+export interface GridInternalField<T extends object> {
+  columnDef: GridColumnDef<T>;
+  field: string;
+  data: T;
+  left: number;
+  width: number;
+  colspan: number;
 }
 
 export interface GridRootProps {
@@ -286,7 +296,7 @@ export interface GridProps<T extends object> {
   headerHeight?: number;
   rowData: T[];
   rowHeightGetter?: (params: T) => number;
-  colSpanGetter?: (params: T) => number;
+  colSpanGetter?: (params: T, field: string) => number;
 }
 
 export const Grid = <T extends object>(props: GridProps<T>) => {
@@ -324,10 +334,33 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       const last = result[result.length - 1];
       const top = last ? last.top + last.height : 0;
       const height = props.rowHeightGetter ? props.rowHeightGetter(row) : 24;
+
+      const cells = internalColumnDefs.reduce<GridInternalField<T>[]>(
+        (result, def) => {
+          const colSpan = props.colSpanGetter
+            ? props.colSpanGetter(row, def.field)
+            : 1;
+          const last = result[result.length - 1];
+          const left = last ? last.left + last.width : 0;
+          const width = def.width * colSpan;
+          result.push({
+            columnDef: def,
+            field: def.field,
+            data: row,
+            left: left,
+            width: width,
+            colspan: colSpan,
+          });
+          return result;
+        },
+        [],
+      );
+
       result.push({
         top,
         height,
         data: row,
+        cells: cells,
       });
       return result;
     }, []);
@@ -380,14 +413,11 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       <GridBody ref={bodyRef} onScroll={onScrollBody} scrollWidth={totalWidth}>
         {internalRowData.map((row, index) => (
           <GridRow key={index} top={row.top} height={row.height}>
-            {internalColumnDefs.map((columnDef) => (
-              <GridCell
-                key={columnDef.field}
-                left={columnDef.left}
-                width={columnDef.width}>
-                {columnDef.cellRenderer ? (
-                  <columnDef.cellRenderer
-                    columnDef={columnDef}
+            {row.cells.map((cell) => (
+              <GridCell key={cell.field} left={cell.left} width={cell.width}>
+                {cell.columnDef.cellRenderer ? (
+                  <cell.columnDef.cellRenderer
+                    columnDef={cell.columnDef}
                     rowData={row.data}
                   />
                 ) : null}
