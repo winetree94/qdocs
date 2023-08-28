@@ -9,7 +9,8 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { TimeLineTrack, TimeLineTracks } from '../../model/timeline/timeline';
 import styles from './Timeline.module.scss';
 import { getTimelineTracks } from './timeline-data';
-import { useAppSelector } from 'store/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { SettingsActions } from 'store/settings';
 
 interface DataType {
   objectName: string;
@@ -17,6 +18,7 @@ interface DataType {
 }
 
 export const Timeline = () => {
+  const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
 
@@ -41,8 +43,17 @@ export const Timeline = () => {
             'tw-justify-center',
             'tw-h-full',
             'tw-items-center',
+            'tw-cursor-pointer',
             index === settings.queueIndex && 'tw-text-purple-500',
-          )}>
+          )}
+          onClick={() =>
+            dispath(
+              SettingsActions.setQueueIndex({
+                queueIndex: Number(props.columnDef.field),
+                play: false,
+              }),
+            )
+          }>
           {Number(props.columnDef.field) + 1}
         </div>
       ),
