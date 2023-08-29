@@ -17,7 +17,12 @@ interface DataType {
   objectContents: TimeLineTrack;
 }
 
-export const Timeline = () => {
+export interface TimelineProps {
+  columnWidth: number;
+}
+
+export const Timeline = (props: TimelineProps) => {
+  console.log(props.columnWidth);
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
@@ -33,7 +38,7 @@ export const Timeline = () => {
     },
     ...Array.from(new Array(50)).map((_, index) => ({
       field: `${index}`,
-      width: 40,
+      width: props.columnWidth,
       headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
         <div
           className={clsx(

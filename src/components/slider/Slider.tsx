@@ -5,10 +5,11 @@ import { clsx } from 'clsx';
 
 export interface QueueSliderProps extends SliderPrimitive.SliderProps {
   className?: string;
+  disableRange?: boolean;
 }
 
 export const QueueSlider = forwardRef<HTMLScriptElement, QueueSliderProps>(
-  ({ className, ...props }, forwardedRef) => {
+  ({ className, disableRange = false, ...props }, forwardedRef) => {
     const value = props.value || props.defaultValue || [];
     const key = props.id || 'SliderThumb';
 
@@ -18,7 +19,9 @@ export const QueueSlider = forwardRef<HTMLScriptElement, QueueSliderProps>(
         className={clsx(styles.SliderRoot, className)}
         ref={forwardedRef}>
         <SliderPrimitive.Track className={styles.SliderTrack}>
-          <SliderPrimitive.Range className={styles.SliderRange} />
+          {!disableRange && (
+            <SliderPrimitive.Range className={clsx(styles.SliderRange)} />
+          )}
         </SliderPrimitive.Track>
         {value.map((_, i) => (
           <SliderPrimitive.Thumb

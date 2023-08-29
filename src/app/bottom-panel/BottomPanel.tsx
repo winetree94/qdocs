@@ -4,15 +4,32 @@ import { QueueIconButton } from 'components/buttons/button/Button';
 import { QueueSlider } from 'components/slider/Slider';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueToggle } from 'components/toggle/Toggle';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 
+const ZOOM_LEVEL = {
+  [1]: 30,
+  [2]: 32,
+  [3]: 34,
+  [4]: 36,
+  [5]: 40,
+  [6]: 50,
+  [7]: 70,
+  [8]: 90,
+  [9]: 110,
+} as const;
+
+type ZOOM_LEVEL_KEYS = keyof typeof ZOOM_LEVEL;
+
 export const BottomPanel = () => {
   const settings = useAppSelector(SettingSelectors.settings);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+
+  const [zoom, setZoom] = React.useState<ZOOM_LEVEL_KEYS>(5);
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
     dispatch(
@@ -93,10 +110,19 @@ export const BottomPanel = () => {
             <SvgRemixIcon icon={'ri-pause-line'} />
           </QueueIconButton>
 
-          <QueueSlider className={clsx('tw-w-10')}></QueueSlider>
+          <QueueSlider
+            className={clsx('tw-w-[73px]', 'tw-mr-4')}
+            disableRange={true}
+            min={1}
+            max={9}
+            value={[zoom]}
+            step={1}
+            onValueChange={([e]) =>
+              setZoom(e as ZOOM_LEVEL_KEYS)
+            }></QueueSlider>
         </div>
       </div>
-      <Timeline />
+      <Timeline columnWidth={ZOOM_LEVEL[zoom]} />
     </div>
   );
 };
