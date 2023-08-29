@@ -103,10 +103,31 @@ export const Timeline = () => {
     return 2;
   };
 
+  const onCursorFieldChange = (field: string) => {
+    console.log(field);
+    const targetIndex: number = (() => {
+      if (field === 'left-margin') {
+        return 0;
+      }
+      if (field === 'right-margin') {
+        return 49;
+      }
+      return Number(field);
+    })();
+
+    dispath(
+      SettingsActions.setQueueIndex({
+        queueIndex: targetIndex,
+        play: false,
+      }),
+    );
+  };
+
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
         cursorField={settings.queueIndex.toString()}
+        onCursorFieldChange={onCursorFieldChange}
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}

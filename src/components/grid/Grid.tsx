@@ -56,9 +56,10 @@ export interface GridRootProps {
   onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }
 
-const GridRoot = (props: GridRootProps) => {
+const GridRoot = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
   return (
     <div
+      ref={ref}
       className={clsx(
         styles.GridRoot,
         'grid-root',
@@ -74,7 +75,7 @@ const GridRoot = (props: GridRootProps) => {
       {props.children}
     </div>
   );
-};
+});
 
 export interface GridHeaderProps {
   children?: React.ReactNode;
@@ -262,6 +263,8 @@ export const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
 export interface GridCursorProps {
   className?: string;
   style?: React.CSSProperties;
+  onDragTransformX?: (transformX: number) => void;
+  onDragEnd?: (transformX: number) => void;
 }
 
 export const GridCursor = (props: GridCursorProps) => {
@@ -281,11 +284,15 @@ export const GridCursor = (props: GridCursorProps) => {
     };
 
     const onMousemove = (event: MouseEvent) => {
-      console.log('mousemove', event);
+      const deltaX = event.clientX - initEvent.clientX;
+      props.onDragTransformX?.(deltaX);
+      document.body.classList.add('tw-cursor-col-resize');
     };
 
     const onMouseup = (event: MouseEvent) => {
-      console.log('mouseup', event);
+      document.body.classList.remove('tw-cursor-col-resize');
+      props.onDragEnd?.(event.clientX - initEvent.clientX);
+      props.onDragTransformX?.(0);
       setInitEvent(null);
       clean();
     };
@@ -313,7 +320,9 @@ export const GridCursor = (props: GridCursorProps) => {
         'tw-cursor-col-resize',
         props.className,
       )}
-      style={props.style}
+      style={{
+        ...props.style,
+      }}
       onMouseDown={onMousedown}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -352,6 +361,7 @@ export interface GridProps<T extends object> {
   className?: string;
   children?: React.ReactNode;
   cursorField?: string;
+  onCursorFieldChange?: (field: string) => void;
   columnDefs: GridColumnDef<T>[];
   headerHeight?: number;
   rowData: T[];
@@ -360,9 +370,12 @@ export interface GridProps<T extends object> {
 }
 
 export const Grid = <T extends object>(props: GridProps<T>) => {
+  const rootRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+
+  const [cursorTransformX, setCursorTransformX] = useState(0);
 
   const internalColumnDefs = useMemo(() => {
     return props.columnDefs.reduce<GridInternalColumnDef<T>[]>(
@@ -452,8 +465,25 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
     headerRef.current.scrollLeft = event.currentTarget.scrollLeft;
   };
 
+  const onCursorDragmove = (x: number) => {
+    setCursorTransformX(x);
+    console.log(Math.max(cursorDefLeft + x, 0));
+  };
+
+  const onCursorDragEnd = (x: number) => {
+    const deltaX = Math.max(cursorDefLeft + x, 0);
+    console.log(deltaX);
+    const cursorDef = internalColumnDefs.find((def) => {
+      return deltaX >= def.left && deltaX <= def.left + def.width;
+    });
+    if (!cursorDef) {
+      return;
+    }
+    props.onCursorFieldChange?.(cursorDef.field);
+  };
+
   return (
-    <GridRoot>
+    <GridRoot ref={rootRef}>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>
         <GridHeaderRow top={0} height={props.headerHeight || 24}>
           {internalColumnDefs.map((columnDef) => (
@@ -489,7 +519,12 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       <GridOverlay ref={overlayRef} scrollWidth={totalWidth}>
         {props.cursorField && (
           <GridCursor
-            style={{ marginTop: 20, marginLeft: cursorDefLeft }}></GridCursor>
+            onDragTransformX={onCursorDragmove}
+            onDragEnd={onCursorDragEnd}
+            style={{
+              marginTop: 20,
+              marginLeft: Math.max(cursorDefLeft + cursorTransformX, 0),
+            }}></GridCursor>
         )}
       </GridOverlay>
     </GridRoot>
