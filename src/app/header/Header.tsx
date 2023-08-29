@@ -181,7 +181,7 @@ export const QueueHeader = () => {
               'tw-w-5',
               'tw-h-5',
               'tw-transition-all',
-              'tw-duration-500',
+              'tw-duration-300',
               {
                 'tw-scale-y-[1]': !isDropdownOpen,
                 'tw-scale-y-[-1]': isDropdownOpen,
