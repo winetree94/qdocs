@@ -58,7 +58,7 @@ export const Timeline = (props: TimelineProps) => {
               }),
             )
           }>
-          {Number(props.columnDef.field) + 1}
+          {Number(props.columnDef.field)}
         </div>
       ),
       cellRenderer: (props: GridCellRendererProps<DataType>) => {
@@ -82,7 +82,7 @@ export const Timeline = (props: TimelineProps) => {
                 : queueList.includes(index)
                 ? styles.queueDot
                 : '',
-              index === 0 && 'tw-rounded-l-lg',
+              index === start && 'tw-rounded-l-lg',
               index === end && 'tw-rounded-r-lg',
             )}></div>
         );
@@ -96,9 +96,9 @@ export const Timeline = (props: TimelineProps) => {
     },
   ];
 
-  const rowData: DataType[] = Array.from(rowIds).map((id, index) => ({
-    objectName: `timeline ${id} ${index}`,
-    objectContents: tracks[0],
+  const rowData: DataType[] = rowIds.map((rowId, index) => ({
+    objectName: `timeline ${rowId} ${index}`,
+    objectContents: tracks.find((track) => track.objectId === rowId),
   }));
 
   const rowHeightGetter = () => rowHeight;
@@ -107,8 +107,9 @@ export const Timeline = (props: TimelineProps) => {
     if (field === 'left-margin' || field === 'right-margin') {
       return 1;
     }
+
     // TODO colspan 계산해야 함
-    return 2;
+    return 1;
   };
 
   const onCursorFieldChange = (field: string) => {
