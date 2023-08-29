@@ -21,10 +21,9 @@
 .queueDot {
     &::before {
         content: '•';
-        position: absolute;
-        right: 15px;
-        bottom: 0;
-        height: 24px;
+        position: relative;
+        vertical-align: baseline;
+        vertical-align: -webkit-baseline-middle;
     }
 }
 
