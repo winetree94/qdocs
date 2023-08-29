@@ -108,6 +108,7 @@ export interface GridHeaderRowProps {
   children?: React.ReactNode;
   top: number;
   height: number;
+  width?: number;
 }
 
 const GridHeaderRow = (props: GridHeaderRowProps) => {
@@ -117,6 +118,7 @@ const GridHeaderRow = (props: GridHeaderRowProps) => {
       style={{
         top: props.top,
         height: props.height,
+        width: props.width,
       }}>
       {props.children}
     </div>
@@ -483,7 +485,10 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   return (
     <GridRoot ref={rootRef}>
       <GridHeader ref={headerRef} onScroll={onScrollHeader}>
-        <GridHeaderRow top={0} height={props.headerHeight || 24}>
+        <GridHeaderRow
+          top={0}
+          height={props.headerHeight || 24}
+          width={totalWidth}>
           {internalColumnDefs.map((columnDef) => (
             <GridHeaderCell
               key={columnDef.field}
