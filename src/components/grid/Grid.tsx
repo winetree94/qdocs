@@ -1,6 +1,13 @@
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { forwardRef, FunctionComponent, useMemo, useRef } from 'react';
+import {
+  forwardRef,
+  FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styles from './Grid.module.scss';
 
 export interface GridHeaderCellRendererProps<T extends object> {
@@ -258,15 +265,56 @@ export interface GridCursorProps {
 }
 
 export const GridCursor = (props: GridCursorProps) => {
+  const [initEvent, setInitEvent] = useState<React.MouseEvent<
+    HTMLSpanElement | SVGSVGElement,
+    MouseEvent
+  > | null>(null);
+
+  useEffect(() => {
+    if (!initEvent) {
+      return;
+    }
+
+    const clean = () => {
+      window.removeEventListener('mousemove', onMousemove);
+      window.removeEventListener('mouseup', onMouseup);
+    };
+
+    const onMousemove = (event: MouseEvent) => {
+      console.log('mousemove', event);
+    };
+
+    const onMouseup = (event: MouseEvent) => {
+      console.log('mouseup', event);
+      setInitEvent(null);
+      clean();
+    };
+
+    window.addEventListener('mousemove', onMousemove);
+    window.addEventListener('mouseup', onMouseup);
+
+    return clean;
+  }, [initEvent]);
+
+  const onMousedown = (
+    event: React.MouseEvent<HTMLSpanElement | SVGSVGElement, MouseEvent>,
+  ) => {
+    setInitEvent(event);
+  };
+
   return (
     <span
       className={clsx(
         'tw-inline-flex',
         'tw-flex-col',
         'tw-items-center',
+        'tw-justify-center',
+        'tw-pointer-events-auto',
+        'tw-cursor-col-resize',
         props.className,
       )}
-      style={props.style}>
+      style={props.style}
+      onMouseDown={onMousedown}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="19"
@@ -281,11 +329,21 @@ export const GridCursor = (props: GridCursorProps) => {
       </svg>
       <div
         className={clsx(
-          'tw-border-l',
-          'tw-h-full',
-          'tw-border-black',
-          'tw-h-screen',
-        )}></div>
+          'tw-w-3',
+          'tw-flex',
+          'tw-justify-center',
+          'tw-poitner-events-auto',
+          'tw-cursor-col-resize',
+        )}
+        onMouseDown={onMousedown}>
+        <div
+          className={clsx(
+            'tw-border-black',
+            'tw-border-l',
+            'tw-width-1',
+            'tw-h-screen',
+          )}></div>
+      </div>
     </span>
   );
 };
