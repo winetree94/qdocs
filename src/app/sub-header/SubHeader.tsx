@@ -26,13 +26,26 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
 import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
 import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
 import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { useTranslation } from 'react-i18next';
+import { createDefaultImage } from 'model/object/image';
+import {
+  ImageEncodingMessage,
+  IMAGE_ENCODING_STATUS,
+} from 'workers/imageConversionWorker';
+import { nanoid, EntityId } from '@reduxjs/toolkit';
+import { QueueDocumentRect } from 'model/document/document';
+import { QueueObjectType } from 'model/object';
+import { DocumentSelectors } from 'store/document/selectors';
+import { useCreateImage } from 'cdk/hooks/useCreateFigure';
 
 export const QueueSubHeader = () => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
+  const { t } = useTranslation();
+  const queueDocument = useAppSelector(DocumentSelectors.serialized);
 
   const history = useAppSelector(HistorySelectors.all);
   const settings = useAppSelector(SettingSelectors.settings);
@@ -46,6 +59,7 @@ export const QueueSubHeader = () => {
     rect: false,
     share: false,
   });
+  const createImage = useCreateImage(queueDocument, settings, dispatch);
 
   const ranges: number[] = [];
   const { queueIndex } = settings;
@@ -79,7 +93,6 @@ export const QueueSubHeader = () => {
                   })
                 }>
                 <QueueDropdown.Trigger>
-                  {/* <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM}> */}
                   <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
                     <SidebarIcon />
                     <ChevronDownIcon
@@ -95,7 +108,6 @@ export const QueueSubHeader = () => {
                       )}
                     />
                   </div>
-                  {/* </QueueIconButton> */}
                 </QueueDropdown.Trigger>
 
                 <QueueDropdown.Content>
@@ -156,20 +168,12 @@ export const QueueSubHeader = () => {
 
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(
-                    ObjectActions.duplicate({
-                      ids: settings.selectedObjectIds,
-                    }),
-                  );
-                }}
-                disabled={!settings.selectedObjectIds.length}>
+                onClick={() => createImage()}>
                 <ImageIcon />
               </QueueIconButton>
 
               {/* duplicate */}
-              <QueueIconButton
+              {/* <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => {
                   dispatch(HistoryActions.Capture());
@@ -181,7 +185,79 @@ export const QueueSubHeader = () => {
                 }}
                 disabled={!settings.selectedObjectIds.length}>
                 <CopyIcon />
-              </QueueIconButton>
+              </QueueIconButton> */}
+
+              <QueueDropdown
+                open={isDropdownOpen.rect}
+                onOpenChange={() =>
+                  setIsDropdownOpen({
+                    ...isDropdownOpen,
+                    rect: !isDropdownOpen.rect,
+                  })
+                }>
+                <QueueDropdown.Trigger>
+                  <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
+                    <CopyIcon />
+                    <ChevronDownIcon
+                      className={clsx(
+                        'tw-w-3',
+                        'tw-h-3',
+                        'tw-transition-all',
+                        'tw-duration-300',
+                        {
+                          'tw-scale-y-[1]': !isDropdownOpen.sidebar,
+                          'tw-scale-y-[-1]': isDropdownOpen.sidebar,
+                        },
+                      )}
+                    />
+                  </div>
+                </QueueDropdown.Trigger>
+
+                <QueueDropdown.Content>
+                  <QueueDropdown.Sub>
+                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+                      도형 - 번역
+                    </QueueDropdown.SubTrigger>
+                    <QueueDropdown.SubContent>
+                      <QueueDropdown.Item>
+                        {t('toolbar.file.new-document')}
+                      </QueueDropdown.Item>
+                      <QueueDropdown.Item>
+                        {t('toolbar.file.open-document')}
+                      </QueueDropdown.Item>
+                    </QueueDropdown.SubContent>
+                  </QueueDropdown.Sub>
+
+                  <QueueDropdown.Sub>
+                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+                      선 -번역
+                    </QueueDropdown.SubTrigger>
+                    <QueueDropdown.SubContent>
+                      <QueueDropdown.Item>
+                        {t('toolbar.file.new-document')}
+                      </QueueDropdown.Item>
+                      <QueueDropdown.Item>
+                        {t('toolbar.file.open-document')}
+                      </QueueDropdown.Item>
+                    </QueueDropdown.SubContent>
+                  </QueueDropdown.Sub>
+
+                  <QueueDropdown.Sub>
+                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
+                      아이콘 -번역
+                    </QueueDropdown.SubTrigger>
+                    <QueueDropdown.SubContent>
+                      <div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                        <div>1</div>
+                      </div>
+                    </QueueDropdown.SubContent>
+                  </QueueDropdown.Sub>
+                </QueueDropdown.Content>
+              </QueueDropdown>
 
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}

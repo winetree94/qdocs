@@ -36,6 +36,7 @@ import {
   ImageEncodingMessage,
   IMAGE_ENCODING_STATUS,
 } from 'workers/imageConversionWorker';
+import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
 
 export interface QueueObject {
   key: string;
@@ -148,6 +149,7 @@ export const ObjectPanel: FunctionComponent = () => {
   const dispatch = useAppDispatch();
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const settings = useAppSelector(SettingSelectors.settings);
+  const createFigure = useCreateFigure(queueDocument, settings, dispatch);
   const [listScrollTopState, setListScrollTopState] = useState(0);
 
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
@@ -161,101 +163,10 @@ export const ObjectPanel: FunctionComponent = () => {
     });
   };
 
-  const createFigure = useCallback(
-    (
-      createDefaultShape: (
-        documentRect: QueueDocumentRect,
-        pageId: EntityId,
-        iconType?: string,
-      ) => QueueObjectType,
-    ): ((iconClassName?: string) => void) => {
-      return (iconClassName) => {
-        const figure = createDefaultShape(
-          queueDocument.document.documentRect,
-          settings.pageId,
-          iconClassName,
-        );
-        const object = {
-          pageId: settings.pageId,
-          ...figure,
-        };
-        dispatch(HistoryActions.Capture());
-        dispatch(
-          ObjectActions.addOne({
-            queueIndex: settings.queueIndex,
-            object: object,
-          }),
-        );
-        dispatch(
-          SettingsActions.setSelection({
-            selectionMode: 'normal',
-            ids: [object.id],
-          }),
-        );
-      };
-    },
-    [queueDocument, settings, dispatch],
-  );
-
   const createSquare = createFigure(createDefaultSquare);
   const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
   const createLine = createFigure(createDefaultLine);
-  const createImage = createFigure(
-    (documentRect: QueueDocumentRect, pageId: EntityId) => {
-      const objectId = nanoid();
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.multiple = false;
-
-      fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
-        const worker = new Worker(
-          /* webpackChunkName: "image-encoding-worker" */ new URL(
-            '../../../workers/imageConversionWorker.ts',
-            import.meta.url,
-          ),
-        );
-
-        worker.addEventListener(
-          'message',
-          (event: MessageEvent<ImageEncodingMessage>) => {
-            const { status, imageData } = event.data;
-
-            switch (status) {
-              case IMAGE_ENCODING_STATUS.ENCODED:
-                dispatch(
-                  ObjectActions.updateImageObject({
-                    id: objectId,
-                    changes: {
-                      image: {
-                        src: imageData.src,
-                        alt: imageData.fileName,
-                        assetId: nanoid(),
-                      },
-                    },
-                  }),
-                );
-
-                break;
-              case IMAGE_ENCODING_STATUS.ERROR:
-                dispatch(ObjectActions.removeMany([objectId]));
-                break;
-            }
-          },
-        );
-
-        worker.postMessage(file);
-      });
-
-      fileInput.click();
-
-      // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
-      // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
-      return createDefaultImage(documentRect, pageId, objectId);
-    },
-  );
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [
@@ -325,24 +236,24 @@ export const ObjectPanel: FunctionComponent = () => {
           },
         ],
       },
-      {
-        key: 'Asset',
-        title: 'Asset',
-        children: [
-          {
-            key: 'Image',
-            factory: () => createImage(),
-            tooltip: 'image',
-            keyword: ['image'],
-            preview: (
-              <SvgRemixIcon
-                icon="ri-image-add-line"
-                size={QUEUE_UI_SIZE.XLARGE}
-              />
-            ),
-          },
-        ],
-      },
+      // {
+      //   key: 'Asset',
+      //   title: 'Asset',
+      //   children: [
+      //     {
+      //       key: 'Image',
+      //       factory: () => createImage(),
+      //       tooltip: 'image',
+      //       keyword: ['image'],
+      //       preview: (
+      //         <SvgRemixIcon
+      //           icon="ri-image-add-line"
+      //           size={QUEUE_UI_SIZE.XLARGE}
+      //         />
+      //       ),
+      //     },
+      //   ],
+      // },
       {
         key: 'Remix Icon',
         title: t('global.icon'),
@@ -356,7 +267,7 @@ export const ObjectPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [t, createSquare, createCircle, createLine, createIcon, createImage],
+    [t, createSquare, createCircle, createLine, createIcon],
   );
 
   const filteredGroups = useMemo(() => {
