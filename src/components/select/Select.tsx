@@ -138,15 +138,13 @@ const Option = forwardRef<HTMLDivElement, Select.SelectItemProps>(
   },
 );
 
-const Separator = forwardRef<HTMLDivElement, Select.SelectSeparatorProps>(
-  ({ className, ...props }) => {
-    return (
-      <Select.Separator
-        className={clsx(styles.SelectSeparator, className)}
-        {...props}
-      />
-    );
-  },
-);
+const Separator = ({ className, ...props }: Select.SelectSeparatorProps) => {
+  return (
+    <Select.Separator
+      className={clsx(styles.SelectSeparator, className)}
+      {...props}
+    />
+  );
+};
 
 export const QueueSelect = Object.assign(Root, { Group, Option, Separator });
