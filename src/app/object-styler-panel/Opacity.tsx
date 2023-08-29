@@ -1,4 +1,4 @@
-import { Slider } from 'components';
+import { QueueSlider } from 'components/slider/Slider';
 import { QueueFade } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
@@ -39,7 +39,7 @@ export const ObjectStyleOpacity = () => {
         </h2>
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <Slider
+        <QueueSlider
           min={0}
           max={1}
           value={[fade.opacity]}

@@ -1,4 +1,4 @@
-import { Slider } from 'components/slider';
+import { QueueSlider } from 'components/slider/Slider';
 import { FillEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { ChangeEvent, ReactElement } from 'react';
 import {
@@ -97,7 +97,7 @@ export const EffectControllerFill = (): ReactElement => {
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <Slider
+          <QueueSlider
             min={0}
             max={1}
             step={0.1}

@@ -467,12 +467,10 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
 
   const onCursorDragmove = (x: number) => {
     setCursorTransformX(x);
-    console.log(Math.max(cursorDefLeft + x, 0));
   };
 
   const onCursorDragEnd = (x: number) => {
     const deltaX = Math.max(cursorDefLeft + x, 0);
-    console.log(deltaX);
     const cursorDef = internalColumnDefs.find((def) => {
       return deltaX >= def.left && deltaX <= def.left + def.width;
     });

@@ -1,4 +1,3 @@
-import { Slider } from 'components/slider';
 import { QueueEffectType } from 'model/effect';
 import { ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
@@ -7,6 +6,7 @@ import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
+import { QueueSlider } from 'components/slider/Slider';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -103,7 +103,7 @@ export const EffectControllerDuration = ({
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <Slider
+          <QueueSlider
             min={0}
             max={10}
             step={0.1}
@@ -124,7 +124,7 @@ export const EffectControllerDuration = ({
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <Slider
+          <QueueSlider
             min={0}
             max={10}
             step={0.1}

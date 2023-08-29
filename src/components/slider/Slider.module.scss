@@ -1,4 +1,4 @@
-.slider-root {
+.SliderRoot {
   position: relative;
   display: flex;
   align-items: center;
@@ -18,23 +18,24 @@
   }
 }
 
-.slider-track {
-  @apply tw-bg-neutral-200;
+.SliderTrack {
+  background-color: #EAEAEA;
+  border: 1px solid #AAA;
   position: relative;
   flex-grow: 1;
   border-radius: 9999px;
 
   &[data-orientation='horizontal'] {
-    height: 3px;
+    height: 4px;
   }
 
   &[data-orientation='vertical'] {
-    width: 3px;
+    width: 4px;
   }
 }
 
-.slider-range {
-  @apply tw-bg-neutral-700;
+.SliderRange {
+  background-color: #000;
   position: absolute;
   border-radius: 9999px;
 
@@ -47,23 +48,25 @@
   }
 }
 
-.slider-thumb {
-  @apply tw-bg-neutral-600;
+.SliderThumb {
+  background-color: #fff;
   display: block;
-  width: 16px;
-  height: 16px;
-  border-radius: 10px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #000;
+  border-radius: 99px;
+
 
   &:hover {
-    @apply tw-bg-neutral-500;
+    background-color: #EEEEEE;
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px #00000030;
+    box-shadow: 0 0 0 2px #00000030;
   }
 
   &:active {
-    box-shadow: 0 0 0 6px #00000030;
+    box-shadow: 0 0 0 4px #00000030;
   }
 }

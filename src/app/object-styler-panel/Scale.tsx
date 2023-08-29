@@ -1,4 +1,4 @@
-import { Slider } from 'components';
+import { QueueSlider } from 'components/slider/Slider';
 import { QueueScale } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
@@ -40,7 +40,7 @@ export const ObjectStyleScale = () => {
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <Slider
+        <QueueSlider
           min={0}
           max={5}
           value={[scale.scale]}

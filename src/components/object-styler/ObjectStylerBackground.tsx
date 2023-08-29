@@ -1,9 +1,9 @@
 import { EntityId } from '@reduxjs/toolkit';
 import { Color } from 'components/object-styler/color/Color';
-import { Slider } from 'components/slider';
+import { QueueSlider } from 'components/slider/Slider';
 import { QueueObjectType } from 'model/object';
 import { QueueFill } from 'model/property';
-import { supportFill, supportFillAll, supportRectAll } from 'model/support';
+import { supportFillAll } from 'model/support';
 import { ChangeEvent, ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -104,7 +104,7 @@ export const ObjectStylerBackground = (): ReactElement => {
               />
             </div>
             <div className="tw-flex tw-items-center tw-w-full">
-              <Slider
+              <QueueSlider
                 min={0}
                 max={1}
                 step={0.1}

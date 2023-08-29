@@ -1,4 +1,3 @@
-import { Slider } from 'components';
 import { QueueStroke } from 'model/property';
 import { useTranslation } from 'react-i18next';
 import { HistoryActions } from 'store/history';
@@ -8,6 +7,7 @@ import { SettingSelectors } from 'store/settings';
 import { QueueSelect } from 'components/select/Select';
 import { supportStrokeAll } from 'model/support';
 import QueueColorPicker from 'components/color-picker/ColorPicker';
+import { QueueSlider } from 'components/slider/Slider';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export const ObjectStyleStroke = () => {
         </h2>
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <Slider
+        <QueueSlider
           min={0}
           max={50}
           value={[stroke.width]}

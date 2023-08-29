@@ -1,7 +1,7 @@
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/buttons/button/Button';
-import CustomSlider from 'components/slider/Slider';
+import { QueueSlider } from 'components/slider/Slider';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueToggle } from 'components/toggle/Toggle';
 import { useTranslation } from 'react-i18next';
@@ -93,7 +93,7 @@ export const BottomPanel = () => {
             <SvgRemixIcon icon={'ri-pause-line'} />
           </QueueIconButton>
 
-          <CustomSlider className={clsx('tw-w-10')}></CustomSlider>
+          <QueueSlider className={clsx('tw-w-10')}></QueueSlider>
         </div>
       </div>
       <Timeline />

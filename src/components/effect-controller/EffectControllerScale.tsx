@@ -1,4 +1,4 @@
-import { Slider } from 'components/slider';
+import { QueueSlider } from 'components/slider/Slider';
 import { OBJECT_EFFECT_TYPE, ScaleEffect } from 'model/effect';
 import { ReactElement } from 'react';
 import {
@@ -83,7 +83,7 @@ export const EffectControllerScale = (): ReactElement => {
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <Slider
+          <QueueSlider
             min={0.1}
             max={10}
             step={0.1}

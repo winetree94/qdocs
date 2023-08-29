@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 import { FadeEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
-import { Slider } from 'components/slider';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
+import { QueueSlider } from 'components/slider/Slider';
 
 export const EffectControllerFade = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -75,7 +75,7 @@ export const EffectControllerFade = (): ReactElement => {
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <Slider
+          <QueueSlider
             min={0}
             max={1}
             step={0.1}
