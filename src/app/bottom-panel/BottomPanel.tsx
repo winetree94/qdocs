@@ -50,12 +50,12 @@ export const BottomPanel = () => {
         className={clsx(
           'tw-flex',
           'tw-items-center',
-          'tw-justify-between',
+          'tw-justify-start',
           'tw-flex-shrink-0',
           'tw-border-b',
         )}>
         {/* left */}
-        <div className={clsx('tw-flex', 'tw-items-center')}>
+        <div className={clsx('tw-flex-1', 'tw-flex', 'tw-items-center')}>
           <p
             className={clsx(
               'tw-text-14',
@@ -69,7 +69,7 @@ export const BottomPanel = () => {
         </div>
 
         {/* center */}
-        <div className={clsx('tw-flex')}>
+        <div className={clsx('tw-flex-1', 'tw-flex', 'tw-justify-center')}>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.rewind())}>
@@ -98,7 +98,13 @@ export const BottomPanel = () => {
         </div>
 
         {/* right */}
-        <div className={clsx('tw-flex', 'tw-items-center')}>
+        <div
+          className={clsx(
+            'tw-flex-1',
+            'tw-flex',
+            'tw-items-center',
+            'tw-justify-end',
+          )}>
           <QueueToggle.Root
             pressed={settings.autoPlayRepeat}
             onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
