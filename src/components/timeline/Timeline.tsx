@@ -73,7 +73,11 @@ export const Timeline = () => {
                 : 'tw-bg-white',
               'tw-text-white',
               'tw-text-center',
-              queueList.includes(index) ? styles.queueDot : styles.gridDot,
+              start > index || end < index
+                ? styles.gridDot
+                : queueList.includes(index)
+                ? styles.queueDot
+                : '',
               index === 0 && 'tw-rounded-l-lg',
               index === end && 'tw-rounded-r-lg',
             )}></div>

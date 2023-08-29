@@ -14,12 +14,14 @@ export const getTimelineTracks = (pageId: EntityId): TimeLineTracks => {
         );
 
         const filtered = effects.map((effect) => effect.index);
+        const queueList = [...new Set([...filtered])];
+        queueList.shift();
 
         const item: TimeLineTrack = {
           objectId: object.id,
           startQueueIndex: filtered[0],
           endQueueIndex: filtered[filtered.length - 1],
-          queueList: [...new Set([...filtered])],
+          queueList,
         };
 
         acc.push(item);
