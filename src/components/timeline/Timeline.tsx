@@ -22,7 +22,6 @@ export interface TimelineProps {
 }
 
 export const Timeline = (props: TimelineProps) => {
-  console.log(props.columnWidth);
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
