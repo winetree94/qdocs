@@ -31,7 +31,6 @@
     &::before {
         @apply tw-text-gray-100;	
         content: '•';
-        position: absolute;
-        right: 15px;
+        position: relative;
     }
 }
