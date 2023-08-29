@@ -10,15 +10,14 @@
   &.default {
     background: $ui-default-background-color;
     color: $ui-default-color;
+
     &:hover {
-      // background: $ui-default-background-color-hover;
-      // border-bottom: 2px dotted $ui-default-background-color-hover;
+      background: $ui-default-background-color-hover;
       color: $ui-default-color-hover;
     }
     &[data-state='on'],
     &:active {
-      // background: $ui-default-background-color-active;
-      // border-bottom: 2px solid $ui-default-background-color-active;
+      background: $ui-default-background-color-active;
       color: $ui-default-color-active;
       font-weight: bold;
     }
