@@ -248,7 +248,9 @@ export const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
         style={{
           position: 'absolute',
         }}>
-        <QueueScrollArea.Viewport ref={ref}>
+        <QueueScrollArea.Viewport
+          ref={ref}
+          className={clsx('!tw-overflow-hidden')}>
           <div style={{ width: props.scrollWidth }}>{props.children}</div>
         </QueueScrollArea.Viewport>
         <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
