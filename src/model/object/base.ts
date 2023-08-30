@@ -31,4 +31,10 @@ export interface BaseObject {
    * 오브젝트가 속한 페이지의 고유 id
    */
   pageId: EntityId;
+
+  /**
+   * @description
+   * 타임라인에서 색상 구분을 하기 위한 값
+   */
+  uniqueColor: string;
 }

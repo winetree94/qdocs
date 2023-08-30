@@ -6,6 +6,7 @@ export interface TimeLineTrack {
   queueList?: number[];
   title?: string;
   objectId?: EntityId;
+  uniqueColor: string;
 }
 
 export interface TimeLineTracks {

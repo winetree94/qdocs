@@ -39,6 +39,7 @@ export const createDefaultIcon = (
     id: objectId,
     pageId: pageId,
     index: 0,
+    uniqueColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

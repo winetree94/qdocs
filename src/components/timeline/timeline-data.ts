@@ -16,7 +16,6 @@ export const getTimelineTracks = (pageId: EntityId): TimeLineTracks => {
         const filtered = effects.map((effect) => effect.index);
         const queueList = effects.reduce((acc, effect) => {
           if (!acc.includes(effect.index)) {
-            // create도 넣는게 맞을까
             acc.push(effect.index);
           }
           return acc;
@@ -26,6 +25,7 @@ export const getTimelineTracks = (pageId: EntityId): TimeLineTracks => {
           objectId: object.id,
           startQueueIndex: filtered[0],
           endQueueIndex: filtered[filtered.length - 1],
+          uniqueColor: object.uniqueColor,
           queueList,
         };
 

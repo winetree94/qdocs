@@ -66,15 +66,17 @@ export const Timeline = (props: TimelineProps) => {
           startQueueIndex: start,
           endQueueIndex: end,
           queueList,
+          uniqueColor,
         } = props.rowData.objectContents;
 
         return (
           <div
+            style={{
+              backgroundColor:
+                start <= index && index <= end ? uniqueColor : '#ffffff',
+            }}
             className={clsx(
               styles.Cell,
-              start <= index && index <= end
-                ? 'tw-bg-purple-500'
-                : 'tw-bg-white',
               'tw-text-white',
               'tw-text-center',
               start > index || end < index
