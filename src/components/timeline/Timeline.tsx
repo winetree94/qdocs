@@ -58,17 +58,8 @@ export const Timeline = (props: TimelineProps) => {
             'tw-justify-center',
             'tw-h-full',
             'tw-items-center',
-            'tw-cursor-pointer',
             index === settings.queueIndex && 'tw-text-purple-500',
-          )}
-          onClick={() =>
-            dispath(
-              SettingsActions.setQueueIndex({
-                queueIndex: Number(props.columnDef.field),
-                play: false,
-              }),
-            )
-          }>
+          )}>
           {Number(props.columnDef.field)}
         </div>
       ),

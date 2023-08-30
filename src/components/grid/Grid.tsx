@@ -4,6 +4,7 @@ import {
   forwardRef,
   FunctionComponent,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -84,20 +85,74 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
 export interface GridHeaderProps {
   children?: React.ReactNode;
   onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
+  onDragTransformX?: (transformX: number) => void;
+  onDragEnd?: (transformX: number) => void;
 }
 
 const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [initEvent, setInitEvent] = useState<React.MouseEvent<
+    HTMLDivElement,
+    MouseEvent
+  > | null>(null);
+
+  useImperativeHandle(ref, () => scrollRef.current);
+
+  useEffect(() => {
+    if (!initEvent) {
+      return;
+    }
+
+    const getDeltaX = (event: MouseEvent) => {
+      const rootRect = scrollRef.current.getBoundingClientRect();
+      const scrollLeft = scrollRef.current.scrollLeft || 0;
+      const deltaX = scrollLeft + event.clientX - rootRect.left;
+      return deltaX;
+    };
+
+    const clean = () => {
+      window.removeEventListener('mousemove', onMousemove);
+      window.removeEventListener('mouseup', onMouseup);
+    };
+
+    const onMousemove = (event: MouseEvent) => {
+      const deltaX = getDeltaX(event);
+      props.onDragTransformX?.(deltaX);
+    };
+
+    const onMouseup = (event: MouseEvent) => {
+      const deltaX = getDeltaX(event);
+      props.onDragEnd?.(deltaX);
+      setInitEvent(null);
+      clean();
+    };
+
+    const deltaX = getDeltaX(initEvent.nativeEvent);
+    props.onDragTransformX?.(deltaX);
+    window.addEventListener('mousemove', onMousemove);
+    window.addEventListener('mouseup', onMouseup);
+
+    return clean;
+  }, [initEvent]);
+
   return (
     <QueueScrollArea.Root
+      onMouseDown={(event) => {
+        setInitEvent(event);
+      }}
       className={clsx(styles.GridHeader, 'tw-flex-shrink-0', 'tw-pb-2.5')}
       type="always">
       <QueueScrollArea.Viewport
-        ref={ref}
+        ref={scrollRef}
         onScroll={props.onScroll}
         className={clsx('tw-relative')}>
         {props.children}
       </QueueScrollArea.Viewport>
       <QueueScrollArea.Scrollbar
+        onMouseDown={(event) => {
+          event.stopPropagation();
+        }}
         orientation="horizontal"
         className={clsx('tw-h-2', 'tw-border-y', 'tw-p-0')}>
         <QueueScrollArea.Thumb
@@ -271,6 +326,7 @@ export const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
 export interface GridCursorProps {
   className?: string;
   style?: React.CSSProperties;
+  overlayRef: React.RefObject<HTMLDivElement>;
   onDragTransformX?: (transformX: number) => void;
   onDragEnd?: (transformX: number) => void;
 }
@@ -286,21 +342,28 @@ export const GridCursor = (props: GridCursorProps) => {
       return;
     }
 
+    const getDeltaX = (event: MouseEvent) => {
+      const rootRect = props.overlayRef.current.getBoundingClientRect();
+      const scrollLeft = props.overlayRef.current.scrollLeft || 0;
+      const deltaX = scrollLeft + event.clientX - rootRect.left;
+      return deltaX;
+    };
+
     const clean = () => {
       window.removeEventListener('mousemove', onMousemove);
       window.removeEventListener('mouseup', onMouseup);
     };
 
     const onMousemove = (event: MouseEvent) => {
-      const deltaX = event.clientX - initEvent.clientX;
-      props.onDragTransformX?.(deltaX);
       document.body.classList.add('tw-cursor-col-resize');
+      const deltaX = getDeltaX(event);
+      props.onDragTransformX?.(deltaX);
     };
 
     const onMouseup = (event: MouseEvent) => {
       document.body.classList.remove('tw-cursor-col-resize');
-      props.onDragEnd?.(event.clientX - initEvent.clientX);
-      props.onDragTransformX?.(0);
+      const deltaX = getDeltaX(event);
+      props.onDragEnd?.(deltaX);
       setInitEvent(null);
       clean();
     };
@@ -383,7 +446,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   const bodyRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  const [cursorTransformX, setCursorTransformX] = useState(0);
+  const [cursorTransformX, setCursorTransformX] = useState<number | null>(null);
 
   const internalColumnDefs = useMemo(() => {
     return props.columnDefs.reduce<GridInternalColumnDef<T>[]>(
@@ -481,23 +544,27 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   };
 
   const onCursorDragmove = (x: number) => {
-    setCursorTransformX(x);
+    setCursorTransformX(
+      Math.max(Math.min(Math.max(x, 0), totalWidth) - 19 / 2, 0),
+    );
   };
 
   const onCursorDragEnd = (x: number) => {
-    const deltaX = Math.max(cursorDefLeft + x, 0);
+    const deltaX = Math.max(Math.min(Math.max(x, 0), totalWidth) - 19 / 2, 0);
     const cursorDef = internalColumnDefs.find((def) => {
       return deltaX >= def.left && deltaX <= def.left + def.width;
     });
-    if (!cursorDef) {
-      return;
-    }
     props.onCursorFieldChange?.(cursorDef.field);
+    setCursorTransformX(null);
   };
 
   return (
     <GridRoot ref={rootRef}>
-      <GridHeader ref={headerRef} onScroll={onScrollHeader}>
+      <GridHeader
+        ref={headerRef}
+        onScroll={onScrollHeader}
+        onDragTransformX={onCursorDragmove}
+        onDragEnd={onCursorDragEnd}>
         <GridHeaderRow
           top={0}
           height={props.headerHeight || 24}
@@ -543,9 +610,11 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           <GridCursor
             onDragTransformX={onCursorDragmove}
             onDragEnd={onCursorDragEnd}
+            overlayRef={overlayRef}
             style={{
               marginTop: 20,
-              marginLeft: Math.max(cursorDefLeft + cursorTransformX, 0),
+              marginLeft:
+                cursorTransformX !== null ? cursorTransformX : cursorDefLeft,
             }}></GridCursor>
         )}
       </GridOverlay>
