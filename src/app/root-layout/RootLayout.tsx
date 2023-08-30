@@ -26,9 +26,15 @@ import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
-  const history = useAppSelector(HistorySelectors.all);
+  const { previous, future } = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
-  const settings = useAppSelector(SettingSelectors.settings);
+  const {
+    selectionMode,
+    presentationMode,
+    pageId,
+    selectedObjectIds,
+    autoPlay,
+  } = useAppSelector(SettingSelectors.settings);
   const pageObjects = useAppSelector(SettingSelectors.pageObjects);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
@@ -41,12 +47,13 @@ export const RootLayout = () => {
     keys: [
       {
         keys: ['Escape'],
-        callback: (e) => {
-          if (settings.presentationMode) {
+        callback: () => {
+          if (presentationMode) {
             dispatch(
-              SettingsActions.setSettings({
-                ...settings,
-                presentationMode: false,
+              SettingsActions.updateSettings({
+                changes: {
+                  presentationMode: false,
+                },
               }),
             );
           }
@@ -56,7 +63,7 @@ export const RootLayout = () => {
         keys: ['c'],
         meta: true,
         callback: async (e) => {
-          if (settings.selectionMode === 'detail') return;
+          if (selectionMode === 'detail') return;
           e.preventDefault();
           try {
             const models = selectedObjects.map((object) => {
@@ -81,7 +88,7 @@ export const RootLayout = () => {
         keys: ['v'],
         meta: true,
         callback: async (e) => {
-          if (settings.selectionMode === 'detail') return;
+          if (selectionMode === 'detail') return;
           try {
             const raw = await navigator.clipboard.readText();
             const clipboardData = JSON.parse(raw) as ClipboardItemData;
@@ -93,7 +100,7 @@ export const RootLayout = () => {
                 pendingObjects.push({
                   ...data.object,
                   id: objectId,
-                  pageId: settings.pageId,
+                  pageId: pageId,
                   rect: {
                     ...data.object.rect,
                     x: data.object.rect.x + 10,
@@ -138,7 +145,7 @@ export const RootLayout = () => {
         keys: ['a'],
         meta: true,
         callback: (e) => {
-          if (settings.selectionMode === 'detail') return;
+          if (selectionMode === 'detail') return;
           dispatch(
             SettingsActions.setSelection({
               selectionMode: 'normal',
@@ -151,8 +158,8 @@ export const RootLayout = () => {
         keys: ['z'],
         meta: true,
         callback: (e) => {
-          if (settings.selectionMode === 'detail') return;
-          if (history.previous.length === 0) return;
+          if (selectionMode === 'detail') return;
+          if (previous.length === 0) return;
           e.preventDefault();
           dispatch(HistoryActions.Undo());
         },
@@ -162,8 +169,8 @@ export const RootLayout = () => {
         meta: true,
         shift: true,
         callback: (e) => {
-          if (settings.selectionMode === 'detail') return;
-          if (history.future.length === 0) return;
+          if (selectionMode === 'detail') return;
+          if (future.length === 0) return;
           e.preventDefault();
           dispatch(HistoryActions.Redo());
         },
@@ -183,16 +190,13 @@ export const RootLayout = () => {
         keys: ['Delete', 'Backspace'],
         meta: false,
         callback: (e) => {
-          if (
-            settings.selectedObjectIds.length === 0 ||
-            settings.selectionMode !== 'normal'
-          ) {
+          if (selectedObjectIds.length === 0 || selectionMode !== 'normal') {
             return;
           }
           dispatch(HistoryActions.Capture());
           dispatch(
             EffectActions.removeObjectOnQueue({
-              ids: settings.selectedObjectIds,
+              ids: selectedObjectIds,
             }),
           );
         },
@@ -201,14 +205,11 @@ export const RootLayout = () => {
         keys: ['Delete', 'Backspace'],
         meta: true,
         callback: (e) => {
-          if (
-            settings.selectedObjectIds.length === 0 ||
-            settings.selectionMode !== 'normal'
-          ) {
+          if (selectedObjectIds.length === 0 || selectionMode !== 'normal') {
             return;
           }
           dispatch(HistoryActions.Capture());
-          dispatch(ObjectActions.removeMany(settings.selectedObjectIds));
+          dispatch(ObjectActions.removeMany(selectedObjectIds));
         },
       },
     ],
@@ -231,7 +232,7 @@ export const RootLayout = () => {
    * 애니메이션이 재생 중일 때, 마우스 클릭을 감지하여 애니메이션을 멈춘다.
    */
   useEffect(() => {
-    if (!settings.autoPlay) return;
+    if (!autoPlay) return;
     const stop = () => {
       dispatch(SettingsActions.pause());
     };
@@ -239,7 +240,7 @@ export const RootLayout = () => {
     return () => {
       document.removeEventListener('mousedown', stop);
     };
-  }, [dispatch, settings.autoPlay]);
+  }, [dispatch, autoPlay]);
 
   /**
    * @description
@@ -253,7 +254,7 @@ export const RootLayout = () => {
 
   return (
     <div className={styles.container}>
-      {!settings.presentationMode ? (
+      {!presentationMode ? (
         <>
           {docs && (
             <>
@@ -266,7 +267,7 @@ export const RootLayout = () => {
 
       {docs && (
         <div className={clsx(styles.Content)}>
-          {!settings.presentationMode && (
+          {!presentationMode && (
             <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
               <div className="tw-h-full">
                 <PanelResizer.Panel
@@ -286,7 +287,7 @@ export const RootLayout = () => {
               'tw-bg-[var(--gray-3)]',
             )}>
             <QueueEditor />
-            {!settings.presentationMode && (
+            {!presentationMode && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
                 <PanelResizer.Panel
                   className="tw-w-full"

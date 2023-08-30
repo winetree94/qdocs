@@ -21,7 +21,7 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
 import { QueueDropdown } from 'components/dropdown/Dropdown';
-import { QueueIconButton, QueueButton } from 'components/buttons/button/Button';
+import { QueueButton } from 'components/buttons/button/Button';
 
 export interface ToolbarModel {
   key: string;
@@ -32,7 +32,8 @@ export interface ToolbarModel {
 
 export const QueueHeader = () => {
   const { t, i18n } = useTranslation();
-  const history = useAppSelector(HistorySelectors.all);
+  // 불필요한 리렌더링을 막기 위해 useAppSelector로 셀렉한 값들을 사용할 때 구조분해 할당으로 가져온다. (나머지 상태는 업데이트 자체가 여러번 되는지 확인이 필요)
+  const { previous, future } = useAppSelector(HistorySelectors.all);
   const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
@@ -223,12 +224,12 @@ export const QueueHeader = () => {
             </QueueDropdown.SubTrigger>
             <QueueDropdown.SubContent>
               <QueueDropdown.Item
-                disabled={!docs || history.previous.length === 0}
+                disabled={!docs || previous.length === 0}
                 onClick={() => dispatch(HistoryActions.Undo())}>
                 {t('global.undo')}
               </QueueDropdown.Item>
               <QueueDropdown.Item
-                disabled={!docs || history.future.length === 0}
+                disabled={!docs || future.length === 0}
                 onClick={() => dispatch(HistoryActions.Redo())}>
                 {t('global.redo')}
               </QueueDropdown.Item>

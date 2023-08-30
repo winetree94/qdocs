@@ -1,6 +1,7 @@
 import {
   BaseHTMLAttributes,
   Fragment,
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -103,90 +104,95 @@ export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
   page: NormalizedQueueDocumentPage;
 }
 
-const PagePreview = ({ page, className, ...props }: PagePreviewProps) => {
-  const queueDocument = useAppSelector(DocumentSelectors.document);
-  const settings = useAppSelector(SettingSelectors.settings);
-  const objects = useAppSelector((state) =>
-    ObjectSelectors.allByPageId(state, page.id),
-  );
-  const firstQueueEffects = useAppSelector((state) =>
-    EffectSelectors.firstQueueByPageId(state, page.id),
-  );
+const PagePreview = memo(
+  ({ page, className, ...props }: PagePreviewProps) => {
+    const queueDocument = useAppSelector(DocumentSelectors.document);
+    const { pageId } = useAppSelector(SettingSelectors.settings);
+    const objects = useAppSelector((state) =>
+      ObjectSelectors.allByPageId(state, page.id),
+    );
+    const firstQueueEffects = useAppSelector((state) =>
+      EffectSelectors.firstQueueByPageId(state, page.id),
+    );
 
-  const firstQueueEffectObjectIds = useMemo(
-    () => firstQueueEffects.map((effect) => effect.objectId),
-    [firstQueueEffects],
-  );
-  const firstQueueObjects = useMemo(
-    () =>
-      objects.filter((object) => firstQueueEffectObjectIds.includes(object.id)),
-    [objects, firstQueueEffectObjectIds],
-  );
+    const firstQueueEffectObjectIds = useMemo(
+      () => firstQueueEffects.map((effect) => effect.objectId),
+      [firstQueueEffects],
+    );
+    const firstQueueObjects = useMemo(
+      () =>
+        objects.filter((object) =>
+          firstQueueEffectObjectIds.includes(object.id),
+        ),
+      [objects, firstQueueEffectObjectIds],
+    );
 
-  const pagePreviewRef = useRef<HTMLDivElement>(null);
+    const pagePreviewRef = useRef<HTMLDivElement>(null);
 
-  const [pagePreviewScale, setPagePreviewScale] = useState(
-    (pagePreviewRef.current?.offsetWidth || 1) /
-      (queueDocument.documentRect.width || 1),
-  );
+    const [pagePreviewScale, setPagePreviewScale] = useState(
+      (pagePreviewRef.current?.offsetWidth || 1) /
+        (queueDocument.documentRect.width || 1),
+    );
 
-  const throttled = useRef(
-    throttle<ResizeObserverCallback>(() => {
-      setPagePreviewScale(
-        pagePreviewRef.current.offsetWidth / queueDocument.documentRect.width,
-      );
-    }, 33),
-  );
+    const throttled = useRef(
+      throttle<ResizeObserverCallback>(() => {
+        setPagePreviewScale(
+          pagePreviewRef.current.offsetWidth / queueDocument.documentRect.width,
+        );
+      }, 33),
+    );
 
-  useEffect(() => {
-    if (!pagePreviewRef.current) {
-      return;
-    }
+    useEffect(() => {
+      if (!pagePreviewRef.current) {
+        return;
+      }
 
-    const resizeObserver = new ResizeObserver(throttled.current);
-    resizeObserver.observe(pagePreviewRef.current);
+      const resizeObserver = new ResizeObserver(throttled.current);
+      resizeObserver.observe(pagePreviewRef.current);
 
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }, []);
 
-  return (
-    <div
-      ref={pagePreviewRef}
-      className={clsx(
-        'tw-relative',
-        'tw-w-full',
-        'tw-h-auto',
-        'tw-border',
-        'tw-border-[var(--gray-8)]',
-        'tw-rounded-[4px]',
-        'tw-bg-[var(--gray-1)]',
-        'tw-overflow-hidden',
-        'tw-pointer-events-none',
-        // document 비율의 설정대로 변경이 필요
-        'tw-aspect-[16/9]',
-        {
-          'tw-border-[var(--violet-9)]': settings.pageId === page.id,
-        },
-        className,
-      )}
-      {...props}>
-      <Scaler
-        className="tw-p-0"
-        width={queueDocument.documentRect.width}
-        height={queueDocument.documentRect.height}
-        scale={pagePreviewScale}>
-        {firstQueueObjects.map((firstQueueObject, index) => (
-          <Fragment key={`preview-${firstQueueObject.id}-${index}`}>
-            <StandaloneRect object={firstQueueObject} />
-            <StandaloneText {...firstQueueObject} />
-          </Fragment>
-        ))}
-      </Scaler>
-    </div>
-  );
-};
+    return (
+      <div
+        ref={pagePreviewRef}
+        className={clsx(
+          'tw-relative',
+          'tw-w-full',
+          'tw-h-auto',
+          'tw-border',
+          'tw-border-[var(--gray-8)]',
+          'tw-rounded-[4px]',
+          'tw-bg-[var(--gray-1)]',
+          'tw-overflow-hidden',
+          'tw-pointer-events-none',
+          // document 비율의 설정대로 변경이 필요
+          'tw-aspect-[16/9]',
+          {
+            'tw-border-[var(--violet-9)]': pageId === page.id,
+          },
+          className,
+        )}
+        {...props}>
+        <Scaler
+          className="tw-p-0"
+          width={queueDocument.documentRect.width}
+          height={queueDocument.documentRect.height}
+          scale={pagePreviewScale}>
+          {firstQueueObjects.map((firstQueueObject, index) => (
+            <Fragment key={`preview-${firstQueueObject.id}-${index}`}>
+              <StandaloneRect object={firstQueueObject} />
+              <StandaloneText {...firstQueueObject} />
+            </Fragment>
+          ))}
+        </Scaler>
+      </div>
+    );
+  },
+  (prev, next) => prev.page.id === next.page.id,
+);
 
 const PageAddBox = ({
   className,
@@ -212,7 +218,7 @@ export const PagePanel = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const { pageId } = useAppSelector(SettingSelectors.settings);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
@@ -222,14 +228,15 @@ export const PagePanel = () => {
 
   const setQueuePageIndex = (id: EntityId): void => {
     dispatch(
-      SettingsActions.setSettings({
-        ...settings,
-        pageId: id,
-        queueIndex: 0,
-        queueStart: -1,
-        queuePosition: 'pause',
-        selectedObjectIds: [],
-        selectionMode: 'normal',
+      SettingsActions.updateSettings({
+        changes: {
+          pageId: id,
+          queueIndex: 0,
+          queueStart: -1,
+          queuePosition: 'pause',
+          selectedObjectIds: [],
+          selectionMode: 'normal',
+        },
       }),
     );
   };
@@ -404,7 +411,7 @@ export const PagePanel = () => {
                   <PageBox
                     draggable
                     className={clsx('page-item', {
-                      'tw-bg-[var(--gray-5)]': settings.pageId === page.id,
+                      'tw-bg-[var(--gray-5)]': pageId === page.id,
                       'tw-opacity-50': dragOverIndex === page.index,
                     })}
                     data-id={page.id}
