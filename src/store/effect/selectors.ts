@@ -40,8 +40,11 @@ const byIds = createSelector(
  * 이펙트를 인덱스 별로 그룹화하여 Map 형태로 조회
  */
 const byIndex = createSelector([all], (effects) => {
-  return effects.reduce<Record<number, QueueEffectType>>((result, effect) => {
-    result[effect.index] = effect;
+  return effects.reduce<Record<number, QueueEffectType[]>>((result, effect) => {
+    if (!result[effect.index]) {
+      result[effect.index] = [];
+    }
+    result[effect.index].push(effect);
     return result;
   }, {});
 });
@@ -204,6 +207,24 @@ const allEffectedObjectsMap = createSelector(
   },
 );
 
+/**
+ * @description
+ * Queue Index 별로 이펙트 중 가장 긴 duration + delay 를 조회
+ */
+const maxDurationByIndex = createSelector([byIndex], (effects) => {
+  return Object.entries(effects).reduce<number[]>((result, [_, effects]) => {
+    const maxDuration = effects.reduce((result, effect) => {
+      const currentEffectDuration = effect.delay + effect.duration;
+      if (currentEffectDuration > result) {
+        return currentEffectDuration;
+      }
+      return result;
+    }, 0);
+    result.push(maxDuration);
+    return result;
+  }, []);
+});
+
 export const EffectSelectors = {
   all,
   ids,
@@ -218,4 +239,5 @@ export const EffectSelectors = {
   allByPageAndEffectIndex,
   allEffectedObjects,
   allEffectedObjectsMap,
+  maxDurationByIndex,
 };

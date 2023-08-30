@@ -25,18 +25,9 @@ export interface TimelineProps {
 export const Timeline = (props: TimelineProps) => {
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effectsByIndex = useAppSelector(EffectSelectors.byIndex);
-
-  console.log(effectsByIndex);
+  const effectsByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
 
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
-
-  /**
-   * @description
-   * index 이동 시 해당 인덱스에 해당하는 이펙트 중 가장 긴 시간을 가져와야 함
-   */
-  const duration = 1000;
-
   const rowHeight = 38;
 
   const columnDefs: GridColumnDef<DataType>[] = [
