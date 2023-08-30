@@ -16,6 +16,8 @@ export interface GridHeaderCellRendererProps<T extends object> {
 
 export interface GridCellRendererProps<T extends object> {
   columnDef: GridColumnDef<T>;
+  cellIndex: number;
+  rowIndex: number;
   rowData: T;
 }
 
@@ -37,6 +39,7 @@ export interface GridInternalColumnDef<T extends object> {
 export interface GridInternalRowData<T extends object> {
   top: number;
   height: number;
+  rowIndex: number;
   data: T;
   cells: GridInternalField<T>[];
 }
@@ -45,6 +48,7 @@ export interface GridInternalField<T extends object> {
   columnDef: GridColumnDef<T>;
   field: string;
   data: T;
+  cellIndex: number;
   left: number;
   width: number;
   colspan: number;
@@ -369,7 +373,7 @@ export interface GridProps<T extends object> {
   columnDefs: GridColumnDef<T>[];
   headerHeight?: number;
   rowData: T[];
-  rowHeightGetter?: (params: T) => number;
+  rowHeightGetter?: (params: T, index: number, self: T[]) => number;
   colSpanGetter?: (params: T, field: string) => number;
 }
 
@@ -407,40 +411,47 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   }, [internalColumnDefs]);
 
   const internalRowData = useMemo(() => {
-    return props.rowData.reduce<GridInternalRowData<T>[]>((result, row) => {
-      const last = result[result.length - 1];
-      const top = last ? last.top + last.height : 0;
-      const height = props.rowHeightGetter ? props.rowHeightGetter(row) : 24;
+    return props.rowData.reduce<GridInternalRowData<T>[]>(
+      (result, row, index, self) => {
+        const last = result[result.length - 1];
+        const top = last ? last.top + last.height : 0;
+        const height = props.rowHeightGetter
+          ? props.rowHeightGetter(row, index, self)
+          : 24;
 
-      const cells = internalColumnDefs.reduce<GridInternalField<T>[]>(
-        (result, def) => {
-          const colSpan = props.colSpanGetter
-            ? props.colSpanGetter(row, def.field)
-            : 1;
-          const last = result[result.length - 1];
-          const left = last ? last.left + last.width : 0;
-          const width = def.width * colSpan;
-          result.push({
-            columnDef: def,
-            field: def.field,
-            data: row,
-            left: left,
-            width: width,
-            colspan: colSpan,
-          });
-          return result;
-        },
-        [],
-      );
+        const cells = internalColumnDefs.reduce<GridInternalField<T>[]>(
+          (result, def, cellIndex) => {
+            const colSpan = props.colSpanGetter
+              ? props.colSpanGetter(row, def.field)
+              : 1;
+            const last = result[result.length - 1];
+            const left = last ? last.left + last.width : 0;
+            const width = def.width * colSpan;
+            result.push({
+              columnDef: def,
+              cellIndex: cellIndex,
+              field: def.field,
+              data: row,
+              left: left,
+              width: width,
+              colspan: colSpan,
+            });
+            return result;
+          },
+          [],
+        );
 
-      result.push({
-        top,
-        height,
-        data: row,
-        cells: cells,
-      });
-      return result;
-    }, []);
+        result.push({
+          top,
+          height,
+          data: row,
+          rowIndex: index,
+          cells: cells,
+        });
+        return result;
+      },
+      [],
+    );
   }, [props.rowData, props.rowHeightGetter]);
 
   const cursorDefLeft = useMemo(() => {
@@ -505,7 +516,11 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           ))}
         </GridHeaderRow>
       </GridHeader>
-      <GridBody ref={bodyRef} onScroll={onScrollBody} scrollWidth={totalWidth}>
+      <GridBody
+        className={clsx('tw-mt-1')}
+        ref={bodyRef}
+        onScroll={onScrollBody}
+        scrollWidth={totalWidth}>
         {internalRowData.map((row, index) => (
           <GridRow key={index} top={row.top} height={row.height}>
             {row.cells.map((cell) => (
@@ -513,6 +528,8 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
                 {cell.columnDef.cellRenderer ? (
                   <cell.columnDef.cellRenderer
                     columnDef={cell.columnDef}
+                    cellIndex={cell.cellIndex}
+                    rowIndex={row.rowIndex}
                     rowData={row.data}
                   />
                 ) : null}

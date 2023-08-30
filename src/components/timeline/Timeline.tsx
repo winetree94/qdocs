@@ -11,6 +11,7 @@ import styles from './Timeline.module.scss';
 import { getTimelineTracks } from './timeline-data';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
+import { EffectSelectors } from 'store/effect';
 
 interface DataType {
   objectName: string;
@@ -24,7 +25,17 @@ export interface TimelineProps {
 export const Timeline = (props: TimelineProps) => {
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
+  const effectsByIndex = useAppSelector(EffectSelectors.byIndex);
+
+  console.log(effectsByIndex);
+
   const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
+
+  /**
+   * @description
+   * index 이동 시 해당 인덱스에 해당하는 이펙트 중 가장 긴 시간을 가져와야 함
+   */
+  const duration = 1000;
 
   const rowHeight = 38;
 
@@ -77,6 +88,7 @@ export const Timeline = (props: TimelineProps) => {
             }}
             className={clsx(
               styles.Cell,
+              props.rowIndex === 0 ? styles.FirstRowCell : '',
               'tw-text-white',
               'tw-text-center',
               start > index || end < index
@@ -103,7 +115,9 @@ export const Timeline = (props: TimelineProps) => {
     objectContents: tracks.find((track) => track.objectId === rowId),
   }));
 
-  const rowHeightGetter = () => rowHeight;
+  const rowHeightGetter = (row: DataType, index: number) => {
+    return rowHeight;
+  };
 
   const colspanGetter = (params: DataType, field: string) => {
     if (field === 'left-margin' || field === 'right-margin') {

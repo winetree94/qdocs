@@ -37,6 +37,17 @@ const byIds = createSelector(
 
 /**
  * @description
+ * 이펙트를 인덱스 별로 그룹화하여 Map 형태로 조회
+ */
+const byIndex = createSelector([all], (effects) => {
+  return effects.reduce<Record<number, QueueEffectType>>((result, effect) => {
+    result[effect.index] = effect;
+    return result;
+  }, {});
+});
+
+/**
+ * @description
  * Object Id 로 Object 의 Effect 목록을 조회
  * 오브젝트의 이펙트 목록을 조회할 경우 사용
  */
@@ -197,6 +208,7 @@ export const EffectSelectors = {
   all,
   ids,
   byId,
+  byIndex,
   entities,
   byIds,
   byObjectId,
