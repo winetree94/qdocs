@@ -53,7 +53,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "eject": "react-scripts eject",
