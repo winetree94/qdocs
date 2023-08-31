@@ -26,22 +26,16 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
 import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
 import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
 import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
-import { createDefaultImage } from 'model/object/image';
-import {
-  ImageEncodingMessage,
-  IMAGE_ENCODING_STATUS,
-} from 'workers/imageConversionWorker';
-import { nanoid, EntityId } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document/document';
-import { QueueObjectType } from 'model/object';
 import { DocumentSelectors } from 'store/document/selectors';
 import { useCreateImage } from 'cdk/hooks/useCreateFigure';
+import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
+import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
 
-export const QueueSubHeader = () => {
+const QueueSubHeader = () => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
@@ -172,21 +166,6 @@ export const QueueSubHeader = () => {
                 <ImageIcon />
               </QueueIconButton>
 
-              {/* duplicate */}
-              {/* <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(
-                    ObjectActions.duplicate({
-                      ids: settings.selectedObjectIds,
-                    }),
-                  );
-                }}
-                disabled={!settings.selectedObjectIds.length}>
-                <CopyIcon />
-              </QueueIconButton> */}
-
               <QueueDropdown
                 open={isDropdownOpen.rect}
                 onOpenChange={() =>
@@ -205,8 +184,8 @@ export const QueueSubHeader = () => {
                         'tw-transition-all',
                         'tw-duration-300',
                         {
-                          'tw-scale-y-[1]': !isDropdownOpen.sidebar,
-                          'tw-scale-y-[-1]': isDropdownOpen.sidebar,
+                          'tw-scale-y-[1]': !isDropdownOpen.rect,
+                          'tw-scale-y-[-1]': isDropdownOpen.rect,
                         },
                       )}
                     />
@@ -216,35 +195,45 @@ export const QueueSubHeader = () => {
                 <QueueDropdown.Content>
                   <QueueDropdown.Sub>
                     <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      도형 - 번역
+                      {t('global.shape')}
                     </QueueDropdown.SubTrigger>
                     <QueueDropdown.SubContent>
-                      <QueueDropdown.Item>
-                        {t('toolbar.file.new-document')}
-                      </QueueDropdown.Item>
-                      <QueueDropdown.Item>
-                        {t('toolbar.file.open-document')}
-                      </QueueDropdown.Item>
+                      <QueueScrollArea.Root className="">
+                        <QueueScrollArea.Viewport className=""></QueueScrollArea.Viewport>
+                        <QueueRectAddLayer />
+                        <QueueScrollArea.Scrollbar orientation="vertical">
+                          <QueueScrollArea.Thumb />
+                        </QueueScrollArea.Scrollbar>
+                        <QueueScrollArea.Scrollbar orientation="horizontal">
+                          <QueueScrollArea.Thumb />
+                        </QueueScrollArea.Scrollbar>
+                        <QueueScrollArea.Corner />
+                      </QueueScrollArea.Root>
                     </QueueDropdown.SubContent>
                   </QueueDropdown.Sub>
 
                   <QueueDropdown.Sub>
                     <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      선 -번역
+                      {t('global.line')}
                     </QueueDropdown.SubTrigger>
                     <QueueDropdown.SubContent>
-                      <QueueDropdown.Item>
-                        {t('toolbar.file.new-document')}
-                      </QueueDropdown.Item>
-                      <QueueDropdown.Item>
-                        {t('toolbar.file.open-document')}
-                      </QueueDropdown.Item>
+                      <QueueScrollArea.Root className="">
+                        <QueueScrollArea.Viewport className=""></QueueScrollArea.Viewport>
+                        <QueueLineAddLayer />
+                        <QueueScrollArea.Scrollbar orientation="vertical">
+                          <QueueScrollArea.Thumb />
+                        </QueueScrollArea.Scrollbar>
+                        <QueueScrollArea.Scrollbar orientation="horizontal">
+                          <QueueScrollArea.Thumb />
+                        </QueueScrollArea.Scrollbar>
+                        <QueueScrollArea.Corner />
+                      </QueueScrollArea.Root>
                     </QueueDropdown.SubContent>
                   </QueueDropdown.Sub>
 
                   <QueueDropdown.Sub>
                     <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      아이콘 -번역
+                      {t('global.icon')}
                     </QueueDropdown.SubTrigger>
                     <QueueDropdown.SubContent>
                       <div>
@@ -350,3 +339,5 @@ export const QueueSubHeader = () => {
     </QueueScrollArea.Root>
   );
 };
+
+export default QueueSubHeader;

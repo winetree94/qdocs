@@ -20,7 +20,7 @@ import { RightPanel } from 'app/right-panel/RightPanel';
 import { PagePanel } from 'app/page-panel/PagePanel';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
-import { QueueSubHeader } from 'app/sub-header/SubHeader';
+import QueueSubHeader from 'app/sub-header/SubHeader';
 import { QueueHeader } from 'app/header/Header';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 

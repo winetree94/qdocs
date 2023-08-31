@@ -1,41 +1,20 @@
-import {
-  FunctionComponent,
-  memo,
-  ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { FunctionComponent, memo, ReactNode, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import styles from './ObjectPanel.module.scss';
 import { RemixIconClasses } from 'cdk/icon/factory';
-import { createDefaultSquare } from 'model/object/square';
-import { createDefaultCircle } from 'model/object/circle';
 import { createDefaultIcon } from 'model/object/icon';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { areEqual, FixedSizeList, ListOnScrollProps } from 'react-window';
 import memoize from 'memoize-one';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { QueueDocumentRect } from 'model/document/document';
-import { QueueObjectType } from 'model/object';
-import { createDefaultLine } from 'model/object/line';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueInput } from 'components/input/Input';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
-import { ObjectActions } from '../../../store/object';
-import { HistoryActions } from 'store/history';
-import { SettingsActions } from 'store/settings';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { createDefaultImage } from 'model/object/image';
-import { nanoid, EntityId } from '@reduxjs/toolkit';
-import {
-  ImageEncodingMessage,
-  IMAGE_ENCODING_STATUS,
-} from 'workers/imageConversionWorker';
 import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
 
 export interface QueueObject {
@@ -163,97 +142,10 @@ export const ObjectPanel: FunctionComponent = () => {
     });
   };
 
-  const createSquare = createFigure(createDefaultSquare);
-  const createCircle = createFigure(createDefaultCircle);
   const createIcon = createFigure(createDefaultIcon);
-  const createLine = createFigure(createDefaultLine);
 
   const models = useMemo<QueueObjectGroup[]>(
     () => [
-      {
-        key: 'Shape',
-        title: t('global.shape'),
-        children: [
-          {
-            key: 'Rectangle',
-            factory: () => createSquare(),
-            keyword: [t('global.rectangle')],
-            tooltip: t('global.rectangle'),
-            preview: (
-              <svg className={styles.canvas}>
-                <g>
-                  <rect
-                    width="30"
-                    height="30"
-                    stroke="black"
-                    strokeWidth="4"
-                    fill="transparent"
-                  />
-                </g>
-              </svg>
-            ),
-          },
-          {
-            key: 'Circle',
-            factory: () => createCircle(),
-            keyword: [t('global.circle')],
-            tooltip: t('global.circle'),
-            preview: (
-              <svg className={styles.canvas}>
-                <g>
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r="13"
-                    stroke="black"
-                    strokeWidth="2"
-                    fill="transparent"
-                  />
-                </g>
-              </svg>
-            ),
-          },
-          {
-            key: 'Line',
-            factory: () => createLine(),
-            keyword: [t('global.line')],
-            tooltip: t('global.line'),
-            preview: (
-              <svg className={styles.canvas}>
-                <g>
-                  <line
-                    x1="0"
-                    y1="0"
-                    x2="42"
-                    y2="42"
-                    stroke="black"
-                    strokeWidth="2"
-                    fill="transparent"
-                  />
-                </g>
-              </svg>
-            ),
-          },
-        ],
-      },
-      // {
-      //   key: 'Asset',
-      //   title: 'Asset',
-      //   children: [
-      //     {
-      //       key: 'Image',
-      //       factory: () => createImage(),
-      //       tooltip: 'image',
-      //       keyword: ['image'],
-      //       preview: (
-      //         <SvgRemixIcon
-      //           icon="ri-image-add-line"
-      //           size={QUEUE_UI_SIZE.XLARGE}
-      //         />
-      //       ),
-      //     },
-      //   ],
-      // },
       {
         key: 'Remix Icon',
         title: t('global.icon'),
@@ -267,7 +159,7 @@ export const ObjectPanel: FunctionComponent = () => {
         })),
       },
     ],
-    [t, createSquare, createCircle, createLine, createIcon],
+    [t, createIcon],
   );
 
   const filteredGroups = useMemo(() => {
