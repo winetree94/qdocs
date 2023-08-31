@@ -29,14 +29,15 @@ button {
   @include queue-ui-fixed-height;
 
   @include queue-ui-size-medium {
-    @apply tw-h-[28px] tw-px-2 tw-py-1.5 tw-text-xs tw-leading-none tw-font-normal;
+    @apply tw-px-2 tw-py-1.5 tw-text-xs tw-leading-none tw-font-normal;
+    height: 28px;
   }
 
   // theme
   @include queue-select-trigger-color-default;
 
   &[data-placeholder] {
-    @apply tw-text-[var(--gray-8)];
+    color: var(--gray-8);
   }
 
   &[data-disabled] {
