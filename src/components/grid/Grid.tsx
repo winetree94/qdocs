@@ -1,3 +1,4 @@
+import { Animators } from 'cdk/animation/Animator';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import {
@@ -428,16 +429,28 @@ export const GridCursor = (props: GridCursorProps) => {
   );
 };
 
+const usePrevious = <T,>(value: T) => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value; //assign the value of ref to the argument
+  }, [value]); //this code will run when the value of 'value' changes
+  return ref.current; //in the end, return the current ref value.
+};
+
 export interface GridProps<T extends object> {
   className?: string;
   children?: React.ReactNode;
   cursorField?: string;
+  cursorTransitionDuration?: number;
   onCursorFieldChange?: (field: string) => void;
   columnDefs: GridColumnDef<T>[];
   headerHeight?: number;
   rowData: T[];
   rowHeightGetter?: (params: T, index: number, self: T[]) => number;
   colSpanGetter?: (params: T, field: string) => number;
+
+  cursorAnimationStart?: number;
+  cursorAnimationDuration?: number;
 }
 
 export const Grid = <T extends object>(props: GridProps<T>) => {
@@ -528,6 +541,8 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
     return cursorCenter - cursorHalfWidth;
   }, [internalColumnDefsMap, props.cursorField]);
 
+  const previousCursorDefLeft = usePrevious(cursorDefLeft);
+
   const totalWidth = useMemo(() => {
     const last = internalColumnDefs[internalColumnDefs.length - 1];
     return last ? last.left + last.width : 0;
@@ -605,17 +620,35 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
           </GridRow>
         ))}
       </GridBody>
+
       <GridOverlay ref={overlayRef} scrollWidth={totalWidth}>
         {props.cursorField && (
-          <GridCursor
-            onDragTransformX={onCursorDragmove}
-            onDragEnd={onCursorDragEnd}
-            overlayRef={overlayRef}
-            style={{
-              marginTop: 20,
-              marginLeft:
-                cursorTransformX !== null ? cursorTransformX : cursorDefLeft,
-            }}></GridCursor>
+          <Animators
+            start={props.cursorAnimationStart}
+            animations={[
+              {
+                delay: 0,
+                duration: props.cursorAnimationDuration || 0,
+                timing: 'linear',
+              },
+            ]}>
+            {([progress]) => {
+              const left =
+                previousCursorDefLeft +
+                (cursorDefLeft - previousCursorDefLeft) * progress;
+              return (
+                <GridCursor
+                  onDragTransformX={onCursorDragmove}
+                  onDragEnd={onCursorDragEnd}
+                  overlayRef={overlayRef}
+                  style={{
+                    marginTop: 20,
+                    marginLeft:
+                      cursorTransformX !== null ? cursorTransformX : left,
+                  }}></GridCursor>
+              );
+            }}
+          </Animators>
         )}
       </GridOverlay>
     </GridRoot>

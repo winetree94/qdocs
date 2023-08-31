@@ -12,6 +12,7 @@ import { getTimelineTracks } from './timeline-data';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
 import { EffectSelectors } from 'store/effect';
+import React, { useEffect } from 'react';
 
 interface DataType {
   objectName: string;
@@ -25,10 +26,15 @@ export interface TimelineProps {
 export const Timeline = (props: TimelineProps) => {
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const effectsByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
-
-  const { rowIds, tracks }: TimeLineTracks = getTimelineTracks(settings.pageId);
+  const { rowIds, tracks } = getTimelineTracks(settings.pageId);
   const rowHeight = 38;
+
+  const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
+
+  const duration =
+    settings.queuePosition === 'forward'
+      ? maxDurationByIndex[settings.queueIndex]
+      : maxDurationByIndex[settings.queueIndex + 1];
 
   const columnDefs: GridColumnDef<DataType>[] = [
     {
@@ -111,7 +117,6 @@ export const Timeline = (props: TimelineProps) => {
   };
 
   const onCursorFieldChange = (field: string) => {
-    console.log(field);
     const targetIndex: number = (() => {
       if (field === 'left-margin') {
         return 0;
@@ -134,6 +139,8 @@ export const Timeline = (props: TimelineProps) => {
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
         cursorField={settings.queueIndex.toString()}
+        cursorAnimationStart={settings.queueStart}
+        cursorAnimationDuration={duration}
         onCursorFieldChange={onCursorFieldChange}
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
