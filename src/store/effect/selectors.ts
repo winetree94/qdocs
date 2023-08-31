@@ -212,17 +212,21 @@ const allEffectedObjectsMap = createSelector(
  * Queue Index 별로 이펙트 중 가장 긴 duration + delay 를 조회
  */
 const maxDurationByIndex = createSelector([byIndex], (effects) => {
-  return Object.entries(effects).reduce<number[]>((result, [_, effects]) => {
-    const maxDuration = effects.reduce((result, effect) => {
-      const currentEffectDuration = effect.delay + effect.duration;
-      if (currentEffectDuration > result) {
-        return currentEffectDuration;
-      }
+  console.log(effects);
+  return Object.entries(effects).reduce<number[]>(
+    (result, [index, effects]) => {
+      const maxDuration = effects.reduce((result, effect) => {
+        const currentEffectDuration = effect.delay + effect.duration;
+        if (currentEffectDuration > result) {
+          return currentEffectDuration;
+        }
+        return result;
+      }, 0);
+      result[Number(index)] = maxDuration;
       return result;
-    }, 0);
-    result.push(maxDuration);
-    return result;
-  }, []);
+    },
+    [],
+  );
 });
 
 export const EffectSelectors = {

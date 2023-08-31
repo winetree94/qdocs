@@ -633,9 +633,12 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
               },
             ]}>
             {([progress]) => {
+              if (!previousCursorDefLeft || !cursorDefLeft) {
+                return;
+              }
               const left =
                 previousCursorDefLeft +
-                (cursorDefLeft - previousCursorDefLeft) * progress;
+                (cursorDefLeft - previousCursorDefLeft) * (progress || 0);
               return (
                 <GridCursor
                   onDragTransformX={onCursorDragmove}
