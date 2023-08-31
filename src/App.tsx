@@ -12,7 +12,7 @@ const App = () => {
     <Provider store={store}>
       <EventDispatcherProvider>
         <RootRendererProvider>
-          <RootLayout></RootLayout>
+          <RootLayout />
         </RootRendererProvider>
       </EventDispatcherProvider>
     </Provider>

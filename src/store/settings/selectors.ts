@@ -25,6 +25,12 @@ const selectedObjects = createSelector(
     settings.selectedObjectIds.map((id) => objectEntities[id]),
 );
 
+const selectedObjectIds = createSelector(
+  [selectSelf, ObjectSelectors.ids],
+  (settings, objectIds) =>
+    objectIds.filter((id) => settings.selectedObjectIds.includes(id)),
+);
+
 export const SettingSelectors = {
   settings,
   documentId,
@@ -32,4 +38,5 @@ export const SettingSelectors = {
   queueIndex,
   pageObjects,
   selectedObjects,
+  selectedObjectIds,
 };

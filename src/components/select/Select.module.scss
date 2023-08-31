@@ -22,7 +22,7 @@ button {
 }
 
 .SelectTrigger {
-  @apply tw-flex tw-items-center tw-justify-between tw-rounded-md tw-outline-none tw-cursor-pointer tw-box-border tw-w-full;
+  @apply tw-flex tw-items-center tw-justify-between tw-rounded-md tw-outline-none tw-cursor-pointer tw-box-border tw-w-full tw-font-normal;
 
   // sizing
   @include queue-ui-x-padding;
@@ -42,6 +42,10 @@ button {
 
   &[data-disabled] {
     @apply tw-cursor-not-allowed;
+  }
+
+  span {
+    @apply tw-font-normal;
   }
 }
 

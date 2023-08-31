@@ -9,7 +9,11 @@ import { clsx } from 'clsx';
 import styles from './ColorPicker.module.scss';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 
-const QueueColorPicker = ({ onChange, ...props }: SketchPickerProps) => {
+const QueueColorPicker = ({
+  className,
+  onChange,
+  ...props
+}: SketchPickerProps) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState<Partial<ColorResult>>({
     hex: props.color as string,
@@ -43,7 +47,7 @@ const QueueColorPicker = ({ onChange, ...props }: SketchPickerProps) => {
 
   return (
     <>
-      <div className={styles.wrapper} onClick={handleClick}>
+      <div className={clsx(styles.wrapper, className)} onClick={handleClick}>
         <div
           className={clsx(styles.color)}
           style={{ backgroundColor: color.hex }}

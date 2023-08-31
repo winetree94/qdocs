@@ -19,6 +19,7 @@ export type QueueSelectProps = Select.SelectProps &
 
 export interface QueueSelectGroupProps extends Select.SelectGroupProps {
   label?: Select.SelectLabelProps['children'];
+  children: React.ReactNode;
 }
 
 type SelectContentPropsKeys = keyof Select.SelectContentProps;

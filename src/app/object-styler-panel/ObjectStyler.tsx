@@ -13,8 +13,8 @@ import { ObjectStyleRotate } from './Rotate';
 export const ObjectStylerPanel = (): ReactElement | null => {
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
 
-  if (selectedObjects.length === 0) {
-    return <div className="tw-h-full" />;
+  if (selectedObjects.length <= 0) {
+    return null;
   }
 
   return (

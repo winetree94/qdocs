@@ -35,6 +35,8 @@ export const RootLayout = () => {
     selectedObjectIds,
     autoPlay,
   } = useAppSelector(SettingSelectors.settings);
+
+  // object 또는 Effect가 계속 dispatch 되기 때문에 매번 다시 셀렉트 하는 것으로 보임...(렌더링 개선 포인트)
   const pageObjects = useAppSelector(SettingSelectors.pageObjects);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
@@ -252,20 +254,26 @@ export const RootLayout = () => {
     return document.removeEventListener('contextmenu', onContextmenu);
   });
 
-  return (
-    <div className={styles.container}>
-      {!presentationMode ? (
-        <>
-          {docs && (
-            <>
-              <QueueHeader />
-              <QueueSubHeader />
-            </>
-          )}
-        </>
-      ) : null}
+  if (!docs) {
+    return (
+      <div className={styles.container}>
+        <div className={clsx(styles.Content)}>
+          <Welcome></Welcome>
+        </div>
+      </div>
+    );
+  }
 
-      {docs && (
+  return (
+    <>
+      <div className={styles.container}>
+        {!presentationMode ? (
+          <>
+            <QueueHeader />
+            <QueueSubHeader />
+          </>
+        ) : null}
+
         <div className={clsx(styles.Content)}>
           {!presentationMode && (
             <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
@@ -310,13 +318,7 @@ export const RootLayout = () => {
             </PanelResizer.Panel>
           </div>
         </div>
-      )}
-
-      {!docs && (
-        <div className={clsx(styles.Content)}>
-          <Welcome></Welcome>
-        </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
