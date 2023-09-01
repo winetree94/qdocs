@@ -1,3 +1,4 @@
+import { QueueSubtoolbar } from 'app/subtoolbar/Subtoolbar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/buttons/button/Button';
@@ -9,6 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
+import { ReactComponent as StepBackIcon } from 'assets/icons/step-back.svg';
+import { ReactComponent as StepForwardIcon } from 'assets/icons/step-forward.svg';
+import { ReactComponent as StepInIcon } from 'assets/icons/step-in.svg';
+import { ReactComponent as StepOutIcon } from 'assets/icons/step-out.svg';
 
 const ZOOM_LEVEL = {
   [1]: 30,
@@ -45,7 +51,7 @@ export const BottomPanel = () => {
       {/*
 
       <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
-      */}
+    */}
       <div
         className={clsx(
           'tw-flex',
@@ -73,27 +79,27 @@ export const BottomPanel = () => {
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.rewind())}>
-            <SvgRemixIcon icon={'ri-rewind-line'} />
+            <StepInIcon />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => changeQueueIndex(settings.queueIndex - 1, true)}>
-            <SvgRemixIcon icon={'ri-skip-back-line'} />
+            <StepBackIcon />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.play())}>
-            <SvgRemixIcon icon={'ri-play-line'} />
+            <PlayIcon />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => changeQueueIndex(settings.queueIndex + 1, true)}>
-            <SvgRemixIcon icon={'ri-skip-forward-line'} />
+            <StepForwardIcon />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.forward())}>
-            <SvgRemixIcon icon={'ri-speed-line'} />
+            <StepOutIcon />
           </QueueIconButton>
         </div>
 
