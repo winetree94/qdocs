@@ -12,7 +12,9 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 export const DocumentPanel = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { documentRect } = useAppSelector(DocumentSelectors.document);
+  const { width, height, fill } = useAppSelector(
+    DocumentSelectors.documentRect,
+  );
 
   const handleChangeDocumentWidth = (
     event: ChangeEvent & { target: HTMLInputElement },
@@ -33,6 +35,16 @@ export const DocumentPanel = () => {
       DocumentActions.updateDocumentRect({
         changes: {
           height: parseInt(event.target.value),
+        },
+      }),
+    );
+  };
+
+  const handleChangeDocumentFill = (color: string) => {
+    dispatch(
+      DocumentActions.updateDocumentRect({
+        changes: {
+          fill: color,
         },
       }),
     );
@@ -60,7 +72,7 @@ export const DocumentPanel = () => {
             </div>
             <div className="tw-flex-1">
               <QueueInput
-                value={documentRect.width}
+                value={width}
                 type="number"
                 variant="filled"
                 onChange={handleChangeDocumentWidth}
@@ -68,7 +80,7 @@ export const DocumentPanel = () => {
             </div>
             <div className="tw-flex-1">
               <QueueInput
-                value={documentRect.height}
+                value={height}
                 type="number"
                 variant="filled"
                 onChange={handleChangeDocumentHeight}
@@ -89,9 +101,14 @@ export const DocumentPanel = () => {
               <div className="tw-flex tw-gap-1 tw-justify-between tw-items-center tw-px-2 tw-py-1.5 tw-box-border tw-bg-[#E7E6EB] tw-leading-none tw-text-xs tw-font-normal tw-rounded-lg">
                 <QueueColorPicker
                   className="tw-flex-1 tw-w-full"
-                  color={'#ffffff'}
+                  color={fill}
+                  onChangeComplete={(color) =>
+                    handleChangeDocumentFill(color.hex)
+                  }
                 />
-                <div className="tw-px-4 tw-font-normal tw-text-xs">FFFFFF</div>
+                <div className="tw-px-4 tw-font-normal tw-text-xs">
+                  {fill.replace('#', '').toUpperCase()}
+                </div>
               </div>
             </div>
           </div>

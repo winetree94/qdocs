@@ -27,7 +27,10 @@ const serialized = createSelector(
   },
 );
 
+const documentRect = createSelector(selectSelf, (docs) => docs.documentRect);
+
 export const DocumentSelectors = {
   document,
   serialized,
+  documentRect,
 };
