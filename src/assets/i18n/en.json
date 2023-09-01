@@ -84,5 +84,6 @@
   "global.background-color": "Background color",
   "global.frame": "Frame",
   "global.grid": "Grid",
-  "global.page-number": "Page number"
+  "global.page-number": "Page number",
+  "global.animation": "Animation"
 }

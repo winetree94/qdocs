@@ -84,5 +84,6 @@
   "global.background-color": "배경색",
   "global.frame": "프레임",
   "global.grid": "그리드",
-  "global.page-number": "페이지 번호"
+  "global.page-number": "페이지 번호",
+  "global.animation": "애니메이션"
 }

@@ -2,7 +2,7 @@ import QueueTab from 'components/tabs/Tab';
 import { LeftPanel } from 'app/left-panel/LeftPanel';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
-import { DefaultPropPanel } from 'app/left-panel/default-prop-panel/DefaultPropPanel';
+import { DefaultPropPanel } from 'app/default-prop-panel/DefaultPropPanel';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { DocumentPanel } from 'app/document-panel/DocumentPanel';
@@ -41,7 +41,7 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
             ),
           },
           {
-            name: 'obj 추가(임시)',
+            name: t('global.animation'),
             content: <LeftPanel />,
           },
         ]}></QueueTab>
