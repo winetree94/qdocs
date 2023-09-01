@@ -1,17 +1,26 @@
 import QueueTab from 'components/tabs/Tab';
-import { LeftPanel } from 'app/left-panel/LeftPanel';
+import { EffectPanel } from 'app/effect-panel/EffectPanel';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
 import { DefaultPropPanel } from 'app/default-prop-panel/DefaultPropPanel';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { DocumentPanel } from 'app/document-panel/DocumentPanel';
+import { useEffect, useState } from 'react';
 
 export type RightPanelProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const RightPanel = ({ className, ...props }: RightPanelProps) => {
   const { t } = useTranslation();
   const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
+
+  const [tabValue, setTabValue] = useState<string>(t('global.design'));
+
+  useEffect(() => {
+    if (tabValue === t('global.animation') && selectedObjectIds.length <= 0) {
+      setTabValue(t('global.design'));
+    }
+  }, [selectedObjectIds.length]);
 
   return (
     <div
@@ -26,10 +35,11 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
       {...props}>
       <QueueTab
         className="tw-h-full"
-        defaultValue={t('global.design')}
+        value={tabValue}
         tabs={[
           {
             name: t('global.design'),
+            onClick: () => setTabValue(t('global.design')),
             content: (
               <div className="tw-h-[calc(100%-46px)]">
                 {selectedObjectIds.length > 0 ? (
@@ -42,7 +52,9 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
           },
           {
             name: t('global.animation'),
-            content: <LeftPanel />,
+            onClick: () => setTabValue(t('global.animation')),
+            disabled: selectedObjectIds.length <= 0,
+            content: <EffectPanel />,
           },
         ]}></QueueTab>
     </div>

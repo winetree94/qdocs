@@ -19,9 +19,38 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueDropdown } from 'components/dropdown';
+import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { QueueSeparator } from 'components/separator/Separator';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
+};
+
+const AllEffectList = () => {
+  const [firstObject] = useAppSelector(SettingSelectors.selectedObjects);
+  const effects = useAppSelector((state) =>
+    EffectSelectors.byObjectId(state, firstObject.id),
+  );
+
+  return (
+    <QueueScrollArea.Root>
+      <QueueScrollArea.Viewport className="tw-max-h-25">
+        <ul className="tw-text-sm">
+          {effects.map((effect, index) => (
+            <li key={`effect-${index}-${effect?.id}`}>
+              <span className="tw-font-normal tw-text-[var(--gray-11)]">
+                #{effect.index + 1}{' '}
+              </span>
+              <span className="tw-font-normal">{effect.type}</span>
+            </li>
+          ))}
+        </ul>
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar>
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
+  );
 };
 
 export const EffectController = ({
@@ -253,46 +282,50 @@ export const EffectControllerBox = (): ReactElement | null => {
   }
 
   return (
-    <div className="tw-flex tw-flex-col tw-gap-2 tw-p-2">
-      <div>
-        <p className="tw-font-medium">{t('effect-panel.all-effects')}</p>
-        <ul>
-          {effects.map((effect, index) => (
-            <li key={`effect-${index}`}>
-              <span>#{effect.index + 1} </span>
-              <span>{effect.type}</span>
-            </li>
-          ))}
-        </ul>
+    <div className="tw-flex tw-flex-wrap tw-gap-2 tw-py-4 tw-px-5">
+      <div className="tw-flex-1 tw-basis-full">
+        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">
+          {t('effect-panel.all-effects')}
+        </h2>
       </div>
-      <div>
-        <div className="tw-flex tw-justify-between">
-          <p className="tw-font-medium">{t('effect-panel.current-effects')}</p>
-          <QueueDropdown>
-            <QueueDropdown.Trigger asChild>
-              <button
-                className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
-                disabled={createEffectIndex === settings.queueIndex}>
-                <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.SMALL} />
-              </button>
-            </QueueDropdown.Trigger>
-            <QueueDropdown.Content side="right" className="tw-w-[100px]">
-              {addableEffectTypes.map((effectType) => {
-                if (currentQueueObjectEffectTypes.includes(effectType)) {
-                  return null;
-                }
 
-                return (
-                  <QueueDropdown.Item
-                    key={effectType}
-                    onClick={(): void => handleAddEffectItemClick(effectType)}>
-                    {effectType}
-                  </QueueDropdown.Item>
-                );
-              })}
-            </QueueDropdown.Content>
-          </QueueDropdown>
-        </div>
+      <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
+        <AllEffectList />
+      </div>
+
+      <QueueSeparator.Root className="tw-my-4" />
+
+      <div className="tw-flex tw-items-center tw-justify-between tw-flex-1 tw-basis-full">
+        <h2 className="tw-text-xs tw-font-medium tw-leading-snug">
+          {t('effect-panel.current-effects')}
+        </h2>
+        <QueueDropdown>
+          <QueueDropdown.Trigger asChild>
+            <button
+              className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
+              disabled={createEffectIndex === settings.queueIndex}>
+              <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.MEDIUM} />
+            </button>
+          </QueueDropdown.Trigger>
+          <QueueDropdown.Content side="right" className="tw-w-[100px]">
+            {addableEffectTypes.map((effectType) => {
+              if (currentQueueObjectEffectTypes.includes(effectType)) {
+                return null;
+              }
+
+              return (
+                <QueueDropdown.Item
+                  key={effectType}
+                  onClick={(): void => handleAddEffectItemClick(effectType)}>
+                  {effectType}
+                </QueueDropdown.Item>
+              );
+            })}
+          </QueueDropdown.Content>
+        </QueueDropdown>
+      </div>
+
+      <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
         <div className="tw-flex tw-flex-col tw-gap-1">
           {objectCurrentEffects.map((currentQueueObjectEffect) => (
             <EffectController

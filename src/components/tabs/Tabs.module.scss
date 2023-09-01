@@ -27,6 +27,11 @@
   line-height: 1;
   color: var(--gray-8);
   font-weight: 500;
+
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--gray-6);
+  }
 }
 
 .TabsTrigger[data-state='active'] {

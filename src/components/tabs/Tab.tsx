@@ -9,6 +9,8 @@ interface TabProps extends RadixTab.TabsProps {
 
 export interface Tabs {
   name: string;
+  disabled?: boolean;
+  onClick?: RadixTab.TabsTriggerProps['onClick'];
   content: JSX.Element;
 }
 
@@ -26,7 +28,9 @@ const QueueTab = forwardRef<HTMLDivElement, TabProps>(
             <RadixTab.Trigger
               className={clsx(styles.TabsTrigger)}
               value={tab.name}
-              key={tab.name + 'list'}>
+              disabled={tab.disabled}
+              key={tab.name + 'list'}
+              onClick={tab.onClick}>
               {tab.name}
             </RadixTab.Trigger>
           ))}
