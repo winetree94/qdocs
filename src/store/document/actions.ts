@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
+import { QueueDocumentRect } from 'model/document';
 import { RootState } from 'store';
 
 /**
@@ -18,8 +19,13 @@ const closeDocument = createAction('Document/closeDocument');
 
 const changeName = createAction<string>('Document/changeName');
 
+const updateDocumentRect = createAction<{
+  changes: Partial<QueueDocumentRect>;
+}>('Document/updateDocumentRect');
+
 export const DocumentActions = {
   loadDocument,
   closeDocument,
   changeName,
+  updateDocumentRect,
 };

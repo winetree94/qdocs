@@ -4,13 +4,39 @@ import { QueueInput } from 'components/input/Input';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSelect } from 'components/select/Select';
 import { QueueSeparator } from 'components/separator/Separator';
+import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DocumentSelectors } from 'store/document';
-import { useAppSelector } from 'store/hooks';
+import { DocumentActions, DocumentSelectors } from 'store/document';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 export const DocumentPanel = () => {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { documentRect } = useAppSelector(DocumentSelectors.document);
+
+  const handleChangeDocumentWidth = (
+    event: ChangeEvent & { target: HTMLInputElement },
+  ) => {
+    dispatch(
+      DocumentActions.updateDocumentRect({
+        changes: {
+          width: parseInt(event.target.value),
+        },
+      }),
+    );
+  };
+
+  const handleChangeDocumentHeight = (
+    event: ChangeEvent & { target: HTMLInputElement },
+  ) => {
+    dispatch(
+      DocumentActions.updateDocumentRect({
+        changes: {
+          height: parseInt(event.target.value),
+        },
+      }),
+    );
+  };
 
   return (
     <QueueScrollArea.Root className="tw-h-full">
@@ -37,7 +63,7 @@ export const DocumentPanel = () => {
                 value={documentRect.width}
                 type="number"
                 variant="filled"
-                readOnly
+                onChange={handleChangeDocumentWidth}
               />
             </div>
             <div className="tw-flex-1">
@@ -45,7 +71,7 @@ export const DocumentPanel = () => {
                 value={documentRect.height}
                 type="number"
                 variant="filled"
-                readOnly
+                onChange={handleChangeDocumentHeight}
               />
             </div>
           </div>
@@ -80,12 +106,13 @@ export const DocumentPanel = () => {
             </div>
 
             <div className="tw-flex-1 tw-basis-full">
-              <label className="tw-flex tw-items-center tw-bg-[#E7E6EB] tw-rounded-lg">
+              <label className="tw-flex tw-items-center tw-bg-[var(--gray-2)] tw-rounded-lg tw-text-[var(--gray-8)] tw-cursor-not-allowed">
                 <QueueCheckbox
                   id="layoutGrid"
                   name="layoutGrid"
                   value="layoutGrid"
                   readOnly
+                  disabled
                 />
                 <span className="tw-text-xs tw-font-normal tw-leading-none">
                   {t('global.grid')}
@@ -104,12 +131,13 @@ export const DocumentPanel = () => {
             </div>
 
             <div className="tw-flex-1 tw-basis-full">
-              <label className="tw-flex tw-items-center tw-bg-[#E7E6EB] tw-rounded-lg">
+              <label className="tw-flex tw-items-center tw-bg-[var(--gray-2)] tw-rounded-lg tw-text-[var(--gray-8)] tw-cursor-not-allowed">
                 <QueueCheckbox
                   id="layoutGrid"
                   name="layoutGrid"
                   value="layoutGrid"
                   readOnly
+                  disabled
                 />
                 <span className="tw-text-xs tw-font-normal tw-leading-none">
                   {t('global.page-number')}

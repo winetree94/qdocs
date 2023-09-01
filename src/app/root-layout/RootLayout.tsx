@@ -295,6 +295,7 @@ export const RootLayout = () => {
               'tw-bg-[var(--gray-3)]',
             )}>
             <QueueEditor />
+
             {!presentationMode && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
                 <PanelResizer.Panel
@@ -308,15 +309,17 @@ export const RootLayout = () => {
             )}
           </div>
 
-          <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
-            <PanelResizer.Panel
-              className="tw-h-full"
-              width={240}
-              minWidth={200}>
-              <PanelResizer.Pane panePosition="left" />
-              <RightPanel className="tw-h-full" />
-            </PanelResizer.Panel>
-          </div>
+          {!presentationMode && (
+            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
+              <PanelResizer.Panel
+                className="tw-h-full"
+                width={240}
+                minWidth={200}>
+                <PanelResizer.Pane panePosition="left" />
+                <RightPanel className="tw-h-full" />
+              </PanelResizer.Panel>
+            </div>
+          )}
         </div>
       </div>
     </>

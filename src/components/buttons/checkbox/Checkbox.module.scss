@@ -15,7 +15,8 @@
 }
 
 .Disabled {
-  color: $ui-default-color-disabled;
+  color: var(--gray-6);
+  cursor: not-allowed;
 }
 
 

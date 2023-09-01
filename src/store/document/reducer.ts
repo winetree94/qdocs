@@ -20,5 +20,21 @@ export const documentSlice = createSlice({
     builder.addCase(DocumentActions.changeName, (state, action) => {
       state.documentName = action.payload;
     });
+
+    builder.addCase(
+      DocumentActions.updateDocumentRect,
+      (state, action): NormalizedQueueDocument => {
+        if (!action) {
+          return state;
+        }
+
+        state.documentRect = {
+          ...state.documentRect,
+          ...action.payload.changes,
+        };
+
+        return state;
+      },
+    );
   },
 });
