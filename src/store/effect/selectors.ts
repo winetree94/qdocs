@@ -14,6 +14,7 @@ import {
   supportStroke,
   supportText,
 } from 'model/support';
+import { TimeLineTrack } from 'model/timeline/timeline';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -229,6 +230,47 @@ const maxDurationByIndex = createSelector([byIndex], (effects) => {
   return models;
 });
 
+const timelineData = createSelector(
+  [ObjectSelectors.all, all, SettingSelectors.pageId],
+  (objects, allEffects, pageId) => {
+    const objectIds: EntityId[] = [];
+    const tracks = objects
+      .filter((value) => value.pageId === pageId)
+      .reduce((acc, object) => {
+        objectIds.push(object.id);
+        const effects = allEffects.filter(
+          (entity) => entity.objectId === object.id,
+        );
+
+        const filtered = effects.map((effect) => effect.index);
+        const queueList = effects.reduce((acc, effect) => {
+          if (!acc.includes(effect.index)) {
+            acc.push(effect.index);
+          }
+          return acc;
+        }, [] as number[]);
+
+        const item: TimeLineTrack = {
+          objectId: object.id,
+          startQueueIndex: filtered[0],
+          endQueueIndex: filtered[filtered.length - 1],
+          uniqueColor: object.uniqueColor,
+          queueList,
+        };
+
+        acc.push(item);
+        return acc;
+      }, [] as TimeLineTrack[]);
+
+    const timelineData = {
+      rowIds: objectIds,
+      tracks,
+    };
+
+    return timelineData;
+  },
+);
+
 export const EffectSelectors = {
   all,
   ids,
@@ -244,4 +286,5 @@ export const EffectSelectors = {
   allEffectedObjects,
   allEffectedObjectsMap,
   maxDurationByIndex,
+  timelineData,
 };

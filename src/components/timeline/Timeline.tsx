@@ -6,13 +6,11 @@ import {
   GridHeaderCellRendererProps,
 } from 'components/grid/Grid';
 import { SettingSelectors } from 'store/settings/selectors';
-import { TimeLineTrack, TimeLineTracks } from '../../model/timeline/timeline';
+import { TimeLineTrack } from '../../model/timeline/timeline';
 import styles from './Timeline.module.scss';
-import { getTimelineTracks } from './timeline-data';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
 import { EffectSelectors } from 'store/effect';
-import React, { useEffect } from 'react';
 
 interface DataType {
   objectName: string;
@@ -26,7 +24,7 @@ export interface TimelineProps {
 export const Timeline = (props: TimelineProps) => {
   const dispath = useAppDispatch();
   const settings = useAppSelector(SettingSelectors.settings);
-  const { rowIds, tracks } = getTimelineTracks(settings.pageId);
+  const { rowIds, tracks } = useAppSelector(EffectSelectors.timelineData);
   const rowHeight = 38;
 
   const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
