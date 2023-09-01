@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
 import clsx from 'clsx';
 import styles from './LeftPanel.module.scss';
-import { ObjectPanel } from './object-panel/ObjectPanel';
 import { QueueTabs } from 'components/tabs/Tabs';
 import { EffectControllerBox } from 'components';
 import { useAppSelector } from 'store/hooks';
@@ -42,7 +41,7 @@ export const LeftPanel: FunctionComponent = () => {
           </QueueTabs.Content>
         </QueueTabs.Root>
       ) : (
-        <ObjectPanel />
+        <div>오브젝트패널 삭제</div>
       )}
     </div>
   );

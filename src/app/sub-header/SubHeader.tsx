@@ -34,6 +34,7 @@ import { DocumentSelectors } from 'store/document/selectors';
 import { useCreateImage } from 'cdk/hooks/useCreateFigure';
 import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
 import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
+import IconAddLayer from './IconAddLayer/IconAddLayer';
 
 const QueueSubHeader = () => {
   const dispatch = useAppDispatch();
@@ -236,13 +237,7 @@ const QueueSubHeader = () => {
                       {t('global.icon')}
                     </QueueDropdown.SubTrigger>
                     <QueueDropdown.SubContent>
-                      <div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                        <div>1</div>
-                      </div>
+                      <IconAddLayer />
                     </QueueDropdown.SubContent>
                   </QueueDropdown.Sub>
                 </QueueDropdown.Content>
