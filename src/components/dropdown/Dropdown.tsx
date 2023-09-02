@@ -58,7 +58,7 @@ const Content = forwardRef<HTMLDivElement, Dropdown.MenuContentProps>(
           ref={forwardedRef}>
           {children}
           <Dropdown.Arrow
-            className={clsx('tw-fill-white')}
+            className={clsx('tw-fill-white-100')}
             width={12}
             height={8}
           />
