@@ -105,17 +105,8 @@ export const Timeline = (props: TimelineProps) => {
     objectContents: tracks.find((track) => track.objectId === rowId),
   }));
 
-  const rowHeightGetter = (row: DataType, index: number) => {
+  const rowHeightGetter = () => {
     return rowHeight;
-  };
-
-  const colspanGetter = (params: DataType, field: string) => {
-    if (field === 'left-margin' || field === 'right-margin') {
-      return 1;
-    }
-
-    // TODO colspan 계산해야 함
-    return 1;
   };
 
   const onCursorFieldChange = (field: string) => {
@@ -147,8 +138,7 @@ export const Timeline = (props: TimelineProps) => {
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
         rowData={rowData}
-        rowHeightGetter={rowHeightGetter}
-        colSpanGetter={colspanGetter}></Grid>
+        rowHeightGetter={rowHeightGetter}></Grid>
     </div>
   );
 };

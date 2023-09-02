@@ -14,6 +14,8 @@ import { ReactComponent as StepBackIcon } from 'assets/icons/step-back.svg';
 import { ReactComponent as StepForwardIcon } from 'assets/icons/step-forward.svg';
 import { ReactComponent as StepInIcon } from 'assets/icons/step-in.svg';
 import { ReactComponent as StepOutIcon } from 'assets/icons/step-out.svg';
+import { ReactComponent as RepeatIcon } from 'assets/icons/repeat.svg';
+import { QueueSeparator } from 'components/separator/Separator';
 
 const ZOOM_LEVEL = {
   [1]: 30,
@@ -48,10 +50,6 @@ export const BottomPanel = memo(() => {
 
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-flex-1', 'tw-h-full')}>
-      {/*
-
-      <QueueSubtoolbar className={clsx('tw-flex-shrink-0')} />
-    */}
       <div
         className={clsx(
           'tw-flex',
@@ -75,7 +73,13 @@ export const BottomPanel = memo(() => {
         </div>
 
         {/* center */}
-        <div className={clsx('tw-flex-1', 'tw-flex', 'tw-justify-center')}>
+        <div
+          className={clsx(
+            'tw-flex-1',
+            'tw-flex',
+            'tw-justify-center',
+            'tw-gap-2',
+          )}>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.rewind())}>
@@ -104,6 +108,7 @@ export const BottomPanel = memo(() => {
         </div>
 
         {/* right */}
+
         <div
           className={clsx(
             'tw-flex-1',
@@ -112,18 +117,28 @@ export const BottomPanel = memo(() => {
             'tw-justify-end',
           )}>
           <QueueToggle.Root
+            className={clsx('tw-w-4')}
             pressed={autoPlayRepeat}
-            onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
-            <SvgRemixIcon icon={'ri-repeat-line'} />
+            onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}
+            size={QUEUE_UI_SIZE.MEDIUM}>
+            <RepeatIcon />
           </QueueToggle.Root>
+
+          {/*
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.pause())}>
             <SvgRemixIcon icon={'ri-pause-line'} />
           </QueueIconButton>
+          */}
+
+          <QueueSeparator.Root
+            className={clsx('!tw-h-4', 'tw-ml-2', 'tw-mr-1')}
+            orientation="vertical"
+          />
 
           <QueueSlider
-            className={clsx('tw-w-[73px]', 'tw-mr-4')}
+            className={clsx('tw-w-[73px]', 'tw-ml-5', 'tw-mr-5')}
             disableRange={true}
             min={1}
             max={9}
