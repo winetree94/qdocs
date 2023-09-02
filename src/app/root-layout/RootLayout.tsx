@@ -35,6 +35,23 @@ export const RootLayout = () => {
 
   /**
    * @description
+   * disallow wheel event
+   */
+  useEffect(() => {
+    document.addEventListener(
+      'wheel',
+      (event) => {
+        if (!event.ctrlKey) {
+          return;
+        }
+        event.preventDefault();
+      },
+      { passive: false },
+    );
+  }, []);
+
+  /**
+   * @description
    * 애니메이션이 재생 중일 때, 마우스 클릭을 감지하여 애니메이션을 멈춘다.
    */
   useEffect(() => {

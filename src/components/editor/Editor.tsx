@@ -429,12 +429,34 @@ export const QueueEditor = () => {
     }
   };
 
+  useEffect(() => {
+    const onWheel = (event: WheelEvent): void => {
+      if (!event.ctrlKey && !event.metaKey) {
+        return;
+      }
+      event.preventDefault();
+      const scale = Math.max(
+        0.1,
+        Math.min(10, currentScale - event.deltaY * 0.001),
+      );
+      if (currentScale === scale) {
+        return;
+      }
+      dispatch(SettingsActions.setScale(scale));
+    };
+    rootRef.current?.addEventListener('wheel', onWheel, { passive: false });
+    return () => rootRef.current?.removeEventListener('wheel', onWheel);
+  }, [
+    dispatch,
+    currentScale,
+    queueDocument.documentRect.width,
+    queueDocument.documentRect.height,
+  ]);
+
   return (
     <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
-        <QueueScrollArea.Root
-          className={clsx(styles.ScrollAreaRoot)}
-          onMouseDown={onRootMousedown}>
+        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
           <QueueScrollArea.Viewport className={clsx('tw-flex')}>
             <Drawable
               onDrawEnd={onDrawEnd}
