@@ -79,7 +79,7 @@ export const Timeline = (props: TimelineProps) => {
             className={clsx(
               styles.Cell,
               props.rowIndex === 0 ? styles.FirstRowCell : '',
-              'tw-text-white',
+              'tw-text-white-100',
               'tw-text-center',
               start > index || end < index
                 ? styles.gridDot

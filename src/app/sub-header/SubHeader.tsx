@@ -312,7 +312,8 @@ const QueueSubHeader = () => {
               }}
               style={{ width: 'unset' }}>
               <SearchIcon />
-              <span className={clsx('tw-text-black', 'tw-text-14', 'tw-mx-1')}>
+              <span
+                className={clsx('tw-text-black-900', 'tw-text-14', 'tw-mx-1')}>
                 {scale}%
               </span>
             </QueueIconButton>

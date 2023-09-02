@@ -419,7 +419,7 @@ export const GridCursor = (props: GridCursorProps) => {
         onMouseDown={onMousedown}>
         <div
           className={clsx(
-            'tw-border-black',
+            'tw-border-black-900',
             'tw-border-l',
             'tw-width-1',
             'tw-h-screen',

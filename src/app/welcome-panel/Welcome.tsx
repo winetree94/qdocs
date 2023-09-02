@@ -70,7 +70,7 @@ export const Welcome = () => {
         <div className="tw-flex tw-flex-col tw-gap-2">
           {/* TODO button component 사용할 지 살펴보기 */}
           <button
-            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-rounded-full tw-bg-queue-500 tw-text-white tw-leading-none tw-text-sm tw-font-medium"
+            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-rounded-full tw-bg-queue-500 tw-text-white-100 tw-leading-none tw-text-sm tw-font-medium"
             onClick={onNewDocumentClick}>
             {t('welcome.new-document')}
           </button>

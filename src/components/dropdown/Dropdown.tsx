@@ -51,7 +51,7 @@ const Content = forwardRef<HTMLDivElement, Dropdown.MenuContentProps>(
       <Dropdown.Portal>
         <Dropdown.Content
           className={clsx(
-            'tw-py-1 tw-rounded-sm tw-bg-white tw-drop-shadow-md tw-text-sm',
+            'tw-py-1 tw-rounded-sm tw-bg-white-100 tw-drop-shadow-md tw-text-sm',
             className,
           )}
           {...props}
@@ -157,7 +157,7 @@ const SubContent = forwardRef<HTMLDivElement, Dropdown.MenuSubContentProps>(
       <Dropdown.Portal>
         <Dropdown.SubContent
           className={clsx(
-            'tw-py-2 tw-rounded-sm tw-bg-white tw-text-sm tw-drop-shadow-md',
+            'tw-py-2 tw-rounded-sm tw-bg-white-100 tw-text-sm tw-drop-shadow-md',
             className,
           )}
           {...props}
