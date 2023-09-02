@@ -57,7 +57,7 @@ export const Timeline = (props: TimelineProps) => {
             'tw-justify-center',
             'tw-h-full',
             'tw-items-center',
-            index === queueIndex && 'tw-text-purple-500',
+            index === queueIndex && 'tw-text-queue-500',
           )}>
           {Number(props.columnDef.field)}
         </div>

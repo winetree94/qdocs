@@ -22,6 +22,16 @@ const autoPlay = createSelector(selectSelf, (settings) => settings.autoPlay);
 
 const scale = createSelector(selectSelf, (settings) => settings.scale);
 
+const leftPanelOpened = createSelector(
+  selectSelf,
+  (settings) => settings.leftPanelOpened,
+);
+
+const bottomPanelOpened = createSelector(
+  selectSelf,
+  (settings) => settings.bottomPanelOpened,
+);
+
 const selectionMode = createSelector(
   selectSelf,
   (settings) => settings.selectionMode,
@@ -68,4 +78,6 @@ export const SettingSelectors = {
   presentationMode,
   queueStart,
   autoPlay,
+  leftPanelOpened,
+  bottomPanelOpened,
 };

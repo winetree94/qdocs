@@ -51,6 +51,9 @@ const QueueSubHeader = () => {
   );
   const scale = Math.floor(useAppSelector(SettingSelectors.scale) * 100);
 
+  const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
+  const bottomPanelOpened = useAppSelector(SettingSelectors.bottomPanelOpened);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     sidebar: false,
     text: false,
@@ -114,10 +117,30 @@ const QueueSubHeader = () => {
                 </QueueDropdown.Trigger>
 
                 <QueueDropdown.Content>
-                  <QueueDropdown.Item>
+                  <QueueDropdown.Item
+                    onClick={() =>
+                      dispatch(
+                        SettingsActions.updateSettings({
+                          changes: {
+                            leftPanelOpened: !leftPanelOpened,
+                          },
+                        }),
+                      )
+                    }>
                     왼쪽 사이드바 닫기-번역
                   </QueueDropdown.Item>
-                  <QueueDropdown.Item>타임라인 닫기-번역</QueueDropdown.Item>
+                  <QueueDropdown.Item
+                    onClick={() =>
+                      dispatch(
+                        SettingsActions.updateSettings({
+                          changes: {
+                            bottomPanelOpened: !bottomPanelOpened,
+                          },
+                        }),
+                      )
+                    }>
+                    타임라인 닫기-번역
+                  </QueueDropdown.Item>
                 </QueueDropdown.Content>
               </QueueDropdown>
 

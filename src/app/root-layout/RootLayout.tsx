@@ -19,6 +19,8 @@ export const RootLayout = () => {
   const dispatch = useAppDispatch();
   const docs = useAppSelector(DocumentSelectors.document);
   const presentationMode = useAppSelector(SettingSelectors.presentationMode);
+  const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
+  const bottomPanelOpened = useAppSelector(SettingSelectors.bottomPanelOpened);
   const autoPlay = useAppSelector(SettingSelectors.autoPlay);
 
   /**
@@ -96,7 +98,7 @@ export const RootLayout = () => {
         ) : null}
 
         <div className={clsx(styles.Content)}>
-          {!presentationMode && (
+          {!presentationMode && leftPanelOpened && (
             <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-gray-400">
               <div className="tw-h-full">
                 <PanelResizer.Panel
@@ -112,7 +114,7 @@ export const RootLayout = () => {
           <div className={clsx(styles.Right, 'tw-px-2.5', 'tw-bg-gray-400')}>
             <QueueEditor />
 
-            {!presentationMode && (
+            {!presentationMode && bottomPanelOpened && (
               <div className="tw-border tw-rounded-t-[20px] tw-bg-[var(--gray-1)]">
                 <PanelResizer.Panel
                   className="tw-w-full"
