@@ -4,12 +4,15 @@ import { isQueueObjectClipboardModel } from 'model/clipboard/base';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
-import { EffectActions, EffectSelectors } from 'store/effect';
+import { store } from 'store';
+import { EffectActions } from 'store/effect';
+import { reduceByObjectId } from 'store/effect/functions';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingsActions, SettingSelectors } from 'store/settings';
+import { getPageObjectIds, getSelectedObjects } from 'store/settings/functions';
 
 export const GlobalKeydown = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +20,6 @@ export const GlobalKeydown = () => {
   const selectionMode = useAppSelector(SettingSelectors.selectionMode);
   const pageId = useAppSelector(SettingSelectors.pageId);
   const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
-  // object 또는 Effect가 계속 dispatch 되기 때문에 매번 다시 셀렉트 하는 것으로 보임...(렌더링 개선 포인트)
-  const pageObjects = useAppSelector(SettingSelectors.pageObjects);
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
   /**
    * @description
@@ -47,12 +46,17 @@ export const GlobalKeydown = () => {
           if (selectionMode === 'detail') return;
           e.preventDefault();
           try {
-            const models = selectedObjects.map((object) => {
-              return {
-                object: object,
-                effects: effects[object.id],
-              };
-            });
+            const effects = reduceByObjectId(
+              Object.values(store.getState().effects.entities),
+            );
+            const models = getSelectedObjects(store.getState()).map(
+              (object) => {
+                return {
+                  object: object,
+                  effects: effects[object.id],
+                };
+              },
+            );
             await navigator.clipboard.writeText(
               JSON.stringify({
                 identity: QUEUE_CLIPBOARD_UNIQUE_ID,
@@ -68,7 +72,7 @@ export const GlobalKeydown = () => {
       {
         keys: ['v'],
         meta: true,
-        callback: async (e) => {
+        callback: async () => {
           if (selectionMode === 'detail') return;
           try {
             const raw = await navigator.clipboard.readText();
@@ -125,12 +129,12 @@ export const GlobalKeydown = () => {
       {
         keys: ['a'],
         meta: true,
-        callback: (e) => {
+        callback: () => {
           if (selectionMode === 'detail') return;
           dispatch(
             SettingsActions.setSelection({
               selectionMode: 'normal',
-              ids: pageObjects.map((object) => object.id),
+              ids: getPageObjectIds(store.getState(), pageId),
             }),
           );
         },
@@ -158,7 +162,7 @@ export const GlobalKeydown = () => {
       },
       {
         keys: ['Escape'],
-        callback: (e) => {
+        callback: () => {
           dispatch(
             SettingsActions.setSelection({
               selectionMode: 'normal',
@@ -170,7 +174,7 @@ export const GlobalKeydown = () => {
       {
         keys: ['Delete', 'Backspace'],
         meta: false,
-        callback: (e) => {
+        callback: () => {
           if (selectedObjectIds.length === 0 || selectionMode !== 'normal') {
             return;
           }
@@ -185,7 +189,7 @@ export const GlobalKeydown = () => {
       {
         keys: ['Delete', 'Backspace'],
         meta: true,
-        callback: (e) => {
+        callback: () => {
           if (selectedObjectIds.length === 0 || selectionMode !== 'normal') {
             return;
           }
