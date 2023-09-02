@@ -456,7 +456,9 @@ export const QueueEditor = () => {
   return (
     <QueueContextMenu.Root>
       <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
-        <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
+        <QueueScrollArea.Root
+          className={clsx(styles.ScrollAreaRoot)}
+          onMouseDown={onRootMousedown}>
           <QueueScrollArea.Viewport className={clsx('tw-flex')}>
             <Drawable
               onDrawEnd={onDrawEnd}
