@@ -8,6 +8,7 @@ module.exports = {
         ibm: ['IBM Plex Serif'],
       },
       colors: {
+        'gray-400': '#edecf0',
         'queue-400': '#533BB10D',
         'queue-500': '#533BB1',
       },

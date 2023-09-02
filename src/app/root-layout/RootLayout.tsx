@@ -97,7 +97,7 @@ export const RootLayout = () => {
 
         <div className={clsx(styles.Content)}>
           {!presentationMode && (
-            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
+            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-gray-400">
               <div className="tw-h-full">
                 <PanelResizer.Panel
                   className="tw-h-full"
@@ -109,12 +109,7 @@ export const RootLayout = () => {
               </div>
             </div>
           )}
-          <div
-            className={clsx(
-              styles.Right,
-              'tw-px-2.5',
-              'tw-bg-[var(--gray-3)]',
-            )}>
+          <div className={clsx(styles.Right, 'tw-px-2.5', 'tw-bg-gray-400')}>
             <QueueEditor />
 
             {!presentationMode && (
@@ -131,7 +126,7 @@ export const RootLayout = () => {
           </div>
 
           {!presentationMode && (
-            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-[var(--gray-3)]">
+            <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-gray-400">
               <PanelResizer.Panel
                 className="tw-h-full"
                 width={240}
