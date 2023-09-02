@@ -57,9 +57,9 @@ const byIndex = createSelector([all], (effects) => {
  * 오브젝트의 이펙트 목록을 조회할 경우 사용
  */
 const byObjectId = createSelector(
-  [entities, (_: RootState, id: EntityId) => id],
+  [all, (_: RootState, id: EntityId) => id],
   (state, id) => {
-    return Object.values(state).filter(({ objectId }) => objectId === id);
+    return state.filter(({ objectId }) => objectId === id);
   },
 );
 
@@ -270,7 +270,6 @@ export const EffectSelectors = {
   ids,
   byId,
   byIndex,
-  entities,
   byIds,
   byObjectId,
   groupByObjectId,

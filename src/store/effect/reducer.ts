@@ -9,6 +9,7 @@ export const getEffectEntityKey = (
 
 export const effectEntityAdapter = createEntityAdapter<QueueEffectType>({
   selectId: getEffectEntityKey,
+  sortComparer: (a, b) => a.index - b.index,
 });
 
 export const effectSlice = createSlice({
