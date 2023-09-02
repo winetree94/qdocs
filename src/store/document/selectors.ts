@@ -9,6 +9,8 @@ const selectSelf = (state: RootState) => state.document;
  */
 const document = createSelector(selectSelf, (docs) => docs);
 
+const documentId = createSelector(selectSelf, (docs) => docs.id);
+
 /**
  * @deprecated
  * 화면 렌더링에 필요하지 않은 데이터를 셀렉하는 셀렉터이기 때문에
@@ -35,6 +37,7 @@ const documentRect = createSelector(selectSelf, (docs) => docs.documentRect);
 
 export const DocumentSelectors = {
   document,
+  documentId,
   serialized,
   documentRect,
 };

@@ -40,8 +40,8 @@ export const QueueEditor = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
 
-  const documentId = useAppSelector(SettingSelectors.documentId);
-  const queueDocument = useAppSelector(DocumentSelectors.document);
+  const documentRect = useAppSelector(DocumentSelectors.documentRect);
+  const documentId = useAppSelector(DocumentSelectors.documentId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
@@ -135,14 +135,14 @@ export const QueueEditor = () => {
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current;
     const targetScale = Math.min(
-      root.clientWidth / (queueDocument.documentRect.width + 100),
-      root.clientHeight / (queueDocument.documentRect.height + 100),
+      root.clientWidth / (documentRect.width + 100),
+      root.clientHeight / (documentRect.height + 100),
     );
     if (currentScale === targetScale) {
       return;
     }
     dispatch(SettingsActions.setScale(targetScale));
-  }, [dispatch, queueDocument, currentScale]);
+  }, [dispatch, documentRect, currentScale]);
 
   // 최초 렌더링 시 스케일 계산
   useLayoutEffect(() => canvasSizeToFit(), [documentId]);
@@ -385,14 +385,14 @@ export const QueueEditor = () => {
 
   const maximizeScale = useCallback(() => {
     const scale = Math.min(
-      document.body.clientWidth / queueDocument.documentRect.width,
-      document.body.clientHeight / queueDocument.documentRect.height,
+      document.body.clientWidth / documentRect.width,
+      document.body.clientHeight / documentRect.height,
     );
     if (currentScale === scale) {
       return;
     }
     dispatch(SettingsActions.setScale(scale));
-  }, [dispatch, queueDocument, currentScale]);
+  }, [dispatch, documentRect, currentScale]);
 
   useEffect(() => {
     if (!presentationMode) {
@@ -402,7 +402,7 @@ export const QueueEditor = () => {
     observer.observe(document.body);
     maximizeScale();
     return () => observer.disconnect();
-  }, [dispatch, maximizeScale, queueDocument, presentationMode, currentScale]);
+  }, [dispatch, maximizeScale, documentRect, presentationMode, currentScale]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
     dispatch(
@@ -446,12 +446,7 @@ export const QueueEditor = () => {
     };
     rootRef.current?.addEventListener('wheel', onWheel, { passive: false });
     return () => rootRef.current?.removeEventListener('wheel', onWheel);
-  }, [
-    dispatch,
-    currentScale,
-    queueDocument.documentRect.width,
-    queueDocument.documentRect.height,
-  ]);
+  }, [dispatch, currentScale, documentRect.width, documentRect.height]);
 
   return (
     <QueueContextMenu.Root>
@@ -467,8 +462,8 @@ export const QueueEditor = () => {
                 presentationMode ? styles.fullscreen : '',
               )}>
               <Scaler
-                width={queueDocument.documentRect.width}
-                height={queueDocument.documentRect.height}
+                width={documentRect.width}
+                height={documentRect.height}
                 scale={currentScale}
                 className={clsx(presentationMode ? styles.scaleFull : '')}>
                 <div
@@ -478,9 +473,9 @@ export const QueueEditor = () => {
                     presentationMode ? styles.fullscreen : '',
                   )}
                   style={{
-                    width: queueDocument.documentRect.width,
-                    height: queueDocument.documentRect.height,
-                    background: queueDocument.documentRect.fill,
+                    width: documentRect.width,
+                    height: documentRect.height,
+                    background: documentRect.fill,
                   }}>
                   {queueObjects.map((object) => (
                     <QueueContextMenu.Root

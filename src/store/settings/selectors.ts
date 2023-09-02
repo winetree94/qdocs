@@ -5,8 +5,6 @@ import { QueueDocumentSettings } from './model';
 
 const selectSelf = (state: RootState): QueueDocumentSettings => state.settings;
 
-const documentId = createSelector(selectSelf, (state) => state.documentId);
-
 const pageId = createSelector(selectSelf, (settings) => settings.pageId);
 
 const queueIndex = createSelector(selectSelf, (state) => state.queueIndex);
@@ -65,7 +63,6 @@ const selectedObjects = createSelector(
 );
 
 export const SettingSelectors = {
-  documentId,
   pageId,
   queueIndex,
   autoPlayRepeat,

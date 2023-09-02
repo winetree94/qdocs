@@ -3,11 +3,6 @@ import { EntityId } from '@reduxjs/toolkit';
 export interface QueueDocumentSettings {
   /**
    * @description
-   * 현재 열려있는 문서 id
-   */
-  documentId: EntityId;
-  /**
-   * @description
    * 현재 선택된 page id
    */
   pageId: EntityId;

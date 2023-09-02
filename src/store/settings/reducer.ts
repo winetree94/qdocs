@@ -4,7 +4,6 @@ import { DocumentActions } from '../document';
 import { SettingsActions } from './actions';
 
 const initialState: QueueDocumentSettings = {
-  documentId: '',
   pageId: '',
   queueIndex: 0,
   queueStart: -1,
@@ -41,13 +40,12 @@ export const documentSettingsSlice = createSlice({
     builder.addCase(
       DocumentActions.loadDocument,
       (state, action): QueueDocumentSettings => {
-        console.log(action);
         if (!action.payload) {
           return { ...initialState };
         }
         return {
+          ...state,
           ...initialState,
-          documentId: action.payload.document.id,
           pageId: action.payload.pages.ids[0],
         };
       },
