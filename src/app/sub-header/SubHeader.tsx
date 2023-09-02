@@ -304,7 +304,7 @@ const QueueSubHeader = () => {
             </div>
           </div>
 
-          <div className={styles.ItemGroup}>
+          <div className={clsx(styles.ItemGroup, 'tw-gap-2')}>
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
