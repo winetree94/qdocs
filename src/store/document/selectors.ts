@@ -10,6 +10,10 @@ const selectSelf = (state: RootState) => state.document;
 const document = createSelector(selectSelf, (docs) => docs);
 
 /**
+ * @deprecated
+ * 화면 렌더링에 필요하지 않은 데이터를 셀렉하는 셀렉터이기 때문에
+ * ./functions.ts의 serializeDocument를 사용하여 직접 직렬화하는 것을 권장
+ *
  * @description
  * 문서를 파일로 저장하기 위한 데이터 형식을 반환하는 셀렉터로, 일반적으로 사용하지 않음
  */

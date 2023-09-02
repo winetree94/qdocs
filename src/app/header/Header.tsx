@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import styles from 'app/header/Header.module.scss';
 import clsx from 'clsx';
 import { QueueMenubar } from 'components/menu-bar/Menubar';
@@ -19,9 +19,10 @@ import { SUPPORTED_LANGUAGES } from 'store/preferences/model';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
-import { RootState } from 'store';
+import { RootState, store } from 'store';
 import { QueueDropdown } from 'components/dropdown/Dropdown';
 import { QueueButton } from 'components/buttons/button/Button';
+import { serializeDocument } from 'store/document/functions';
 
 export interface ToolbarModel {
   key: string;
@@ -30,7 +31,7 @@ export interface ToolbarModel {
   children: ToolbarModel[];
 }
 
-export const QueueHeader = () => {
+export const QueueHeader = memo(() => {
   const { t, i18n } = useTranslation();
   // 불필요한 리렌더링을 막기 위해 useAppSelector로 셀렉한 값들을 사용할 때 구조분해 할당으로 가져온다. (나머지 상태는 업데이트 자체가 여러번 되는지 확인이 필요)
   const { previous, future } = useAppSelector(HistorySelectors.all);
@@ -38,7 +39,6 @@ export const QueueHeader = () => {
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
   const preferences = useAppSelector(PreferencesSelectors.all);
-  const serializedDocumentModel = useAppSelector(DocumentSelectors.serialized);
   const rootRenderer = useRootRenderer();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -134,6 +134,8 @@ export const QueueHeader = () => {
 
   const onSaveDocumentClick = (): void => {
     if (!docs) return;
+
+    const serializedDocumentModel = serializeDocument(store.getState());
     const stringified = JSON.stringify(serializedDocumentModel);
     const blob = new Blob([stringified], { type: 'octet/stream' });
     const url = URL.createObjectURL(blob);
@@ -345,4 +347,4 @@ export const QueueHeader = () => {
       )}
     </div>
   );
-};
+});
