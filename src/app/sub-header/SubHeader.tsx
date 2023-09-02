@@ -49,6 +49,8 @@ const QueueSubHeader = () => {
   const byEffectIndex = useAppSelector((state) =>
     EffectSelectors.allByPageAndEffectIndex(state, currentPageId),
   );
+  const scale = Math.floor(useAppSelector(SettingSelectors.scale) * 100);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     sidebar: false,
     text: false,
@@ -283,11 +285,13 @@ const QueueSubHeader = () => {
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
-                dispatch(HistoryActions.Capture());
-                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
+                eventDispatch(fitScreenSizeEvent());
               }}
-              disabled={!selectedObjectIds.length}>
+              style={{ width: 'unset' }}>
               <SearchIcon />
+              <span className={clsx('tw-text-black', 'tw-text-14', 'tw-mx-1')}>
+                {scale}%
+              </span>
             </QueueIconButton>
 
             <QueueIconButton

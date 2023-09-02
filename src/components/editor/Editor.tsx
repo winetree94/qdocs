@@ -135,8 +135,8 @@ export const QueueEditor = () => {
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current;
     const targetScale = Math.min(
-      root.clientWidth / (queueDocument.documentRect.width + 40),
-      root.clientHeight / (queueDocument.documentRect.height + 40),
+      root.clientWidth / (queueDocument.documentRect.width + 100),
+      root.clientHeight / (queueDocument.documentRect.height + 100),
     );
     if (currentScale === targetScale) {
       return;
