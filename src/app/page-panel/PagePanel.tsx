@@ -34,6 +34,8 @@ import { StandaloneRect } from 'components/queue/standaloneRects';
 import { Scaler } from 'components/scaler/Scaler';
 import { StandaloneText } from 'components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from 'model/effect';
+import { reduceByObjectId } from 'store/effect/functions';
+import { store } from 'store';
 
 const PagePanelRoot = ({
   className,
@@ -101,18 +103,22 @@ const PageBox = ({
 };
 
 export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
-  page: NormalizedQueueDocumentPage;
+  page?: NormalizedQueueDocumentPage;
+  pageId: EntityId;
 }
 
 const PagePreview = memo(
-  ({ page, className, ...props }: PagePreviewProps) => {
+  ({ pageId, className, ...props }: PagePreviewProps) => {
     const queueDocument = useAppSelector(DocumentSelectors.document);
-    const pageId = useAppSelector(SettingSelectors.pageId);
+    const currentPageId = useAppSelector(SettingSelectors.pageId);
+
+    // objects all 셀렉 시 전체 값을 바라보기 때문에, 다른 페이지의 오브젝트나
+    // 첫번째 큐가 아닌 이펙트 변화시에도 렌더링이 발생하기 때문에 수정할 방법을 찾아야함
     const objects = useAppSelector((state) =>
-      ObjectSelectors.allByPageId(state, page.id),
+      ObjectSelectors.allByPageId(state, pageId),
     );
     const firstQueueEffects = useAppSelector((state) =>
-      EffectSelectors.firstQueueByPageId(state, page.id),
+      EffectSelectors.firstQueueByPageId(state, pageId),
     );
 
     const firstQueueEffectObjectIds = useMemo(
@@ -171,7 +177,7 @@ const PagePreview = memo(
           // document 비율의 설정대로 변경이 필요
           'tw-aspect-[16/9]',
           {
-            'tw-border-[var(--violet-9)]': pageId === page.id,
+            'tw-border-[var(--violet-9)]': currentPageId === pageId,
           },
           className,
         )}
@@ -191,7 +197,6 @@ const PagePreview = memo(
       </div>
     );
   },
-  (prev, next) => prev.page.id === next.page.id,
 );
 
 const PageAddBox = ({
@@ -218,11 +223,10 @@ export const PagePanel = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
-  const pageId = useAppSelector(SettingSelectors.pageId);
-  const document = useAppSelector(DocumentSelectors.document);
-  const pages = useAppSelector(PageSelectors.all);
-  const effects = useAppSelector(EffectSelectors.groupByObjectId);
-  const objects = useAppSelector(ObjectSelectors.all);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
+  const { id: documentId } = useAppSelector(DocumentSelectors.document);
+
+  const pageIds = useAppSelector(PageSelectors.ids);
 
   const [dragOverIndex, setDragOverIndex] = useState(-1);
 
@@ -247,10 +251,10 @@ export const PagePanel = () => {
     dispatch(HistoryActions.Capture());
     dispatch(
       PageActions.addPage({
-        documentId: document.id,
+        documentId,
         id: newId,
         index,
-        pageName: `Page-${pages.length + 1}`,
+        pageName: `Page-${pageIds.length + 1}`,
       }),
     );
     setQueuePageIndex(newId);
@@ -258,10 +262,10 @@ export const PagePanel = () => {
 
   const removePage = (id: EntityId): void => {
     dispatch(HistoryActions.Capture());
-    const index = pages.findIndex((page) => page.id === id);
+    const index = pageIds.findIndex((pageId) => pageId === id);
     dispatch(PageActions.removePage(id));
-    const sliced = pages.slice(0).filter((page) => page.id !== id);
-    setQueuePageIndex(sliced[index]?.id || sliced[sliced.length - 1]?.id);
+    const sliced = pageIds.slice(0).filter((pageId) => pageId !== id);
+    setQueuePageIndex(sliced[index] || sliced[sliced.length - 1]);
   };
 
   const movePage = (from: EntityId, to: EntityId): void => {
@@ -279,9 +283,14 @@ export const PagePanel = () => {
     index: number,
   ) => {
     const newId = nanoid();
+    const effects = reduceByObjectId(
+      Object.values(store.getState().effects.entities),
+    );
 
     // 선택된 페이지의 objectIds
-    const currentPageObjectIds = objects
+    const currentPageObjectIds = Object.values(
+      store.getState().objects.entities,
+    )
       .map((object) => object.pageId === pageId && object.id)
       .filter(Boolean);
 
@@ -315,7 +324,9 @@ export const PagePanel = () => {
 
   const duplicatePageAndContent = (pageId: EntityId, index: number): void => {
     const newId = nanoid();
-    const currentPageObjectIds = objects
+    const currentPageObjectIds = Object.values(
+      store.getState().objects.entities,
+    )
       .map((object) => object.pageId === pageId && object.id)
       .filter(Boolean);
 
@@ -387,37 +398,24 @@ export const PagePanel = () => {
     });
   };
 
-  // page name 표기하는 부분이 없기 때문에 일단 주석
-  // const editPageName = (pageName: string, id: EntityId): void => {
-  //   dispatch(HistoryActions.Capture());
-  //   dispatch(
-  //     PageActions.updatePage({
-  //       id: id,
-  //       changes: {
-  //         pageName: pageName.trim(),
-  //       },
-  //     }),
-  //   );
-  // };
-
   return (
     <PagePanelRoot>
       <QueueScrollArea.Root className="tw-h-full">
         <QueueScrollArea.Viewport>
           <PagesBox>
-            {pages.map((page, index, self) => (
-              <QueueContextMenu.Root key={page.id}>
+            {pageIds.map((pageId, index, self) => (
+              <QueueContextMenu.Root key={pageId}>
                 <QueueContextMenu.Trigger asChild>
                   <PageBox
                     draggable
                     className={clsx('page-item', {
-                      'tw-bg-[var(--gray-5)]': pageId === page.id,
-                      'tw-opacity-50': dragOverIndex === page.index,
+                      'tw-bg-[var(--gray-5)]': currentPageId === pageId,
+                      'tw-opacity-50': dragOverIndex === index,
                     })}
-                    data-id={page.id}
-                    onClick={() => navigatePage(page.id)}
+                    data-id={pageId}
+                    onClick={() => navigatePage(pageId)}
                     onDragStart={(event): void =>
-                      handleDragStart(event, page.id)
+                      handleDragStart(event, pageId)
                     }
                     onDragEnter={(): void => setDragOverIndex(index)}
                     onDragEnd={(): void => setDragOverIndex(-1)}
@@ -425,13 +423,13 @@ export const PagePanel = () => {
                     onDrop={handleDrop}>
                     <div className="tw-shrink-0 tw-flex tw-flex-col tw-justify-between tw-items-end">
                       <div className="tw-font-normal tw-text-xs tw-cursor-default">
-                        {page.index + 1}
+                        {index + 1}
                       </div>
                       <div className="tw-flex">
                         <button
                           className="tw-text-[var(--gray-10)] tw-cursor-pointer"
                           onClick={() =>
-                            duplicatePageWithLastQueueSnapshot(page.id, index)
+                            duplicatePageWithLastQueueSnapshot(pageId, index)
                           }>
                           <SvgRemixIcon
                             icon="ri-file-copy-line"
@@ -442,7 +440,7 @@ export const PagePanel = () => {
                     </div>
 
                     <div className="tw-flex-1 tw-max-w-[80%]">
-                      <PagePreview page={page} />
+                      <PagePreview pageId={pageId} />
                     </div>
                   </PageBox>
                 </QueueContextMenu.Trigger>
@@ -451,15 +449,15 @@ export const PagePanel = () => {
                   <QueueContextMenu.Content>
                     <QueueContextMenu.Item
                       onClick={() =>
-                        movePage(page.id, self[Math.max(index - 1, 0)].id)
+                        movePage(pageId, self[Math.max(index - 1, 0)])
                       }>
                       {t('page-panel.move-page-to-before')}
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Item
                       onClick={() =>
                         movePage(
-                          page.id,
-                          self[Math.min(index + 1, self.length - 1)].id,
+                          pageId,
+                          self[Math.min(index + 1, self.length - 1)],
                         )
                       }>
                       {t('page-panel.move-page-to-after')}
@@ -475,15 +473,15 @@ export const PagePanel = () => {
                     </QueueContextMenu.Item>
                     <QueueContextMenu.Separator />
                     <QueueContextMenu.Item
-                      onClick={() => duplicatePageAndContent(page.id, index)}>
+                      onClick={() => duplicatePageAndContent(pageId, index)}>
                       {t('page-panel.duplicate-page-and-content')}
                     </QueueContextMenu.Item>
-                    {pages.length >= 2 && (
+                    {pageIds.length >= 2 && (
                       <>
                         <QueueContextMenu.Separator />
                         <QueueContextMenu.Item
                           className="tw-text-[var(--red-10)]"
-                          onClick={() => openDeleteConfirmDialog(page.id)}>
+                          onClick={() => openDeleteConfirmDialog(pageId)}>
                           {t('global.delete')}
                         </QueueContextMenu.Item>
                       </>
@@ -504,7 +502,7 @@ export const PagePanel = () => {
           className="tw-w-full tw-box-border tw-text-sm"
           size={QUEUE_UI_SIZE.MEDIUM}
           color={QUEUE_UI_COLOR.DEFAULT}
-          onClick={() => createPage(pages.length)}>
+          onClick={() => createPage(pageIds.length)}>
           <SvgRemixIcon icon="ri-add-box-line" size={QUEUE_UI_SIZE.MEDIUM} />
           <span className="tw-ml-1">{t('page-panel.add-page')}</span>
         </QueueButton>
