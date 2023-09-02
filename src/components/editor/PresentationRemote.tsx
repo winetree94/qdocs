@@ -10,7 +10,7 @@ import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 
 export const PresentationRemote = () => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
 
   return (
     <div className={styles.Container}>
@@ -37,7 +37,7 @@ export const PresentationRemote = () => {
           <SvgRemixIcon icon={'ri-play-line'} />
         </QueueIconButton>
         <QueueToggle.Root
-          pressed={settings.autoPlayRepeat}
+          pressed={autoPlayRepeat}
           onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
           <SvgRemixIcon icon={'ri-repeat-line'} />
         </QueueToggle.Root>

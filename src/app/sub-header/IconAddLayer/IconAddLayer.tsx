@@ -129,9 +129,15 @@ const QueueIconAddLayer = () => {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
-  const createFigure = useCreateFigure(queueDocument, settings, dispatch);
+  const createFigure = useCreateFigure(
+    queueDocument,
+    currentPageId,
+    currentQueueIndex,
+    dispatch,
+  );
   const [listScrollTopState, setListScrollTopState] = useState(0);
   const [closedObjectGroupKey, setClosedObjectGroupKey] = useState<{
     [key: string]: boolean;

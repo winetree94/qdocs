@@ -64,7 +64,7 @@ objectMiddleware.startListening({
   actionCreator: ObjectActions.duplicate,
   effect: (action, api) => {
     const state = api.getState();
-    const settings = SettingSelectors.settings(state);
+    const queueIndex = SettingSelectors.queueIndex(state);
     const effects = EffectSelectors.allEffectedObjectsMap(state);
     const models = action.payload.ids.map<QueueObjectType>((id) => ({
       ...effects[id],
@@ -77,7 +77,7 @@ objectMiddleware.startListening({
     }));
     api.dispatch(
       ObjectActions.addMany({
-        queueIndex: settings.queueIndex,
+        queueIndex: queueIndex,
         objects: models,
       }),
     );

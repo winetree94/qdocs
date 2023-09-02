@@ -18,9 +18,8 @@ import { GlobalKeydown } from 'app/global-keydown/GlobalKeydown';
 export const RootLayout = () => {
   const dispatch = useAppDispatch();
   const docs = useAppSelector(DocumentSelectors.document);
-  const { presentationMode, autoPlay } = useAppSelector(
-    SettingSelectors.settings,
-  );
+  const presentationMode = useAppSelector(SettingSelectors.presentationMode);
+  const autoPlay = useAppSelector(SettingSelectors.autoPlay);
 
   /**
    * @description

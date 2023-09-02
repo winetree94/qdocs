@@ -26,19 +26,18 @@ settingsMiddleware.startListening({
   actionCreator: SettingsActions.forward,
   effect: (action, api) => {
     const state = api.getState();
-    const settings = SettingSelectors.settings(state);
+    const currentPageId = SettingSelectors.pageId(state);
+    const currentQueueIndex = SettingSelectors.queueIndex(state);
     const pages = PageSelectors.all(state);
-    const pageId = settings.pageId;
     const byEffects = pages.map((page) =>
       EffectSelectors.allByPageAndEffectIndex(state, page.id),
     );
-    const pageIndex = pages.findIndex((page) => page.id === pageId);
-    const queueIndex = settings.queueIndex;
+    const pageIndex = pages.findIndex((page) => page.id === currentPageId);
 
     let targetPageId = pages[pageIndex].id;
-    let targetQueue = queueIndex;
-    if (byEffects[pageIndex][queueIndex + 1]) {
-      targetQueue = queueIndex + 1;
+    let targetQueue = currentQueueIndex;
+    if (byEffects[pageIndex][currentQueueIndex + 1]) {
+      targetQueue = currentQueueIndex + 1;
     } else if (byEffects[pageIndex + 1]) {
       targetPageId = pages[pageIndex + 1].id;
       targetQueue = 0;
@@ -47,7 +46,7 @@ settingsMiddleware.startListening({
       targetQueue = 0;
     }
 
-    if (pageId === targetPageId && settings.queueIndex === targetQueue) {
+    if (currentPageId === targetPageId && currentQueueIndex === targetQueue) {
       return;
     }
 
@@ -72,25 +71,24 @@ settingsMiddleware.startListening({
   actionCreator: SettingsActions.rewind,
   effect: (_, api) => {
     const state = api.getState();
-    const settings = SettingSelectors.settings(state);
+    const currentPageId = SettingSelectors.pageId(state);
+    const currentQueueIndex = SettingSelectors.queueIndex(state);
     const pages = PageSelectors.all(state);
-    const pageId = settings.pageId;
     const byEffects = pages.map((page) =>
       EffectSelectors.allByPageAndEffectIndex(state, page.id),
     );
-    const pageIndex = pages.findIndex((page) => page.id === pageId);
-    const queueIndex = settings.queueIndex;
+    const pageIndex = pages.findIndex((page) => page.id === currentPageId);
 
     let targetPageId = pages[pageIndex].id;
-    let targetQueue = queueIndex;
-    if (byEffects[pageIndex][queueIndex - 1]) {
-      targetQueue = queueIndex - 1;
+    let targetQueue = currentQueueIndex;
+    if (byEffects[pageIndex][currentQueueIndex - 1]) {
+      targetQueue = currentQueueIndex - 1;
     } else if (byEffects[pageIndex - 1]) {
       targetPageId = pages[pageIndex - 1].id;
       targetQueue = byEffects[pageIndex - 1].length - 1;
     }
 
-    if (pageId === targetPageId && settings.queueIndex === targetQueue) {
+    if (currentPageId === targetPageId && currentQueueIndex === targetQueue) {
       return;
     }
 

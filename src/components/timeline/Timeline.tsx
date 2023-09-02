@@ -11,6 +11,7 @@ import styles from './Timeline.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
 import { EffectSelectors } from 'store/effect';
+import { useMemo } from 'react';
 
 interface DataType {
   objectName: string;
@@ -23,16 +24,19 @@ export interface TimelineProps {
 
 export const Timeline = (props: TimelineProps) => {
   const dispath = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const queueIndex = useAppSelector(SettingSelectors.queueIndex);
+  const queuePosition = useAppSelector(SettingSelectors.queuePosition);
+  const queueStart = useAppSelector(SettingSelectors.queueStart);
   const { rowIds, tracks } = useAppSelector(EffectSelectors.timelineData);
   const rowHeight = 38;
 
+  const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
   const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
 
   const duration =
-    settings.queuePosition === 'forward'
-      ? maxDurationByIndex[settings.queueIndex]
-      : maxDurationByIndex[settings.queueIndex + 1];
+    queuePosition === 'forward'
+      ? maxDurationByIndex[queueIndex]
+      : maxDurationByIndex[queueIndex + 1];
 
   const columnDefs: GridColumnDef<DataType>[] = [
     {
@@ -53,7 +57,7 @@ export const Timeline = (props: TimelineProps) => {
             'tw-justify-center',
             'tw-h-full',
             'tw-items-center',
-            index === settings.queueIndex && 'tw-text-purple-500',
+            index === queueIndex && 'tw-text-purple-500',
           )}>
           {Number(props.columnDef.field)}
         </div>
@@ -136,8 +140,8 @@ export const Timeline = (props: TimelineProps) => {
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
       <Grid
-        cursorField={settings.queueIndex.toString()}
-        cursorAnimationStart={settings.queueStart}
+        cursorField={queueIndexString}
+        cursorAnimationStart={queueStart}
         cursorAnimationDuration={duration}
         onCursorFieldChange={onCursorFieldChange}
         className={clsx('tw-flex-1', 'tw-border-t')}

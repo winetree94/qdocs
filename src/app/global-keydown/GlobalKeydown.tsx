@@ -14,9 +14,9 @@ import { SettingsActions, SettingSelectors } from 'store/settings';
 export const GlobalKeydown = () => {
   const dispatch = useAppDispatch();
   const { previous, future } = useAppSelector(HistorySelectors.all);
-  const { selectionMode, pageId, selectedObjectIds } = useAppSelector(
-    SettingSelectors.settings,
-  );
+  const selectionMode = useAppSelector(SettingSelectors.selectionMode);
+  const pageId = useAppSelector(SettingSelectors.pageId);
+  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
   // object 또는 Effect가 계속 dispatch 되기 때문에 매번 다시 셀렉트 하는 것으로 보임...(렌더링 개선 포인트)
   const pageObjects = useAppSelector(SettingSelectors.pageObjects);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);

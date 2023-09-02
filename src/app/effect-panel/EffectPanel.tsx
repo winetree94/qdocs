@@ -10,7 +10,7 @@ export const PanelTabType = {
 } as const;
 
 export const EffectPanel = () => {
-  const { selectedObjectIds } = useAppSelector(SettingSelectors.settings);
+  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
 
   if (selectedObjectIds.length <= 0) {
     return null;

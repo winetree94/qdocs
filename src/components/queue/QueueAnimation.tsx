@@ -86,9 +86,7 @@ export const ObjectAnimator = ({
   const effects = useAppSelector((state) =>
     EffectSelectors.byObjectId(state, object.id),
   );
-  const presentationMode = useAppSelector(
-    SettingSelectors.settings,
-  ).presentationMode;
+  const presentationMode = useAppSelector(SettingSelectors.presentationMode);
   const currentFade = getCurrentFade(object, effects, queueIndex);
   const animatableFade =
     queueStart > 0

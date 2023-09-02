@@ -1,11 +1,10 @@
-import { QueueSubtoolbar } from 'app/subtoolbar/Subtoolbar';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/buttons/button/Button';
 import { QueueSlider } from 'components/slider/Slider';
 import { Timeline } from 'components/timeline/Timeline';
 import { QueueToggle } from 'components/toggle/Toggle';
-import React from 'react';
+import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions, SettingSelectors } from 'store/settings';
@@ -30,8 +29,9 @@ const ZOOM_LEVEL = {
 
 type ZOOM_LEVEL_KEYS = keyof typeof ZOOM_LEVEL;
 
-export const BottomPanel = () => {
-  const settings = useAppSelector(SettingSelectors.settings);
+export const BottomPanel = memo(() => {
+  const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
+  const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -83,7 +83,7 @@ export const BottomPanel = () => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(settings.queueIndex - 1, true)}>
+            onClick={() => changeQueueIndex(queueIndex - 1, true)}>
             <StepBackIcon />
           </QueueIconButton>
           <QueueIconButton
@@ -93,7 +93,7 @@ export const BottomPanel = () => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(settings.queueIndex + 1, true)}>
+            onClick={() => changeQueueIndex(queueIndex + 1, true)}>
             <StepForwardIcon />
           </QueueIconButton>
           <QueueIconButton
@@ -112,7 +112,7 @@ export const BottomPanel = () => {
             'tw-justify-end',
           )}>
           <QueueToggle.Root
-            pressed={settings.autoPlayRepeat}
+            pressed={autoPlayRepeat}
             onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
             <SvgRemixIcon icon={'ri-repeat-line'} />
           </QueueToggle.Root>
@@ -137,4 +137,4 @@ export const BottomPanel = () => {
       <Timeline columnWidth={ZOOM_LEVEL[zoom]} />
     </div>
   );
-};
+});

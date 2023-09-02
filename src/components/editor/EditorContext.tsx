@@ -21,7 +21,7 @@ export const EditorContext = forwardRef<
 >((_, ref) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
   const history = useAppSelector(HistorySelectors.all);
 
   const paste = async () => {
@@ -36,7 +36,7 @@ export const EditorContext = forwardRef<
           pendingObjects.push({
             ...data.object,
             id: objectId,
-            pageId: settings.pageId,
+            pageId: currentPageId,
             rect: {
               ...data.object.rect,
               x: data.object.rect.x + 10,

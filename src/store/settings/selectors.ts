@@ -5,13 +5,42 @@ import { QueueDocumentSettings } from './model';
 
 const selectSelf = (state: RootState): QueueDocumentSettings => state.settings;
 
-const settings = createSelector(selectSelf, (state) => state);
-
 const documentId = createSelector(selectSelf, (state) => state.documentId);
 
 const pageId = createSelector(selectSelf, (settings) => settings.pageId);
 
 const queueIndex = createSelector(selectSelf, (state) => state.queueIndex);
+
+const queuePosition = createSelector(
+  selectSelf,
+  (state) => state.queuePosition,
+);
+
+const queueStart = createSelector(selectSelf, (state) => state.queueStart);
+
+const autoPlay = createSelector(selectSelf, (settings) => settings.autoPlay);
+
+const scale = createSelector(selectSelf, (settings) => settings.scale);
+
+const selectionMode = createSelector(
+  selectSelf,
+  (settings) => settings.selectionMode,
+);
+
+const presentationMode = createSelector(
+  selectSelf,
+  (settings) => settings.presentationMode,
+);
+
+const selectedObjectIds = createSelector(
+  selectSelf,
+  (settings) => settings.selectedObjectIds,
+);
+
+const autoPlayRepeat = createSelector(
+  selectSelf,
+  (settings) => settings.autoPlayRepeat,
+);
 
 const pageObjects = createSelector(
   [selectSelf, ObjectSelectors.all],
@@ -25,18 +54,18 @@ const selectedObjects = createSelector(
     settings.selectedObjectIds.map((id) => objectEntities[id]),
 );
 
-const selectedObjectIds = createSelector(
-  [selectSelf, ObjectSelectors.ids],
-  (settings, objectIds) =>
-    objectIds.filter((id) => settings.selectedObjectIds.includes(id)),
-);
-
 export const SettingSelectors = {
-  settings,
   documentId,
   pageId,
   queueIndex,
+  autoPlayRepeat,
   pageObjects,
   selectedObjects,
   selectedObjectIds,
+  selectionMode,
+  scale,
+  queuePosition,
+  presentationMode,
+  queueStart,
+  autoPlay,
 };

@@ -43,9 +43,11 @@ const QueueSubHeader = () => {
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
 
   const history = useAppSelector(HistorySelectors.all);
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
+  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
   const byEffectIndex = useAppSelector((state) =>
-    EffectSelectors.allByPageAndEffectIndex(state, settings.pageId),
+    EffectSelectors.allByPageAndEffectIndex(state, currentPageId),
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     sidebar: false,
@@ -54,11 +56,15 @@ const QueueSubHeader = () => {
     rect: false,
     share: false,
   });
-  const createImage = useCreateImage(queueDocument, settings, dispatch);
+  const createImage = useCreateImage(
+    queueDocument,
+    currentPageId,
+    currentQueueIndex,
+    dispatch,
+  );
 
   const ranges: number[] = [];
-  const { queueIndex } = settings;
-  const rangeStart = Math.max(queueIndex - 2, 0);
+  const rangeStart = Math.max(currentQueueIndex - 2, 0);
   const rangeEnd = rangeStart + 5;
   for (let i = rangeStart; i < rangeEnd; i++) {
     ranges.push(i);
@@ -153,11 +159,11 @@ const QueueSubHeader = () => {
                   dispatch(HistoryActions.Capture());
                   dispatch(
                     ObjectActions.duplicate({
-                      ids: settings.selectedObjectIds,
+                      ids: selectedObjectIds,
                     }),
                   );
                 }}
-                disabled={!settings.selectedObjectIds.length}>
+                disabled={!selectedObjectIds.length}>
                 <TypeIcon />
               </QueueIconButton>
 
@@ -249,11 +255,11 @@ const QueueSubHeader = () => {
                   dispatch(HistoryActions.Capture());
                   dispatch(
                     ObjectActions.duplicate({
-                      ids: settings.selectedObjectIds,
+                      ids: selectedObjectIds,
                     }),
                   );
                 }}
-                disabled={!settings.selectedObjectIds.length}>
+                disabled={!selectedObjectIds.length}>
                 <ShareIcon />
               </QueueIconButton>
 
@@ -263,11 +269,11 @@ const QueueSubHeader = () => {
                   dispatch(HistoryActions.Capture());
                   dispatch(
                     ObjectActions.duplicate({
-                      ids: settings.selectedObjectIds,
+                      ids: selectedObjectIds,
                     }),
                   );
                 }}
-                disabled={!settings.selectedObjectIds.length}>
+                disabled={!selectedObjectIds.length}>
                 <TableIcon />
               </QueueIconButton>
             </div>
@@ -278,11 +284,9 @@ const QueueSubHeader = () => {
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
                 dispatch(HistoryActions.Capture());
-                dispatch(
-                  ObjectActions.duplicate({ ids: settings.selectedObjectIds }),
-                );
+                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
               }}
-              disabled={!settings.selectedObjectIds.length}>
+              disabled={!selectedObjectIds.length}>
               <SearchIcon />
             </QueueIconButton>
 
@@ -290,11 +294,9 @@ const QueueSubHeader = () => {
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
                 dispatch(HistoryActions.Capture());
-                dispatch(
-                  ObjectActions.duplicate({ ids: settings.selectedObjectIds }),
-                );
+                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
               }}
-              disabled={!settings.selectedObjectIds.length}>
+              disabled={!selectedObjectIds.length}>
               <PrinterIcon />
             </QueueIconButton>
 
@@ -302,11 +304,9 @@ const QueueSubHeader = () => {
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
                 dispatch(HistoryActions.Capture());
-                dispatch(
-                  ObjectActions.duplicate({ ids: settings.selectedObjectIds }),
-                );
+                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
               }}
-              disabled={!settings.selectedObjectIds.length}>
+              disabled={!selectedObjectIds.length}>
               <SaveIcon />
             </QueueIconButton>
 

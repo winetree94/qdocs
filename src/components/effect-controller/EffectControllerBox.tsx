@@ -59,14 +59,14 @@ export const EffectController = ({
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
 
   const existingEffectIdsOfSelectedObjects = selectedObjects.map((object) =>
     getEffectEntityKey({
       objectId: object.id,
       type: effectType,
-      index: settings.queueIndex,
+      index: currentQueueIndex,
     }),
   );
 
@@ -235,7 +235,8 @@ const createEffect = (
 export const EffectControllerBox = (): ReactElement | null => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const hasSelectedObjects = selectedObjects.length > 0;
   const [firstObject] = selectedObjects;
@@ -245,7 +246,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   );
 
   const objectCurrentEffects = effects.filter(
-    (effect) => effect.index === settings.queueIndex,
+    (effect) => effect.index === currentQueueIndex,
   );
   const addableEffectTypes = Object.values(
     OBJECT_ADDABLE_EFFECTS[firstObject.type],
@@ -264,10 +265,10 @@ export const EffectControllerBox = (): ReactElement | null => {
       const newEffects = [...effects];
       return createEffect(
         effectType,
-        settings.queueIndex,
+        currentQueueIndex,
         {
           ...object,
-          pageId: settings.pageId,
+          pageId: currentPageId,
         },
         newEffects,
       );
@@ -303,7 +304,7 @@ export const EffectControllerBox = (): ReactElement | null => {
           <QueueDropdown.Trigger asChild>
             <button
               className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
-              disabled={createEffectIndex === settings.queueIndex}>
+              disabled={createEffectIndex === currentQueueIndex}>
               <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.MEDIUM} />
             </button>
           </QueueDropdown.Trigger>

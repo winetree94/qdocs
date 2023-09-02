@@ -84,7 +84,7 @@ effectMiddleware.startListening({
   actionCreator: EffectActions.removeObjectOnQueue,
   effect: (action, api) => {
     const state = api.getState();
-    const settings = SettingSelectors.settings(state);
+    const currentQueueIndex = SettingSelectors.queueIndex(state);
     const effects = EffectSelectors.all(state).reduce<{
       [key: string]: QueueEffectType[];
     }>((result, effect) => {
@@ -99,7 +99,7 @@ effectMiddleware.startListening({
     action.payload.ids.forEach((id) => {
       const objectEffects = effects[id];
       objectEffects.forEach((effect) => {
-        if (effect.index > settings.queueIndex) {
+        if (effect.index > currentQueueIndex) {
           pendingRemove.push(effect);
         }
       });
@@ -107,7 +107,7 @@ effectMiddleware.startListening({
         id: nanoid(),
         delay: 0,
         duration: 0,
-        index: settings.queueIndex,
+        index: currentQueueIndex,
         objectId: id,
         prop: undefined,
         timing: 'linear',

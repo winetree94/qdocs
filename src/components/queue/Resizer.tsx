@@ -127,8 +127,8 @@ export const ObjectResizer = ({
   const { selected, documentScale } = useContext(QueueObjectContainerContext);
   const animation = useContext(QueueAnimatableContext);
   const selectedObjectIds = useAppSelector(
-    SettingSelectors.settings,
-  ).selectedObjectIds.join('');
+    SettingSelectors.selectedObjectIds,
+  ).join('');
   const currentObject =
     useAppSelector((state) => ObjectSelectors.byId(state, selectedObjectIds))
       ?.type || 'group';

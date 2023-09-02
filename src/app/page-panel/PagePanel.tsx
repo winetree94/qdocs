@@ -107,7 +107,7 @@ export interface PagePreviewProps extends BaseHTMLAttributes<HTMLDivElement> {
 const PagePreview = memo(
   ({ page, className, ...props }: PagePreviewProps) => {
     const queueDocument = useAppSelector(DocumentSelectors.document);
-    const { pageId } = useAppSelector(SettingSelectors.settings);
+    const pageId = useAppSelector(SettingSelectors.pageId);
     const objects = useAppSelector((state) =>
       ObjectSelectors.allByPageId(state, page.id),
     );
@@ -218,7 +218,7 @@ export const PagePanel = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
-  const { pageId } = useAppSelector(SettingSelectors.settings);
+  const pageId = useAppSelector(SettingSelectors.pageId);
   const document = useAppSelector(DocumentSelectors.document);
   const pages = useAppSelector(PageSelectors.all);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);

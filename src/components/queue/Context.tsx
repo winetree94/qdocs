@@ -17,7 +17,7 @@ export const QueueObjectContextContent = forwardRef<
 >((_, ref) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
@@ -29,7 +29,7 @@ export const QueueObjectContextContent = forwardRef<
     dispatch(HistoryActions.Capture());
     dispatch(
       EffectActions.removeObjectOnQueue({
-        ids: settings.selectedObjectIds,
+        ids: selectedObjectIds,
       }),
     );
   };
@@ -40,7 +40,7 @@ export const QueueObjectContextContent = forwardRef<
    */
   const onCompletelyRemoveClick = (): void => {
     dispatch(HistoryActions.Capture());
-    dispatch(ObjectActions.removeMany(settings.selectedObjectIds));
+    dispatch(ObjectActions.removeMany(selectedObjectIds));
   };
 
   /**
@@ -49,7 +49,7 @@ export const QueueObjectContextContent = forwardRef<
    */
   const duplicate = (): void => {
     dispatch(HistoryActions.Capture());
-    dispatch(ObjectActions.duplicate({ ids: settings.selectedObjectIds }));
+    dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
   };
 
   /**
@@ -92,7 +92,7 @@ export const QueueObjectContextContent = forwardRef<
       <QueueContextMenu.Item onClick={duplicate}>
         {t('global.duplicate')}
       </QueueContextMenu.Item>
-      {settings.selectedObjectIds.length === 1 && (
+      {selectedObjectIds.length === 1 && (
         <>
           <QueueContextMenu.Separator />
           <QueueContextMenu.Item
@@ -100,7 +100,7 @@ export const QueueObjectContextContent = forwardRef<
               dispatch(HistoryActions.Capture());
               dispatch(
                 ObjectActions.toFront({
-                  id: settings.selectedObjectIds[0],
+                  id: selectedObjectIds[0],
                 }),
               );
             }}>
@@ -111,7 +111,7 @@ export const QueueObjectContextContent = forwardRef<
               dispatch(HistoryActions.Capture());
               dispatch(
                 ObjectActions.toBack({
-                  id: settings.selectedObjectIds[0],
+                  id: selectedObjectIds[0],
                 }),
               );
             }}>
@@ -122,7 +122,7 @@ export const QueueObjectContextContent = forwardRef<
               dispatch(HistoryActions.Capture());
               dispatch(
                 ObjectActions.BringForward({
-                  id: settings.selectedObjectIds[0],
+                  id: selectedObjectIds[0],
                 }),
               );
             }}>
@@ -133,7 +133,7 @@ export const QueueObjectContextContent = forwardRef<
               dispatch(HistoryActions.Capture());
               dispatch(
                 ObjectActions.SendBackward({
-                  id: settings.selectedObjectIds[0],
+                  id: selectedObjectIds[0],
                 }),
               );
             }}>
@@ -146,7 +146,7 @@ export const QueueObjectContextContent = forwardRef<
           dispatch(HistoryActions.Capture());
           dispatch(
             ObjectActions.Group({
-              ids: settings.selectedObjectIds,
+              ids: selectedObjectIds,
             }),
           );
         }}>
@@ -157,7 +157,7 @@ export const QueueObjectContextContent = forwardRef<
           dispatch(HistoryActions.Capture());
           dispatch(
             ObjectActions.Ungroup({
-              ids: settings.selectedObjectIds,
+              ids: selectedObjectIds,
             }),
           );
         }}>

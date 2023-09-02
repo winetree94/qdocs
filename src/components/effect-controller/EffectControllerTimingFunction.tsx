@@ -22,14 +22,14 @@ export const EffectControllerTimingFunction = ({
   effectType,
 }: EffectControllerTimingFunctionProps): ReactElement => {
   const dispatch = useAppDispatch();
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const effectsOfSelectedObjects = useAppSelector((state) =>
     EffectSelectors.byIds(
       state,
       selectedObjects.map((object) =>
         getEffectEntityKey({
-          index: settings.queueIndex,
+          index: currentQueueIndex,
           objectId: object.id,
           type: effectType,
         }),

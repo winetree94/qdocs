@@ -132,15 +132,19 @@ const allByPageAndEffectIndex = createSelector([allByPageId], (effects) => {
  * 에디터에서 현재 위치의 오브젝트들을 화면에 표시하기 위해 사용
  */
 const allEffectedObjects = createSelector(
-  [SettingSelectors.settings, ObjectSelectors.all, groupByObjectId],
-  (settings, objects, effects) => {
-    const pageId = settings.pageId;
+  [
+    SettingSelectors.pageId,
+    SettingSelectors.queueIndex,
+    ObjectSelectors.all,
+    groupByObjectId,
+  ],
+  (pageId, queueIndex, objects, effects) => {
     return objects
       .filter((object) => object.pageId === pageId)
       .reduce<QueueObjectType[]>((result, current) => {
         const object = { ...current };
         (effects[current.id] || [])
-          .filter(({ index }) => index <= settings.queueIndex)
+          .filter(({ index }) => index <= queueIndex)
           .filter(
             (effect) => effect.type !== 'create' && effect.type !== 'remove',
           )

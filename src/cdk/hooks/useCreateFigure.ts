@@ -14,7 +14,8 @@ import {
 
 export const useCreateFigure = (
   queueDocument: RootState,
-  settings: QueueDocumentSettings,
+  pageId: EntityId,
+  queueIndex: number,
   dispatch: Dispatch<any>,
 ) => {
   const createFigure = useCallback(
@@ -28,17 +29,17 @@ export const useCreateFigure = (
       return (iconClassName) => {
         const figure = createDefaultShape(
           queueDocument.document.documentRect,
-          settings.pageId,
+          pageId,
           iconClassName,
         );
         const object = {
-          pageId: settings.pageId,
+          pageId: pageId,
           ...figure,
         };
         dispatch(HistoryActions.Capture());
         dispatch(
           ObjectActions.addOne({
-            queueIndex: settings.queueIndex,
+            queueIndex: queueIndex,
             object: object,
           }),
         );
@@ -50,7 +51,7 @@ export const useCreateFigure = (
         );
       };
     },
-    [queueDocument, settings, dispatch],
+    [queueDocument, dispatch, pageId, queueIndex],
   );
 
   return createFigure;
@@ -58,10 +59,16 @@ export const useCreateFigure = (
 
 export const useCreateImage = (
   queueDocument: RootState,
-  settings: QueueDocumentSettings,
+  pageId: EntityId,
+  queueIndex: number,
   dispatch: Dispatch<any>,
 ) => {
-  const createFigure = useCreateFigure(queueDocument, settings, dispatch);
+  const createFigure = useCreateFigure(
+    queueDocument,
+    pageId,
+    queueIndex,
+    dispatch,
+  );
   return createFigure((documentRect: QueueDocumentRect, pageId: EntityId) => {
     const objectId = nanoid();
     const fileInput = document.createElement('input');

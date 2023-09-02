@@ -40,11 +40,21 @@ export const QueueEditor = () => {
   const rootRef = useRef<HTMLSpanElement>(null);
   const canvasDiv = useRef<HTMLDivElement>(null);
 
+  const documentId = useAppSelector(SettingSelectors.documentId);
   const queueDocument = useAppSelector(DocumentSelectors.document);
-  const settings = useAppSelector(SettingSelectors.settings);
-  const pageId = useAppSelector(SettingSelectors.pageId);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
+  const queueStart = useAppSelector(SettingSelectors.queueStart);
+  const autoPlay = useAppSelector(SettingSelectors.autoPlay);
+  const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
+  const currentScale = useAppSelector(SettingSelectors.scale);
+  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
+  const presentationMode = useAppSelector(SettingSelectors.presentationMode);
+  const queuePosition = useAppSelector(SettingSelectors.queuePosition);
+  const selectionMode = useAppSelector(SettingSelectors.selectionMode);
+
   const objects = useAppSelector((state) =>
-    ObjectSelectors.allByPageId(state, pageId),
+    ObjectSelectors.allByPageId(state, currentPageId),
   );
   const effects = useAppSelector(EffectSelectors.all);
   const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
@@ -73,17 +83,17 @@ export const QueueEditor = () => {
     if (!createEffect) {
       return false;
     }
-    if (settings.queueIndex < createEffect.index) {
+    if (currentQueueIndex < createEffect.index) {
       return false;
     }
-    if (removeEffect && settings.queueIndex > removeEffect.index) {
+    if (removeEffect && currentQueueIndex > removeEffect.index) {
       return false;
     }
     return true;
   });
 
   const currentQueueEffects = effects.filter(
-    (effect) => effect.index === settings.queueIndex,
+    (effect) => effect.index === currentQueueIndex,
   );
 
   const queueEffectsGroupByObjectId = currentQueueEffects.reduce<{
@@ -103,24 +113,24 @@ export const QueueEditor = () => {
 
   const currentTick = useRef<number>(0);
 
-  const autoplay = useCallback(
+  const autoplayCallback = useCallback(
     (time: number) => {
-      if (time - settings.queueStart > maxEffectTime) {
-        dispatch(SettingsActions.forward({ repeat: settings.autoPlayRepeat }));
+      if (time - queueStart > maxEffectTime) {
+        dispatch(SettingsActions.forward({ repeat: autoPlayRepeat }));
         return;
       }
-      currentTick.current = requestAnimationFrame(autoplay);
+      currentTick.current = requestAnimationFrame(autoplayCallback);
     },
-    [dispatch, maxEffectTime, settings.autoPlayRepeat, settings.queueStart],
+    [dispatch, maxEffectTime, autoPlayRepeat, queueStart],
   );
 
   useEffect(() => {
-    if (!settings.autoPlay) {
+    if (!autoPlay) {
       return;
     }
-    currentTick.current = requestAnimationFrame(autoplay);
+    currentTick.current = requestAnimationFrame(autoplayCallback);
     return () => cancelAnimationFrame(currentTick.current);
-  }, [settings.queueStart, maxEffectTime, autoplay, settings.autoPlay]);
+  }, [queueStart, maxEffectTime, autoplayCallback, autoPlay]);
 
   const canvasSizeToFit = useCallback((): void => {
     const root = rootRef.current;
@@ -128,14 +138,14 @@ export const QueueEditor = () => {
       root.clientWidth / (queueDocument.documentRect.width + 40),
       root.clientHeight / (queueDocument.documentRect.height + 40),
     );
-    if (settings.scale === targetScale) {
+    if (currentScale === targetScale) {
       return;
     }
     dispatch(SettingsActions.setScale(targetScale));
-  }, [dispatch, queueDocument, settings]);
+  }, [dispatch, queueDocument, currentScale]);
 
   // 최초 렌더링 시 스케일 계산
-  useLayoutEffect(() => canvasSizeToFit(), [settings.documentId]);
+  useLayoutEffect(() => canvasSizeToFit(), [documentId]);
 
   useEventSelector(fitScreenSizeEvent, canvasSizeToFit);
 
@@ -144,7 +154,7 @@ export const QueueEditor = () => {
    * 빈 공간을 클릭했을 때, 선택된 오브젝트 해제
    */
   const onRootMousedown = () => {
-    if (settings.selectedObjectIds.length === 0) {
+    if (selectedObjectIds.length === 0) {
       return;
     }
     dispatch(SettingsActions.resetSelection());
@@ -155,11 +165,10 @@ export const QueueEditor = () => {
     object: QueueObjectType,
   ): void => {
     event.stopPropagation();
-    const selected = settings.selectedObjectIds.includes(object.id);
+    const selected = selectedObjectIds.includes(object.id);
     if (!event.shiftKey && !selected) {
       dispatch(
         SettingsActions.setSelection({
-          ...settings,
           selectionMode: 'normal',
           ids: [object.id],
         }),
@@ -185,14 +194,14 @@ export const QueueEditor = () => {
   const onUpdateDrag = (initEvent: MouseEvent, event: MouseEvent): void => {
     const diffX = event.clientX - initEvent.clientX;
     const diffY = event.clientY - initEvent.clientY;
-    const currentScale = 1 / settings.scale;
+    const currentScaleFactor = 1 / currentScale;
 
-    const targetX = diffX * currentScale;
-    const targetY = diffY * currentScale;
+    const targetX = diffX * currentScaleFactor;
+    const targetY = diffY * currentScaleFactor;
     const adjacentTargetX = event.shiftKey ? targetX : adjacent(targetX, 30);
     const adjacentTargetY = event.shiftKey ? targetY : adjacent(targetY, 30);
 
-    const updateModel = settings.selectedObjectIds.reduce<{
+    const updateModel = selectedObjectIds.reduce<{
       objects: { id: EntityId; changes: { rect: QueueRect } }[];
       effects: QueueEffectType[];
     }>(
@@ -221,7 +230,7 @@ export const QueueEditor = () => {
             duration: 1000,
             delay: 0,
             objectId: id,
-            index: settings.queueIndex,
+            index: currentQueueIndex,
             timing: 'linear',
             ...existRectEffect,
             prop: {
@@ -269,7 +278,7 @@ export const QueueEditor = () => {
       return;
     }
     const rect = canvasDiv.current.getBoundingClientRect();
-    const absScale = 1 / settings.scale;
+    const absScale = 1 / currentScale;
     const x = (event.clientX - rect.x) * absScale;
     const y = (event.clientY - rect.y) * absScale;
     const width = event.width * absScale;
@@ -286,7 +295,7 @@ export const QueueEditor = () => {
       })
       .map(([id]) => id);
 
-    if (isEqual(rangeObjectIds, settings.selectedObjectIds)) {
+    if (isEqual(rangeObjectIds, selectedObjectIds)) {
       return;
     }
 
@@ -326,7 +335,7 @@ export const QueueEditor = () => {
           delay: 0,
           objectId: id,
           timing: 'linear',
-          index: settings.queueIndex,
+          index: currentQueueIndex,
           ...existRectEffect,
           prop: {
             ...props[id].rect,
@@ -364,7 +373,7 @@ export const QueueEditor = () => {
           delay: 0,
           objectId: id,
           timing: 'linear',
-          index: settings.queueIndex,
+          index: currentQueueIndex,
           ...existRotateEffect,
           prop: {
             degree: degree,
@@ -379,27 +388,21 @@ export const QueueEditor = () => {
       document.body.clientWidth / queueDocument.documentRect.width,
       document.body.clientHeight / queueDocument.documentRect.height,
     );
-    if (settings.scale === scale) {
+    if (currentScale === scale) {
       return;
     }
     dispatch(SettingsActions.setScale(scale));
-  }, [dispatch, queueDocument, settings.scale]);
+  }, [dispatch, queueDocument, currentScale]);
 
   useEffect(() => {
-    if (!settings.presentationMode) {
+    if (!presentationMode) {
       return;
     }
     const observer = new ResizeObserver(maximizeScale);
     observer.observe(document.body);
     maximizeScale();
     return () => observer.disconnect();
-  }, [
-    dispatch,
-    maximizeScale,
-    queueDocument,
-    settings.presentationMode,
-    settings.scale,
-  ]);
+  }, [dispatch, maximizeScale, queueDocument, presentationMode, currentScale]);
 
   const onTextEdit = (object: QueueObjectType, text: string): void => {
     dispatch(
@@ -416,7 +419,7 @@ export const QueueEditor = () => {
   };
 
   const onObjectContextMenuOpenChange = (id: EntityId, open: boolean): void => {
-    if (open && !settings.selectedObjectIds.includes(id)) {
+    if (open && !selectedObjectIds.includes(id)) {
       dispatch(
         SettingsActions.setSelection({
           selectionMode: 'normal',
@@ -437,20 +440,18 @@ export const QueueEditor = () => {
               onDrawEnd={onDrawEnd}
               className={clsx(
                 styles.Drawable,
-                settings.presentationMode ? styles.fullscreen : '',
+                presentationMode ? styles.fullscreen : '',
               )}>
               <Scaler
                 width={queueDocument.documentRect.width}
                 height={queueDocument.documentRect.height}
-                scale={settings.scale}
-                className={clsx(
-                  settings.presentationMode ? styles.scaleFull : '',
-                )}>
+                scale={currentScale}
+                className={clsx(presentationMode ? styles.scaleFull : '')}>
                 <div
                   ref={canvasDiv}
                   className={clsx(
                     styles.canvas,
-                    settings.presentationMode ? styles.fullscreen : '',
+                    presentationMode ? styles.fullscreen : '',
                   )}
                   style={{
                     width: queueDocument.documentRect.width,
@@ -467,17 +468,15 @@ export const QueueEditor = () => {
                         <QueueObject.Container
                           object={object}
                           detail={
-                            settings.selectionMode === 'detail' &&
-                            settings.selectedObjectIds.includes(object.id)
+                            selectionMode === 'detail' &&
+                            selectedObjectIds.includes(object.id)
                           }
-                          documentScale={settings.scale}
-                          selected={settings.selectedObjectIds.includes(
-                            object.id,
-                          )}>
+                          documentScale={currentScale}
+                          selected={selectedObjectIds.includes(object.id)}>
                           <QueueObject.Animator
-                            queueIndex={settings.queueIndex}
-                            queuePosition={settings.queuePosition}
-                            queueStart={settings.queueStart}>
+                            queueIndex={currentQueueIndex}
+                            queuePosition={queuePosition}
+                            queueStart={queueStart}>
                             <Draggable
                               onMouseDown={(e) => onObjectMousedown(e, object)}
                               onDoubleClick={(e) =>
@@ -523,7 +522,7 @@ export const QueueEditor = () => {
                 </div>
               </Scaler>
             </Drawable>
-            {settings.presentationMode && <PresentationRemote />}
+            {presentationMode && <PresentationRemote />}
           </QueueScrollArea.Viewport>
           <QueueScrollArea.Scrollbar orientation="vertical">
             <QueueScrollArea.Thumb />

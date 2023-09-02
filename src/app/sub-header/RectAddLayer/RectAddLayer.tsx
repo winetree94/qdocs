@@ -12,10 +12,16 @@ import clsx from 'clsx';
 
 const QueueRectAddLayer = () => {
   const queueDocument = useAppSelector(DocumentSelectors.serialized);
-  const settings = useAppSelector(SettingSelectors.settings);
+  const currentPageId = useAppSelector(SettingSelectors.pageId);
+  const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
 
-  const createFigure = useCreateFigure(queueDocument, settings, dispatch);
+  const createFigure = useCreateFigure(
+    queueDocument,
+    currentPageId,
+    currentQueueIndex,
+    dispatch,
+  );
   const createSquare = createFigure(createDefaultSquare);
   const createCircle = createFigure(createDefaultCircle);
 
