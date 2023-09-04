@@ -23,25 +23,26 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
 import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
 import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
 import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
-import { DocumentSelectors } from 'store/document/selectors';
 import { useCreateImage } from 'cdk/hooks/useCreateFigure';
 import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
 import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
+import { batch } from 'react-redux';
+import { store } from 'store';
 
 const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
 
+  const hasSelectedObject = useAppSelector(SettingSelectors.hasSelectedObject);
   const history = useAppSelector(HistorySelectors.all);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
-  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
   const scale = Math.floor(useAppSelector(SettingSelectors.scale) * 100);
 
   const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
@@ -156,14 +157,19 @@ const QueueSubHeader = memo(() => {
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(
-                    ObjectActions.duplicate({
-                      ids: selectedObjectIds,
-                    }),
+                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
+                    store.getState(),
                   );
+                  batch(() => {
+                    dispatch(HistoryActions.Capture());
+                    dispatch(
+                      ObjectActions.duplicate({
+                        ids: selectedObjectIds,
+                      }),
+                    );
+                  });
                 }}
-                disabled={!selectedObjectIds.length}>
+                disabled={!hasSelectedObject}>
                 <TypeIcon />
               </QueueIconButton>
 
@@ -252,28 +258,38 @@ const QueueSubHeader = memo(() => {
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(
-                    ObjectActions.duplicate({
-                      ids: selectedObjectIds,
-                    }),
+                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
+                    store.getState(),
                   );
+                  batch(() => {
+                    dispatch(HistoryActions.Capture());
+                    dispatch(
+                      ObjectActions.duplicate({
+                        ids: selectedObjectIds,
+                      }),
+                    );
+                  });
                 }}
-                disabled={!selectedObjectIds.length}>
+                disabled={!hasSelectedObject}>
                 <ShareIcon />
               </QueueIconButton>
 
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(
-                    ObjectActions.duplicate({
-                      ids: selectedObjectIds,
-                    }),
+                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
+                    store.getState(),
                   );
+                  batch(() => {
+                    dispatch(HistoryActions.Capture());
+                    dispatch(
+                      ObjectActions.duplicate({
+                        ids: selectedObjectIds,
+                      }),
+                    );
+                  });
                 }}
-                disabled={!selectedObjectIds.length}>
+                disabled={!hasSelectedObject}>
                 <TableIcon />
               </QueueIconButton>
             </div>
@@ -296,20 +312,30 @@ const QueueSubHeader = memo(() => {
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
-                dispatch(HistoryActions.Capture());
-                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
+                const selectedObjectIds = SettingSelectors.selectedObjectIds(
+                  store.getState(),
+                );
+                batch(() => {
+                  dispatch(HistoryActions.Capture());
+                  dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
+                });
               }}
-              disabled={!selectedObjectIds.length}>
+              disabled={!hasSelectedObject}>
               <PrinterIcon />
             </QueueIconButton>
 
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
-                dispatch(HistoryActions.Capture());
-                dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
+                const selectedObjectIds = SettingSelectors.selectedObjectIds(
+                  store.getState(),
+                );
+                batch(() => {
+                  dispatch(HistoryActions.Capture());
+                  dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
+                });
               }}
-              disabled={!selectedObjectIds.length}>
+              disabled={!hasSelectedObject}>
               <SaveIcon />
             </QueueIconButton>
 

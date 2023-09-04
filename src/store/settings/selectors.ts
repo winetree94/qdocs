@@ -58,6 +58,11 @@ const selectedObjectIds = createSelector(
   (settings) => settings.selectedObjectIds,
 );
 
+const hasSelectedObject = createSelector(
+  selectedObjectIds,
+  (selectedObjectIds) => selectedObjectIds.length > 0,
+);
+
 const autoPlayRepeat = createSelector(
   selectSelf,
   (settings) => settings.autoPlayRepeat,
@@ -278,6 +283,7 @@ export const SettingSelectors = {
   autoPlayRepeat,
   pageObjects,
   pageObjectIds,
+  hasSelectedObject,
   selectedObjects,
   selectedObjectIds,
   selectionMode,
