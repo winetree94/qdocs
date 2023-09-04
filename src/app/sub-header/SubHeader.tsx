@@ -37,7 +37,6 @@ const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
 
   const history = useAppSelector(HistorySelectors.all);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
@@ -57,7 +56,6 @@ const QueueSubHeader = memo(() => {
   });
 
   const createImage = useCreateImage(
-    queueDocument,
     currentPageId,
     currentQueueIndex,
     dispatch,

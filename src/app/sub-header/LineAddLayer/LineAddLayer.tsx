@@ -1,5 +1,4 @@
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
 import { QueueIconButton } from 'components/buttons/button/Button';
@@ -9,13 +8,11 @@ import styles from './LineAddLayer.module.scss';
 import clsx from 'clsx';
 
 const QueueLineAddLayer = () => {
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
 
   const createFigure = useCreateFigure(
-    queueDocument,
     currentPageId,
     currentQueueIndex,
     dispatch,

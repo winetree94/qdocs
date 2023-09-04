@@ -1,23 +1,19 @@
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
 import { createDefaultSquare } from 'model/object/square';
 import { createDefaultCircle } from 'model/object/circle';
-import { createDefaultIcon } from 'model/object/icon';
 import { QueueIconButton } from 'components/buttons/button/Button';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import styles from './RectAddLayer.module.scss';
 import clsx from 'clsx';
 
 const QueueRectAddLayer = () => {
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
 
   const createFigure = useCreateFigure(
-    queueDocument,
     currentPageId,
     currentQueueIndex,
     dispatch,

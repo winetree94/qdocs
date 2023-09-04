@@ -2,18 +2,17 @@ import { Dispatch, EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document';
 import { QueueObjectType, createDefaultImage } from 'model/object';
 import { useCallback } from 'react';
-import { RootState } from 'store';
-import { QueueDocument } from 'store/document';
+import { RootState, store } from 'store';
+import { DocumentSelectors } from 'store/document';
 import { HistoryActions } from 'store/history';
 import { ObjectActions } from 'store/object';
-import { QueueDocumentSettings, SettingsActions } from 'store/settings';
+import { SettingsActions } from 'store/settings';
 import {
   ImageEncodingMessage,
   IMAGE_ENCODING_STATUS,
 } from 'workers/imageConversionWorker';
 
 export const useCreateFigure = (
-  queueDocument: RootState,
   pageId: EntityId,
   queueIndex: number,
   dispatch: Dispatch<any>,
@@ -27,11 +26,8 @@ export const useCreateFigure = (
       ) => QueueObjectType,
     ): ((iconClassName?: string) => void) => {
       return (iconClassName) => {
-        const figure = createDefaultShape(
-          queueDocument.document.documentRect,
-          pageId,
-          iconClassName,
-        );
+        const rect = DocumentSelectors.documentRect(store.getState());
+        const figure = createDefaultShape(rect, pageId, iconClassName);
         const object = {
           pageId: pageId,
           ...figure,
@@ -51,25 +47,19 @@ export const useCreateFigure = (
         );
       };
     },
-    [queueDocument, dispatch, pageId, queueIndex],
+    [dispatch, pageId, queueIndex],
   );
 
   return createFigure;
 };
 
 export const useCreateImage = (
-  queueDocument: RootState,
   pageId: EntityId,
   queueIndex: number,
   dispatch: Dispatch<any>,
 ) => {
-  const createFigure = useCreateFigure(
-    queueDocument,
-    pageId,
-    queueIndex,
-    dispatch,
-  );
-  return createFigure((documentRect: QueueDocumentRect, pageId: EntityId) => {
+  const createFigure = useCreateFigure(pageId, queueIndex, dispatch);
+  return createFigure((rect, QueueDocumentRect, pageId: EntityId) => {
     const objectId = nanoid();
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -120,6 +110,6 @@ export const useCreateImage = (
 
     // 이미지 업로드 -> base64로 인코딩 완료할 때 까지 로딩 표시된 상태로 default image object 만들어두기?
     // 로딩중 상태로 만들어 뒀다가 이미지 붙이면 사라지도록 하면 좋을듯?
-    return createDefaultImage(documentRect, pageId, objectId);
+    return createDefaultImage(rect, pageId, objectId);
   });
 };

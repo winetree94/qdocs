@@ -2,14 +2,10 @@ import { FunctionComponent, memo, ReactNode, useMemo, useState } from 'react';
 import memoize from 'memoize-one';
 import { areEqual, FixedSizeList, ListOnScrollProps } from 'react-window';
 import * as Tooltip from '@radix-ui/react-tooltip';
-
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
-import { QueueIconButton } from 'components/buttons/button/Button';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { createDefaultLine } from 'model/object/line';
 import clsx from 'clsx';
 import styles from 'app/sub-header/IconAddLayer/IconAddLayer.module.scss';
 import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
@@ -128,12 +124,10 @@ const createItemData = memoize(
 const QueueIconAddLayer = () => {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState<string>('');
-  const queueDocument = useAppSelector(DocumentSelectors.serialized);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
   const createFigure = useCreateFigure(
-    queueDocument,
     currentPageId,
     currentQueueIndex,
     dispatch,

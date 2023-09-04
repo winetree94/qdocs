@@ -11,7 +11,9 @@ import styles from './Timeline.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
 import { EffectSelectors } from 'store/effect';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
+
+const ROW_HEIGHT = 38;
 
 interface DataType {
   objectName: string;
@@ -22,21 +24,21 @@ export interface TimelineProps {
   columnWidth: number;
 }
 
-export const Timeline = (props: TimelineProps) => {
+export const Timeline = memo((props: TimelineProps) => {
   const dispath = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
   const { rowIds, tracks } = useAppSelector(SettingSelectors.timelineData);
-  const rowHeight = 38;
 
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
   const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
 
-  const duration =
-    queuePosition === 'forward'
+  const duration = useMemo(() => {
+    return queuePosition === 'forward'
       ? maxDurationByIndex[queueIndex]
       : maxDurationByIndex[queueIndex + 1];
+  }, [maxDurationByIndex, queueIndex, queuePosition]);
 
   const columnDefs: GridColumnDef<DataType>[] = [
     {
@@ -106,7 +108,7 @@ export const Timeline = (props: TimelineProps) => {
   }));
 
   const rowHeightGetter = () => {
-    return rowHeight;
+    return ROW_HEIGHT;
   };
 
   const onCursorFieldChange = (field: string) => {
@@ -132,8 +134,8 @@ export const Timeline = (props: TimelineProps) => {
     );
   };
 
-  return (
-    <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full', 'tw-flex-1')}>
+  const memoizedGrid = useMemo(
+    () => (
       <Grid
         cursorField={queueIndexString}
         cursorAnimationStart={queueStart}
@@ -143,6 +145,16 @@ export const Timeline = (props: TimelineProps) => {
         columnDefs={columnDefs}
         rowData={rowData}
         rowHeightGetter={rowHeightGetter}></Grid>
-    </div>
+    ),
+    [
+      columnDefs,
+      duration,
+      onCursorFieldChange,
+      queueIndexString,
+      queueStart,
+      rowData,
+    ],
   );
-};
+
+  return memoizedGrid;
+});

@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import {
   createContext,
   useCallback,
-  useLayoutEffect,
+  useEffect,
   useReducer,
   useRef,
 } from 'react';
@@ -88,7 +88,7 @@ export const Animators = ({ start, animations, children }: AnimatorsProps) => {
     [calculateProgress],
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // requestAnimationFrame 이 렌더링 사이클보다 늦게 실행되기 때문에, 즉시 반영
     setProgresses(
       calculateProgress(performance.now()).map((progress) =>
