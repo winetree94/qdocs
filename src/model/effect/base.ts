@@ -15,6 +15,12 @@ export interface BaseQueueEffect<T> {
    */
   id: EntityId;
 
+  /*
+   * @descriptioin
+   * 이펙트의 대상이 되는 페이지의 고유 아이디
+   */
+  pageId: EntityId;
+
   /**
    * @description
    * 이펙트의 대상이 되는 객체의 고유 아이디

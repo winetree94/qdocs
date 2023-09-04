@@ -4,7 +4,7 @@ import { ObjectSelectors } from 'store/object/selectors';
 import { QueueDocumentSettings } from './model';
 import { EffectSelectors } from 'store/effect/selectors';
 import { QueueObjectType } from 'model/object';
-import { OBJECT_EFFECT_TYPE } from 'model/effect';
+import { OBJECT_EFFECT_TYPE, QueueEffectType } from 'model/effect';
 import {
   supportFade,
   supportFill,
@@ -97,7 +97,9 @@ const allEffectedObjects = createSelector(
         (effects[current.id] || [])
           .filter(({ index }) => index <= queueIndex)
           .filter(
-            (effect) => effect.type !== 'create' && effect.type !== 'remove',
+            (effect) =>
+              effect.type !== OBJECT_EFFECT_TYPE.CREATE &&
+              effect.type !== OBJECT_EFFECT_TYPE.REMOVE,
           )
           .forEach((effect) => {
             if (
@@ -209,10 +211,10 @@ const currentVisibleObjects = createSelector(
   (queueIndex, objects, effects) => {
     return objects.filter((object) => {
       const createEffect = (effects[object.id] || []).find(
-        (effect) => effect.type === 'create',
+        (effect) => effect.type === OBJECT_EFFECT_TYPE.CREATE,
       );
       const removeEffect = (effects[object.id] || []).find(
-        (effect) => effect.type === 'remove',
+        (effect) => effect.type === OBJECT_EFFECT_TYPE.REMOVE,
       );
       if (!createEffect) {
         return false;
@@ -225,6 +227,48 @@ const currentVisibleObjects = createSelector(
       }
       return true;
     });
+  },
+);
+
+const currentPageEffects = createSelector(
+  [EffectSelectors.all, pageId],
+  (effects, pageId) => {
+    return effects.filter((effect) => effect.pageId === pageId);
+  },
+);
+
+const currentPageQueueIndexEffects = createSelector(
+  [currentPageEffects, queueIndex],
+  (effects, queueIndex) => {
+    return effects.filter((effect) => effect.index === queueIndex);
+  },
+);
+
+const currentPageQueueIndexEffectsByObjectId = createSelector(
+  [currentPageQueueIndexEffects],
+  (effects) => {
+    return effects.reduce<Record<string, QueueEffectType[]>>(
+      (result, effect) => {
+        if (!result[effect.objectId]) {
+          result[effect.objectId] = [];
+        }
+        result[effect.objectId].push(effect);
+        return result;
+      },
+      {},
+    );
+  },
+);
+
+const currentPageQueueIndexMaxDuration = createSelector(
+  [currentPageQueueIndexEffects],
+  (effects) => {
+    return effects.reduce((acc, effect) => {
+      if (acc < effect.duration + effect.delay) {
+        acc = effect.duration + effect.delay;
+      }
+      return acc;
+    }, 0);
   },
 );
 
@@ -248,4 +292,8 @@ export const SettingSelectors = {
   allEffectedObjectsMap,
   timelineData,
   currentVisibleObjects,
+  currentPageEffects,
+  currentPageQueueIndexEffects,
+  currentPageQueueIndexEffectsByObjectId,
+  currentPageQueueIndexMaxDuration,
 };

@@ -23,7 +23,6 @@ import { fitScreenSizeEvent } from 'app/events/event';
 import { DocumentSelectors } from 'store/document/selectors';
 import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
-import { EffectSelectors } from 'store/effect/selectors';
 import { RectEffect, RotateEffect, QueueEffectType } from 'model/effect';
 import { EffectActions } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
@@ -52,34 +51,21 @@ export const QueueEditor = memo(() => {
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const selectionMode = useAppSelector(SettingSelectors.selectionMode);
 
-  const effects = useAppSelector(EffectSelectors.all);
   const props = useAppSelector(SettingSelectors.allEffectedObjectsMap);
+
+  const queueObjects = useAppSelector(SettingSelectors.currentVisibleObjects);
+  const queueEffectsGroupByObjectId = useAppSelector(
+    SettingSelectors.currentPageQueueIndexEffectsByObjectId,
+  );
+  const maxEffectTime = useAppSelector(
+    SettingSelectors.currentPageQueueIndexMaxDuration,
+  );
+
+  const currentTick = useRef<number>(0);
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
     [key: string]: QueueObjectType;
   }>({});
-
-  const queueObjects = useAppSelector(SettingSelectors.currentVisibleObjects);
-  const currentQueueEffects = effects.filter(
-    (effect) => effect.index === currentQueueIndex,
-  );
-
-  const queueEffectsGroupByObjectId = currentQueueEffects.reduce<{
-    [id: string]: QueueEffectType[];
-  }>((result, effect) => {
-    if (!result[effect.objectId]) {
-      result[effect.objectId] = [];
-    }
-    result[effect.objectId].push(effect);
-    return result;
-  }, {});
-
-  const maxEffectTime = Math.max(
-    ...currentQueueEffects.map((effect) => effect.duration + effect.delay),
-    0,
-  );
-
-  const currentTick = useRef<number>(0);
 
   const autoplayCallback = useCallback(
     (time: number) => {

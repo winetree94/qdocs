@@ -121,6 +121,7 @@ const createEffect = (
     duration: 1000,
     delay: 0,
     index: queueIndex,
+    pageId: queueObject.pageId,
     objectId: queueObject.id,
     timing: 'linear',
     prop: undefined,
