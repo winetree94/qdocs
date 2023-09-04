@@ -1,11 +1,4 @@
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
 import { QueueObject } from 'components/queue';
@@ -32,6 +25,7 @@ import { Draggable } from 'cdk/drag/Drag';
 import { isEqual } from 'lodash';
 import { HistoryActions } from 'store/history';
 import { QueueObjectType } from 'model/object';
+import { store } from 'store';
 
 export const QueueEditor = memo(() => {
   const dispatch = useAppDispatch();
@@ -51,8 +45,6 @@ export const QueueEditor = memo(() => {
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const selectionMode = useAppSelector(SettingSelectors.selectionMode);
 
-  const props = useAppSelector(SettingSelectors.allEffectedObjectsMap);
-
   const queueObjects = useAppSelector(SettingSelectors.currentVisibleObjects);
   const queueEffectsGroupByObjectId = useAppSelector(
     SettingSelectors.currentPageQueueIndexEffectsByObjectId,
@@ -63,7 +55,7 @@ export const QueueEditor = memo(() => {
 
   const currentTick = useRef<number>(0);
 
-  const [capturedObjectProps, setCapturedObjectProps] = useState<{
+  const capturedObjectProps = useRef<{
     [key: string]: QueueObjectType;
   }>({});
 
@@ -146,6 +138,7 @@ export const QueueEditor = memo(() => {
   };
 
   const onUpdateDrag = (initEvent: MouseEvent, event: MouseEvent): void => {
+    const props = SettingSelectors.allEffectedObjectsMap(store.getState());
     const diffX = event.clientX - initEvent.clientX;
     const diffY = event.clientY - initEvent.clientY;
     const currentScaleFactor = 1 / currentScale;
@@ -170,8 +163,8 @@ export const QueueEditor = memo(() => {
             changes: {
               rect: {
                 ...props[id].rect,
-                x: capturedObjectProps[id].rect.x + adjacentTargetX,
-                y: capturedObjectProps[id].rect.y + adjacentTargetY,
+                x: capturedObjectProps.current[id].rect.x + adjacentTargetX,
+                y: capturedObjectProps.current[id].rect.y + adjacentTargetY,
               },
             },
           });
@@ -189,8 +182,8 @@ export const QueueEditor = memo(() => {
             ...existRectEffect,
             prop: {
               ...props[id].rect,
-              x: capturedObjectProps[id].rect.x + adjacentTargetX,
-              y: capturedObjectProps[id].rect.y + adjacentTargetY,
+              x: capturedObjectProps.current[id].rect.x + adjacentTargetX,
+              y: capturedObjectProps.current[id].rect.y + adjacentTargetY,
             },
           });
         }
@@ -211,7 +204,8 @@ export const QueueEditor = memo(() => {
   };
 
   const onObjectDragStart = (): void => {
-    setCapturedObjectProps(props);
+    const props = SettingSelectors.allEffectedObjectsMap(store.getState());
+    capturedObjectProps.current = { ...props };
     dispatch(HistoryActions.Capture());
   };
 
@@ -231,6 +225,7 @@ export const QueueEditor = memo(() => {
     if (!canvasDiv.current) {
       return;
     }
+    const props = SettingSelectors.allEffectedObjectsMap(store.getState());
     const rect = canvasDiv.current.getBoundingClientRect();
     const absScale = 1 / currentScale;
     const x = (event.clientX - rect.x) * absScale;
@@ -262,6 +257,7 @@ export const QueueEditor = memo(() => {
   };
 
   const resizeObjectRect = (id: EntityId, rect: ResizerEvent): void => {
+    const props = SettingSelectors.allEffectedObjectsMap(store.getState());
     if (
       queueEffectsGroupByObjectId[id]?.find(
         (effect) => effect.type === 'create',
@@ -399,7 +395,9 @@ export const QueueEditor = memo(() => {
       dispatch(SettingsActions.setScale(scale));
     };
     rootRef.current?.addEventListener('wheel', onWheel, { passive: false });
-    return () => rootRef.current?.removeEventListener('wheel', onWheel);
+    return () => {
+      return rootRef.current?.removeEventListener('wheel', onWheel);
+    };
   }, [dispatch, currentScale, documentRect.width, documentRect.height]);
 
   return (
