@@ -10,6 +10,7 @@ import { EffectActions, EffectSelectors } from 'store/effect';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
 import { deviceMetaKey } from 'cdk/device/meta';
+import { store } from 'store';
 
 export const QueueObjectContextContent = forwardRef<
   HTMLDivElement,
@@ -19,7 +20,6 @@ export const QueueObjectContextContent = forwardRef<
   const dispatch = useAppDispatch();
   const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const effects = useAppSelector(EffectSelectors.groupByObjectId);
 
   /**
    * @description
@@ -56,9 +56,8 @@ export const QueueObjectContextContent = forwardRef<
    * @description
    * 오브젝트를 클립보드에 복사
    */
-  const copyToClipboard = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-  ) => {
+  const copyToClipboard = async () => {
+    const effects = EffectSelectors.effectsByObjectId(store.getState());
     const models = selectedObjects.map((object) => ({
       object: object,
       effects: effects[object.id],

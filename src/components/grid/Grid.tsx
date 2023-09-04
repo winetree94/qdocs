@@ -559,9 +559,11 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
   };
 
   const onCursorDragmove = (x: number) => {
-    setCursorTransformX(
-      Math.max(Math.min(Math.max(x, 0), totalWidth) - 19 / 2, 0),
+    const adjacentCenter = Math.max(
+      Math.min(Math.max(x, 0), totalWidth) - 19 / 2,
+      0,
     );
+    setCursorTransformX(adjacentCenter);
   };
 
   const onCursorDragEnd = (x: number) => {

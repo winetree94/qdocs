@@ -5,14 +5,12 @@ import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
 import { QueueEffectType } from 'model/effect';
 import { QueueObjectType } from 'model/object';
 import { store } from 'store';
-import { EffectActions } from 'store/effect';
-import { reduceByObjectId } from 'store/effect/functions';
+import { EffectActions, EffectSelectors } from 'store/effect';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingsActions, SettingSelectors } from 'store/settings';
-import { getPageObjectIds, getSelectedObjects } from 'store/settings/functions';
 
 export const GlobalKeydown = () => {
   const dispatch = useAppDispatch();
@@ -46,17 +44,17 @@ export const GlobalKeydown = () => {
           if (selectionMode === 'detail') return;
           e.preventDefault();
           try {
-            const effects = reduceByObjectId(
-              Object.values(store.getState().effects.entities),
+            const effectsByObjectId = EffectSelectors.effectsByObjectId(
+              store.getState(),
             );
-            const models = getSelectedObjects(store.getState()).map(
-              (object) => {
-                return {
-                  object: object,
-                  effects: effects[object.id],
-                };
-              },
-            );
+            const models = SettingSelectors.selectedObjects(
+              store.getState(),
+            ).map((object) => {
+              return {
+                object: object,
+                effects: effectsByObjectId[object.id],
+              };
+            });
             await navigator.clipboard.writeText(
               JSON.stringify({
                 identity: QUEUE_CLIPBOARD_UNIQUE_ID,
@@ -134,7 +132,7 @@ export const GlobalKeydown = () => {
           dispatch(
             SettingsActions.setSelection({
               selectionMode: 'normal',
-              ids: getPageObjectIds(store.getState(), pageId),
+              ids: SettingSelectors.pageObjectIds(store.getState()),
             }),
           );
         },

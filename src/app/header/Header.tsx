@@ -22,7 +22,6 @@ import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState, store } from 'store';
 import { QueueDropdown } from 'components/dropdown/Dropdown';
 import { QueueButton } from 'components/buttons/button/Button';
-import { serializeDocument } from 'store/document/functions';
 
 export interface ToolbarModel {
   key: string;
@@ -134,8 +133,9 @@ export const QueueHeader = memo(() => {
 
   const onSaveDocumentClick = (): void => {
     if (!docs) return;
-
-    const serializedDocumentModel = serializeDocument(store.getState());
+    const serializedDocumentModel = DocumentSelectors.serialized(
+      store.getState(),
+    );
     const stringified = JSON.stringify(serializedDocumentModel);
     const blob = new Blob([stringified], { type: 'octet/stream' });
     const url = URL.createObjectURL(blob);

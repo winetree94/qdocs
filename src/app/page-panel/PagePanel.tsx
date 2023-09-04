@@ -34,7 +34,6 @@ import { StandaloneRect } from 'components/queue/standaloneRects';
 import { Scaler } from 'components/scaler/Scaler';
 import { StandaloneText } from 'components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from 'model/effect';
-import { reduceByObjectId } from 'store/effect/functions';
 import { store } from 'store';
 
 const PagePanelRoot = ({
@@ -283,9 +282,7 @@ export const PagePanel = () => {
     index: number,
   ) => {
     const newId = nanoid();
-    const effects = reduceByObjectId(
-      Object.values(store.getState().effects.entities),
-    );
+    const effects = EffectSelectors.effectsByObjectId(store.getState());
 
     // 선택된 페이지의 objectIds
     const currentPageObjectIds = Object.values(

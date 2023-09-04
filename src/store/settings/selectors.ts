@@ -56,6 +56,13 @@ const pageObjects = createSelector(
     objects.filter((object) => object.pageId === settings.pageId),
 );
 
+const pageObjectIds = createSelector(
+  [selectSelf, ObjectSelectors.byPageId],
+  (settings, objects) => {
+    return objects[settings.pageId]?.map(({ id }) => id) || [];
+  },
+);
+
 const selectedObjects = createSelector(
   [selectSelf, ObjectSelectors.entities],
   (settings, objectEntities) =>
@@ -67,6 +74,7 @@ export const SettingSelectors = {
   queueIndex,
   autoPlayRepeat,
   pageObjects,
+  pageObjectIds,
   selectedObjects,
   selectedObjectIds,
   selectionMode,

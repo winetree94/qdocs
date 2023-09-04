@@ -120,6 +120,10 @@ export const Timeline = (props: TimelineProps) => {
       return Number(field);
     })();
 
+    if (targetIndex === queueIndex) {
+      return;
+    }
+
     dispath(
       SettingsActions.setQueueIndex({
         queueIndex: targetIndex,

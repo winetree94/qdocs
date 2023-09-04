@@ -1,4 +1,5 @@
 import { createSelector, EntityId } from '@reduxjs/toolkit';
+import { QueueObjectType } from 'model/object';
 import { RootState } from 'store';
 import { objectEntityAdapter } from './reducer';
 
@@ -22,6 +23,17 @@ const idSetOfPageId = createSelector([allByPageId], (objects) => {
   return new Set<EntityId>(objects.map(({ id }) => id));
 });
 
+const byPageId = createSelector([all], (objects) => {
+  return objects.reduce<Record<EntityId, QueueObjectType[]>>((acc, object) => {
+    const { pageId } = object;
+    if (!acc[pageId]) {
+      acc[pageId] = [];
+    }
+    acc[pageId].push(object);
+    return acc;
+  }, {});
+});
+
 export const ObjectSelectors = {
   all,
   byId,
@@ -29,5 +41,6 @@ export const ObjectSelectors = {
   ids,
   total,
   allByPageId,
+  byPageId,
   idSetOfPageId,
 };

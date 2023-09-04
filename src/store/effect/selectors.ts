@@ -15,7 +15,6 @@ import {
   supportText,
 } from 'model/support';
 import { TimeLineTrack } from 'model/timeline/timeline';
-import { reduceByObjectId } from 'store/effect/functions';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);
@@ -47,6 +46,16 @@ const byIndex = createSelector([all], (effects) => {
       result[effect.index] = [];
     }
     result[effect.index].push(effect);
+    return result;
+  }, {});
+});
+
+const effectsByObjectId = createSelector([all], (effects) => {
+  return effects.reduce<Record<string, QueueEffectType[]>>((result, effect) => {
+    if (!result[effect.objectId]) {
+      result[effect.objectId] = [];
+    }
+    result[effect.objectId].push(effect);
     return result;
   }, {});
 });
@@ -90,13 +99,6 @@ const firstQueueByPageId = createSelector(
 
 /**
  * @description
- * 전체 이펙트를 object id 로 그룹화하여 Map 형태로 조회
- * 오브젝트의 이펙트 목록을 조회할 경우 사용
- */
-const groupByObjectId = createSelector([all], reduceByObjectId);
-
-/**
- * @description
  * Page Id 로 Effect Index 로 그룹화된 이펙트 목록을 조회
  * Effect Index 별로 Effect 의 존재 여부를 확인할 때 사용
  */
@@ -126,7 +128,7 @@ const allEffectedObjects = createSelector(
     SettingSelectors.pageId,
     SettingSelectors.queueIndex,
     ObjectSelectors.all,
-    groupByObjectId,
+    effectsByObjectId,
   ],
   (pageId, queueIndex, objects, effects) => {
     return objects
@@ -271,8 +273,8 @@ export const EffectSelectors = {
   byId,
   byIndex,
   byIds,
+  effectsByObjectId,
   byObjectId,
-  groupByObjectId,
   allByPageId,
   firstQueueByPageId,
   allByPageAndEffectIndex,
