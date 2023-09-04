@@ -58,7 +58,7 @@ export const QueueEditor = memo(() => {
     ObjectSelectors.allByPageId(state, currentPageId),
   );
   const effects = useAppSelector(EffectSelectors.all);
-  const props = useAppSelector(EffectSelectors.allEffectedObjectsMap);
+  const props = useAppSelector(SettingSelectors.allEffectedObjectsMap);
 
   const [capturedObjectProps, setCapturedObjectProps] = useState<{
     [key: string]: QueueObjectType;

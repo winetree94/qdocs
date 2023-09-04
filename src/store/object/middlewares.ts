@@ -3,7 +3,8 @@ import { createTypedListenerMiddleware } from 'middleware';
 import { ObjectSelectors } from './selectors';
 import { PageActions } from '../page';
 import { ObjectActions } from './actions';
-import { SettingsActions, SettingSelectors } from '../settings';
+import { SettingsActions } from '../settings';
+import { SettingSelectors } from '../settings/selectors';
 import { EffectActions, EffectSelectors } from '../effect';
 import { QueueObjectType } from 'model/object';
 import { OBJECT_EFFECT_TYPES, QueueEffectType } from 'model/effect';
@@ -65,7 +66,7 @@ objectMiddleware.startListening({
   effect: (action, api) => {
     const state = api.getState();
     const queueIndex = SettingSelectors.queueIndex(state);
-    const effects = EffectSelectors.allEffectedObjectsMap(state);
+    const effects = SettingSelectors.allEffectedObjectsMap(state);
     const models = action.payload.ids.map<QueueObjectType>((id) => ({
       ...effects[id],
       rect: {

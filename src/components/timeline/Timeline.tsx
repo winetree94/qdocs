@@ -27,7 +27,7 @@ export const Timeline = (props: TimelineProps) => {
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-  const { rowIds, tracks } = useAppSelector(EffectSelectors.timelineData);
+  const { rowIds, tracks } = useAppSelector(SettingSelectors.timelineData);
   const rowHeight = 38;
 
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
