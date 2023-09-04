@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next';
 import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
 import welcomeImage from './welcome.svg';
+import { memo } from 'react';
 
-export const Welcome = () => {
+export const Welcome = memo(() => {
   const dispatch = useAppDispatch();
   const rootRenderer = useRootRenderer();
   const { t } = useTranslation();
@@ -89,4 +90,4 @@ export const Welcome = () => {
       </div>
     </div>
   );
-};
+});

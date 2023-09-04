@@ -1,4 +1,5 @@
 import {
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -34,7 +35,7 @@ import { isEqual } from 'lodash';
 import { HistoryActions } from 'store/history';
 import { QueueObjectType } from 'model/object';
 
-export const QueueEditor = () => {
+export const QueueEditor = memo(() => {
   const dispatch = useAppDispatch();
 
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -63,15 +64,9 @@ export const QueueEditor = () => {
     [key: string]: QueueObjectType;
   }>({});
 
-  const effectsGroupByObjectId = effects.reduce<{
-    [id: string]: QueueEffectType[];
-  }>((result, effect) => {
-    if (!result[effect.objectId]) {
-      result[effect.objectId] = [];
-    }
-    result[effect.objectId].push(effect);
-    return result;
-  }, {});
+  const effectsGroupByObjectId = useAppSelector(
+    EffectSelectors.effectsByObjectId,
+  );
 
   const queueObjects = objects.filter((object) => {
     const createEffect = (effectsGroupByObjectId[object.id] || []).find(
@@ -557,4 +552,4 @@ export const QueueEditor = () => {
       </QueueContextMenu.Portal>
     </QueueContextMenu.Root>
   );
-};
+});

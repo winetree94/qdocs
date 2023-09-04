@@ -1,15 +1,12 @@
 import { fitScreenSizeEvent } from 'app/events/event';
 import { useEventDispatch } from 'cdk/hooks/event-dispatcher';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
-import { QueueToggle } from 'components/toggle/Toggle';
 import { QueueIconButton } from 'components/buttons/button/Button';
 import styles from './SubHeader.module.scss';
 import { SettingSelectors } from 'store/settings/selectors';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { EffectSelectors } from 'store/effect/selectors';
 import { SettingsActions } from 'store/settings/actions';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
@@ -26,7 +23,7 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
 import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
 import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
 import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +33,7 @@ import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
 import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
 
-const QueueSubHeader = () => {
+const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
@@ -46,9 +43,6 @@ const QueueSubHeader = () => {
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
-  const byEffectIndex = useAppSelector((state) =>
-    EffectSelectors.allByPageAndEffectIndex(state, currentPageId),
-  );
   const scale = Math.floor(useAppSelector(SettingSelectors.scale) * 100);
 
   const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
@@ -61,28 +55,13 @@ const QueueSubHeader = () => {
     rect: false,
     share: false,
   });
+
   const createImage = useCreateImage(
     queueDocument,
     currentPageId,
     currentQueueIndex,
     dispatch,
   );
-
-  const ranges: number[] = [];
-  const rangeStart = Math.max(currentQueueIndex - 2, 0);
-  const rangeEnd = rangeStart + 5;
-  for (let i = rangeStart; i < rangeEnd; i++) {
-    ranges.push(i);
-  }
-
-  const changeQueueIndex = (targetIndex: number, play: boolean): void => {
-    dispatch(
-      SettingsActions.setQueueIndex({
-        queueIndex: targetIndex,
-        play: play,
-      }),
-    );
-  };
 
   return (
     <QueueScrollArea.Root className={styles.Container}>
@@ -157,7 +136,6 @@ const QueueSubHeader = () => {
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => dispatch(HistoryActions.Undo())}
                 disabled={!history.previous.length}>
-                {/* <SvgRemixIcon icon={'ri-arrow-go-back-line'} /> */}
                 <CornerUpLeftIcon />
               </QueueIconButton>
 
@@ -166,7 +144,6 @@ const QueueSubHeader = () => {
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => dispatch(HistoryActions.Redo())}
                 disabled={!history.future.length}>
-                {/* <SvgRemixIcon icon={'ri-arrow-go-forward-line'} /> */}
                 <CornerUpRightIcon />
               </QueueIconButton>
 
@@ -361,6 +338,6 @@ const QueueSubHeader = () => {
       </QueueScrollArea.Scrollbar>
     </QueueScrollArea.Root>
   );
-};
+});
 
 export default QueueSubHeader;
