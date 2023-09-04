@@ -59,7 +59,7 @@ export const useCreateImage = (
   dispatch: Dispatch<any>,
 ) => {
   const createFigure = useCreateFigure(pageId, queueIndex, dispatch);
-  return createFigure((rect, QueueDocumentRect, pageId: EntityId) => {
+  return createFigure((rect: QueueDocumentRect, pageId: EntityId) => {
     const objectId = nanoid();
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
