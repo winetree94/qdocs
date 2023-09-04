@@ -204,6 +204,30 @@ const timelineData = createSelector(
   },
 );
 
+const currentVisibleObjects = createSelector(
+  [queueIndex, pageObjects, EffectSelectors.effectsByObjectId],
+  (queueIndex, objects, effects) => {
+    return objects.filter((object) => {
+      const createEffect = (effects[object.id] || []).find(
+        (effect) => effect.type === 'create',
+      );
+      const removeEffect = (effects[object.id] || []).find(
+        (effect) => effect.type === 'remove',
+      );
+      if (!createEffect) {
+        return false;
+      }
+      if (queueIndex < createEffect.index) {
+        return false;
+      }
+      if (removeEffect && queueIndex > removeEffect.index) {
+        return false;
+      }
+      return true;
+    });
+  },
+);
+
 export const SettingSelectors = {
   pageId,
   queueIndex,
@@ -223,4 +247,5 @@ export const SettingSelectors = {
   allEffectedObjects,
   allEffectedObjectsMap,
   timelineData,
+  currentVisibleObjects,
 };

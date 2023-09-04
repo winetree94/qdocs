@@ -25,7 +25,6 @@ import { SettingSelectors } from 'store/settings/selectors';
 import { QueueRect } from 'model/property';
 import { EffectSelectors } from 'store/effect/selectors';
 import { RectEffect, RotateEffect, QueueEffectType } from 'model/effect';
-import { ObjectSelectors } from 'store/object/selectors';
 import { EffectActions } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
@@ -44,7 +43,6 @@ export const QueueEditor = memo(() => {
   const documentRect = useAppSelector(DocumentSelectors.documentRect);
   const documentId = useAppSelector(DocumentSelectors.documentId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
-  const currentPageId = useAppSelector(SettingSelectors.pageId);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
   const autoPlay = useAppSelector(SettingSelectors.autoPlay);
   const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
@@ -54,9 +52,6 @@ export const QueueEditor = memo(() => {
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const selectionMode = useAppSelector(SettingSelectors.selectionMode);
 
-  const objects = useAppSelector((state) =>
-    ObjectSelectors.allByPageId(state, currentPageId),
-  );
   const effects = useAppSelector(EffectSelectors.all);
   const props = useAppSelector(SettingSelectors.allEffectedObjectsMap);
 
@@ -64,29 +59,7 @@ export const QueueEditor = memo(() => {
     [key: string]: QueueObjectType;
   }>({});
 
-  const effectsGroupByObjectId = useAppSelector(
-    EffectSelectors.effectsByObjectId,
-  );
-
-  const queueObjects = objects.filter((object) => {
-    const createEffect = (effectsGroupByObjectId[object.id] || []).find(
-      (effect) => effect.type === 'create',
-    );
-    const removeEffect = (effectsGroupByObjectId[object.id] || []).find(
-      (effect) => effect.type === 'remove',
-    );
-    if (!createEffect) {
-      return false;
-    }
-    if (currentQueueIndex < createEffect.index) {
-      return false;
-    }
-    if (removeEffect && currentQueueIndex > removeEffect.index) {
-      return false;
-    }
-    return true;
-  });
-
+  const queueObjects = useAppSelector(SettingSelectors.currentVisibleObjects);
   const currentQueueEffects = effects.filter(
     (effect) => effect.index === currentQueueIndex,
   );
