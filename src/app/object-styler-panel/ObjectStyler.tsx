@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { memo, ReactElement } from 'react';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings/selectors';
 import { ObjectStyleText } from './Text';
@@ -9,9 +9,19 @@ import { ObjectStyleBackground } from './Background';
 import { ObjectStyleRect } from './Rect';
 import { ObjectStyleScale } from './Scale';
 import { ObjectStyleRotate } from './Rotate';
+import {
+  supportFade,
+  supportFill,
+  supportRect,
+  supportRotation,
+  supportScale,
+  supportStroke,
+  supportText,
+} from 'model/support';
 
-export const ObjectStylerPanel = (): ReactElement | null => {
+export const ObjectStylerPanel = memo((): ReactElement | null => {
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
+  const firstObject = selectedObjects[0];
 
   if (selectedObjects.length <= 0) {
     return null;
@@ -20,25 +30,45 @@ export const ObjectStylerPanel = (): ReactElement | null => {
   return (
     <div className="tw-px-5 tw-py-4">
       <div className="tw-flex tw-flex-col tw-gap-3">
-        <ObjectStyleRect />
-        <QueueSeparator.Root className="tw-my-2" />
-        <ObjectStyleText />
-        <QueueSeparator.Root className="tw-my-2" />
-        <ObjectStyleBackground />
-        <QueueSeparator.Root className="tw-my-2" />
-        <ObjectStyleScale />
-        <QueueSeparator.Root className="tw-my-2" />
-        <ObjectStyleRotate />
-        <QueueSeparator.Root className="tw-my-2" />
-        {selectedObjects[0].type !== 'icon' && (
+        {supportRect(firstObject) && <ObjectStyleRect />}
+        {supportText(firstObject) && (
           <>
-            <ObjectStyleStroke />
             <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleText />
           </>
         )}
-        <ObjectStyleOpacity />
+        {supportFill(firstObject) && (
+          <>
+            <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleBackground />
+          </>
+        )}
+        {supportScale(firstObject) && (
+          <>
+            <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleScale />
+          </>
+        )}
+        {supportRotation(firstObject) && (
+          <>
+            <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleRotate />
+          </>
+        )}
+        {supportStroke(firstObject) && (
+          <>
+            <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleStroke />
+          </>
+        )}
+        {supportFade(firstObject) && (
+          <>
+            <QueueSeparator.Root className="tw-my-2" />
+            <ObjectStyleOpacity />
+          </>
+        )}
         <QueueSeparator.Root className="tw-my-2" />
       </div>
     </div>
   );
-};
+});
