@@ -11,7 +11,7 @@
     background: $ui-default-background-color;
     color: $ui-default-color;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: $ui-default-background-color-hover;
       color: $ui-default-color-hover;
     }
