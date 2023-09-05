@@ -70,7 +70,7 @@ const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
 };
 
 export const Timeline = memo((props: TimelineProps) => {
-  const dispath = useAppDispatch();
+  const dispatch = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
@@ -131,14 +131,14 @@ export const Timeline = memo((props: TimelineProps) => {
         return;
       }
 
-      dispath(
+      dispatch(
         SettingsActions.setQueueIndex({
           queueIndex: targetIndex,
           play: false,
         }),
       );
     },
-    [dispath],
+    [dispatch],
   );
 
   const memoizedGrid = useMemo(
