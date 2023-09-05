@@ -5,6 +5,7 @@ import uxFlowUrl from 'assets/templates/ux-flow.que';
 import wave from 'assets/templates/wave.que';
 import imageTest from 'assets/templates/image-test.que';
 import groupTest from 'assets/templates/object-group.que';
+import conflictFlow from 'assets/templates/conflict.que';
 import { nanoid } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 
@@ -87,5 +88,10 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Group test',
     preview: '',
     getTemplate: () => fetch(groupTest).then((r) => r.json()),
+  },
+  {
+    name: 'conflictFlow',
+    preview: '',
+    getTemplate: () => fetch(conflictFlow).then((r) => r.json()),
   },
 ];
