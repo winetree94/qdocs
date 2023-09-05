@@ -569,7 +569,15 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       Math.min(Math.max(x, 0), totalWidth) - 19 / 2,
       0,
     );
+    const cursorField = internalColumnDefs.find((def) => {
+      return (
+        adjacentCenter >= def.left && adjacentCenter <= def.left + def.width
+      );
+    })?.field;
     setCursorTransformX(adjacentCenter);
+    if (cursorField) {
+      props.onCursorFieldChange?.(cursorField);
+    }
   };
 
   const onCursorDragEnd = (x: number) => {
