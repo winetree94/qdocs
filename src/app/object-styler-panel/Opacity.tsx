@@ -1,6 +1,7 @@
 import { QueueSlider } from 'components/slider/Slider';
 import { QueueFade } from 'model/property';
 import { useTranslation } from 'react-i18next';
+import { store } from 'store';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -9,12 +10,15 @@ import { SettingSelectors } from 'store/settings';
 export const ObjectStyleOpacity = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const [firstObject] = selectedObjects;
-
-  const fade = firstObject.fade;
+  const { opacity } = useAppSelector(
+    SettingSelectors.firstSelectedObjectFade,
+    (prev, next) => {
+      return prev.opacity === next.opacity;
+    },
+  );
 
   const updateFade = (fade: Partial<QueueFade>): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
@@ -42,7 +46,7 @@ export const ObjectStyleOpacity = () => {
         <QueueSlider
           min={0}
           max={1}
-          value={[fade.opacity]}
+          value={[opacity]}
           step={0.05}
           onValueChange={([e]) =>
             updateFade({

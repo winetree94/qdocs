@@ -74,6 +74,61 @@ const firstSelectedObjectType = createSelector(
   (selectedObjects) => selectedObjects[0]?.type,
 );
 
+const firstSelectedObjectRect = createSelector(
+  [selectedObjects],
+  (selectedObjects) => selectedObjects[0]?.rect,
+);
+
+const firstSelectedObjectText = createSelector(
+  [selectedObjects],
+  (selectedObjects) => selectedObjects[0]?.text,
+);
+
+const firstSelectedObjectFill = createSelector(
+  [selectedObjects],
+  (selectedObjects) => {
+    return supportFill(selectedObjects[0])
+      ? selectedObjects[0]?.fill
+      : undefined;
+  },
+);
+
+const firstSelectedObjectScale = createSelector(
+  [selectedObjects],
+  (selectedObjects) => {
+    return supportScale(selectedObjects[0])
+      ? selectedObjects[0]?.scale
+      : undefined;
+  },
+);
+
+const firstSelectedObjectRotation = createSelector(
+  [selectedObjects],
+  (selectedObjects) => {
+    return supportRotation(selectedObjects[0])
+      ? selectedObjects[0]?.rotate
+      : undefined;
+  },
+);
+
+const firstSelectedObjectStroke = createSelector(
+  [selectedObjects],
+  (selectedObjects) => {
+    return supportStroke(selectedObjects[0])
+      ? selectedObjects[0]?.stroke
+      : undefined;
+  },
+);
+
+const firstSelectedObjectFade = createSelector(
+  [selectedObjects],
+  (selectedObjects) => {
+    return supportFade(selectedObjects[0])
+      ? selectedObjects[0]?.fade
+      : undefined;
+  },
+);
+
 const hasSelectedObject = createSelector(
   selectedObjectIds,
   (selectedObjectIds) => selectedObjectIds.length > 0,
@@ -296,6 +351,13 @@ export const SettingSelectors = {
   hasSelectedObject,
   firstSelectedObjectId,
   firstSelectedObjectType,
+  firstSelectedObjectRect,
+  firstSelectedObjectText,
+  firstSelectedObjectFill,
+  firstSelectedObjectScale,
+  firstSelectedObjectRotation,
+  firstSelectedObjectStroke,
+  firstSelectedObjectFade,
   selectedObjects,
   selectedObjectIds,
   selectionMode,

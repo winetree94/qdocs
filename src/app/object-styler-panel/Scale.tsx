@@ -1,6 +1,7 @@
 import { QueueSlider } from 'components/slider/Slider';
 import { QueueScale } from 'model/property';
 import { useTranslation } from 'react-i18next';
+import { store } from 'store';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -9,12 +10,15 @@ import { SettingSelectors } from 'store/settings';
 export const ObjectStyleScale = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const [firstObject] = selectedObjects;
-
-  const scale = firstObject.scale;
+  const { scale } = useAppSelector(
+    SettingSelectors.firstSelectedObjectScale,
+    (prev, next) => {
+      return prev.scale === next.scale;
+    },
+  );
 
   const updateStroke = (scale: Partial<QueueScale>): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
@@ -43,7 +47,7 @@ export const ObjectStyleScale = () => {
         <QueueSlider
           min={0}
           max={5}
-          value={[scale.scale]}
+          value={[scale]}
           step={0.05}
           onValueChange={([e]) =>
             updateStroke({

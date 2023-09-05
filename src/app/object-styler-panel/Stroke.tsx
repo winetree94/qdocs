@@ -5,28 +5,31 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import { QueueSelect } from 'components/select/Select';
-import { supportStrokeAll } from 'model/support';
 import QueueColorPicker from 'components/color-picker/ColorPicker';
 import { QueueSlider } from 'components/slider/Slider';
+import { store } from 'store';
+import { supportStroke } from 'model/support';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-
-  if (!supportStrokeAll(selectedObjects)) {
-    return <></>;
-  }
-
-  const [firstObject] = selectedObjects;
-
-  const stroke = firstObject.stroke;
+  const { width, color, dasharray } = useAppSelector(
+    SettingSelectors.firstSelectedObjectStroke,
+    (prev, next) => {
+      return (
+        prev.width === next.width &&
+        prev.color === next.color &&
+        prev.dasharray === next.dasharray
+      );
+    },
+  );
 
   const updateStroke = (stroke: Partial<QueueStroke>): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
-        selectedObjects.map((object) => ({
+        selectedObjects.filter(supportStroke).map((object) => ({
           id: object.id,
           changes: {
             stroke: {
@@ -50,7 +53,7 @@ export const ObjectStyleStroke = () => {
         <QueueSlider
           min={0}
           max={50}
-          value={[stroke.width]}
+          value={[width]}
           onValueChange={([e]) =>
             updateStroke({
               width: e,
@@ -62,18 +65,18 @@ export const ObjectStyleStroke = () => {
       <div className="tw-flex-1 tw-basis-full">
         <div className="tw-flex tw-gap-2 tw-items-center tw-px-2 tw-py-1.5 tw-box-border tw-bg-[#E7E6EB] tw-leading-none tw-text-xs tw-font-normal tw-rounded-lg">
           <QueueColorPicker
-            color={stroke.color}
+            color={color}
             onChange={(color) => {
               updateStroke({ color: color.hex });
             }}
           />
-          <div>{stroke.color.replace('#', '')}</div>
+          <div>{color.replace('#', '')}</div>
         </div>
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
         <QueueSelect
-          value={stroke.dasharray}
+          value={dasharray}
           onValueChange={(value): void => updateStroke({ dasharray: value })}>
           <QueueSelect.Option value="solid">-------</QueueSelect.Option>
           <QueueSelect.Option value="dashed">- - - -</QueueSelect.Option>

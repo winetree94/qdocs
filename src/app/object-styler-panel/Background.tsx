@@ -6,29 +6,27 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 import { QueueObjectType } from 'model/object';
-import { supportFillAll } from 'model/support';
 import QueueColorPicker from 'components/color-picker/ColorPicker';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QueueInput } from 'components/input/Input';
+import { store } from 'store';
+import { supportFill } from '../../model/support/property';
 
 export const ObjectStyleBackground = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-
-  if (!supportFillAll(selectedObjects)) {
-    return null;
-  }
-
-  const [firstObject] = selectedObjects;
-  const fill = firstObject.fill;
+  const { color, opacity } = useAppSelector(
+    SettingSelectors.firstSelectedObjectFill,
+    (prev, next) => prev.color === next.color && prev.opacity === next.opacity,
+  );
 
   const updateObjectFill = (fill: Partial<QueueFill>) => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
-        selectedObjects.map<{
+        selectedObjects.filter(supportFill).map<{
           id: EntityId;
           changes: Partial<QueueObjectType>;
         }>((object) => {
@@ -58,19 +56,19 @@ export const ObjectStyleBackground = () => {
         <div className="tw-flex tw-gap-2 tw-items-center tw-px-2 tw-py-1.5 tw-box-border tw-bg-[#E7E6EB] tw-leading-none tw-text-xs tw-font-normal tw-rounded-lg tw-h-[34px]">
           <div className="tw-flex tw-items-center tw-gap-2">
             <QueueColorPicker
-              color={fill.color}
+              color={color}
               onChange={(color) => {
                 updateObjectFill({ color: color.hex });
               }}
             />
-            <div className="tw-flex-1">{fill.color.replace('#', '')}</div>
+            <div className="tw-flex-1">{color.replace('#', '')}</div>
           </div>
           <QueueSeparator.Root className="tw-h-4" orientation="vertical" />
           <div className="tw-flex tw-items-center tw-basis-3/5">
             <QueueInput
               className="tw-p-0 tw-font-normal"
               type="number"
-              value={fill.opacity * 100}
+              value={opacity * 100}
               onChange={(event) => {
                 updateObjectFill({
                   opacity: Number(event.target.value) / 100,

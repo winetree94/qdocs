@@ -1,6 +1,7 @@
 import { QueueSlider } from 'components/slider/Slider';
 import { QueueRotate } from 'model/property';
 import { useTranslation } from 'react-i18next';
+import { store } from 'store';
 import { HistoryActions } from 'store/history';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
@@ -9,12 +10,15 @@ import { SettingSelectors } from 'store/settings';
 export const ObjectStyleRotate = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const [firstObject] = selectedObjects;
-
-  const rotate = firstObject.rotate;
+  const { degree } = useAppSelector(
+    SettingSelectors.firstSelectedObjectRotation,
+    (prev, next) => {
+      return prev.degree === next.degree;
+    },
+  );
 
   const updateStroke = (rotate: Partial<QueueRotate>): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
@@ -43,7 +47,7 @@ export const ObjectStyleRotate = () => {
         <QueueSlider
           min={0}
           max={360}
-          value={[rotate.degree]}
+          value={[degree]}
           step={0.05}
           onValueChange={([e]) =>
             updateStroke({

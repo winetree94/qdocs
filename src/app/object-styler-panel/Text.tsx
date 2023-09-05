@@ -12,6 +12,7 @@ import { QueueButton } from 'components/buttons/button/Button';
 import { QueueSeparator } from 'components/separator/Separator';
 import { QUEUE_UI_COLOR } from 'styles/ui/Color';
 import QueueColorPicker from 'components/color-picker/ColorPicker';
+import { store } from 'store';
 
 const textHorizontalAlignButtonGroup: {
   value: 'left' | 'center' | 'right' | 'justify';
@@ -56,12 +57,19 @@ const textVerticalAlignButtonGroup: {
 export const ObjectStyleText = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const [firstObject] = selectedObjects;
-
-  const text = firstObject.text;
+  const { fontFamily, fontSize, horizontalAlign, verticalAlign, fontColor } =
+    useAppSelector(SettingSelectors.firstSelectedObjectText, (prev, next) => {
+      return (
+        prev.fontFamily === next.fontFamily &&
+        prev.fontSize === next.fontSize &&
+        prev.horizontalAlign === next.horizontalAlign &&
+        prev.verticalAlign === next.verticalAlign &&
+        prev.fontColor === next.fontColor
+      );
+    });
 
   const updateText = (text: Partial<QueueText>): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     dispatch(HistoryActions.Capture());
     dispatch(
       ObjectActions.updateObjects(
@@ -87,7 +95,7 @@ export const ObjectStyleText = () => {
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
         <QueueSelect
-          value={text.fontFamily}
+          value={fontFamily}
           onValueChange={(value): void => updateText({ fontFamily: value })}>
           <QueueSelect.Group>
             <QueueSelect.Option value="Arial">Arial</QueueSelect.Option>
@@ -103,7 +111,7 @@ export const ObjectStyleText = () => {
       </div>
       <div className="tw-flex-1">
         <QueueInput
-          value={text.fontSize}
+          value={fontSize}
           type="number"
           variant="filled"
           onChange={(e): void =>
@@ -136,7 +144,7 @@ export const ObjectStyleText = () => {
           {textHorizontalAlignButtonGroup.map((button) => (
             <QueueButton
               className="tw-w-full tw-max-w-[50px] tw-box-border"
-              data-state={text.horizontalAlign === button.value && 'on'}
+              data-state={horizontalAlign === button.value && 'on'}
               color={QUEUE_UI_COLOR.DEFAULT}
               key={`textHorizontalAlignButtonGroup-${button.value}`}
               onClick={() => {
@@ -153,7 +161,7 @@ export const ObjectStyleText = () => {
           {textVerticalAlignButtonGroup.map((button) => (
             <QueueButton
               className="tw-w-full tw-max-w-[50px] tw-box-border"
-              data-state={text.verticalAlign === button.value && 'on'}
+              data-state={verticalAlign === button.value && 'on'}
               color={QUEUE_UI_COLOR.DEFAULT}
               key={`textVerticalAlignButtonGroup-${button.value}`}
               onClick={() => {
@@ -175,12 +183,12 @@ export const ObjectStyleText = () => {
       <div className="tw-flex-1 tw-basis-full">
         <div className="tw-flex tw-gap-2 tw-items-center tw-px-2 tw-py-1.5 tw-box-border tw-bg-[#E7E6EB] tw-leading-none tw-text-xs tw-font-normal tw-rounded-lg">
           <QueueColorPicker
-            color={text.fontColor}
+            color={fontColor}
             onChange={(color) => {
               updateText({ fontColor: color.hex });
             }}
           />
-          <div>{text.fontColor.replace('#', '')}</div>
+          <div>{fontColor.replace('#', '')}</div>
         </div>
       </div>
     </div>
