@@ -35,6 +35,7 @@ export const QueueEditor = memo(() => {
 
   const documentRect = useAppSelector(DocumentSelectors.documentRect);
   const documentId = useAppSelector(DocumentSelectors.documentId);
+  const pageId = useAppSelector(SettingSelectors.pageId);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
   const autoPlay = useAppSelector(SettingSelectors.autoPlay);
@@ -179,6 +180,7 @@ export const QueueEditor = memo(() => {
             objectId: id,
             index: currentQueueIndex,
             timing: 'linear',
+            pageId: pageId,
             ...existRectEffect,
             prop: {
               ...props[id].rect,
@@ -285,6 +287,7 @@ export const QueueEditor = memo(() => {
           delay: 0,
           objectId: id,
           timing: 'linear',
+          pageId: pageId,
           index: currentQueueIndex,
           ...existRectEffect,
           prop: {
@@ -323,6 +326,7 @@ export const QueueEditor = memo(() => {
           delay: 0,
           objectId: id,
           timing: 'linear',
+          pageId: pageId,
           index: currentQueueIndex,
           ...existRotateEffect,
           prop: {

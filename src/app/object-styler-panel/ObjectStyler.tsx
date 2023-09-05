@@ -30,7 +30,14 @@ export const ObjectStylerPanel = memo((): ReactElement | null => {
   return (
     <div className="tw-px-5 tw-py-4">
       <div className="tw-flex tw-flex-col tw-gap-3">
-        {supportRect(firstObject) && <ObjectStyleRect />}
+        {supportRect(firstObject) && (
+          <ObjectStyleRect
+            x={firstObject.rect.x}
+            y={firstObject.rect.y}
+            width={firstObject.rect.width}
+            height={firstObject.rect.height}
+          />
+        )}
         {supportText(firstObject) && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
