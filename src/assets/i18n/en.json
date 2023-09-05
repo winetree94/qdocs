@@ -85,5 +85,9 @@
   "global.frame": "Frame",
   "global.grid": "Grid",
   "global.page-number": "Page number",
-  "global.animation": "Animation"
+  "global.animation": "Animation",
+  "menu.close-left-sidebar": "Close the left sidebar",
+  "menu.close-bottom-sidebar": "Close the bottom sidebar",
+  "menu.open-left-sidebar": "Open the left sidebar",
+  "menu.open-bottom-sidebar": "Open the bottom sidebar"
 }

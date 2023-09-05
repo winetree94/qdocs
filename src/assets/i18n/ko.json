@@ -85,5 +85,9 @@
   "global.frame": "프레임",
   "global.grid": "그리드",
   "global.page-number": "페이지 번호",
-  "global.animation": "애니메이션"
+  "global.animation": "애니메이션",
+  "menu.close-left-sidebar": "왼쪽 사이드바 닫기",
+  "menu.close-bottom-sidebar": "하단 사이드바 닫기",
+  "menu.open-left-sidebar": "왼쪽 사이드바 열기",
+  "menu.open-bottom-sidebar": "하단 사이드바 열기"
 }

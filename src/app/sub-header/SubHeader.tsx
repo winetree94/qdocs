@@ -23,7 +23,7 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
 import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
 import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
 import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
@@ -105,7 +105,9 @@ const QueueSubHeader = memo(() => {
                         }),
                       )
                     }>
-                    왼쪽 사이드바 닫기-번역
+                    {leftPanelOpened
+                      ? t('menu.close-left-sidebar')
+                      : t('menu.open-left-sidebar')}
                   </QueueDropdown.Item>
                   <QueueDropdown.Item
                     onClick={() =>
@@ -117,7 +119,9 @@ const QueueSubHeader = memo(() => {
                         }),
                       )
                     }>
-                    타임라인 닫기-번역
+                    {bottomPanelOpened
+                      ? t('menu.close-bottom-sidebar')
+                      : t('menu.open-bottom-sidebar')}
                   </QueueDropdown.Item>
                 </QueueDropdown.Content>
               </QueueDropdown>
