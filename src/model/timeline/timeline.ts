@@ -7,6 +7,7 @@ export interface TimeLineTrack {
   title?: string;
   objectId?: EntityId;
   uniqueColor: string;
+  selectedTrack: boolean;
 }
 
 export interface TimeLineTracks {

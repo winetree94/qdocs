@@ -255,6 +255,7 @@ const timelineData = createSelector(
           startQueueIndex: filtered[0],
           endQueueIndex: filtered[filtered.length - 1],
           uniqueColor: object.uniqueColor,
+          selectedTrack: false,
           queueList,
         } as TimeLineTrack;
       });

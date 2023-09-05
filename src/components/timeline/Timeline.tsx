@@ -3,7 +3,6 @@ import {
   Grid,
   GridCellRendererProps,
   GridColumnDef,
-  GridHeaderCellRendererProps,
 } from 'components/grid/Grid';
 import { SettingSelectors } from 'store/settings/selectors';
 import { TimeLineTrack } from '../../model/timeline/timeline';
@@ -43,6 +42,7 @@ const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
     endQueueIndex: end,
     queueList,
     uniqueColor,
+    selectedTrack,
   } = props.rowData;
 
   const cellIndex = props.cellIndex - 1;
@@ -65,17 +65,28 @@ const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
           : '',
         cellIndex === start && 'tw-rounded-l-lg',
         cellIndex === end && 'tw-rounded-r-lg',
+        start <= cellIndex &&
+          cellIndex <= end &&
+          selectedTrack &&
+          'tw-animate-pulse tw-border-solid tw-border-y-2 tw-border-amber-300',
       )}></div>
   );
 };
 
 export const Timeline = memo((props: TimelineProps) => {
+  let tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
+    return isEqual(a, b);
+  });
+
   const dispatch = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-  const tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
-    return isEqual(a, b);
+  const selectedId = useAppSelector(SettingSelectors.firstSelectedObjectId);
+
+  tracks = tracks.map((track) => {
+    track.selectedTrack = track.objectId === selectedId;
+    return track;
   });
 
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
