@@ -51,6 +51,15 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
         effect.pageId = object.pageId;
       });
 
+      document.objects.ids.forEach((id) => {
+        const object = document.objects.entities[id];
+        if (!object.uniqueColor) {
+          object.uniqueColor = `#${Math.floor(
+            Math.random() * 16777215,
+          ).toString(16)}`;
+        }
+      });
+
       onSubmit?.(document);
     } finally {
       setFetching(false);
@@ -75,6 +84,15 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
         const effect = document.effects.entities[id];
         const object = document.objects.entities[effect.objectId];
         effect.pageId = object.pageId;
+      });
+
+      document.objects.ids.forEach((id) => {
+        const object = document.objects.entities[id];
+        if (!object.uniqueColor) {
+          object.uniqueColor = `#${Math.floor(
+            Math.random() * 16777215,
+          ).toString(16)}`;
+        }
       });
 
       onSubmit?.(document);
