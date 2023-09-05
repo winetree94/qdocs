@@ -12,6 +12,7 @@ import {
 import { WithImage } from 'model/property/image';
 import { OBJECT_TYPE } from './meta';
 import { BaseObject } from './base';
+import { getRandomColor } from 'cdk/color/color';
 
 export interface QueueImage
   extends BaseObject,
@@ -39,7 +40,7 @@ export const createDefaultImage = (
     id: objectId,
     pageId: pageId,
     index: 0,
-    uniqueColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    uniqueColor: getRandomColor(),
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,

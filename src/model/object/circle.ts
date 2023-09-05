@@ -11,6 +11,7 @@ import {
   WithStroke,
   WithText,
 } from 'model/property';
+import { getRandomColor } from 'cdk/color/color';
 
 export interface QueueCircle
   extends BaseObject,
@@ -36,7 +37,7 @@ export const createDefaultCircle = (
     pageId: pageId,
     id: objectId,
     index: 0,
-    uniqueColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    uniqueColor: getRandomColor(),
     rect: {
       x: documentRect.width / 2 - width / 2,
       y: documentRect.height / 2 - height / 2,
