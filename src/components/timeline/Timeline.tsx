@@ -74,20 +74,13 @@ const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
 };
 
 export const Timeline = memo((props: TimelineProps) => {
-  let tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
+  const tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
     return isEqual(a, b);
   });
-
   const dispatch = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-  const selectedId = useAppSelector(SettingSelectors.firstSelectedObjectId);
-
-  tracks = tracks.map((track) => {
-    track.selectedTrack = track.objectId === selectedId;
-    return track;
-  });
 
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
   const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);

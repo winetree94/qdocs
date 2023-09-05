@@ -236,8 +236,13 @@ const allEffectedObjectsMap = createSelector(
 );
 
 const timelineData = createSelector(
-  [ObjectSelectors.all, EffectSelectors.effectsByObjectId, pageId],
-  (objects, allEffects, pageId) => {
+  [
+    ObjectSelectors.all,
+    EffectSelectors.effectsByObjectId,
+    selectedObjectIds,
+    pageId,
+  ],
+  (objects, allEffects, selectedObjectIds, pageId) => {
     return objects
       .filter((value) => value.pageId === pageId)
       .map((object) => {
@@ -255,7 +260,7 @@ const timelineData = createSelector(
           startQueueIndex: filtered[0],
           endQueueIndex: filtered[filtered.length - 1],
           uniqueColor: object.uniqueColor,
-          selectedTrack: false,
+          selectedTrack: selectedObjectIds.includes(object.id),
           queueList,
         } as TimeLineTrack;
       });
