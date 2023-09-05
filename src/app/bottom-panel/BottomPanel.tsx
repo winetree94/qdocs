@@ -16,6 +16,7 @@ import { ReactComponent as StepInIcon } from 'assets/icons/step-in.svg';
 import { ReactComponent as StepOutIcon } from 'assets/icons/step-out.svg';
 import { ReactComponent as RepeatIcon } from 'assets/icons/repeat.svg';
 import { QueueSeparator } from 'components/separator/Separator';
+import { store } from 'store';
 
 const ZOOM_LEVEL = {
   [1]: 30,
@@ -32,17 +33,16 @@ const ZOOM_LEVEL = {
 type ZOOM_LEVEL_KEYS = keyof typeof ZOOM_LEVEL;
 
 export const BottomPanel = memo(() => {
-  const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
-  const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-
   const [zoom, setZoom] = React.useState<ZOOM_LEVEL_KEYS>(5);
+  const autoPlayRepeat = useAppSelector(SettingSelectors.autoPlayRepeat);
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
+    const queueIndex = SettingSelectors.queueIndex(store.getState());
     dispatch(
       SettingsActions.setQueueIndex({
-        queueIndex: targetIndex,
+        queueIndex: queueIndex + targetIndex,
         play: play,
       }),
     );
@@ -87,7 +87,7 @@ export const BottomPanel = memo(() => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(queueIndex - 1, true)}>
+            onClick={() => changeQueueIndex(-1, true)}>
             <StepBackIcon />
           </QueueIconButton>
           <QueueIconButton
@@ -97,7 +97,7 @@ export const BottomPanel = memo(() => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => changeQueueIndex(queueIndex + 1, true)}>
+            onClick={() => changeQueueIndex(+1, true)}>
             <StepForwardIcon />
           </QueueIconButton>
           <QueueIconButton
