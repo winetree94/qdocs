@@ -59,24 +59,24 @@ export const Welcome = memo(() => {
         'tw-justify-center',
         'tw-items-center',
       )}>
-      <div className="tw-relative tw-overflow-hidden tw-flex tw-flex-col tw-justify-between tw-w-[350px] tw-h-[500px] tw-px-9 tw-pt-[64px] tw-pb-4 tw-border tw-border-queue-500 tw-rounded-[36px]">
+      <div className="tw-relative tw-overflow-hidden tw-flex tw-flex-col tw-justify-between tw-w-[350px] tw-h-[500px] tw-px-9 tw-pt-[64px] tw-pb-4 tw-border tw-border-queue-700 tw-rounded-[36px]">
         <div>
-          <h1 className="tw-font-ibm tw-text-[36px] tw-leading-none tw-text-queue-500 tw-text-center">
+          <h1 className="tw-font-ibm tw-text-[36px] tw-leading-none tw-text-queue-700 tw-text-center">
             .Qdocs
           </h1>
-          <p className="tw-mt-2 tw-font-ibm tw-font-normal tw-leading-none tw-text-queue-500 tw-text-center">
+          <p className="tw-mt-2 tw-font-ibm tw-font-normal tw-leading-none tw-text-queue-700 tw-text-center">
             Play documents
           </p>
         </div>
         <div className="tw-flex tw-flex-col tw-gap-2">
           {/* TODO button component 사용할 지 살펴보기 */}
           <button
-            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-rounded-full tw-bg-queue-500 tw-text-white-100 tw-leading-none tw-text-sm tw-font-medium"
+            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-rounded-full tw-bg-queue-700 tw-text-white-100 tw-leading-none tw-text-sm tw-font-medium"
             onClick={onNewDocumentClick}>
             {t('welcome.new-document')}
           </button>
           <button
-            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-text-queue-500 tw-text-sm tw-font-medium"
+            className="tw-flex tw-justify-center tw-items-center tw-p-4 tw-text-queue-700 tw-text-sm tw-font-medium"
             onClick={startFileChooser}>
             {t('welcome.open-document')}
           </button>
