@@ -34,12 +34,14 @@ export const QueueHeader = memo(() => {
   const { t, i18n } = useTranslation();
   // 불필요한 리렌더링을 막기 위해 useAppSelector로 셀렉한 값들을 사용할 때 구조분해 할당으로 가져온다. (나머지 상태는 업데이트 자체가 여러번 되는지 확인이 필요)
   const { previous, future } = useAppSelector(HistorySelectors.all);
-  const docs = useAppSelector(DocumentSelectors.document);
   const dispatch = useAppDispatch();
   const alertDialog = useAlertDialog();
   const preferences = useAppSelector(PreferencesSelectors.all);
   const rootRenderer = useRootRenderer();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const docId = useAppSelector(DocumentSelectors.documentId);
+  const docName = useAppSelector(DocumentSelectors.documentName);
 
   const openNewDocumentDialog = () => {
     rootRenderer.render(
@@ -52,6 +54,7 @@ export const QueueHeader = memo(() => {
   };
 
   const onNewDocumentClick = (): void => {
+    const docs = DocumentSelectors.document(store.getState());
     if (docs) {
       alertDialog.open({
         title: t('global.data-loss-warning-title'),
@@ -104,6 +107,7 @@ export const QueueHeader = memo(() => {
   };
 
   const onOpenDocumentClick = (): void => {
+    const docs = DocumentSelectors.document(store.getState());
     if (docs) {
       alertDialog.open({
         title: t('global.data-loss-warning-title'),
@@ -132,6 +136,7 @@ export const QueueHeader = memo(() => {
   };
 
   const onSaveDocumentClick = (): void => {
+    const docs = DocumentSelectors.document(store.getState());
     if (!docs) return;
     const serializedDocumentModel = DocumentSelectors.serialized(
       store.getState(),
@@ -151,6 +156,7 @@ export const QueueHeader = memo(() => {
   };
 
   const onCloseDocumentClick = (): void => {
+    const docs = DocumentSelectors.document(store.getState());
     if (docs) {
       alertDialog.open({
         title: t('global.data-loss-warning-title'),
@@ -208,13 +214,13 @@ export const QueueHeader = memo(() => {
               </QueueDropdown.Item>
               <QueueDropdown.Item
                 onClick={onSaveDocumentClick}
-                disabled={!docs}>
+                disabled={!docId}>
                 {t('toolbar.file.save-document')}
               </QueueDropdown.Item>
               <QueueDropdown.Separator />
               <QueueDropdown.Item
                 onClick={onCloseDocumentClick}
-                disabled={!docs}>
+                disabled={!docId}>
                 {t('toolbar.file.close-document')}
               </QueueDropdown.Item>
             </QueueDropdown.SubContent>
@@ -226,20 +232,20 @@ export const QueueHeader = memo(() => {
             </QueueDropdown.SubTrigger>
             <QueueDropdown.SubContent>
               <QueueDropdown.Item
-                disabled={!docs || previous.length === 0}
+                disabled={!docId || previous.length === 0}
                 onClick={() => dispatch(HistoryActions.Undo())}>
                 {t('global.undo')}
               </QueueDropdown.Item>
               <QueueDropdown.Item
-                disabled={!docs || future.length === 0}
+                disabled={!docId || future.length === 0}
                 onClick={() => dispatch(HistoryActions.Redo())}>
                 {t('global.redo')}
               </QueueDropdown.Item>
               <QueueDropdown.Separator />
-              <QueueDropdown.Item disabled={!docs || true}>
+              <QueueDropdown.Item disabled={!docId || true}>
                 {t('toolbar.edit.edit-title')}
               </QueueDropdown.Item>
-              <QueueDropdown.Item disabled={!docs || true}>
+              <QueueDropdown.Item disabled={!docId || true}>
                 {t('toolbar.edit.page-settings')}
               </QueueDropdown.Item>
             </QueueDropdown.SubContent>
@@ -251,7 +257,7 @@ export const QueueHeader = memo(() => {
             </QueueDropdown.SubTrigger>
             <QueueDropdown.SubContent>
               <QueueDropdown.Item
-                disabled={!docs}
+                disabled={!docId}
                 onClick={() =>
                   dispatch(SettingsActions.setPresentationMode(true))
                 }>
@@ -329,12 +335,10 @@ export const QueueHeader = memo(() => {
           </QueueDropdown.Sub>
         </QueueDropdown.Content>
       </QueueDropdown>
-      <div className={clsx(styles['title-container'])}>
-        {docs?.documentName}
-      </div>
+      <div className={clsx(styles['title-container'])}>{docName}</div>
 
       {/* presentation mode */}
-      {docs && (
+      {docId && (
         <QueueButton
           className={clsx(
             styles['slide-button'],

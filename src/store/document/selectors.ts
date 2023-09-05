@@ -11,6 +11,8 @@ const document = createSelector(selectSelf, (docs) => docs);
 
 const documentId = createSelector(selectSelf, (docs) => docs.id);
 
+const documentName = createSelector(selectSelf, (docs) => docs.documentName);
+
 /**
  * @deprecated
  * 화면 렌더링에 필요하지 않은 데이터를 셀렉하는 셀렉터이기 때문에
@@ -40,4 +42,5 @@ export const DocumentSelectors = {
   documentId,
   serialized,
   documentRect,
+  documentName,
 };

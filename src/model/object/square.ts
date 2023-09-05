@@ -72,3 +72,51 @@ export const createDefaultSquare = (
     },
   };
 };
+
+export const createDefaultSquareText = (
+  documentRect: QueueDocumentRect,
+  pageId: EntityId,
+): QueueSquare => {
+  const width = 300;
+  const height = 300;
+  const objectId = nanoid();
+  return {
+    type: OBJECT_TYPE.RECT,
+    id: objectId,
+    pageId: pageId,
+    index: 0,
+    uniqueColor: getRandomColor(),
+    rect: {
+      x: documentRect.width / 2 - width / 2,
+      y: documentRect.height / 2 - height / 2,
+      width: width,
+      height: height,
+    },
+    stroke: {
+      width: 0,
+      color: '#000000',
+      dasharray: 'solid',
+    },
+    fill: {
+      color: '#ffffff',
+      opacity: 0,
+    },
+    rotate: {
+      degree: 0,
+    },
+    scale: {
+      scale: 1,
+    },
+    fade: {
+      opacity: 1,
+    },
+    text: {
+      text: 'Text',
+      fontSize: 72,
+      fontColor: '#000000',
+      fontFamily: 'Arial',
+      horizontalAlign: 'center',
+      verticalAlign: 'middle',
+    },
+  };
+};

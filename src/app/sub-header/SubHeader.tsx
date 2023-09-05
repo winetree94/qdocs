@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings/actions';
 import { HistoryActions } from 'store/history';
 import { HistorySelectors } from 'store/history/selectors';
-import { ObjectActions } from 'store/object';
 import { QUEUE_UI_SIZE } from 'styles/ui/Size';
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
 import { ReactComponent as CornerUpLeftIcon } from 'assets/icons/corner-up-left.svg';
@@ -27,19 +26,19 @@ import { memo, useState } from 'react';
 import { QueueDropdown } from 'components';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
-import { useCreateImage } from 'cdk/hooks/useCreateFigure';
+import { useCreateFigure, useCreateImage } from 'cdk/hooks/useCreateFigure';
 import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
 import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
-import { batch } from 'react-redux';
 import { store } from 'store';
+import { DocumentSelectors } from 'store/document';
+import { createDefaultSquareText } from 'model/object';
 
 const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
 
-  const hasSelectedObject = useAppSelector(SettingSelectors.hasSelectedObject);
   const history = useAppSelector(HistorySelectors.all);
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
@@ -61,6 +60,29 @@ const QueueSubHeader = memo(() => {
     currentQueueIndex,
     dispatch,
   );
+
+  const onSaveDocumentClick = (): void => {
+    const docs = DocumentSelectors.document(store.getState());
+    if (!docs) return;
+    const serializedDocumentModel = DocumentSelectors.serialized(
+      store.getState(),
+    );
+    const stringified = JSON.stringify(serializedDocumentModel);
+    const blob = new Blob([stringified], { type: 'octet/stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${serializedDocumentModel.document.documentName}.que`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const createFigure = useCreateFigure(
+    currentPageId,
+    currentQueueIndex,
+    dispatch,
+  );
+  const createText = createFigure(createDefaultSquareText);
 
   return (
     <QueueScrollArea.Root className={styles.Container}>
@@ -160,20 +182,7 @@ const QueueSubHeader = memo(() => {
             <div className={styles.ItemGroup}>
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => {
-                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
-                    store.getState(),
-                  );
-                  batch(() => {
-                    dispatch(HistoryActions.Capture());
-                    dispatch(
-                      ObjectActions.duplicate({
-                        ids: selectedObjectIds,
-                      }),
-                    );
-                  });
-                }}
-                disabled={!hasSelectedObject}>
+                onClick={() => createText()}>
                 <TypeIcon />
               </QueueIconButton>
 
@@ -259,41 +268,11 @@ const QueueSubHeader = memo(() => {
                 </QueueDropdown.Content>
               </QueueDropdown>
 
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => {
-                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
-                    store.getState(),
-                  );
-                  batch(() => {
-                    dispatch(HistoryActions.Capture());
-                    dispatch(
-                      ObjectActions.duplicate({
-                        ids: selectedObjectIds,
-                      }),
-                    );
-                  });
-                }}
-                disabled={!hasSelectedObject}>
+              <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
                 <ShareIcon />
               </QueueIconButton>
 
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => {
-                  const selectedObjectIds = SettingSelectors.selectedObjectIds(
-                    store.getState(),
-                  );
-                  batch(() => {
-                    dispatch(HistoryActions.Capture());
-                    dispatch(
-                      ObjectActions.duplicate({
-                        ids: selectedObjectIds,
-                      }),
-                    );
-                  });
-                }}
-                disabled={!hasSelectedObject}>
+              <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
                 <TableIcon />
               </QueueIconButton>
             </div>
@@ -301,6 +280,7 @@ const QueueSubHeader = memo(() => {
 
           <div className={clsx(styles.ItemGroup, 'tw-gap-2')}>
             <QueueIconButton
+              className="tw-px-2"
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={() => {
                 eventDispatch(fitScreenSizeEvent());
@@ -313,33 +293,13 @@ const QueueSubHeader = memo(() => {
               </span>
             </QueueIconButton>
 
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => {
-                const selectedObjectIds = SettingSelectors.selectedObjectIds(
-                  store.getState(),
-                );
-                batch(() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
-                });
-              }}
-              disabled={!hasSelectedObject}>
+            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
               <PrinterIcon />
             </QueueIconButton>
 
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => {
-                const selectedObjectIds = SettingSelectors.selectedObjectIds(
-                  store.getState(),
-                );
-                batch(() => {
-                  dispatch(HistoryActions.Capture());
-                  dispatch(ObjectActions.duplicate({ ids: selectedObjectIds }));
-                });
-              }}
-              disabled={!hasSelectedObject}>
+              onClick={onSaveDocumentClick}>
               <SaveIcon />
             </QueueIconButton>
 
