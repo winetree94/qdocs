@@ -24,6 +24,10 @@
     &:disabled {
       // background: $ui-default-background-color-disabled;
       color: $ui-default-color-disabled;
+      // TODO....
+      svg {
+        opacity: 0.3;
+      }
     }
   }
 }
