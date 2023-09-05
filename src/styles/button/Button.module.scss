@@ -15,8 +15,8 @@
       background: $ui-default-background-color-hover;
       color: $ui-default-color-hover;
     }
-    &[data-state='on'],
-    &:active {
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
       background: $ui-default-background-color-active;
       color: $ui-default-color-active;
       font-weight: bold;
@@ -36,12 +36,12 @@
   &.blue {
     background: $ui-blue-background-color;
     color: $ui-blue-color;
-    &:hover {
+    &:hover:not(:disabled) {
       background: $ui-blue-background-color-hover;
       color: $ui-blue-color-hover;
     }
-    &[data-state='on'],
-    &:active {
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
       background: $ui-blue-background-color-active;
       color: $ui-blue-color-active;
     }
@@ -56,12 +56,12 @@
   &.red {
     background: $ui-red-background-color;
     color: $ui-red-color;
-    &:hover {
+    &:hover:not(:disabled) {
       background: $ui-red-background-color-hover;
       color: $ui-red-color-hover;
     }
-    &[data-state='on'],
-    &:active {
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
       background: $ui-red-background-color-active;
       color: $ui-red-color-active;
     }
