@@ -645,12 +645,12 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
             start={props.cursorAnimationStart}
             animations={cursorAnimations}>
             {([progress]) => {
-              if (!previousCursorDefLeft || !cursorDefLeft) {
+              if (!cursorDefLeft) {
                 return;
               }
+              const prevDefLeft = previousCursorDefLeft || 0;
               const left =
-                previousCursorDefLeft +
-                (cursorDefLeft - previousCursorDefLeft) * (progress || 0);
+                prevDefLeft + (cursorDefLeft - prevDefLeft) * (progress || 0);
               return (
                 <GridCursor
                   onDragTransformX={onCursorDragmove}

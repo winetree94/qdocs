@@ -83,8 +83,8 @@ export const Timeline = memo((props: TimelineProps) => {
 
   const duration = useMemo(() => {
     return queuePosition === 'forward'
-      ? maxDurationByIndex[queueIndex]
-      : maxDurationByIndex[queueIndex + 1];
+      ? maxDurationByIndex[queueIndex] || 0
+      : maxDurationByIndex[queueIndex + 1] || 0;
   }, [maxDurationByIndex, queueIndex, queuePosition]);
 
   const columnDefs: GridColumnDef<TimeLineTrack>[] = useMemo(() => {
