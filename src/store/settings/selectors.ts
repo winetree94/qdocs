@@ -236,17 +236,12 @@ const allEffectedObjectsMap = createSelector(
 );
 
 const timelineData = createSelector(
-  [ObjectSelectors.all, EffectSelectors.all, pageId],
+  [ObjectSelectors.all, EffectSelectors.effectsByObjectId, pageId],
   (objects, allEffects, pageId) => {
-    const objectIds: EntityId[] = [];
-    const tracks = objects
+    return objects
       .filter((value) => value.pageId === pageId)
-      .reduce((acc, object) => {
-        objectIds.push(object.id);
-        const effects = allEffects.filter(
-          (entity) => entity.objectId === object.id,
-        );
-
+      .map((object) => {
+        const effects = allEffects[object.id];
         const filtered = effects.map((effect) => effect.index);
         const queueList = effects.reduce((acc, effect) => {
           if (!acc.includes(effect.index)) {
@@ -255,24 +250,14 @@ const timelineData = createSelector(
           return acc;
         }, [] as number[]);
 
-        const item: TimeLineTrack = {
+        return {
           objectId: object.id,
           startQueueIndex: filtered[0],
           endQueueIndex: filtered[filtered.length - 1],
           uniqueColor: object.uniqueColor,
           queueList,
-        };
-
-        acc.push(item);
-        return acc;
-      }, [] as TimeLineTrack[]);
-
-    const timelineData = {
-      rowIds: objectIds,
-      tracks,
-    };
-
-    return timelineData;
+        } as TimeLineTrack;
+      });
   },
 );
 

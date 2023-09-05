@@ -1,4 +1,3 @@
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import clsx from 'clsx';
 import { QueueIconButton } from 'components/buttons/button/Button';
 import { QueueSlider } from 'components/slider/Slider';

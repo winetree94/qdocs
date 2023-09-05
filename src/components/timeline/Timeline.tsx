@@ -11,25 +11,72 @@ import styles from './Timeline.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
 import { EffectSelectors } from 'store/effect';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
+import { store } from 'store';
+import { isEqual } from 'lodash';
 
 const ROW_HEIGHT = 38;
-
-interface DataType {
-  objectName: string;
-  objectContents: TimeLineTrack;
-}
 
 export interface TimelineProps {
   columnWidth: number;
 }
+
+const TimelineEmptyRenderer = memo(() => <></>);
+
+const TimelineHeaderRenderer = memo((props: GridColumnDef<TimeLineTrack>) => (
+  <div
+    className={clsx(
+      'tw-relative',
+      'tw-text-12',
+      'tw-flex',
+      'tw-justify-center',
+      'tw-h-full',
+      'tw-items-center',
+    )}>
+    {Number(props.field)}
+  </div>
+));
+
+const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
+  const {
+    startQueueIndex: start,
+    endQueueIndex: end,
+    queueList,
+    uniqueColor,
+  } = props.rowData;
+
+  const cellIndex = props.cellIndex - 1;
+
+  return (
+    <div
+      style={{
+        backgroundColor:
+          start <= cellIndex && cellIndex <= end ? uniqueColor : '#ffffff',
+      }}
+      className={clsx(
+        styles.Cell,
+        props.rowIndex === 0 ? styles.FirstRowCell : '',
+        'tw-text-white-100',
+        'tw-text-center',
+        start > cellIndex || end < cellIndex
+          ? styles.gridDot
+          : queueList.includes(cellIndex)
+          ? styles.queueDot
+          : '',
+        cellIndex === start && 'tw-rounded-l-lg',
+        cellIndex === end && 'tw-rounded-r-lg',
+      )}></div>
+  );
+};
 
 export const Timeline = memo((props: TimelineProps) => {
   const dispath = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
   const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-  const { rowIds, tracks } = useAppSelector(SettingSelectors.timelineData);
+  const tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
+    return isEqual(a, b);
+  });
 
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
   const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
@@ -40,99 +87,59 @@ export const Timeline = memo((props: TimelineProps) => {
       : maxDurationByIndex[queueIndex + 1];
   }, [maxDurationByIndex, queueIndex, queuePosition]);
 
-  const columnDefs: GridColumnDef<DataType>[] = [
-    {
-      field: 'left-margin',
-      width: 20,
-      headerRenderer: () => <></>,
-      cellRenderer: () => <></>,
-    },
-    ...Array.from(new Array(50)).map((_, index) => ({
-      field: `${index}`,
-      width: props.columnWidth,
-      headerRenderer: (props: GridHeaderCellRendererProps<DataType>) => (
-        <div
-          className={clsx(
-            'tw-relative',
-            'tw-text-12',
-            'tw-flex',
-            'tw-justify-center',
-            'tw-h-full',
-            'tw-items-center',
-            index === queueIndex && 'tw-text-queue-500',
-          )}>
-          {Number(props.columnDef.field)}
-        </div>
-      ),
-      cellRenderer: (props: GridCellRendererProps<DataType>) => {
-        const {
-          startQueueIndex: start,
-          endQueueIndex: end,
-          queueList,
-          uniqueColor,
-        } = props.rowData.objectContents;
-
-        return (
-          <div
-            style={{
-              backgroundColor:
-                start <= index && index <= end ? uniqueColor : '#ffffff',
-            }}
-            className={clsx(
-              styles.Cell,
-              props.rowIndex === 0 ? styles.FirstRowCell : '',
-              'tw-text-white-100',
-              'tw-text-center',
-              start > index || end < index
-                ? styles.gridDot
-                : queueList.includes(index)
-                ? styles.queueDot
-                : '',
-              index === start && 'tw-rounded-l-lg',
-              index === end && 'tw-rounded-r-lg',
-            )}></div>
-        );
+  const columnDefs: GridColumnDef<TimeLineTrack>[] = useMemo(() => {
+    return [
+      {
+        field: 'left-margin',
+        width: 20,
+        headerRenderer: TimelineEmptyRenderer,
+        cellRenderer: TimelineEmptyRenderer,
       },
-    })),
-    {
-      field: 'right-margin',
-      width: 20,
-      headerRenderer: () => <></>,
-      cellRenderer: () => <></>,
-    },
-  ];
+      ...Array.from(new Array(50)).map((_, cellIndex) => ({
+        field: `${cellIndex}`,
+        width: props.columnWidth,
+        headerRenderer: TimelineHeaderRenderer,
+        cellRenderer: TimelineCellRenderer,
+      })),
+      {
+        field: 'right-margin',
+        width: 20,
+        headerRenderer: TimelineEmptyRenderer,
+        cellRenderer: TimelineEmptyRenderer,
+      },
+    ];
+  }, [props.columnWidth]);
 
-  const rowData: DataType[] = rowIds.map((rowId, index) => ({
-    objectName: `timeline ${rowId} ${index}`,
-    objectContents: tracks.find((track) => track.objectId === rowId),
-  }));
-
-  const rowHeightGetter = () => {
+  const rowHeightGetter = useCallback(() => {
     return ROW_HEIGHT;
-  };
+  }, []);
 
-  const onCursorFieldChange = (field: string) => {
-    const targetIndex: number = (() => {
-      if (field === 'left-margin') {
-        return 0;
+  const onCursorFieldChange = useCallback(
+    (field: string) => {
+      const queueIndex = SettingSelectors.queueIndex(store.getState());
+      const targetIndex: number = (() => {
+        if (field === 'left-margin') {
+          return 0;
+        }
+        if (field === 'right-margin') {
+          return 49;
+        }
+        return Number(field);
+      })();
+
+      if (targetIndex === queueIndex) {
+        return;
       }
-      if (field === 'right-margin') {
-        return 49;
-      }
-      return Number(field);
-    })();
 
-    if (targetIndex === queueIndex) {
-      return;
-    }
-
-    dispath(
-      SettingsActions.setQueueIndex({
-        queueIndex: targetIndex,
-        play: false,
-      }),
-    );
-  };
+      dispath(
+        SettingsActions.setQueueIndex({
+          queueIndex: targetIndex,
+          play: false,
+        }),
+      );
+    },
+    [dispath],
+  );
 
   const memoizedGrid = useMemo(
     () => (
@@ -143,7 +150,7 @@ export const Timeline = memo((props: TimelineProps) => {
         onCursorFieldChange={onCursorFieldChange}
         className={clsx('tw-flex-1', 'tw-border-t')}
         columnDefs={columnDefs}
-        rowData={rowData}
+        rowData={tracks}
         rowHeightGetter={rowHeightGetter}></Grid>
     ),
     [
@@ -152,7 +159,8 @@ export const Timeline = memo((props: TimelineProps) => {
       onCursorFieldChange,
       queueIndexString,
       queueStart,
-      rowData,
+      rowHeightGetter,
+      tracks,
     ],
   );
 

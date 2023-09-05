@@ -28,7 +28,7 @@ export interface GridCellRendererProps<T extends object> {
 export interface GridColumnDef<T extends object> {
   field: string;
   width: number;
-  headerRenderer?: FunctionComponent<GridHeaderCellRendererProps<T>>;
+  headerRenderer?: FunctionComponent<GridColumnDef<T>>;
   cellRenderer?: FunctionComponent<GridCellRendererProps<T>>;
 }
 
@@ -36,7 +36,7 @@ export interface GridInternalColumnDef<T extends object> {
   field: string;
   left: number;
   width: number;
-  headerRenderer?: FunctionComponent<GridHeaderCellRendererProps<T>>;
+  headerRenderer?: FunctionComponent<GridColumnDef<T>>;
   cellRenderer?: FunctionComponent<GridCellRendererProps<T>>;
 }
 
@@ -92,81 +92,79 @@ export interface GridHeaderProps {
   onDragEnd?: (transformX: number) => void;
 }
 
-const GridHeader = memo(
-  forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
+const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    const [initEvent, setInitEvent] = useState<React.MouseEvent<
-      HTMLDivElement,
-      MouseEvent
-    > | null>(null);
+  const [initEvent, setInitEvent] = useState<React.MouseEvent<
+    HTMLDivElement,
+    MouseEvent
+  > | null>(null);
 
-    useImperativeHandle(ref, () => scrollRef.current);
+  useImperativeHandle(ref, () => scrollRef.current);
 
-    useEffect(() => {
-      if (!initEvent) {
-        return;
-      }
+  useEffect(() => {
+    if (!initEvent) {
+      return;
+    }
 
-      const getDeltaX = (event: MouseEvent) => {
-        const rootRect = scrollRef.current.getBoundingClientRect();
-        const scrollLeft = scrollRef.current.scrollLeft || 0;
-        const deltaX = scrollLeft + event.clientX - rootRect.left;
-        return deltaX;
-      };
+    const getDeltaX = (event: MouseEvent) => {
+      const rootRect = scrollRef.current.getBoundingClientRect();
+      const scrollLeft = scrollRef.current.scrollLeft || 0;
+      const deltaX = scrollLeft + event.clientX - rootRect.left;
+      return deltaX;
+    };
 
-      const clean = () => {
-        window.removeEventListener('mousemove', onMousemove);
-        window.removeEventListener('mouseup', onMouseup);
-      };
+    const clean = () => {
+      window.removeEventListener('mousemove', onMousemove);
+      window.removeEventListener('mouseup', onMouseup);
+    };
 
-      const onMousemove = (event: MouseEvent) => {
-        const deltaX = getDeltaX(event);
-        props.onDragTransformX?.(deltaX);
-      };
-
-      const onMouseup = (event: MouseEvent) => {
-        const deltaX = getDeltaX(event);
-        props.onDragEnd?.(deltaX);
-        setInitEvent(null);
-        clean();
-      };
-
-      const deltaX = getDeltaX(initEvent.nativeEvent);
+    const onMousemove = (event: MouseEvent) => {
+      const deltaX = getDeltaX(event);
       props.onDragTransformX?.(deltaX);
-      window.addEventListener('mousemove', onMousemove);
-      window.addEventListener('mouseup', onMouseup);
+    };
 
-      return clean;
-    }, [initEvent]);
+    const onMouseup = (event: MouseEvent) => {
+      const deltaX = getDeltaX(event);
+      props.onDragEnd?.(deltaX);
+      setInitEvent(null);
+      clean();
+    };
 
-    return (
-      <QueueScrollArea.Root
+    const deltaX = getDeltaX(initEvent.nativeEvent);
+    props.onDragTransformX?.(deltaX);
+    window.addEventListener('mousemove', onMousemove);
+    window.addEventListener('mouseup', onMouseup);
+
+    return clean;
+  }, [initEvent]);
+
+  return (
+    <QueueScrollArea.Root
+      onMouseDown={(event) => {
+        setInitEvent(event);
+      }}
+      className={clsx(styles.GridHeader, 'tw-flex-shrink-0', 'tw-pb-2.5')}
+      type="always">
+      <QueueScrollArea.Viewport
+        ref={scrollRef}
+        onScroll={props.onScroll}
+        className={clsx('tw-relative')}>
+        {props.children}
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar
         onMouseDown={(event) => {
-          setInitEvent(event);
+          event.stopPropagation();
         }}
-        className={clsx(styles.GridHeader, 'tw-flex-shrink-0', 'tw-pb-2.5')}
-        type="always">
-        <QueueScrollArea.Viewport
-          ref={scrollRef}
-          onScroll={props.onScroll}
-          className={clsx('tw-relative')}>
-          {props.children}
-        </QueueScrollArea.Viewport>
-        <QueueScrollArea.Scrollbar
-          onMouseDown={(event) => {
-            event.stopPropagation();
-          }}
-          orientation="horizontal"
-          className={clsx('tw-h-2', 'tw-border-y', 'tw-p-0')}>
-          <QueueScrollArea.Thumb
-            className={clsx(styles.GridTimelineScrollbar, 'tw-h-2.5')}
-          />
-        </QueueScrollArea.Scrollbar>
-      </QueueScrollArea.Root>
-    );
-  }),
-);
+        orientation="horizontal"
+        className={clsx('tw-h-2', 'tw-border-y', 'tw-p-0')}>
+        <QueueScrollArea.Thumb
+          className={clsx(styles.GridTimelineScrollbar, 'tw-h-2.5')}
+        />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
+  );
+});
 
 export interface GridHeaderRowProps {
   children?: React.ReactNode;
@@ -175,7 +173,7 @@ export interface GridHeaderRowProps {
   width?: number;
 }
 
-const GridHeaderRow = memo((props: GridHeaderRowProps) => {
+const GridHeaderRow = (props: GridHeaderRowProps) => {
   return (
     <div
       className={clsx(styles.GridHeaderRow, 'grid-header-row', 'tw-relative')}
@@ -187,7 +185,7 @@ const GridHeaderRow = memo((props: GridHeaderRowProps) => {
       {props.children}
     </div>
   );
-});
+};
 
 export interface GridHeaderCellProps {
   fixed?: 'left' | 'right';
@@ -220,30 +218,28 @@ export interface GridBodyProps {
   scrollWidth?: number;
 }
 
-const GridBody = memo(
-  forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
-    return (
-      <QueueScrollArea.Root
-        className={clsx(styles.GridBody, 'tw-flex-1', props.className)}>
-        <QueueScrollArea.Viewport
-          ref={ref}
-          onScroll={props.onScroll}
-          className={clsx('tw-relative')}>
-          {props.children}
-          <div
-            className={clsx('tw-h-0')}
-            style={{ width: props.scrollWidth }}></div>
-        </QueueScrollArea.Viewport>
-        <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
-          <QueueScrollArea.Thumb />
-        </QueueScrollArea.Scrollbar>
-        <QueueScrollArea.Scrollbar orientation="vertical">
-          <QueueScrollArea.Thumb />
-        </QueueScrollArea.Scrollbar>
-      </QueueScrollArea.Root>
-    );
-  }),
-);
+const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
+  return (
+    <QueueScrollArea.Root
+      className={clsx(styles.GridBody, 'tw-flex-1', props.className)}>
+      <QueueScrollArea.Viewport
+        ref={ref}
+        onScroll={props.onScroll}
+        className={clsx('tw-relative')}>
+        {props.children}
+        <div
+          className={clsx('tw-h-0')}
+          style={{ width: props.scrollWidth }}></div>
+      </QueueScrollArea.Viewport>
+      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+      <QueueScrollArea.Scrollbar orientation="vertical">
+        <QueueScrollArea.Thumb />
+      </QueueScrollArea.Scrollbar>
+    </QueueScrollArea.Root>
+  );
+});
 
 export interface GridBodyRowProps {
   children?: React.ReactNode;
@@ -251,7 +247,7 @@ export interface GridBodyRowProps {
   height: number;
 }
 
-const GridRow = memo((props: GridBodyRowProps) => {
+const GridRow = (props: GridBodyRowProps) => {
   return (
     <div
       className={clsx(
@@ -264,7 +260,7 @@ const GridRow = memo((props: GridBodyRowProps) => {
       {props.children}
     </div>
   );
-});
+};
 
 export interface GridBodyCellProps {
   left: number;
@@ -296,8 +292,8 @@ export interface GridOverlayProps {
   children?: React.ReactNode;
 }
 
-export const GridOverlay = memo(
-  forwardRef<HTMLDivElement, GridOverlayProps>((props, ref) => {
+export const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
+  (props, ref) => {
     return (
       <QueueScrollArea.Root
         className={clsx(
@@ -325,7 +321,7 @@ export const GridOverlay = memo(
         </QueueScrollArea.Scrollbar>
       </QueueScrollArea.Root>
     );
-  }),
+  },
 );
 
 export interface GridCursorProps {
@@ -532,7 +528,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
       },
       [],
     );
-  }, [props.rowData, props.rowHeightGetter]);
+  }, [internalColumnDefs, props]);
 
   const cursorDefLeft = useMemo(() => {
     const cursorDef = internalColumnDefsMap[props.cursorField];
@@ -612,7 +608,7 @@ export const Grid = <T extends object>(props: GridProps<T>) => {
               left={columnDef.left}
               width={columnDef.width}>
               {columnDef.headerRenderer ? (
-                <columnDef.headerRenderer columnDef={columnDef} />
+                <columnDef.headerRenderer {...columnDef} />
               ) : (
                 columnDef.field
               )}
