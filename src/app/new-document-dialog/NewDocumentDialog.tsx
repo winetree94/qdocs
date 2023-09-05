@@ -40,6 +40,17 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
       }
       setFetching(true);
       const document = await template.getTemplate();
+
+      /**
+       * TODO 언젠가 없애야함
+       * 데이터 보완
+       */
+      document.effects.ids.forEach((id) => {
+        const effect = document.effects.entities[id];
+        const object = document.objects.entities[effect.objectId];
+        effect.pageId = object.pageId;
+      });
+
       onSubmit?.(document);
     } finally {
       setFetching(false);
@@ -56,6 +67,16 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
     try {
       setFetching(true);
       const document = await fetcher();
+      /**
+       * TODO 언젠가 없애야함
+       * 데이터 보완
+       */
+      document.effects.ids.forEach((id) => {
+        const effect = document.effects.entities[id];
+        const object = document.objects.entities[effect.objectId];
+        effect.pageId = object.pageId;
+      });
+
       onSubmit?.(document);
     } finally {
       setFetching(false);
