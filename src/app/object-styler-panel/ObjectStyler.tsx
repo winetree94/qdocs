@@ -9,66 +9,54 @@ import { ObjectStyleBackground } from './Background';
 import { ObjectStyleRect } from './Rect';
 import { ObjectStyleScale } from './Scale';
 import { ObjectStyleRotate } from './Rotate';
-import {
-  supportFade,
-  supportFill,
-  supportRect,
-  supportRotation,
-  supportScale,
-  supportStroke,
-  supportText,
-} from 'model/support';
+import { SUPPPORTED_PROPERTY_MAP } from '../../model/support/property';
 
 export const ObjectStylerPanel = memo((): ReactElement | null => {
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const firstObject = selectedObjects[0];
+  const firstSelectedObjectType = useAppSelector(
+    SettingSelectors.firstSelectedObjectType,
+  );
 
-  if (selectedObjects.length <= 0) {
+  if (!firstSelectedObjectType) {
     return null;
   }
 
   return (
     <div className="tw-px-5 tw-py-4">
       <div className="tw-flex tw-flex-col tw-gap-3">
-        {supportRect(firstObject) && (
-          <ObjectStyleRect
-            x={firstObject.rect.x}
-            y={firstObject.rect.y}
-            width={firstObject.rect.width}
-            height={firstObject.rect.height}
-          />
+        {SUPPPORTED_PROPERTY_MAP.rect[firstSelectedObjectType] && (
+          <ObjectStyleRect />
         )}
-        {supportText(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.text[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleText />
           </>
         )}
-        {supportFill(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.fill[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleBackground />
           </>
         )}
-        {supportScale(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.scale[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleScale />
           </>
         )}
-        {supportRotation(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.rotate[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleRotate />
           </>
         )}
-        {supportStroke(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.stroke[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleStroke />
           </>
         )}
-        {supportFade(firstObject) && (
+        {SUPPPORTED_PROPERTY_MAP.fade[firstSelectedObjectType] && (
           <>
             <QueueSeparator.Root className="tw-my-2" />
             <ObjectStyleOpacity />

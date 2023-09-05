@@ -6,14 +6,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { ObjectActions } from 'store/object';
 import { SettingSelectors } from 'store/settings';
 
-export interface ObjectStyleRectProps {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export const ObjectStyleRect = memo((props: ObjectStyleRectProps) => {
+export const ObjectStyleRect = memo(() => {
   const dispatch = useAppDispatch();
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
   const [firstObject] = selectedObjects;

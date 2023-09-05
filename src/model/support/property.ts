@@ -12,7 +12,7 @@ import {
   WithText,
 } from 'model/property';
 
-const SUPPPORTED_PROPERTY_MAP: {
+export const SUPPPORTED_PROPERTY_MAP: {
   [key in OBJECT_PROPERTY_TYPES]: {
     [key in OBJECT_TYPES]: boolean;
   };

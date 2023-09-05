@@ -58,6 +58,22 @@ const selectedObjectIds = createSelector(
   (settings) => settings.selectedObjectIds,
 );
 
+const selectedObjects = createSelector(
+  [selectSelf, ObjectSelectors.entities],
+  (settings, objectEntities) =>
+    settings.selectedObjectIds.map((id) => objectEntities[id]),
+);
+
+const firstSelectedObjectId = createSelector(
+  selectedObjectIds,
+  (selectedObjectIds) => selectedObjectIds[0],
+);
+
+const firstSelectedObjectType = createSelector(
+  [selectedObjects],
+  (selectedObjects) => selectedObjects[0]?.type,
+);
+
 const hasSelectedObject = createSelector(
   selectedObjectIds,
   (selectedObjectIds) => selectedObjectIds.length > 0,
@@ -79,12 +95,6 @@ const pageObjectIds = createSelector(
   (settings, objects) => {
     return objects[settings.pageId]?.map(({ id }) => id) || [];
   },
-);
-
-const selectedObjects = createSelector(
-  [selectSelf, ObjectSelectors.entities],
-  (settings, objectEntities) =>
-    settings.selectedObjectIds.map((id) => objectEntities[id]),
 );
 
 /**
@@ -284,6 +294,8 @@ export const SettingSelectors = {
   pageObjects,
   pageObjectIds,
   hasSelectedObject,
+  firstSelectedObjectId,
+  firstSelectedObjectType,
   selectedObjects,
   selectedObjectIds,
   selectionMode,
