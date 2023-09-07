@@ -11,7 +11,7 @@ import {
   QueueRotate,
   QueueScale,
 } from 'model/property';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { EffectSelectors } from 'store/effect/selectors';
 import { useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
@@ -113,33 +113,52 @@ export const ObjectAnimator = ({
       ? getFillAnimation(object, effects, queueIndex, queuePosition)
       : undefined;
 
-  const animatorsProps = [
-    {
-      timing: animatableRect?.moveEffect.timing,
-      duration: animatableRect?.moveEffect.duration || 0,
-      delay: animatableRect?.moveEffect.delay || 0,
-    },
-    {
-      timing: animatableFade?.fadeEffect.timing,
-      duration: animatableFade?.fadeEffect.duration || 0,
-      delay: animatableFade?.fadeEffect.delay || 0,
-    },
-    {
-      timing: animatableScale?.scaleEffect.timing,
-      duration: animatableScale?.scaleEffect.duration || 0,
-      delay: animatableScale?.scaleEffect.delay || 0,
-    },
-    {
-      timing: animatableRotate?.rotateEffect.timing,
-      duration: animatableRotate?.rotateEffect.duration || 0,
-      delay: animatableRotate?.rotateEffect.delay || 0,
-    },
-    {
-      timing: animatableFill?.fillEffect.timing,
-      duration: animatableFill?.fillEffect.duration || 0,
-      delay: animatableFill?.fillEffect.delay || 0,
-    },
-  ];
+  const animatorsProps = useMemo(
+    () => [
+      {
+        timing: animatableRect?.moveEffect.timing,
+        duration: animatableRect?.moveEffect.duration || 0,
+        delay: animatableRect?.moveEffect.delay || 0,
+      },
+      {
+        timing: animatableFade?.fadeEffect.timing,
+        duration: animatableFade?.fadeEffect.duration || 0,
+        delay: animatableFade?.fadeEffect.delay || 0,
+      },
+      {
+        timing: animatableScale?.scaleEffect.timing,
+        duration: animatableScale?.scaleEffect.duration || 0,
+        delay: animatableScale?.scaleEffect.delay || 0,
+      },
+      {
+        timing: animatableRotate?.rotateEffect.timing,
+        duration: animatableRotate?.rotateEffect.duration || 0,
+        delay: animatableRotate?.rotateEffect.delay || 0,
+      },
+      {
+        timing: animatableFill?.fillEffect.timing,
+        duration: animatableFill?.fillEffect.duration || 0,
+        delay: animatableFill?.fillEffect.delay || 0,
+      },
+    ],
+    [
+      animatableFade?.fadeEffect.delay,
+      animatableFade?.fadeEffect.duration,
+      animatableFade?.fadeEffect.timing,
+      animatableFill?.fillEffect.delay,
+      animatableFill?.fillEffect.duration,
+      animatableFill?.fillEffect.timing,
+      animatableRect?.moveEffect.delay,
+      animatableRect?.moveEffect.duration,
+      animatableRect?.moveEffect.timing,
+      animatableRotate?.rotateEffect.delay,
+      animatableRotate?.rotateEffect.duration,
+      animatableRotate?.rotateEffect.timing,
+      animatableScale?.scaleEffect.delay,
+      animatableScale?.scaleEffect.duration,
+      animatableScale?.scaleEffect.timing,
+    ],
+  );
 
   return (
     <Animators start={queueStart} animations={animatorsProps}>
