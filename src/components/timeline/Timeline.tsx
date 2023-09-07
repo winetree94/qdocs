@@ -9,7 +9,6 @@ import { TimeLineTrack } from '../../model/timeline/timeline';
 import styles from './Timeline.module.scss';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingsActions } from 'store/settings';
-import { EffectSelectors } from 'store/effect';
 import { memo, useCallback, useMemo } from 'react';
 import { store } from 'store';
 import { isEqual } from 'lodash';
@@ -79,17 +78,11 @@ export const Timeline = memo((props: TimelineProps) => {
   });
   const dispatch = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex);
-  const queuePosition = useAppSelector(SettingSelectors.queuePosition);
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-
   const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
-  const maxDurationByIndex = useAppSelector(EffectSelectors.maxDurationByIndex);
-
-  const duration = useMemo(() => {
-    return queuePosition === 'forward'
-      ? maxDurationByIndex[queueIndex] || 0
-      : maxDurationByIndex[queueIndex + 1] || 0;
-  }, [maxDurationByIndex, queueIndex, queuePosition]);
+  const duration = useAppSelector(
+    SettingSelectors.currentPageNextQueueIndexMaxDuration,
+  );
 
   const columnDefs: GridColumnDef<TimeLineTrack>[] = useMemo(() => {
     return [

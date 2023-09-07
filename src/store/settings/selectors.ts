@@ -1,5 +1,5 @@
 import { RootState } from 'store';
-import { createSelector, EntityId } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 import { ObjectSelectors } from 'store/object/selectors';
 import { QueueDocumentSettings } from './model';
 import { EffectSelectors } from 'store/effect/selectors';
@@ -322,9 +322,35 @@ const currentPageQueueIndexEffectsByObjectId = createSelector(
 );
 
 const currentPageQueueIndexMaxDuration = createSelector(
-  [currentPageQueueIndexEffects],
+  [currentPageQueueIndexEffects, queuePosition],
   (effects) => {
     return effects.reduce((acc, effect) => {
+      if (acc < effect.duration + effect.delay) {
+        acc = effect.duration + effect.delay;
+      }
+      return acc;
+    }, 0);
+  },
+);
+
+const currentPageNextQueueIndexMaxDuration = createSelector(
+  [currentPageEffects, queueIndex, queuePosition],
+  (effects, queueIndex, queuePosition) => {
+    const effectsMap = effects.reduce<Record<string, QueueEffectType[]>>(
+      (result, effect) => {
+        if (!result[effect.index]) {
+          result[effect.index] = [];
+        }
+        result[effect.index].push(effect);
+        return result;
+      },
+      {},
+    );
+
+    const targetIndex =
+      queuePosition === 'forward' ? queueIndex : queueIndex + 1;
+
+    return (effectsMap[targetIndex] || []).reduce((acc, effect) => {
       if (acc < effect.duration + effect.delay) {
         acc = effect.duration + effect.delay;
       }
@@ -366,5 +392,6 @@ export const SettingSelectors = {
   currentPageEffects,
   currentPageQueueIndexEffects,
   currentPageQueueIndexEffectsByObjectId,
+  currentPageNextQueueIndexMaxDuration,
   currentPageQueueIndexMaxDuration,
 };
