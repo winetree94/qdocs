@@ -333,6 +333,18 @@ const currentPageQueueIndexMaxDuration = createSelector(
   },
 );
 
+const currentPageMaxEffectIndex = createSelector(
+  [currentPageEffects],
+  (effects) => {
+    return effects.reduce((acc, effect) => {
+      if (acc < effect.index) {
+        acc = effect.index;
+      }
+      return acc;
+    }, 0);
+  },
+);
+
 const currentPageNextQueueIndexMaxDuration = createSelector(
   [currentPageEffects, queueIndex, queuePosition],
   (effects, queueIndex, queuePosition) => {
@@ -390,6 +402,7 @@ export const SettingSelectors = {
   timelineData,
   currentVisibleObjects,
   currentPageEffects,
+  currentPageMaxEffectIndex,
   currentPageQueueIndexEffects,
   currentPageQueueIndexEffectsByObjectId,
   currentPageNextQueueIndexMaxDuration,

@@ -81,6 +81,9 @@ export const Timeline = memo((props: TimelineProps) => {
   const dispatch = useAppDispatch();
   const queueIndex = useAppSelector(SettingSelectors.queueIndex).toString();
   const queueStart = useAppSelector(SettingSelectors.queueStart);
+  const maxEffectIndex = useAppSelector(
+    SettingSelectors.currentPageMaxEffectIndex,
+  );
   const duration = useAppSelector(
     SettingSelectors.currentPageNextQueueIndexMaxDuration,
   );
@@ -93,7 +96,7 @@ export const Timeline = memo((props: TimelineProps) => {
         headerRenderer: TimelineEmptyRenderer,
         cellRenderer: TimelineEmptyRenderer,
       },
-      ...Array.from(new Array(50)).map((_, cellIndex) => ({
+      ...Array.from(new Array(maxEffectIndex + 50)).map((_, cellIndex) => ({
         field: `${cellIndex}`,
         width: props.columnWidth,
         headerRenderer: TimelineHeaderRenderer,
@@ -106,7 +109,7 @@ export const Timeline = memo((props: TimelineProps) => {
         cellRenderer: TimelineEmptyRenderer,
       },
     ];
-  }, [props.columnWidth]);
+  }, [props.columnWidth, maxEffectIndex]);
 
   const rowHeightGetter = useCallback(() => {
     return ROW_HEIGHT;
