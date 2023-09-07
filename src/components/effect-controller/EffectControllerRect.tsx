@@ -7,8 +7,10 @@ import { getEffectEntityKey } from 'store/effect/reducer';
 import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
+import { useTranslation } from 'react-i18next';
 
 export const EffectControllerRect = (): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -45,7 +47,7 @@ export const EffectControllerRect = (): ReactElement => {
 
   return (
     <div>
-      <p className="tw-text-sm">width</p>
+      <p className="tw-text-sm">{t('global.width')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <input
           className="tw-w-full"
@@ -56,7 +58,7 @@ export const EffectControllerRect = (): ReactElement => {
           }
         />
       </div>
-      <p className="tw-text-sm">height</p>
+      <p className="tw-text-sm">{t('global.height')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <input
           className="tw-w-full"
@@ -67,7 +69,7 @@ export const EffectControllerRect = (): ReactElement => {
           }
         />
       </div>
-      <p className="tw-text-sm">x</p>
+      <p className="tw-text-sm">{t('global.x')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <input
           className="tw-w-full"
@@ -78,7 +80,7 @@ export const EffectControllerRect = (): ReactElement => {
           }
         />
       </div>
-      <p className="tw-text-sm">y</p>
+      <p className="tw-text-sm">{t('global.y')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <input
           className="tw-w-full"

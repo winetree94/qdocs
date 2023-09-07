@@ -1,6 +1,7 @@
 import { QueueSlider } from 'components/slider/Slider';
 import { OBJECT_EFFECT_TYPE, ScaleEffect } from 'model/effect';
 import { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   EffectActions,
   EffectSelectors,
@@ -11,6 +12,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
 
 export const EffectControllerScale = (): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -69,7 +71,7 @@ export const EffectControllerScale = (): ReactElement => {
         hidden
         readOnly
       />
-      <p className="tw-text-sm">scale</p>
+      <p className="tw-text-sm">{t('global.scale')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">
           <input

@@ -7,8 +7,10 @@ import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { QueueSlider } from 'components/slider/Slider';
+import { useTranslation } from 'react-i18next';
 
 export const EffectControllerFade = (): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -61,7 +63,7 @@ export const EffectControllerFade = (): ReactElement => {
 
   return (
     <div>
-      <p className="tw-text-sm">fade</p>
+      <p className="tw-text-sm">{t('effect.fade')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">
           <input

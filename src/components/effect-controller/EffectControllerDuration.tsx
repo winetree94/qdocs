@@ -7,6 +7,7 @@ import { EffectSelectors } from 'store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from 'store/history';
 import { QueueSlider } from 'components/slider/Slider';
+import { useTranslation } from 'react-i18next';
 
 export type EffectControllerDurationProps = {
   effectType: QueueEffectType['type'];
@@ -15,6 +16,7 @@ export type EffectControllerDurationProps = {
 export const EffectControllerDuration = ({
   effectType,
 }: EffectControllerDurationProps): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -91,7 +93,7 @@ export const EffectControllerDuration = ({
 
   return (
     <div>
-      <p className="tw-text-sm">duration</p>
+      <p className="tw-text-sm">{t('effect.duration')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">
           <input
@@ -112,7 +114,7 @@ export const EffectControllerDuration = ({
           />
         </div>
       </div>
-      <p className="tw-text-sm">delay</p>
+      <p className="tw-text-sm">{t('effect.delay')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">
           <input

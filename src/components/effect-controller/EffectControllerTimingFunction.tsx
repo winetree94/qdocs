@@ -9,8 +9,10 @@ import { HistoryActions } from 'store/history';
 import {
   AnimatorTimingFunctionType,
   TIMING_FUNCTION_META,
+  TIMING_FUNCTION_TRANSLATION_KEY,
 } from 'cdk/animation/timing/meta';
 import { QueueSelect } from 'components/select/Select';
+import { useTranslation } from 'react-i18next';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -21,6 +23,7 @@ const timingFunctions = Object.values(TIMING_FUNCTION_META);
 export const EffectControllerTimingFunction = ({
   effectType,
 }: EffectControllerTimingFunctionProps): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -53,14 +56,14 @@ export const EffectControllerTimingFunction = ({
 
   return (
     <div>
-      <p className="tw-text-sm">timing function</p>
+      <p className="tw-text-sm">{t('effect.timing-function')}</p>
       <QueueSelect
         defaultValue={firstObjectEffect.timing}
         onValueChange={handleTimingFunctionChange}>
         <QueueSelect.Group>
           {timingFunctions.map((timingFunction) => (
             <QueueSelect.Option value={timingFunction} key={timingFunction}>
-              {timingFunction}
+              {t(TIMING_FUNCTION_TRANSLATION_KEY[timingFunction])}
             </QueueSelect.Option>
           ))}
         </QueueSelect.Group>

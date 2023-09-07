@@ -1,6 +1,7 @@
 import { QueueSlider } from 'components/slider/Slider';
 import { FillEffect, OBJECT_EFFECT_TYPE } from 'model/effect';
 import { ChangeEvent, ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   EffectActions,
   EffectSelectors,
@@ -11,6 +12,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { SettingSelectors } from 'store/settings';
 
 export const EffectControllerFill = (): ReactElement => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
@@ -75,7 +77,7 @@ export const EffectControllerFill = (): ReactElement => {
 
   return (
     <div>
-      <p className="text-sm">color</p>
+      <p className="text-sm">{t('effect.fill')}</p>
       <div>
         <input
           type="color"
@@ -83,7 +85,7 @@ export const EffectControllerFill = (): ReactElement => {
           onChange={handleCurrentColorChange}
         />
       </div>
-      <p className="tw-text-sm">opacity</p>
+      <p className="tw-text-sm">{t('global.opacity')}</p>
       <div className="tw-flex tw-items-center tw-gap-2">
         <div className="tw-w-5/12">
           <input

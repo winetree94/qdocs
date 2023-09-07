@@ -1,7 +1,9 @@
 import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
 import {
   BaseQueueEffect,
+  OBJECT_EFFECT_TRANSLATION_KEY,
   OBJECT_EFFECT_TYPE,
+  OBJECT_EFFECT_TYPES,
   QueueEffectType,
 } from 'model/effect';
 import { ReactElement, useState } from 'react';
@@ -28,6 +30,7 @@ type EffectControllerProps = {
 };
 
 const AllEffectList = () => {
+  const { t } = useTranslation();
   const [firstObject] = useAppSelector(SettingSelectors.selectedObjects);
   const effects = useAppSelector((state) =>
     EffectSelectors.byObjectId(state, firstObject.id),
@@ -42,7 +45,9 @@ const AllEffectList = () => {
               <span className="tw-font-normal tw-text-[var(--gray-11)]">
                 #{effect.index + 1}{' '}
               </span>
-              <span className="tw-font-normal">{effect.type}</span>
+              <span className="tw-font-normal">
+                {t(OBJECT_EFFECT_TRANSLATION_KEY[effect.type])}
+              </span>
             </li>
           ))}
         </ul>
@@ -57,6 +62,7 @@ const AllEffectList = () => {
 export const EffectController = ({
   effectType,
 }: EffectControllerProps): ReactElement => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -85,7 +91,7 @@ export const EffectController = ({
           size={QUEUE_UI_SIZE.SMALL}
           onClick={(): void => setOpen((prev) => !prev)}
           disabled={effectType === OBJECT_EFFECT_TYPE.CREATE}>
-          <span>{effectType}</span>
+          <span>{t(OBJECT_EFFECT_TRANSLATION_KEY[effectType])}</span>
         </QueueButton>
         {effectType !== OBJECT_EFFECT_TYPE.CREATE && (
           <QueueIconButton
@@ -252,7 +258,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   );
   const addableEffectTypes = Object.values(
     OBJECT_ADDABLE_EFFECTS[firstObject.type],
-  );
+  ).filter((effect) => effect !== OBJECT_EFFECT_TYPE.STROKE);
   const currentQueueObjectEffectTypes = objectCurrentEffects.map(
     (currentQueueObjectEffect) => currentQueueObjectEffect.type,
   );
@@ -321,7 +327,7 @@ export const EffectControllerBox = (): ReactElement | null => {
                 <QueueDropdown.Item
                   key={effectType}
                   onClick={(): void => handleAddEffectItemClick(effectType)}>
-                  {effectType}
+                  {t(OBJECT_EFFECT_TRANSLATION_KEY[effectType])}
                 </QueueDropdown.Item>
               );
             })}
