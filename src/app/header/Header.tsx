@@ -283,11 +283,8 @@ export const QueueHeader = memo(() => {
                 <QueueDropdown.SubContent alignOffset={-5}>
                   <QueueDropdown.RadioGroup
                     value={preferences.language}
-                    onValueChange={async (rawValue) => {
+                    onValueChange={(rawValue) => {
                       const value = rawValue as SUPPORTED_LANGUAGES;
-                      await i18n.changeLanguage(
-                        value !== 'auto' ? value : null,
-                      );
                       dispatch(
                         PreferencesActions.changeLanguage({
                           language: value,

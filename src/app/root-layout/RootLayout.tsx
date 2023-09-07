@@ -14,14 +14,37 @@ import QueueSubHeader from 'app/sub-header/SubHeader';
 import { QueueHeader } from 'app/header/Header';
 import { BottomPanel } from 'app/bottom-panel/BottomPanel';
 import { GlobalKeydown } from 'app/global-keydown/GlobalKeydown';
+import { useTranslation } from 'react-i18next';
+import { PreferencesSelectors } from 'store/preferences/selectors';
+import {
+  SUPPORTED_LANGUAGE,
+  SUPPORTED_LANGUAGES,
+} from 'store/preferences/model';
 
 export const RootLayout = () => {
+  const { i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const docs = useAppSelector(DocumentSelectors.document);
+  const language = useAppSelector(PreferencesSelectors.language);
   const presentationMode = useAppSelector(SettingSelectors.presentationMode);
   const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
   const bottomPanelOpened = useAppSelector(SettingSelectors.bottomPanelOpened);
   const autoPlay = useAppSelector(SettingSelectors.autoPlay);
+
+  useEffect(() => {
+    let lang = language;
+    if (lang === 'auto') {
+      const browserLang = navigator.language.split(
+        '-',
+      )[0] as SUPPORTED_LANGUAGES;
+      lang = Object.values(SUPPORTED_LANGUAGE).includes(browserLang)
+        ? browserLang
+        : SUPPORTED_LANGUAGE.EN;
+    }
+    i18n.changeLanguage(lang).catch((error) => {
+      console.warn('failed to change language', error);
+    });
+  }, [language, i18n]);
 
   /**
    * @description

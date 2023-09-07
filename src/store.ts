@@ -11,6 +11,7 @@ import { pagesSlice } from 'store/page/reducer';
 import { settingsMiddleware } from 'store/settings/middlewares';
 import { documentSettingsSlice } from 'store/settings/reducer';
 import { preferencesSlice } from 'store/preferences/reducer';
+import { preferencesMiddleware } from 'store/preferences/middleware';
 
 const reducers = combineReducers({
   [historySlice.name]: historySlice.reducer,
@@ -50,6 +51,7 @@ export const store = configureStore({
       pageMiddleware.middleware,
       objectMiddleware.middleware,
       effectMiddleware.middleware,
+      preferencesMiddleware.middleware,
     ),
 });
 
