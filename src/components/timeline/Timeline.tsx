@@ -35,51 +35,52 @@ const TimelineHeaderRenderer = memo((props: GridColumnDef<TimeLineTrack>) => (
   </div>
 ));
 
-const TimelineCellRenderer = (props: GridCellRendererProps<TimeLineTrack>) => {
-  const {
-    startQueueIndex: start,
-    endQueueIndex: end,
-    queueList,
-    uniqueColor,
-    selectedTrack,
-  } = props.rowData;
+const TimelineCellRenderer = memo(
+  (props: GridCellRendererProps<TimeLineTrack>) => {
+    const {
+      startQueueIndex: start,
+      endQueueIndex: end,
+      queueList,
+      uniqueColor,
+      selectedTrack,
+    } = props.rowData;
 
-  const cellIndex = props.cellIndex - 1;
+    const cellIndex = props.cellIndex - 1;
 
-  return (
-    <div
-      style={{
-        backgroundColor:
-          start <= cellIndex && cellIndex <= end ? uniqueColor : '#ffffff',
-      }}
-      className={clsx(
-        styles.Cell,
-        props.rowIndex === 0 ? styles.FirstRowCell : '',
-        'tw-text-white-100',
-        'tw-text-center',
-        start > cellIndex || end < cellIndex
-          ? styles.gridDot
-          : queueList.includes(cellIndex)
-          ? styles.queueDot
-          : '',
-        cellIndex === start && 'tw-rounded-l-lg',
-        cellIndex === end && 'tw-rounded-r-lg',
-        start <= cellIndex &&
-          cellIndex <= end &&
-          selectedTrack &&
-          'tw-animate-pulse tw-border-solid tw-border-y-2 tw-border-amber-300',
-      )}></div>
-  );
-};
+    return (
+      <div
+        style={{
+          backgroundColor:
+            start <= cellIndex && cellIndex <= end ? uniqueColor : '#ffffff',
+        }}
+        className={clsx(
+          styles.Cell,
+          props.rowIndex === 0 ? styles.FirstRowCell : '',
+          'tw-text-white-100',
+          'tw-text-center',
+          start > cellIndex || end < cellIndex
+            ? styles.gridDot
+            : queueList.includes(cellIndex)
+            ? styles.queueDot
+            : '',
+          cellIndex === start && 'tw-rounded-l-lg',
+          cellIndex === end && 'tw-rounded-r-lg',
+          start <= cellIndex &&
+            cellIndex <= end &&
+            selectedTrack &&
+            'tw-animate-pulse tw-border-solid tw-border-y-2 tw-border-amber-300',
+        )}></div>
+    );
+  },
+);
 
 export const Timeline = memo((props: TimelineProps) => {
   const tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
     return isEqual(a, b);
   });
   const dispatch = useAppDispatch();
-  const queueIndex = useAppSelector(SettingSelectors.queueIndex);
+  const queueIndex = useAppSelector(SettingSelectors.queueIndex).toString();
   const queueStart = useAppSelector(SettingSelectors.queueStart);
-  const queueIndexString = useMemo(() => queueIndex.toString(), [queueIndex]);
   const duration = useAppSelector(
     SettingSelectors.currentPageNextQueueIndexMaxDuration,
   );
@@ -141,7 +142,7 @@ export const Timeline = memo((props: TimelineProps) => {
   const memoizedGrid = useMemo(
     () => (
       <Grid
-        cursorField={queueIndexString}
+        cursorField={queueIndex}
         cursorAnimationStart={queueStart}
         cursorAnimationDuration={duration}
         onCursorFieldChange={onCursorFieldChange}
@@ -154,7 +155,7 @@ export const Timeline = memo((props: TimelineProps) => {
       columnDefs,
       duration,
       onCursorFieldChange,
-      queueIndexString,
+      queueIndex,
       queueStart,
       rowHeightGetter,
       tracks,
