@@ -27,7 +27,11 @@ import { HistoryActions } from 'store/history';
 import { QueueObjectType } from 'model/object';
 import { store } from 'store';
 
-export const QueueEditor = memo(() => {
+export interface QueueEditorProps {
+  className?: string;
+}
+
+export const QueueEditor = memo((props: QueueEditorProps) => {
   const dispatch = useAppDispatch();
 
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -406,7 +410,9 @@ export const QueueEditor = memo(() => {
 
   return (
     <QueueContextMenu.Root>
-      <QueueContextMenu.Trigger ref={rootRef} className={clsx(styles.Root)}>
+      <QueueContextMenu.Trigger
+        ref={rootRef}
+        className={clsx(styles.Root, props.className)}>
         <QueueScrollArea.Root
           className={clsx(styles.ScrollAreaRoot)}
           onMouseDown={onRootMousedown}>

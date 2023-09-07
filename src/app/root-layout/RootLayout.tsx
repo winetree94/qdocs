@@ -134,7 +134,15 @@ export const RootLayout = () => {
               </div>
             </div>
           )}
-          <div className={clsx(styles.Right, 'tw-px-2.5', 'tw-bg-gray-400')}>
+          <div
+            className={clsx(
+              'tw-flex',
+              'tw-flex-1',
+              'tw-flex-col',
+              'tw-min-w-0',
+              'tw-bg-gray-400',
+              !presentationMode ? 'tw-px-2.5' : 'tw-px-0',
+            )}>
             <QueueEditor />
 
             {!presentationMode && bottomPanelOpened && (
