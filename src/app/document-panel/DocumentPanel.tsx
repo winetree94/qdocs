@@ -75,6 +75,7 @@ export const DocumentPanel = () => {
                 value={width}
                 type="number"
                 variant="filled"
+                disabled
                 onChange={handleChangeDocumentWidth}
               />
             </div>
@@ -83,6 +84,7 @@ export const DocumentPanel = () => {
                 value={height}
                 type="number"
                 variant="filled"
+                disabled
                 onChange={handleChangeDocumentHeight}
               />
             </div>
