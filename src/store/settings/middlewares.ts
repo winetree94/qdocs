@@ -104,3 +104,36 @@ settingsMiddleware.startListening({
     );
   },
 });
+
+settingsMiddleware.startListening({
+  actionCreator: SettingsActions.goToIn,
+  effect: (action, api) => {
+    api.dispatch(
+      SettingsActions.updateSettings({
+        changes: {
+          queuePosition: 'pause',
+          queueStart: -1,
+          queueIndex: 0,
+        },
+      }),
+    );
+  },
+});
+
+settingsMiddleware.startListening({
+  actionCreator: SettingsActions.goToOut,
+  effect: (action, api) => {
+    const maxEffectIndex = SettingSelectors.currentPageMaxEffectIndex(
+      api.getState(),
+    );
+    api.dispatch(
+      SettingsActions.updateSettings({
+        changes: {
+          queuePosition: 'pause',
+          queueStart: -1,
+          queueIndex: maxEffectIndex,
+        },
+      }),
+    );
+  },
+});

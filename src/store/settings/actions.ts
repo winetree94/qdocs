@@ -10,6 +10,10 @@ const play = createAction('settings/play');
 
 const pause = createAction('settings/pause');
 
+const goToIn = createAction('settings/goToIn');
+
+const goToOut = createAction('settings/goToOut');
+
 const setRepeat = createAction<boolean>('settings/setRepeat');
 
 const updateSettings = createAction<{
@@ -64,4 +68,6 @@ export const SettingsActions = {
   resetSelection,
   setPresentationMode,
   setQueueIndex,
+  goToIn,
+  goToOut,
 };

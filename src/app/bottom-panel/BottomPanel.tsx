@@ -39,9 +39,15 @@ export const BottomPanel = memo(() => {
 
   const changeQueueIndex = (targetIndex: number, play: boolean): void => {
     const queueIndex = SettingSelectors.queueIndex(store.getState());
+    const targetQueueIndex = Math.max(queueIndex + targetIndex, 0);
+
+    if (queueIndex === targetQueueIndex) {
+      return;
+    }
+
     dispatch(
       SettingsActions.setQueueIndex({
-        queueIndex: queueIndex + targetIndex,
+        queueIndex: targetQueueIndex,
         play: play,
       }),
     );
@@ -81,7 +87,7 @@ export const BottomPanel = memo(() => {
           )}>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => dispatch(SettingsActions.rewind())}>
+            onClick={() => dispatch(SettingsActions.goToIn())}>
             <StepInIcon />
           </QueueIconButton>
           <QueueIconButton
@@ -101,7 +107,7 @@ export const BottomPanel = memo(() => {
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => dispatch(SettingsActions.forward())}>
+            onClick={() => dispatch(SettingsActions.goToOut())}>
             <StepOutIcon />
           </QueueIconButton>
         </div>
