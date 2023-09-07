@@ -209,7 +209,6 @@ export const documentSettingsSlice = createSlice({
             ? 'forward'
             : 'backward',
           queueStart: action.payload.play ? performance.now() : -1,
-          selectedObjectIds: [],
           selectionMode: 'normal',
         };
       },
