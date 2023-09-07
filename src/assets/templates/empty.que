@@ -44,7 +44,7 @@
         },
         "fill": {
           "color": "#ffffff",
-          "opacity": 1
+          "opacity": 0 
         },
         "rotate": {
           "degree": 0
