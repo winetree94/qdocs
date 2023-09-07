@@ -21,6 +21,7 @@ import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
 import { QueueDropdown } from 'components/dropdown';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
+import { store } from 'store';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -239,7 +240,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const hasSelectedObjects = selectedObjects.length > 0;
+  const hasSelectedObjects = useAppSelector(SettingSelectors.hasSelectedObject);
   const [firstObject] = selectedObjects;
 
   const effects = useAppSelector((state) =>
@@ -262,6 +263,7 @@ export const EffectControllerBox = (): ReactElement | null => {
   const handleAddEffectItemClick = (
     effectType: QueueEffectType['type'],
   ): void => {
+    const selectedObjects = SettingSelectors.selectedObjects(store.getState());
     const models = selectedObjects.map((object) => {
       const newEffects = [...effects];
       return createEffect(

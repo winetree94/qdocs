@@ -6,21 +6,42 @@ import { DefaultPropPanel } from 'app/default-prop-panel/DefaultPropPanel';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { DocumentPanel } from 'app/document-panel/DocumentPanel';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export type RightPanelProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const RightPanel = ({ className, ...props }: RightPanelProps) => {
   const { t } = useTranslation();
-  const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
+  const hasSelectedObject = useAppSelector(SettingSelectors.hasSelectedObject);
 
   const [tabValue, setTabValue] = useState<string>(t('global.design'));
 
   useEffect(() => {
-    if (tabValue === t('global.animation') && selectedObjectIds.length <= 0) {
+    if (tabValue === t('global.animation') && !hasSelectedObject) {
       setTabValue(t('global.design'));
     }
-  }, [selectedObjectIds.length]);
+  }, [hasSelectedObject, tabValue, t]);
+
+  const tabs = useMemo(
+    () => [
+      {
+        name: t('global.design'),
+        onClick: () => setTabValue(t('global.design')),
+        content: (
+          <div className="tw-h-[calc(100%-46px)]">
+            {hasSelectedObject ? <DefaultPropPanel /> : <DocumentPanel />}
+          </div>
+        ),
+      },
+      {
+        name: t('global.animation'),
+        onClick: () => setTabValue(t('global.animation')),
+        disabled: !hasSelectedObject,
+        content: <EffectPanel />,
+      },
+    ],
+    [hasSelectedObject, t],
+  );
 
   return (
     <div
@@ -33,30 +54,7 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
         className,
       )}
       {...props}>
-      <QueueTab
-        className="tw-h-full"
-        value={tabValue}
-        tabs={[
-          {
-            name: t('global.design'),
-            onClick: () => setTabValue(t('global.design')),
-            content: (
-              <div className="tw-h-[calc(100%-46px)]">
-                {selectedObjectIds.length > 0 ? (
-                  <DefaultPropPanel />
-                ) : (
-                  <DocumentPanel />
-                )}
-              </div>
-            ),
-          },
-          {
-            name: t('global.animation'),
-            onClick: () => setTabValue(t('global.animation')),
-            disabled: selectedObjectIds.length <= 0,
-            content: <EffectPanel />,
-          },
-        ]}></QueueTab>
+      <QueueTab className="tw-h-full" value={tabValue} tabs={tabs}></QueueTab>
     </div>
   );
 };
