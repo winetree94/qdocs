@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { scaleTime } from 'd3-scale';
 import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider';
 
 import SliderRail from './components/SliderRail';
