@@ -17,6 +17,11 @@ The app is being publicly revealed through https://the-queue.io
 
 # Development
 
+### Requirements
+
+- Node.js 18+
+- Npm 9+
+
 ### Install Dependencies
 
 ```
