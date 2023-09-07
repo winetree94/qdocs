@@ -31,7 +31,7 @@ const TimelineHeaderRenderer = memo((props: GridColumnDef<TimeLineTrack>) => (
       'tw-h-full',
       'tw-items-center',
     )}>
-    {Number(props.field)}
+    {Number(props.field) + 1}
   </div>
 ));
 
