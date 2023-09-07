@@ -8,7 +8,8 @@ interface TabProps extends RadixTab.TabsProps {
 }
 
 export interface Tabs {
-  name: string;
+  id: string;
+  label: string;
   disabled?: boolean;
   onClick?: RadixTab.TabsTriggerProps['onClick'];
   content: JSX.Element;
@@ -21,17 +22,17 @@ const QueueTab = forwardRef<HTMLDivElement, TabProps>(
         ref={ref}
         {...props}
         className={clsx(styles.TabsRoot, className)}
-        defaultValue={props.defaultValue || tabs[0].name}>
+        defaultValue={props.defaultValue || tabs[0].id}>
         {/* tab list */}
         <RadixTab.List className={clsx(styles.TabsList)}>
           {tabs.map((tab) => (
             <RadixTab.Trigger
               className={clsx(styles.TabsTrigger)}
-              value={tab.name}
+              value={tab.id}
               disabled={tab.disabled}
-              key={tab.name + 'list'}
+              key={tab.id + 'list'}
               onClick={tab.onClick}>
-              {tab.name}
+              {tab.label}
             </RadixTab.Trigger>
           ))}
         </RadixTab.List>
@@ -40,8 +41,8 @@ const QueueTab = forwardRef<HTMLDivElement, TabProps>(
         {tabs.map((tab) => (
           <RadixTab.Content
             className={clsx(styles.TabsContent)}
-            value={tab.name}
-            key={tab.name + 'content'}>
+            value={tab.id}
+            key={tab.id + 'content'}>
             {tab.content}
           </RadixTab.Content>
         ))}

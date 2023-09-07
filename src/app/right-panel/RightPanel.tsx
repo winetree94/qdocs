@@ -14,19 +14,20 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
   const { t } = useTranslation();
   const hasSelectedObject = useAppSelector(SettingSelectors.hasSelectedObject);
 
-  const [tabValue, setTabValue] = useState<string>(t('global.design'));
+  const [tabValue, setTabValue] = useState<string>('design');
 
   useEffect(() => {
-    if (tabValue === t('global.animation') && !hasSelectedObject) {
-      setTabValue(t('global.design'));
+    if (tabValue === 'animation' && !hasSelectedObject) {
+      setTabValue('design');
     }
   }, [hasSelectedObject, tabValue, t]);
 
   const tabs = useMemo(
     () => [
       {
-        name: t('global.design'),
-        onClick: () => setTabValue(t('global.design')),
+        label: t('global.design'),
+        id: 'design',
+        onClick: () => setTabValue('design'),
         content: (
           <div className="tw-h-[calc(100%-46px)]">
             {hasSelectedObject ? <DefaultPropPanel /> : <DocumentPanel />}
@@ -34,8 +35,9 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
         ),
       },
       {
-        name: t('global.animation'),
-        onClick: () => setTabValue(t('global.animation')),
+        label: t('global.animation'),
+        id: 'animation',
+        onClick: () => setTabValue('animation'),
         disabled: !hasSelectedObject,
         content: <EffectPanel />,
       },
