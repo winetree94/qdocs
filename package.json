@@ -34,9 +34,7 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@reduxjs/toolkit": "^1.9.5",
     "clsx": "^2.0.0",
-    "d3-scale": "^4.0.2",
     "i18next": "^23.2.11",
-    "i18next-browser-languagedetector": "^7.1.0",
     "i18next-icu": "^2.3.0",
     "intl-messageformat": "^10.5.0",
     "lodash": "^4.17.21",
@@ -49,6 +47,7 @@
     "react-i18next": "^13.0.2",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.9",
+    "react-redux": "^8.1.2",
     "remixicon": "^3.4.0"
   },
   "scripts": {
@@ -86,7 +85,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/d3-scale": "^4.0.3",
     "@types/jest": "^29.5.3",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.4.2",
@@ -109,7 +107,6 @@
     "prettier": "^3.0.0",
     "prettier-eslint": "^15.0.1",
     "prop-types": "^15.8.1",
-    "react-redux": "^8.1.1",
     "react-scripts": "5.0.1",
     "sass": "^1.63.6",
     "storybook": "^7.1.1",
