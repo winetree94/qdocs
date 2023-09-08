@@ -42,8 +42,8 @@ const reducers = combineReducers({
 });
 
 export const store = configureStore({
-  devTools: false,
-  // devTools: process.env.NODE_ENV !== 'production',
+  // devTools: false,
+  devTools: process.env.NODE_ENV !== 'production',
   reducer: reducers,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(
