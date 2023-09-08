@@ -4,8 +4,13 @@ import { ObjectSelectors } from 'store/object/selectors';
 import { QueueDocumentSettings } from './model';
 import { EffectSelectors } from 'store/effect/selectors';
 import { QueueObjectType } from 'model/object';
-import { OBJECT_EFFECT_TYPE, QueueEffectType } from 'model/effect';
 import {
+  OBJECT_EFFECT_TYPE,
+  OBJECT_EFFECT_TYPES,
+  QueueEffectType,
+} from 'model/effect';
+import {
+  EFFECT_SUPPORTED_MAP,
   supportFade,
   supportFill,
   supportRect,
@@ -62,6 +67,25 @@ const selectedObjects = createSelector(
   [selectSelf, ObjectSelectors.entities],
   (settings, objectEntities) =>
     settings.selectedObjectIds.map((id) => objectEntities[id]),
+);
+
+const firstSelectedObject = createSelector(
+  selectedObjects,
+  (objects) => objects[0],
+);
+
+const firstSelectedObjectEffects = createSelector(
+  [firstSelectedObject, EffectSelectors.effectsByObjectId],
+  (object, effects) => {
+    return effects[object.id];
+  },
+);
+
+const firstSelectedObjectEffectTypes = createSelector(
+  [firstSelectedObjectEffects],
+  (effects) => {
+    return effects.map((effect) => effect.type);
+  },
 );
 
 const firstSelectedObjectId = createSelector(
@@ -371,6 +395,38 @@ const currentPageNextQueueIndexMaxDuration = createSelector(
   },
 );
 
+/**
+ * @description
+ * 선택된 오브젝트들에서 공통적으로 지원하는 이펙트 목록을 조회
+ */
+const selectedObjectsSupportedEffectTypes = createSelector(
+  [selectedObjects],
+  (objects) => {
+    return Object.values(OBJECT_EFFECT_TYPE).reduce<{
+      [key in OBJECT_EFFECT_TYPES]: boolean;
+    }>(
+      (result, effectType) => {
+        const supported = objects.every(
+          (object) => !!EFFECT_SUPPORTED_MAP[effectType][object.type],
+        );
+        result[effectType] = supported;
+        return result;
+      },
+      {
+        [OBJECT_EFFECT_TYPE.CREATE]: false,
+        [OBJECT_EFFECT_TYPE.REMOVE]: false,
+        [OBJECT_EFFECT_TYPE.RECT]: false,
+        [OBJECT_EFFECT_TYPE.FADE]: false,
+        [OBJECT_EFFECT_TYPE.FILL]: false,
+        [OBJECT_EFFECT_TYPE.STROKE]: false,
+        [OBJECT_EFFECT_TYPE.ROTATE]: false,
+        [OBJECT_EFFECT_TYPE.SCALE]: false,
+        [OBJECT_EFFECT_TYPE.TEXT]: false,
+      },
+    );
+  },
+);
+
 export const SettingSelectors = {
   pageId,
   queueIndex,
@@ -378,6 +434,9 @@ export const SettingSelectors = {
   pageObjects,
   pageObjectIds,
   hasSelectedObject,
+  firstSelectedObject,
+  firstSelectedObjectEffects,
+  firstSelectedObjectEffectTypes,
   firstSelectedObjectId,
   firstSelectedObjectType,
   firstSelectedObjectRect,
@@ -407,4 +466,5 @@ export const SettingSelectors = {
   currentPageQueueIndexEffectsByObjectId,
   currentPageNextQueueIndexMaxDuration,
   currentPageQueueIndexMaxDuration,
+  selectedObjectsSupportedEffectTypes,
 };

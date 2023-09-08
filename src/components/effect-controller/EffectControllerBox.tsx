@@ -3,11 +3,10 @@ import {
   BaseQueueEffect,
   OBJECT_EFFECT_TRANSLATION_KEY,
   OBJECT_EFFECT_TYPE,
-  OBJECT_EFFECT_TYPES,
   QueueEffectType,
 } from 'model/effect';
-import { ReactElement, useState } from 'react';
-import { OBJECT_ADDABLE_EFFECTS, QueueObjectType } from 'model/object';
+import { ReactElement, useState, useMemo } from 'react';
+import { QueueObjectType } from 'model/object';
 import { QueueButton, QueueIconButton } from 'components/buttons/button/Button';
 import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
@@ -24,39 +23,11 @@ import { QueueDropdown } from 'components/dropdown';
 import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
 import { QueueSeparator } from 'components/separator/Separator';
 import { store } from 'store';
+import { isEqual } from 'lodash';
+import { OBJECT_SUPPORTED_EFFECTS } from 'model/support';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
-};
-
-const AllEffectList = () => {
-  const { t } = useTranslation();
-  const [firstObject] = useAppSelector(SettingSelectors.selectedObjects);
-  const effects = useAppSelector((state) =>
-    EffectSelectors.byObjectId(state, firstObject.id),
-  );
-
-  return (
-    <QueueScrollArea.Root>
-      <QueueScrollArea.Viewport className="tw-max-h-25">
-        <ul className="tw-text-sm">
-          {effects.map((effect, index) => (
-            <li key={`effect-${index}-${effect?.id}`}>
-              <span className="tw-font-normal tw-text-[var(--gray-11)]">
-                #{effect.index + 1}{' '}
-              </span>
-              <span className="tw-font-normal">
-                {t(OBJECT_EFFECT_TRANSLATION_KEY[effect.type])}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </QueueScrollArea.Viewport>
-      <QueueScrollArea.Scrollbar>
-        <QueueScrollArea.Thumb />
-      </QueueScrollArea.Scrollbar>
-    </QueueScrollArea.Root>
-  );
 };
 
 export const EffectController = ({
@@ -241,30 +212,41 @@ const createEffect = (
 };
 
 export const EffectControllerBox = (): ReactElement | null => {
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const currentQueueIndex = useAppSelector(SettingSelectors.queueIndex);
   const currentPageId = useAppSelector(SettingSelectors.pageId);
-  const selectedObjects = useAppSelector(SettingSelectors.selectedObjects);
-  const hasSelectedObjects = useAppSelector(SettingSelectors.hasSelectedObject);
-  const [firstObject] = selectedObjects;
 
-  const effects = useAppSelector((state) =>
-    EffectSelectors.byObjectId(state, firstObject.id),
+  const firstSelectedObject = useAppSelector(
+    SettingSelectors.firstSelectedObject,
+    isEqual,
   );
 
-  const objectCurrentEffects = effects.filter(
+  const effects = useAppSelector(
+    SettingSelectors.firstSelectedObjectEffects,
+    isEqual,
+  );
+
+  const currentQueueIndexEffects = effects.filter(
     (effect) => effect.index === currentQueueIndex,
   );
-  const addableEffectTypes = Object.values(
-    OBJECT_ADDABLE_EFFECTS[firstObject.type],
-  ).filter((effect) => effect !== OBJECT_EFFECT_TYPE.STROKE);
-  const currentQueueObjectEffectTypes = objectCurrentEffects.map(
-    (currentQueueObjectEffect) => currentQueueObjectEffect.type,
+
+  const addableEffectTypes = useMemo(
+    () =>
+      Object.values(OBJECT_SUPPORTED_EFFECTS[firstSelectedObject.type])
+        .filter((effectType) => effectType !== OBJECT_EFFECT_TYPE.CREATE)
+        .filter((effectType) => {
+          return !currentQueueIndexEffects.find(
+            (currentQueueObjectEffect) =>
+              currentQueueObjectEffect.type === effectType,
+          );
+        }),
+    [firstSelectedObject.type, currentQueueIndexEffects],
   );
-  const createEffectIndex = effects.find(
-    (effect) => effect.type === OBJECT_EFFECT_TYPE.CREATE,
-  ).index;
+
+  const isCreateEffectIndex =
+    effects.find((effect) => effect.type === OBJECT_EFFECT_TYPE.CREATE)
+      .index === currentQueueIndex;
 
   const handleAddEffectItemClick = (
     effectType: QueueEffectType['type'],
@@ -282,12 +264,11 @@ export const EffectControllerBox = (): ReactElement | null => {
         newEffects,
       );
     });
-
     dispatch(HistoryActions.Capture());
     dispatch(EffectActions.upsertEffects(models));
   };
 
-  if (!hasSelectedObjects) {
+  if (!firstSelectedObject) {
     return null;
   }
 
@@ -300,7 +281,25 @@ export const EffectControllerBox = (): ReactElement | null => {
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <AllEffectList />
+        <QueueScrollArea.Root>
+          <QueueScrollArea.Viewport className="tw-max-h-25">
+            <ul className="tw-text-sm">
+              {effects.map((effect, index) => (
+                <li key={`effect-${index}-${effect?.id}`}>
+                  <span className="tw-font-normal tw-text-[var(--gray-11)]">
+                    #{effect.index + 1}{' '}
+                  </span>
+                  <span className="tw-font-normal">
+                    {t(OBJECT_EFFECT_TRANSLATION_KEY[effect.type])}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </QueueScrollArea.Viewport>
+          <QueueScrollArea.Scrollbar>
+            <QueueScrollArea.Thumb />
+          </QueueScrollArea.Scrollbar>
+        </QueueScrollArea.Root>
       </div>
 
       <QueueSeparator.Root className="tw-my-4" />
@@ -309,35 +308,31 @@ export const EffectControllerBox = (): ReactElement | null => {
         <h2 className="tw-text-xs tw-font-medium tw-leading-snug">
           {t('effect-panel.current-effects')}
         </h2>
-        <QueueDropdown>
-          <QueueDropdown.Trigger asChild>
-            <button
-              className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
-              disabled={createEffectIndex === currentQueueIndex}>
-              <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.MEDIUM} />
-            </button>
-          </QueueDropdown.Trigger>
-          <QueueDropdown.Content side="right" className="tw-w-[100px]">
-            {addableEffectTypes.map((effectType) => {
-              if (currentQueueObjectEffectTypes.includes(effectType)) {
-                return null;
-              }
-
-              return (
+        {!isCreateEffectIndex && (
+          <QueueDropdown>
+            <QueueDropdown.Trigger asChild disabled={isCreateEffectIndex}>
+              <button
+                className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
+                disabled={isCreateEffectIndex}>
+                <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.MEDIUM} />
+              </button>
+            </QueueDropdown.Trigger>
+            <QueueDropdown.Content side="right" className="tw-w-[100px]">
+              {addableEffectTypes.map((effectType) => (
                 <QueueDropdown.Item
                   key={effectType}
                   onClick={(): void => handleAddEffectItemClick(effectType)}>
                   {t(OBJECT_EFFECT_TRANSLATION_KEY[effectType])}
                 </QueueDropdown.Item>
-              );
-            })}
-          </QueueDropdown.Content>
-        </QueueDropdown>
+              ))}
+            </QueueDropdown.Content>
+          </QueueDropdown>
+        )}
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
         <div className="tw-flex tw-flex-col tw-gap-1">
-          {objectCurrentEffects.map((currentQueueObjectEffect) => (
+          {currentQueueIndexEffects.map((currentQueueObjectEffect) => (
             <EffectController
               key={`ec-${currentQueueObjectEffect.type}`}
               effectType={currentQueueObjectEffect.type}
