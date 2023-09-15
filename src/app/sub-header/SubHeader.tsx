@@ -32,7 +32,12 @@ import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
 import { store } from 'store';
 import { DocumentSelectors } from 'store/document';
-import { createDefaultSquareText } from 'model/object';
+import { createDefaultImage, createDefaultSquareText } from 'model/object';
+import {
+  ImageEncodingMessage,
+  IMAGE_ENCODING_STATUS,
+} from 'workers/imageConversionWorker';
+import { nanoid } from '@reduxjs/toolkit';
 
 const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
@@ -60,6 +65,48 @@ const QueueSubHeader = memo(() => {
     currentQueueIndex,
     dispatch,
   );
+
+  const handleCreateImageClick = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.multiple = false;
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      const worker = new Worker(
+        /* webpackChunkName: "image-encoding-worker" */ new URL(
+          '../../workers/imageConversionWorker.ts',
+          import.meta.url,
+        ),
+      );
+
+      worker.addEventListener(
+        'message',
+        (event: MessageEvent<ImageEncodingMessage>) => {
+          const { status, imageData } = event.data;
+
+          switch (status) {
+            case IMAGE_ENCODING_STATUS.ENCODED:
+              createImage(createDefaultImage)({
+                assetId: nanoid(),
+                alt: imageData.fileName,
+                src: imageData.src,
+              });
+
+              break;
+            case IMAGE_ENCODING_STATUS.ERROR:
+              // what to do?
+              break;
+          }
+        },
+      );
+
+      worker.postMessage(file);
+    });
+
+    fileInput.click();
+  };
 
   const onSaveDocumentClick = (): void => {
     const docs = DocumentSelectors.document(store.getState());
@@ -188,7 +235,7 @@ const QueueSubHeader = memo(() => {
 
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => createImage()}>
+                onClick={() => handleCreateImageClick()}>
                 <ImageIcon />
               </QueueIconButton>
 

@@ -1,4 +1,4 @@
-import { EntityId } from '@reduxjs/toolkit';
+import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from 'model/document/document';
 import {
   WithRect,
@@ -30,14 +30,14 @@ export interface QueueImage
 export const createDefaultImage = (
   documentRect: QueueDocumentRect,
   pageId: EntityId,
-  objectId: string,
+  image?: QueueImage['image'],
 ): QueueImage => {
   const width = 300;
   const height = 300;
 
   return {
     type: OBJECT_TYPE.IMAGE,
-    id: objectId,
+    id: nanoid(),
     pageId: pageId,
     index: 0,
     uniqueColor: getRandomColor(),
@@ -74,9 +74,9 @@ export const createDefaultImage = (
       width: 0,
     },
     image: {
-      assetId: '',
-      src: '',
-      alt: '',
+      assetId: image?.assetId ?? '',
+      src: image?.src ?? '',
+      alt: image?.alt ?? '',
     },
   };
 };
