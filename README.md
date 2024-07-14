@@ -2,7 +2,7 @@
 
 The Queue is currently in development.
 
-The app is being publicly revealed through https://the-queue.io
+The app is being publicly revealed through https://qdocs.winetree94.com
 
 # Browser Support
 
