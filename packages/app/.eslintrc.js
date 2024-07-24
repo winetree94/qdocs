@@ -18,14 +18,14 @@ module.exports = {
     "sourceType": "module",
     "tsconfigRootDir": ".",
     "project": [
-      "./tsconfig.json"
+      __dirname + "/tsconfig.json"
     ]
   },
   parser: '@typescript-eslint/parser',
   "settings": {
     "import/resolver": {
       "typescript": {
-        "project": "./tsconfig.json"
+        "project": __dirname + "/tsconfig.json"
       }
     },
     "react": {
