@@ -3,13 +3,14 @@ import clsx from 'clsx';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, DotFilledIcon } from '@radix-ui/react-icons';
 
-export interface QueueDropdownGroupProps extends Dropdown.MenuGroupProps {
-  label?: Dropdown.MenuLabelProps['children'];
+export interface QueueDropdownGroupProps
+  extends Dropdown.DropdownMenuGroupProps {
+  label?: Dropdown.DropdownMenuLabelProps['children'];
 }
 
 export interface QueueDropdownRadioGroupProps
-  extends Dropdown.MenuRadioGroupProps {
-  label?: Dropdown.MenuLabelProps['children'];
+  extends Dropdown.DropdownMenuRadioGroupProps {
+  label?: Dropdown.DropdownMenuLabelProps['children'];
 }
 
 const DropdownItemBase = [
@@ -45,7 +46,7 @@ const DropdownIndicatorBase = [
   'tw-justify-center',
 ];
 
-const Content = forwardRef<HTMLDivElement, Dropdown.MenuContentProps>(
+const Content = forwardRef<HTMLDivElement, Dropdown.DropdownMenuContentProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Dropdown.Portal>
@@ -94,7 +95,7 @@ const RadioGroup = forwardRef<HTMLDivElement, QueueDropdownRadioGroupProps>(
   },
 );
 
-const Item = forwardRef<HTMLDivElement, Dropdown.MenuItemProps>(
+const Item = forwardRef<HTMLDivElement, Dropdown.DropdownMenuItemProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <Dropdown.Item
@@ -107,71 +108,75 @@ const Item = forwardRef<HTMLDivElement, Dropdown.MenuItemProps>(
   },
 );
 
-const CheckboxItem = forwardRef<HTMLDivElement, Dropdown.MenuCheckboxItemProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Dropdown.CheckboxItem
-        className={clsx(DropdownItemBase, className)}
+const CheckboxItem = forwardRef<
+  HTMLDivElement,
+  Dropdown.DropdownMenuCheckboxItemProps
+>(({ children, className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.CheckboxItem
+      className={clsx(DropdownItemBase, className)}
+      {...props}
+      ref={forwardedRef}>
+      <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
+        <CheckIcon />
+      </Dropdown.ItemIndicator>
+      {children}
+    </Dropdown.CheckboxItem>
+  );
+});
+
+const RadioItem = forwardRef<
+  HTMLDivElement,
+  Dropdown.DropdownMenuRadioItemProps
+>(({ children, className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.RadioItem
+      className={clsx(DropdownItemBase, className)}
+      {...props}
+      ref={forwardedRef}>
+      <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
+        <DotFilledIcon />
+      </Dropdown.ItemIndicator>
+      {children}
+    </Dropdown.RadioItem>
+  );
+});
+
+const Separator = forwardRef<
+  HTMLDivElement,
+  Dropdown.DropdownMenuSeparatorProps
+>(({ className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.Separator
+      className={clsx('tw-h-px tw-mx-2 tw-my-1.5 tw-bg-stone-100', className)}
+      {...props}
+      ref={forwardedRef}
+    />
+  );
+});
+
+const SubContent = forwardRef<
+  HTMLDivElement,
+  Dropdown.DropdownMenuSubContentProps
+>(({ children, className, ...props }, forwardedRef) => {
+  return (
+    <Dropdown.Portal>
+      <Dropdown.SubContent
+        className={clsx(
+          'tw-py-2 tw-rounded-sm tw-bg-white-100 tw-text-sm tw-drop-shadow-md',
+          className,
+        )}
         {...props}
         ref={forwardedRef}>
-        <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
-          <CheckIcon />
-        </Dropdown.ItemIndicator>
         {children}
-      </Dropdown.CheckboxItem>
-    );
-  },
-);
-
-const RadioItem = forwardRef<HTMLDivElement, Dropdown.MenuRadioItemProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Dropdown.RadioItem
-        className={clsx(DropdownItemBase, className)}
-        {...props}
-        ref={forwardedRef}>
-        <Dropdown.ItemIndicator className={clsx(DropdownIndicatorBase)}>
-          <DotFilledIcon />
-        </Dropdown.ItemIndicator>
-        {children}
-      </Dropdown.RadioItem>
-    );
-  },
-);
-
-const Separator = forwardRef<HTMLDivElement, Dropdown.MenuSeparatorProps>(
-  ({ className, ...props }, forwardedRef) => {
-    return (
-      <Dropdown.Separator
-        className={clsx('tw-h-px tw-mx-2 tw-my-1.5 tw-bg-stone-100', className)}
-        {...props}
-        ref={forwardedRef}
-      />
-    );
-  },
-);
-
-const SubContent = forwardRef<HTMLDivElement, Dropdown.MenuSubContentProps>(
-  ({ children, className, ...props }, forwardedRef) => {
-    return (
-      <Dropdown.Portal>
-        <Dropdown.SubContent
-          className={clsx(
-            'tw-py-2 tw-rounded-sm tw-bg-white-100 tw-text-sm tw-drop-shadow-md',
-            className,
-          )}
-          {...props}
-          ref={forwardedRef}>
-          {children}
-        </Dropdown.SubContent>
-      </Dropdown.Portal>
-    );
-  },
-);
+      </Dropdown.SubContent>
+    </Dropdown.Portal>
+  );
+});
 
 const ItemIndicator = forwardRef<
   HTMLDivElement,
-  Dropdown.MenuItemIndicatorProps
+  Dropdown.DropdownMenuItemIndicatorProps
 >(({ className, ...props }, forwardedRef) => {
   return (
     <Dropdown.ItemIndicator

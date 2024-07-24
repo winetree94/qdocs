@@ -6165,7 +6165,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-virtualized-auto-sizer@npm:^1.0.1":
+"@types/react-virtualized-auto-sizer@npm:^1.0.4":
   version: 1.0.4
   resolution: "@types/react-virtualized-auto-sizer@npm:1.0.4"
   dependencies:
@@ -18491,7 +18491,7 @@ __metadata:
     "@types/react": "npm:^18.2.15"
     "@types/react-color": "npm:^3.0.6"
     "@types/react-dom": "npm:^18.2.7"
-    "@types/react-virtualized-auto-sizer": "npm:^1.0.1"
+    "@types/react-virtualized-auto-sizer": "npm:^1.0.4"
     "@types/react-window": "npm:^1.8.5"
     "@typescript-eslint/eslint-plugin": "npm:^5.5.0"
     "@typescript-eslint/parser": "npm:^5.42.1"

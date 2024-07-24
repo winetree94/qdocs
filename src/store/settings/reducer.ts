@@ -206,8 +206,8 @@ export const documentSettingsSlice = createSlice({
           queuePosition: !action.payload.play
             ? 'pause'
             : state.queueIndex < action.payload.queueIndex
-            ? 'forward'
-            : 'backward',
+              ? 'forward'
+              : 'backward',
           queueStart: action.payload.play ? performance.now() : -1,
           selectionMode: 'normal',
         };

@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  useCallback,
-  cloneElement,
-  useState,
-} from 'react';
+import { ReactElement, useCallback, cloneElement, useState } from 'react';
 import clsx from 'clsx';
 import style from './ButtonGroup.module.scss';
 
@@ -31,10 +26,10 @@ const QueueButtonGroup = ({ children, activeIndex }: Props) => {
                 index !== 0 && children.length - 1 !== index
                   ? '0px'
                   : !index
-                  ? '8px 0 0 8px'
-                  : children.length - 1 === index
-                  ? '0 8px 8px 0'
-                  : child.props.style,
+                    ? '8px 0 0 8px'
+                    : children.length - 1 === index
+                      ? '0 8px 8px 0'
+                      : child.props.style,
               ...child.props.style,
             },
             index,

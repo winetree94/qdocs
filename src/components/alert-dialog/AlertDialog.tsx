@@ -27,17 +27,13 @@ const QueueAlertDialogRoot = forwardRef<
 >(({ children, ...props }: QueueAlertDialogRootProps, ref) => {
   const context = useRootRenderedContext();
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        close: (): void => {
-          context.close();
-        },
-      };
-    },
-    [context],
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      close: (): void => {
+        context.close();
+      },
+    };
+  }, [context]);
 
   return (
     <AlertDialog.Root

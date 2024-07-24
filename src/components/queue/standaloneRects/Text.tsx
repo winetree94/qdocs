@@ -11,15 +11,15 @@ export const StandaloneText = memo(
       text.verticalAlign === 'middle'
         ? 'center'
         : text.verticalAlign === 'top'
-        ? 'flex-start'
-        : 'flex-end';
+          ? 'flex-start'
+          : 'flex-end';
 
     const textAlign =
       text.horizontalAlign === 'center'
         ? 'center'
         : text.horizontalAlign === 'left'
-        ? 'left'
-        : 'right';
+          ? 'left'
+          : 'right';
 
     return (
       <div

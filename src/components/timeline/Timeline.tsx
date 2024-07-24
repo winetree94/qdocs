@@ -61,8 +61,8 @@ const TimelineCellRenderer = memo(
           start > cellIndex || end < cellIndex
             ? styles.gridDot
             : queueList.includes(cellIndex)
-            ? styles.queueDot
-            : '',
+              ? styles.queueDot
+              : '',
           cellIndex === start && 'tw-rounded-l-lg',
           cellIndex === end && 'tw-rounded-r-lg',
           start <= cellIndex &&

@@ -49,17 +49,13 @@ export const QueueDialogRoot = forwardRef<
 >(({ children, ...props }, ref) => {
   const context = useRootRenderedContext();
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        close: (): void => {
-          context.close();
-        },
-      };
-    },
-    [context],
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      close: (): void => {
+        context.close();
+      },
+    };
+  }, [context]);
 
   return (
     <Dialog.Root

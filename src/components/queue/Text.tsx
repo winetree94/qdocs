@@ -17,17 +17,17 @@ export const Text: FunctionComponent<TextProps> = ({ onEdit }) => {
     object.text.verticalAlign === 'middle'
       ? 'center'
       : object.text.verticalAlign === 'top'
-      ? 'flex-start'
-      : 'flex-end';
+        ? 'flex-start'
+        : 'flex-end';
 
   const textAlign =
     object.text.horizontalAlign === 'center'
       ? 'center'
       : object.text.horizontalAlign === 'left'
-      ? 'left'
-      : object.text.horizontalAlign === 'right'
-      ? 'right'
-      : 'justify';
+        ? 'left'
+        : object.text.horizontalAlign === 'right'
+          ? 'right'
+          : 'justify';
 
   const onKeydown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
     if (event.nativeEvent.isComposing) {

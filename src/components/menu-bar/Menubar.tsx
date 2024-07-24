@@ -20,10 +20,7 @@ export const Root = React.forwardRef<HTMLDivElement, Menubar.MenubarProps>(
   },
 );
 
-export const Menu = ({
-  children,
-  ...props
-}: Menubar.ScopedProps<Menubar.MenubarMenuProps>) => {
+export const Menu = ({ children, ...props }: Menubar.MenubarMenuProps) => {
   return <Menubar.Menu {...props}>{children}</Menubar.Menu>;
 };
 
@@ -57,16 +54,8 @@ export const Trigger = React.forwardRef<
   },
 );
 
-export const Portal = ({
-  children,
-  className,
-  ...props
-}: Menubar.MenubarPortalProps) => {
-  return (
-    <Menubar.Portal {...props} className={clsx(className)}>
-      {children}
-    </Menubar.Portal>
-  );
+export const Portal = ({ children, ...props }: Menubar.MenubarPortalProps) => {
+  return <Menubar.Portal {...props}>{children}</Menubar.Portal>;
 };
 
 export const Content = React.forwardRef<

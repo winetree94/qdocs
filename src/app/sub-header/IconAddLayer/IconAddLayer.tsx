@@ -240,7 +240,13 @@ const QueueIconAddLayer = () => {
         <QueueScrollArea.Viewport
           className={clsx(styles.ScrollAreaViewport, 'tw-h-52')}>
           <AutoSizer>
-            {({ height, width }): ReactNode => (
+            {({
+              height,
+              width,
+            }: {
+              height: number;
+              width: number;
+            }): ReactNode => (
               <FixedSizeList
                 itemCount={flattenItems.length}
                 itemSize={50}
