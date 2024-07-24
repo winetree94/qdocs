@@ -45,9 +45,9 @@
     "react-compound-slider": "^3.4.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.0.2",
+    "react-redux": "^8.1.2",
     "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.9",
-    "react-redux": "^8.1.2",
     "remixicon": "^3.4.0"
   },
   "scripts": {
@@ -72,6 +72,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.24.9",
     "@storybook/addon-essentials": "^7.1.1",
     "@storybook/addon-interactions": "^7.1.1",
     "@storybook/addon-links": "^7.1.1",
@@ -82,9 +83,11 @@
     "@storybook/react": "^7.1.1",
     "@storybook/react-webpack5": "^7.1.1",
     "@storybook/testing-library": "^0.2.0",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/babel__core": "^7",
     "@types/jest": "^29.5.3",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.4.2",
@@ -101,8 +104,10 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-storybook": "^0.6.13",
+    "less": "^4.2.0",
     "postcss": "^8.4.27",
     "prettier": "^3.0.0",
     "prettier-eslint": "^15.0.1",
@@ -115,5 +120,6 @@
     "typescript-plugin-css-modules": "^4.1.1",
     "web-vitals": "^3.4.0",
     "webpack": "^5.88.2"
-  }
+  },
+  "packageManager": "yarn@4.3.1"
 }
