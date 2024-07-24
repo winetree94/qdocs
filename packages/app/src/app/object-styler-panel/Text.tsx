@@ -1,4 +1,3 @@
-import { SvgRemixIcon, SvgRemixIconProps } from '@legacy/cdk/icon/SvgRemixIcon';
 import { QueueInput } from '@legacy/components/input/Input';
 import { QueueText } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
@@ -13,44 +12,58 @@ import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
 import { store } from '@legacy/store';
+import {
+  RiAlignBottom,
+  RiAlignCenter,
+  RiAlignJustify,
+  RiAlignLeft,
+  RiAlignRight,
+  RiAlignTop,
+  RiAlignVertically,
+  RiBold,
+  RiItalic,
+  RiStrikethrough,
+  RiUnderline,
+} from '@remixicon/react';
+import React from 'react';
 
 const textHorizontalAlignButtonGroup: {
   value: 'left' | 'center' | 'right' | 'justify';
-  icon: SvgRemixIconProps['icon'];
+  icon: React.ReactElement;
 }[] = [
   {
     value: 'left',
-    icon: 'ri-align-left',
+    icon: <RiAlignLeft size={16} />,
   },
   {
     value: 'center',
-    icon: 'ri-align-center',
+    icon: <RiAlignCenter size={16} />,
   },
   {
     value: 'right',
-    icon: 'ri-align-right',
+    icon: <RiAlignRight size={16} />,
   },
   {
     value: 'justify',
-    icon: 'ri-align-justify',
+    icon: <RiAlignJustify size={16} />,
   },
 ];
 
 const textVerticalAlignButtonGroup: {
   value: 'top' | 'middle' | 'bottom';
-  icon: SvgRemixIconProps['icon'];
+  icon: React.ReactElement;
 }[] = [
   {
     value: 'top',
-    icon: 'ri-align-top',
+    icon: <RiAlignTop size={16} />,
   },
   {
     value: 'middle',
-    icon: 'ri-align-vertically',
+    icon: <RiAlignVertically size={16} />,
   },
   {
     value: 'bottom',
-    icon: 'ri-align-bottom',
+    icon: <RiAlignBottom size={16} />,
   },
 ];
 
@@ -123,16 +136,16 @@ export const ObjectStyleText = () => {
       <div className="tw-flex-1 tw-basis-full">
         <QueueButtonGroup>
           <QueueButton className="tw-w-full" disabled>
-            <SvgRemixIcon icon="ri-bold" />
+            <RiBold size={16} />
           </QueueButton>
           <QueueButton className="tw-w-full" disabled>
-            <SvgRemixIcon icon="ri-italic" />
+            <RiItalic size={16} />
           </QueueButton>
           <QueueButton className="tw-w-full" disabled>
-            <SvgRemixIcon icon="ri-underline" />
+            <RiUnderline size={16} />
           </QueueButton>
           <QueueButton className="tw-w-full" disabled>
-            <SvgRemixIcon icon="ri-strikethrough" />
+            <RiStrikethrough size={16} />
           </QueueButton>
         </QueueButtonGroup>
       </div>
@@ -150,7 +163,7 @@ export const ObjectStyleText = () => {
               onClick={() => {
                 updateText({ horizontalAlign: button.value });
               }}>
-              <SvgRemixIcon icon={button.icon} />
+              {button.icon}
             </QueueButton>
           ))}
         </QueueButtonGroup>
@@ -167,7 +180,7 @@ export const ObjectStyleText = () => {
               onClick={() => {
                 updateText({ verticalAlign: button.value });
               }}>
-              <SvgRemixIcon icon={button.icon} />
+              {button.icon}
             </QueueButton>
           ))}
         </QueueButtonGroup>

@@ -355,22 +355,6 @@ const QueueSubHeader = memo(() => {
               onClick={onSaveDocumentClick}>
               <SaveIcon />
             </QueueIconButton>
-
-            {/* <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => eventDispatch(fitScreenSizeEvent())}>
-              <SvgRemixIcon icon={'ri-fullscreen-fill'} />
-            </QueueIconButton> */}
-            {/* <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.decreaseScale())}>
-              <SvgRemixIcon icon={'ri-subtract-line'} />
-            </QueueIconButton>
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => dispatch(SettingsActions.increaseScale())}>
-              <SvgRemixIcon icon={'ri-add-line'} />
-            </QueueIconButton> */}
           </div>
         </div>
       </QueueScrollArea.Viewport>

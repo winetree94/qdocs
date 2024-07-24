@@ -20,7 +20,6 @@ import {
 } from '@legacy/store/page';
 import { HistoryActions } from '@legacy/store/history';
 import { DocumentSelectors } from '@legacy/store/document';
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
@@ -35,6 +34,7 @@ import { Scaler } from '@legacy/components/scaler/Scaler';
 import { StandaloneText } from '@legacy/components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
 import { store } from '@legacy/store';
+import { RiAddBoxLine, RiFileCopyLine } from '@remixicon/react';
 
 const PagePanelRoot = ({
   className,
@@ -428,10 +428,7 @@ export const PagePanel = () => {
                           onClick={() =>
                             duplicatePageWithLastQueueSnapshot(pageId, index)
                           }>
-                          <SvgRemixIcon
-                            icon="ri-file-copy-line"
-                            size={QUEUE_UI_SIZE.MEDIUM}
-                          />
+                          <RiFileCopyLine size={16} />
                         </button>
                       </div>
                     </div>
@@ -500,7 +497,7 @@ export const PagePanel = () => {
           size={QUEUE_UI_SIZE.MEDIUM}
           color={QUEUE_UI_COLOR.DEFAULT}
           onClick={() => createPage(pageIds.length)}>
-          <SvgRemixIcon icon="ri-add-box-line" size={QUEUE_UI_SIZE.MEDIUM} />
+          <RiAddBoxLine size={16} />
           <span className="tw-ml-1">{t('page-panel.add-page')}</span>
         </QueueButton>
       </PageAddBox>

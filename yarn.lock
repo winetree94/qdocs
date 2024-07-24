@@ -2875,6 +2875,7 @@ __metadata:
     "@radix-ui/react-toggle-group": "npm:^1.0.4"
     "@radix-ui/react-tooltip": "npm:^1.0.6"
     "@reduxjs/toolkit": "npm:^1.9.5"
+    "@remixicon/react": "npm:^4.2.0"
     "@storybook/addon-essentials": "npm:^7.1.1"
     "@storybook/addon-interactions": "npm:^7.1.1"
     "@storybook/addon-links": "npm:^7.1.1"
@@ -4506,6 +4507,15 @@ __metadata:
     react-redux:
       optional: true
   checksum: 10c0/fa0aa4b7c6973ac87ce0ac7e45faa02c73b66c4ee0bc950d178494539a42a1bb908d109297102458b7ea14d5e7dae356e7a7ce9a1b9849b0e8451e6dd70fca9c
+  languageName: node
+  linkType: hard
+
+"@remixicon/react@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "@remixicon/react@npm:4.2.0"
+  peerDependencies:
+    react: ">=18.2.0"
+  checksum: 10c0/bbc26d5f3e579755533f966b7a764943de9c05f44f9c15fd026afb55035c4626203acf7f9f86d6665dda79162e6d2e08426f4f070b81d1d41844e1243ee6edfb
   languageName: node
   linkType: hard
 

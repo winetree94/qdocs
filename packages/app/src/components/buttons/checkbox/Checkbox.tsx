@@ -3,7 +3,7 @@ import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from '@legacy/styles/ui/Color';
 import styles from './Checkbox.module.scss';
 import clsx from 'clsx';
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
+import { RiCheckboxBlankFill, RiCheckboxFill } from '@remixicon/react';
 
 export interface QueueCheckboxProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -33,19 +33,34 @@ const QueueCheckbox = ({
   const Icon = useMemo(() => {
     return {
       on: (
-        <SvgRemixIcon
-          icon="ri-checkbox-fill"
-          size={checkboxSize}
-          color={disabled ? styles.Disabled : checkboxColor}
-          className={clsx(styles.CheckboxIcon, disabled && styles.Disabled)}
+        // <SvgRemixIcon
+        //   icon="ri-checkbox-fill"
+        //   size={checkboxSize}
+        //   color={disabled ? styles.Disabled : checkboxColor}
+        //   className={clsx(styles.CheckboxIcon, disabled && styles.Disabled)}
+        // />
+        <RiCheckboxFill
+          className={clsx(
+            styles.CheckboxIcon,
+            disabled && styles.Disabled,
+            disabled ? styles.Disabled : checkboxColor,
+          )}
+          size={16}
         />
       ),
       off: (
-        <SvgRemixIcon
-          icon="ri-checkbox-blank-line"
-          size={checkboxSize}
-          color={disabled ? styles.Disabled : checkboxColor}
-          className={clsx(styles.CheckboxIcon)}
+        // <SvgRemixIcon
+        //   icon="ri-checkbox-blank-line"
+        //   size={checkboxSize}
+        //   color={disabled ? styles.Disabled : checkboxColor}
+        //   className={clsx(styles.CheckboxIcon)}
+        // />
+        <RiCheckboxBlankFill
+          className={clsx(
+            styles.CheckboxIcon,
+            disabled ? styles.Disabled : checkboxColor,
+          )}
+          size={16}
         />
       ),
     };

@@ -2,7 +2,6 @@ import { memo, ReactNode, useState } from 'react';
 import styles from '@legacy/app/header/Header.module.scss';
 import clsx from 'clsx';
 import { QueueMenubar } from '@legacy/components/menu-bar/Menubar';
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
 import { NewDocumentDialog } from '@legacy/app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
@@ -22,6 +21,7 @@ import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
 import { RootState, store } from 'store';
 import { QueueDropdown } from '@legacy/components/dropdown/Dropdown';
 import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { RiPlayLine } from '@remixicon/react';
 
 export interface ToolbarModel {
   key: string;
@@ -342,7 +342,7 @@ export const QueueHeader = memo(() => {
             'tw-flex tw-items-center tw-gap-1',
           )}
           onClick={onPresentationStartClick}>
-          <SvgRemixIcon icon={'ri-play-line'} size={QUEUE_UI_SIZE.MEDIUM} />
+          <RiPlayLine size={16} />
           <span className="tw-text-sm tw-font-medium">Present</span>
         </QueueButton>
       )}

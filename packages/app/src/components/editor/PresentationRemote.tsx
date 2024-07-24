@@ -1,4 +1,3 @@
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import styles from './PresentationRemote.module.scss';
 import { SettingsActions } from '@legacy/store/settings/actions';
@@ -7,6 +6,13 @@ import { QueueToggle } from '@legacy/components/toggle/Toggle';
 import { SettingSelectors } from '@legacy/store/settings';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import {
+  RiPauseLine,
+  RiPlayLine,
+  RiRepeatLine,
+  RiRewindLine,
+  RiSpeedLine,
+} from '@remixicon/react';
 
 export const PresentationRemote = () => {
   const dispatch = useAppDispatch();
@@ -18,28 +24,28 @@ export const PresentationRemote = () => {
         <QueueIconButton
           size={QUEUE_UI_SIZE.MEDIUM}
           onClick={() => dispatch(SettingsActions.rewind())}>
-          <SvgRemixIcon icon={'ri-rewind-line'} />
+          <RiRewindLine size={16} />
         </QueueIconButton>
         <QueueIconButton
           size={QUEUE_UI_SIZE.MEDIUM}
           onClick={() => dispatch(SettingsActions.forward())}>
-          <SvgRemixIcon icon={'ri-speed-line'} />
+          <RiSpeedLine size={16} />
         </QueueIconButton>
         <QueueIconButton
           size={QUEUE_UI_SIZE.MEDIUM}
           color={QUEUE_UI_COLOR.DEFAULT}
           onClick={() => dispatch(SettingsActions.pause())}>
-          <SvgRemixIcon icon={'ri-pause-line'} />
+          <RiPauseLine size={16} />
         </QueueIconButton>
         <QueueIconButton
           size={QUEUE_UI_SIZE.MEDIUM}
           onClick={() => dispatch(SettingsActions.play())}>
-          <SvgRemixIcon icon={'ri-play-line'} />
+          <RiPlayLine size={16} />
         </QueueIconButton>
         <QueueToggle.Root
           pressed={autoPlayRepeat}
           onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
-          <SvgRemixIcon icon={'ri-repeat-line'} />
+          <RiRepeatLine size={16} />
         </QueueToggle.Root>
       </div>
     </div>

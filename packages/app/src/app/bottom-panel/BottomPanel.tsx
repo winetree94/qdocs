@@ -129,14 +129,6 @@ export const BottomPanel = memo(() => {
             <RepeatIcon />
           </QueueToggle.Root>
 
-          {/*
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
-            onClick={() => dispatch(SettingsActions.pause())}>
-            <SvgRemixIcon icon={'ri-pause-line'} />
-          </QueueIconButton>
-          */}
-
           <QueueSeparator.Root
             className={clsx('!tw-h-4', 'tw-ml-2', 'tw-mr-1')}
             orientation="vertical"

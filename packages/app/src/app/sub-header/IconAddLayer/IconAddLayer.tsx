@@ -5,16 +5,15 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { useCreateFigure } from '@legacy/cdk/hooks/useCreateFigure';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import clsx from 'clsx';
 import styles from '@legacy/app/sub-header/IconAddLayer/IconAddLayer.module.scss';
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { createDefaultIcon } from '@legacy/model/object/icon';
-import { RemixIconClasses } from '@legacy/cdk/icon/factory';
+import { RemixIconMap } from '@legacy/cdk/icon/factory';
 import { QueueInput } from '@legacy/components/input/Input';
 import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { useTranslation } from 'react-i18next';
+import { RiArrowDownSLine, RiArrowRightSLine } from '@remixicon/react';
 
 interface QueueObject {
   key: string;
@@ -64,14 +63,11 @@ const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
           style={style}
           onClick={() => data.toggleOpenedObjectGroup(flattenData.key)}
           className={clsx(styles.objectGroupTitle)}>
-          <SvgRemixIcon
-            className={styles.objectGroupArrow}
-            icon={
-              data.closedObjectGroupKey[flattenData.key]
-                ? 'ri-arrow-right-s-line'
-                : 'ri-arrow-down-s-line'
-            }
-          />
+          {data.closedObjectGroupKey[flattenData.key] ? (
+            <RiArrowRightSLine className={styles.objectGroupArrow} size={16} />
+          ) : (
+            <RiArrowDownSLine className={styles.objectGroupArrow} size={16} />
+          )}
           {flattenData.title}
         </div>
       );
@@ -151,13 +147,11 @@ const QueueIconAddLayer = () => {
       {
         key: 'Remix Icon',
         title: t('global.icon'),
-        children: RemixIconClasses.map((iconClassName) => ({
-          key: iconClassName,
-          factory: () => createIcon(iconClassName),
-          keyword: [iconClassName],
-          preview: (
-            <SvgRemixIcon icon={iconClassName} size={QUEUE_UI_SIZE.XLARGE} />
-          ),
+        children: Object.entries(RemixIconMap).map(([iconClass, Icon]) => ({
+          key: iconClass,
+          factory: () => createIcon(iconClass),
+          keyword: [iconClass],
+          preview: <Icon className={styles.icon} size={32} />,
         })),
       },
     ],

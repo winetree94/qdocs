@@ -15,19 +15,18 @@ import { EffectControllerDuration } from '@legacy/components/effect-controller/E
 import { EffectControllerTimingFunction } from '@legacy/components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
-import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { EffectActions, getEffectEntityKey } from '../../store/effect';
 import { HistoryActions } from '@legacy/store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import { QueueDropdown } from '@legacy/components/dropdown';
 import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from '@legacy/store';
 import { isEqual } from 'lodash';
 import { OBJECT_SUPPORTED_EFFECTS } from '@legacy/model/support';
+import { RiAddLine, RiDeleteBin5Line } from '@remixicon/react';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -72,10 +71,7 @@ export const EffectController = ({
             className="tw-absolute tw-right-0"
             onClick={handleDeleteEffectButton}
             size={QUEUE_UI_SIZE.SMALL}>
-            <SvgRemixIcon
-              icon="ri-delete-bin-5-line"
-              size={QUEUE_UI_SIZE.SMALL}
-            />
+            <RiDeleteBin5Line size={16} />
           </QueueIconButton>
         )}
       </div>
@@ -317,7 +313,7 @@ export const EffectControllerBox = (): ReactElement | null => {
               <button
                 className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
                 disabled={isCreateEffectIndex}>
-                <SvgRemixIcon icon="ri-add-line" size={QUEUE_UI_SIZE.MEDIUM} />
+                <RiAddLine size={16} />
               </button>
             </QueueDropdown.Trigger>
             <QueueDropdown.Content side="right" className="tw-w-[100px]">
