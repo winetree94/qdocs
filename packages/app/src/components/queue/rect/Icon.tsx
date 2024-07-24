@@ -7,7 +7,6 @@ import {
 } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
-import symbolPath from '@legacy/assets/remixicon.symbol.svg';
 import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
 
 export const Icon = ({ onRectMousedown }: RectProps) => {
@@ -44,7 +43,7 @@ export const Icon = ({ onRectMousedown }: RectProps) => {
       opacity={animation.fade.opacity}>
       <use
         onMouseDown={onRectMousedown}
-        href={`${symbolPath}#${containerContext.object.iconType}`}
+        href={`/assets/icons/remixicon.symbol.svg#${containerContext.object.iconType}`}
         fill={fill}></use>
     </svg>
   );

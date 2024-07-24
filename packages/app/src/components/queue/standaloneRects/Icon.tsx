@@ -1,4 +1,3 @@
-import symbolPath from '@legacy/assets/remixicon.symbol.svg';
 import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
 import { StandaloneIconObject } from '@legacy/model/standalone-object';
 
@@ -27,7 +26,9 @@ export const StandaloneIcon = ({
         transform: `rotate(${rotate.degree}deg) scale(${scale.scale})`,
       }}
       opacity={fade.opacity}>
-      <use href={`${symbolPath}#${iconType}`} fill={calculatedFill}></use>
+      <use
+        href={`/assets/icons/remixicon.symbol.svg#${iconType}`}
+        fill={calculatedFill}></use>
     </svg>
   );
 };
