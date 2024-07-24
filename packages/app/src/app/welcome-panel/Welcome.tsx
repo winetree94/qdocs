@@ -5,7 +5,6 @@ import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
 import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
 import { RootState } from '@legacy/store';
-import welcomeImage from './welcome.svg';
 import { memo } from 'react';
 
 export const Welcome = memo(() => {
@@ -84,7 +83,7 @@ export const Welcome = memo(() => {
 
         <img
           className="tw-absolute tw-top-[76px] tw-left-0 tw-select-none tw-pointer-events-none"
-          src={welcomeImage}
+          src={'/assets/icons/welcome.svg'}
           alt={t('welcome.image-alt')}
         />
       </div>
