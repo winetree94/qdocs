@@ -1,0 +1,38 @@
+@import '../../../styles/button/Button.module.scss';
+
+.QueueCheckbox {
+  @apply tw-inline-flex tw-items-center tw-relative tw-cursor-pointer;
+
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  color: $ui-default-color;
+}
+
+.Disabled {
+  color: var(--gray-6);
+  cursor: not-allowed;
+}
+
+
+.CheckboxInput {
+  @apply tw-appearance-none tw-hidden;
+}
+
+.CheckboxLabel {
+  @apply tw-flex;
+}
+
+
+.CheckboxIcon {
+  @apply tw-shrink-0 tw-mr-1;
+}
+
+.CheckboxChildren {
+  @apply tw-flex-auto tw-truncate;
+}

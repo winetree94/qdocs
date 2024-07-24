@@ -1,0 +1,70 @@
+
+
+
+
+.ScrollAreaRoot {
+  @apply tw-overflow-hidden;
+  --scrollbar-size: 10px;
+}
+
+.ScrollAreaViewport {
+  @apply tw-w-full tw-h-full;
+}
+
+.ScrollAreaScrollbar {
+  @apply tw-flex tw-select-none tw-touch-none tw-p-0.5;
+  transition: background 160ms ease-out;
+}
+
+.ScrollAreaScrollbar:hover {
+  background: var(--black-a6);
+}
+
+.ScrollAreaScrollbar[data-orientation='vertical'] {
+  width: var(--scrollbar-size);
+}
+
+.ScrollAreaScrollbar[data-orientation='horizontal'] {
+  flex-direction: column;
+  height: var(--scrollbar-size);
+}
+
+.ScrollAreaThumb {
+  flex: 1;
+  background: #BEBEC8;
+  border-radius: var(--scrollbar-size);
+  position: relative;
+}
+
+/* increase target size for touch devices https://www.w3.org/WAI/WCAG21/Understanding/target-size.html */
+.ScrollAreaThumb::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  // min-width: 44px;
+  // min-height: 44px;
+}
+
+.ScrollAreaCorner {
+  background: var(--black-a8);
+}
+
+.Text {
+  color: var(--violet-11);
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.Tag {
+  color: var(--mauve-12);
+  font-size: 13px;
+  line-height: 18px;
+  margin-top: 10px;
+  border-top: 1px solid var(--mauve-6);
+  padding-top: 10px;
+}

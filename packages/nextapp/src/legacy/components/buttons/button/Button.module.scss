@@ -1,0 +1,36 @@
+@import '../../../styles/button/Button.module.scss';
+
+.QueueIconButton {
+  // base
+  @include queue-button-base;
+
+  // sizing
+  @include queue-ui-fixed-height;
+  @include queue-ui-fixed-width;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-button-color-default;
+  @include queue-button-color-blue;
+  @include queue-button-color-red;
+}
+
+.QueueButton {
+  position: relative;
+  // base
+  @include queue-button-base;
+
+  // sizing
+  @include queue-ui-x-padding;
+  @include queue-ui-fixed-height;
+
+  // font
+  @include queue-ui-fixed-font-size;
+
+  // theme
+  @include queue-button-color-default;
+  @include queue-button-color-blue;
+  @include queue-button-color-red;
+}

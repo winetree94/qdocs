@@ -3,7 +3,7 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
  
-const App = dynamic(() => import('../../../app/src/App'), { ssr: false })
+const App = dynamic(() => import('../legacy/App'), { ssr: false })
  
 export function ClientOnly() {
   return <App />

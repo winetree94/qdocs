@@ -1,0 +1,36 @@
+@import '../../styles/popover/Popover.module.scss';
+@import '../../styles/list/List.module.scss';
+
+.ContextMenuContent,
+.ContextMenuSubContent {
+  @include popover;
+}
+
+.ContextMenuItem,
+.ContextMenuCheckboxItem,
+.ContextMenuRadioItem,
+.ContextMenuSubTrigger {
+  @include list-item;
+}
+
+.ContextMenuSubTrigger[data-state='open'] {
+  @include list-item-hover;
+}
+
+.ContextMenuItem[data-disabled],
+.ContextMenuCheckboxItem[data-disabled],
+.ContextMenuRadioItem[data-disabled],
+.ContextMenuSubTrigger[data-disabled] {
+  @include list-item-disabled;
+}
+
+.ContextMenuItem[data-highlighted],
+.ContextMenuCheckboxItem[data-highlighted],
+.ContextMenuRadioItem[data-highlighted],
+.ContextMenuSubTrigger[data-highlighted] {
+  @include list-item-hover;
+}
+
+.ContextMenuSeparator {
+  @include list-separator;
+}

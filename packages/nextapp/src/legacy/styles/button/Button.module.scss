@@ -1,0 +1,78 @@
+@import '../ui/UI.module.scss';
+@import '../ui/Color.module.scss';
+
+@mixin queue-button-color-default {
+  &.default {
+    background: $ui-default-background-color;
+    color: $ui-default-color;
+
+    &:hover:not(:disabled) {
+      background: $ui-default-background-color-hover;
+      color: $ui-default-color-hover;
+    }
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
+      background: $ui-default-background-color-active;
+      color: $ui-default-color-active;
+      font-weight: bold;
+    }
+    &:disabled {
+      // background: $ui-default-background-color-disabled;
+      color: $ui-default-color-disabled;
+      // TODO....
+      svg {
+        opacity: 0.3;
+      }
+    }
+  }
+}
+
+@mixin queue-button-color-blue {
+  &.blue {
+    background: $ui-blue-background-color;
+    color: $ui-blue-color;
+    &:hover:not(:disabled) {
+      background: $ui-blue-background-color-hover;
+      color: $ui-blue-color-hover;
+    }
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
+      background: $ui-blue-background-color-active;
+      color: $ui-blue-color-active;
+    }
+    &:disabled {
+      background: $ui-blue-background-color-disabled;
+      color: $ui-blue-color-disabled;
+    }
+  }
+}
+
+@mixin queue-button-color-red {
+  &.red {
+    background: $ui-red-background-color;
+    color: $ui-red-color;
+    &:hover:not(:disabled) {
+      background: $ui-red-background-color-hover;
+      color: $ui-red-color-hover;
+    }
+    &[data-state='on']:not(:disabled),
+    &:active:not(:disabled) {
+      background: $ui-red-background-color-active;
+      color: $ui-red-color-active;
+    }
+    &:disabled {
+      background: $ui-red-background-color-disabled;
+      color: $ui-red-color-disabled;
+    }
+  }
+}
+
+@mixin queue-button-base {
+  @apply tw-flex
+    tw-items-center
+    tw-justify-center
+    tw-border-0
+    tw-transition-colors
+    tw-outline-none
+    tw-whitespace-nowrap;
+}

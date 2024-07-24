@@ -1,0 +1,11 @@
+
+@import '../../styles/popover/Popover.module.scss';
+
+.Content {
+  @include popover;
+  min-width: 220px;
+}
+
+.Anchor {
+  display: inline-block;
+}

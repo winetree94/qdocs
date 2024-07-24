@@ -1,0 +1,38 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+  height: fit-content;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.color {
+  min-width:60px;
+  height: 20px;
+  border-radius: 8px;
+}
+
+.chevron {
+  position: absolute;
+  top: 1px;
+  right: 4px;
+}
+
+
+
+.popover {
+  position: absolute;
+  z-index: 2;
+}
+
+.cover {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}

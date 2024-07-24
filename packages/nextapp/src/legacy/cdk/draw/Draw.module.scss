@@ -1,0 +1,14 @@
+.Drawer {
+  position: relative;
+}
+
+.Draw {
+  position: absolute;
+}
+
+.Preview {
+  position: relative;
+  border: 1px solid var(--blue-7);
+  background-color: var(--blue-5);
+  opacity: 0.5;
+}

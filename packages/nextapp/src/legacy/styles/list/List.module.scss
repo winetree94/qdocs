@@ -1,0 +1,76 @@
+@mixin list-item {
+  box-sizing: border-box;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--gray-12);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 5px 25px;
+  position: relative;
+  user-select: none;
+  outline: none;
+}
+
+@mixin list-item-disabled {
+  color: var(--gray-8);
+  pointer-events: 'none';
+}
+
+@mixin list-item-hover {
+  background-color: var(--blue-10);
+  color: var(--blue-1);
+}
+
+@mixin list-separator {
+  height: 1px;
+  background-color: var(--gray-5);
+  margin: 5px;
+}
+
+@mixin list-item-right-slot {
+  margin-left: auto;
+  padding-left: 20px;
+
+  [data-highlighted] > .RightSlot {
+    background-color: var(--blue-10);
+    color: var(--blue-1);
+    margin-left: auto;
+    padding-left: 20px;
+  }
+  
+  [data-disabled] > .RightSlot {
+    background-color: var(--blue-10);
+    color: var(--blue-1);
+    margin-left: auto;
+    padding-left: 20px;
+  }
+}
+
+@mixin list-item-indicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin list-group-label {
+  display: flex;
+  align-items: center;
+  height: 25px;
+  font-size: 12px;
+  box-sizing: border-box;
+  padding: 5px 25px;
+  color: var(--gray-10);
+}
+
+@mixin list-scroll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  cursor: default;
+}

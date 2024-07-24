@@ -1,0 +1,28 @@
+import { Meta, Story } from '@storybook/blocks';
+
+import * as SelectStories from './Select.stories';
+
+<Meta of={SelectStories} />
+
+# QueueSelect API
+
+## QueueSelect Component Interface
+
+```tsx
+<QueueSelect>
+  <QueueSelect.Option value="banana">Banana</QueueSelect.Option>
+
+  <QueueSelect.Separator />
+
+  <QueueSelect.Group>
+    <QueueSelect.Option value="apple">Apple</QueueSelect.Option>
+  </QueueSelect.Group>
+
+  <QueueSelect.Separator />
+
+  <QueueSelect.Group label="Vegetables">
+    <QueueSelect.Option value="broccoli">Broccoli</QueueSelect.Option>
+    <QueueSelect.Option value="carrot" disabled>Carrot</QueueSelect.Option>
+  </QueueSelect.Group>
+</QueueSelect>
+```

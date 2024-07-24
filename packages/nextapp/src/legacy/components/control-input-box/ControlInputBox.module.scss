@@ -1,0 +1,78 @@
+@use "sass:map";
+@import '../../../styles/button/Button.module.scss';
+
+
+$theme-colors: (
+    "grey" : #000000,
+    "black" : #ffffff,
+    "red": #ffffff,
+);
+
+$theme-background-colors: (
+    "grey" : #E7E6EB,
+    "black" : #000000,
+    "red": red,
+);
+
+$theme-border-colors: (
+    "grey" : #000000,
+    "black" : #ffffff,
+    "red": #ffffff,
+);
+
+
+
+@mixin queue-input-color-filled {
+    &.filled {
+        &.grey {
+            color: map.get($theme-colors, 'grey');
+            background-color: map.get($theme-background-colors, 'grey');
+        }
+
+
+        &.red {
+            color: map.get($theme-colors, 'red');
+            background-color: map.get($theme-background-colors, 'red');
+        }
+    }
+}
+
+.TextInputRoot {
+    @apply tw-flex
+    tw-flex-nowrap 
+    tw-items-center;
+    gap: 4px;
+    border-radius: 8px;
+    background-color: transparent;
+    box-sizing: border-box;
+
+    @include queue-input-color-filled;
+}
+
+.Icon {
+    box-sizing: border-box;
+    flex-shrink: 0;
+
+    img {
+        width: 18px;
+        height: auto;
+    }
+}
+
+.InputBox {
+    @apply tw-text-xs;
+    display: flex;
+    align-items: center;
+
+
+    input {
+        width: 100%;
+        min-width: 0;
+        padding: 4px;
+        outline: none;
+        background-color: transparent;
+    }
+}
+
+
+

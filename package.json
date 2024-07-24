@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "next": "yarn workspace @qdocs/next dev",
+    "next:build": "yarn workspace @qdocs/next build",
     "start": "yarn workspace @qdocs/app start",
     "build": "yarn workspace @qdocs/app build"
   }
