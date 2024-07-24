@@ -1,4 +1,4 @@
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { PreferencesActions } from '@legacy/store/preferences/actions';
 
 export const preferencesMiddleware = createTypedListenerMiddleware();

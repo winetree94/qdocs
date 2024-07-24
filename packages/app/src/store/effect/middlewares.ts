@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { getEffectEntityKey } from './reducer';
 import { EffectSelectors } from './selectors';
 import { ObjectActions } from '../object';

@@ -1,4 +1,4 @@
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { PageSelectors } from '@legacy/store/page/selectors';
 import { SettingsActions } from './actions';

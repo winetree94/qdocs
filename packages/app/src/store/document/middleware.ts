@@ -1,4 +1,4 @@
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { HistoryActions } from '@legacy/store/history';
 import { DocumentActions } from './actions';
 

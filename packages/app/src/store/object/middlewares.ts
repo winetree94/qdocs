@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { ObjectSelectors } from './selectors';
 import { PageActions } from '../page';
 import { ObjectActions } from './actions';

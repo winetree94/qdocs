@@ -1,9 +1,3 @@
-import emptyUrl from '@legacy/assets/templates/empty.que';
-import animatedTextUrl from '@legacy/assets/templates/animated-text.que';
-import playUrl from '@legacy/assets/templates/play.que';
-import uxFlowUrl from '@legacy/assets/templates/ux-flow.que';
-import wave from '@legacy/assets/templates/wave.que';
-import conflictFlow from '@legacy/assets/templates/conflict.que';
 import { RootState } from '@legacy/store';
 
 export interface TemplateMeta {
@@ -16,31 +10,37 @@ export const TEMPLATES: TemplateMeta[] = [
   {
     name: 'Empty',
     preview: '',
-    getTemplate: () => fetch(emptyUrl).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/empty.que').then((r) => r.json()),
   },
   {
     name: 'UX Flow',
     preview: '',
-    getTemplate: () => fetch(uxFlowUrl).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/ux-flow.que').then((r) => r.json()),
   },
   {
     name: 'Wave',
     preview: '',
-    getTemplate: () => fetch(wave).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/wave.que').then((r) => r.json()),
   },
   {
     name: 'Animated Text',
     preview: '',
-    getTemplate: () => fetch(animatedTextUrl).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/animated-text.que').then((r) => r.json()),
   },
   {
     name: 'Play',
     preview: '',
-    getTemplate: () => fetch(playUrl).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/play.que').then((r) => r.json()),
   },
   {
     name: 'conflictFlow',
     preview: '',
-    getTemplate: () => fetch(conflictFlow).then((r) => r.json()),
+    getTemplate: () =>
+      fetch('/assets/templates/conflict.que').then((r) => r.json()),
   },
 ];

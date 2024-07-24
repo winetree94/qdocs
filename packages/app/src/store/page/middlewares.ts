@@ -1,5 +1,5 @@
 import { EntityId, isAnyOf } from '@reduxjs/toolkit';
-import { createTypedListenerMiddleware } from 'middleware';
+import { createTypedListenerMiddleware } from '@legacy/middleware';
 import { PageSelectors } from './selectors';
 import { NormalizedQueueDocumentPage } from './model';
 import { PageActions } from './actions';
