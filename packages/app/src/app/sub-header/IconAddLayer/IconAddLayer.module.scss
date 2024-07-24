@@ -70,8 +70,8 @@
   }
 }
 
-@import '@radix-ui/colors/black-alpha.css';
-@import '@radix-ui/colors/violet.css';
+
+
 
 .ScrollAreaRoot {
   @apply tw-flex tw-flex-1;
@@ -79,11 +79,6 @@
 
 .ScrollAreaViewport {
   @apply tw-flex tw-flex-1;
-}
-
-/* reset */
-button {
-  all: unset;
 }
 
 .TooltipContent {

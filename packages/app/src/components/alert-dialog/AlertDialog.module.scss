@@ -1,9 +1,5 @@
-@import '@radix-ui/colors/black-alpha.css';
-@import '@radix-ui/colors/mauve.css';
-@import '@radix-ui/colors/red.css';
-@import '@radix-ui/colors/violet.css';
 @import '../../components/dialog/Dialog.module.scss';
-@import 'components/buttons/button/Button.module.scss';
+@import '../../components/buttons/button/Button.module.scss';
 
 .AlertDialogOverlay {
   @include queue-dialog-overlay;

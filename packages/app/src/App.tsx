@@ -4,7 +4,6 @@ import { store } from 'store';
 import { EventDispatcherProvider } from '@legacy/cdk/hooks/event-dispatcher';
 import { RootRendererProvider } from '@legacy/cdk/root-renderer/root-renderer';
 import './i18n';
-import './App.scss';
 import 'tailwindcss/tailwind.css';
 
 const App = () => {

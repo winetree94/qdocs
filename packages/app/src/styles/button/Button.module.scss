@@ -1,10 +1,5 @@
-@import '@radix-ui/colors/gray.css';
-@import '@radix-ui/colors/blue.css';
-@import '@radix-ui/colors/red.css';
-@import '@radix-ui/colors/yellow.css';
-@import '@radix-ui/colors/white-alpha.css';
-@import '~styles/ui/UI.module.scss';
-@import '~styles/ui/Color.module.scss';
+@import '../ui/UI.module.scss';
+@import '../ui/Color.module.scss';
 
 @mixin queue-button-color-default {
   &.default {

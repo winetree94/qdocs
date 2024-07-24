@@ -21,6 +21,16 @@
   }
 }
 
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/green.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/gray.css';
+@import '@radix-ui/colors/blue.css';
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/yellow.css';
+@import '@radix-ui/colors/white-alpha.css';
+
 // 'Inter' font
 @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -34,4 +44,34 @@
 * {
   font-family: 'Spoqa Han Sans Neo', Inter, sans-serif;
   font-weight: 300;
+}
+
+// reset box sizing
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+* {
+  user-select: none;
+}
+
+// disable gesture / swipe history back
+body {
+  overscroll-behavior: none;
+  overflow: hidden;
+}
+
+/* reset */
+button {
+  all: unset;
 }
