@@ -1,11 +1,11 @@
 {
-  "name": "qdocs",
+  "name": "@qdocs/monorepo",
   "packageManager": "yarn@4.3.1",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn workspace app start",
-    "build": "yarn workspace app build"
+    "start": "yarn workspace @qdocs/app start",
+    "build": "yarn workspace @qdocs/app build"
   }
 }
