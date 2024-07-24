@@ -18,7 +18,7 @@ import { SUPPORTED_LANGUAGES } from '@legacy/store/preferences/model';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
-import { RootState, store } from 'store';
+import { RootState, store } from '@legacy/store';
 import { QueueDropdown } from '@legacy/components/dropdown/Dropdown';
 import { QueueButton } from '@legacy/components/buttons/button/Button';
 import { RiPlayLine } from '@remixicon/react';

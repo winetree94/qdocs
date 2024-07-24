@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 import { pageEntityAdapter } from './reducer';
 
 const selectSelf = (state: RootState) => state.pages;

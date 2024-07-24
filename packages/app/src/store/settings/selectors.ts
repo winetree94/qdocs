@@ -1,4 +1,4 @@
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 import { createSelector } from '@reduxjs/toolkit';
 import { ObjectSelectors } from '@legacy/store/object/selectors';
 import { QueueDocumentSettings } from './model';

@@ -4,7 +4,7 @@ import playUrl from '@legacy/assets/templates/play.que';
 import uxFlowUrl from '@legacy/assets/templates/ux-flow.que';
 import wave from '@legacy/assets/templates/wave.que';
 import conflictFlow from '@legacy/assets/templates/conflict.que';
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 
 export interface TemplateMeta {
   name: string;

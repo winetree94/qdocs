@@ -4,7 +4,7 @@ import { useAppDispatch } from '@legacy/store/hooks';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
 import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 import welcomeImage from './welcome.svg';
 import { memo } from 'react';
 

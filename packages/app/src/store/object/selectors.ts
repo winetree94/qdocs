@@ -1,6 +1,6 @@
 import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { QueueObjectType } from '@legacy/model/object';
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 import { objectEntityAdapter } from './reducer';
 
 const selectSelf = (state: RootState) => state.objects;

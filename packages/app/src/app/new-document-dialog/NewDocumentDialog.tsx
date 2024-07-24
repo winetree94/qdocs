@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import { QueueSelect } from '@legacy/components/select/Select';
-import { RootState } from 'store';
+import { RootState } from '@legacy/store';
 
 export interface NewDocumentDialogProps {
   onSubmit?: (document: RootState) => void;
