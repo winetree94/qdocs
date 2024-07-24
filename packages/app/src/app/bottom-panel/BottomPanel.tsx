@@ -15,7 +15,7 @@ import { ReactComponent as StepInIcon } from '@legacy/assets/icons/step-in.svg';
 import { ReactComponent as StepOutIcon } from '@legacy/assets/icons/step-out.svg';
 import { ReactComponent as RepeatIcon } from '@legacy/assets/icons/repeat.svg';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
-import { store } from 'store';
+import { store } from '@legacy/store';
 
 const ZOOM_LEVEL = {
   [1]: 30,

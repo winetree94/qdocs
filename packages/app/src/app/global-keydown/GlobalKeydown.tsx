@@ -4,7 +4,7 @@ import { isQueueObjectClipboardModel } from '@legacy/model/clipboard/base';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from '@legacy/model/clipboard/constants';
 import { QueueEffectType } from '@legacy/model/effect';
 import { QueueObjectType } from '@legacy/model/object';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { EffectActions, EffectSelectors } from '@legacy/store/effect';
 import { HistoryActions } from '@legacy/store/history';
 import { HistorySelectors } from '@legacy/store/history/selectors';

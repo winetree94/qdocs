@@ -9,7 +9,7 @@ import { QueueObjectType } from '@legacy/model/object';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { QueueInput } from '@legacy/components/input/Input';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { supportFill } from '../../model/support/property';
 
 export const ObjectStyleBackground = () => {

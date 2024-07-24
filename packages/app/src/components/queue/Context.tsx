@@ -10,7 +10,7 @@ import { EffectActions, EffectSelectors } from '@legacy/store/effect';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from '@legacy/model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
 import { deviceMetaKey } from '@legacy/cdk/device/meta';
-import { store } from 'store';
+import { store } from '@legacy/store';
 
 export const QueueObjectContextContent = forwardRef<
   HTMLDivElement,

@@ -12,7 +12,7 @@ import { QueueButton } from '@legacy/components/buttons/button/Button';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
-import { store } from 'store';
+import { store } from '@legacy/store';
 
 const textHorizontalAlignButtonGroup: {
   value: 'left' | 'center' | 'right' | 'justify';

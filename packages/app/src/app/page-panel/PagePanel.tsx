@@ -34,7 +34,7 @@ import { StandaloneRect } from '@legacy/components/queue/standaloneRects';
 import { Scaler } from '@legacy/components/scaler/Scaler';
 import { StandaloneText } from '@legacy/components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
-import { store } from 'store';
+import { store } from '@legacy/store';
 
 const PagePanelRoot = ({
   className,

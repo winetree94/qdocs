@@ -1,7 +1,7 @@
 import { QueueSlider } from '@legacy/components/slider/Slider';
 import { QueueRotate } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';

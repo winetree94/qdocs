@@ -33,7 +33,7 @@ import {
 import QueueRectAddLayer from '@legacy/app/sub-header/RectAddLayer/RectAddLayer';
 import QueueLineAddLayer from '@legacy/app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { DocumentSelectors } from '@legacy/store/document';
 import {
   createDefaultImage,

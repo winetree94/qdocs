@@ -16,7 +16,11 @@ import { fitScreenSizeEvent } from '@legacy/app/events/event';
 import { DocumentSelectors } from '@legacy/store/document/selectors';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { QueueRect } from '@legacy/model/property';
-import { RectEffect, RotateEffect, QueueEffectType } from '@legacy/model/effect';
+import {
+  RectEffect,
+  RotateEffect,
+  QueueEffectType,
+} from '@legacy/model/effect';
 import { EffectActions } from '../../store/effect';
 import { EntityId } from '@reduxjs/toolkit';
 import { SettingsActions } from '../../store/settings';
@@ -25,7 +29,7 @@ import { Draggable } from '@legacy/cdk/drag/Drag';
 import { isEqual } from 'lodash';
 import { HistoryActions } from '@legacy/store/history';
 import { QueueObjectType } from '@legacy/model/object';
-import { store } from 'store';
+import { store } from '@legacy/store';
 
 export interface QueueEditorProps {
   className?: string;
@@ -176,7 +180,7 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
         } else {
           const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
             (effect) => effect.type === 'rect',
-          ) as RectEffect;
+          );
           result.effects.push({
             type: 'rect',
             duration: 1000,
@@ -283,7 +287,7 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
     } else {
       const existRectEffect = queueEffectsGroupByObjectId[id]?.find(
         (effect) => effect.type === 'rect',
-      ) as RectEffect;
+      );
       dispatch(
         EffectActions.upsertEffect({
           type: 'rect',
@@ -322,7 +326,7 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
     } else {
       const existRotateEffect = queueEffectsGroupByObjectId[id]?.find(
         (effect) => effect.type === 'rotate',
-      ) as RotateEffect;
+      );
       dispatch(
         EffectActions.upsertEffect({
           type: 'rotate',

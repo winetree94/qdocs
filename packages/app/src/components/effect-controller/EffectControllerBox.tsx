@@ -7,7 +7,10 @@ import {
 } from '@legacy/model/effect';
 import { ReactElement, useState, useMemo } from 'react';
 import { QueueObjectType } from '@legacy/model/object';
-import { QueueButton, QueueIconButton } from '@legacy/components/buttons/button/Button';
+import {
+  QueueButton,
+  QueueIconButton,
+} from '@legacy/components/buttons/button/Button';
 import { EffectControllerDuration } from '@legacy/components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from '@legacy/components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
@@ -22,7 +25,7 @@ import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import { QueueDropdown } from '@legacy/components/dropdown';
 import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { isEqual } from 'lodash';
 import { OBJECT_SUPPORTED_EFFECTS } from '@legacy/model/support';
 

@@ -10,7 +10,7 @@ import styles from './Timeline.module.scss';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingsActions } from '@legacy/store/settings';
 import { memo, useCallback, useMemo } from 'react';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { isEqual } from 'lodash';
 
 const ROW_HEIGHT = 38;

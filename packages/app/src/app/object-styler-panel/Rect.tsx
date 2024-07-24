@@ -1,7 +1,7 @@
 import { QueueInput } from '@legacy/components/input/Input';
 import { QueueRect } from '@legacy/model/property';
 import { memo } from 'react';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';

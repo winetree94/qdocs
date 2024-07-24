@@ -2,7 +2,7 @@ import { Dispatch, EntityId } from '@reduxjs/toolkit';
 import { QueueDocumentRect } from '@legacy/model/document';
 import { QueueObjectType, QueueImage } from '@legacy/model/object';
 import { useCallback } from 'react';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { DocumentSelectors } from '@legacy/store/document';
 import { HistoryActions } from '@legacy/store/history';
 import { ObjectActions } from '@legacy/store/object';

@@ -7,7 +7,7 @@ import { SettingSelectors } from '@legacy/store/settings';
 import { QueueSelect } from '@legacy/components/select/Select';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
 import { QueueSlider } from '@legacy/components/slider/Slider';
-import { store } from 'store';
+import { store } from '@legacy/store';
 import { supportStroke } from '@legacy/model/support';
 
 export const ObjectStyleStroke = () => {
