@@ -1,9 +1,9 @@
-import emptyUrl from 'assets/templates/empty.que';
-import animatedTextUrl from 'assets/templates/animated-text.que';
-import playUrl from 'assets/templates/play.que';
-import uxFlowUrl from 'assets/templates/ux-flow.que';
-import wave from 'assets/templates/wave.que';
-import conflictFlow from 'assets/templates/conflict.que';
+import emptyUrl from '@legacy/assets/templates/empty.que';
+import animatedTextUrl from '@legacy/assets/templates/animated-text.que';
+import playUrl from '@legacy/assets/templates/play.que';
+import uxFlowUrl from '@legacy/assets/templates/ux-flow.que';
+import wave from '@legacy/assets/templates/wave.que';
+import conflictFlow from '@legacy/assets/templates/conflict.que';
 import { RootState } from 'store';
 
 export interface TemplateMeta {

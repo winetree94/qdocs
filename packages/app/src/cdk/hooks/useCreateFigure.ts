@@ -1,12 +1,12 @@
 import { Dispatch, EntityId } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
-import { QueueObjectType, QueueImage } from 'model/object';
+import { QueueDocumentRect } from '@legacy/model/document';
+import { QueueObjectType, QueueImage } from '@legacy/model/object';
 import { useCallback } from 'react';
 import { store } from 'store';
-import { DocumentSelectors } from 'store/document';
-import { HistoryActions } from 'store/history';
-import { ObjectActions } from 'store/object';
-import { SettingsActions } from 'store/settings';
+import { DocumentSelectors } from '@legacy/store/document';
+import { HistoryActions } from '@legacy/store/history';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingsActions } from '@legacy/store/settings';
 
 export const useCreateFigure = (
   pageId: EntityId,

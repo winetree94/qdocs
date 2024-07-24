@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document';
+import { QueueDocumentRect } from '@legacy/model/document';
 import { RootState } from 'store';
 
 /**

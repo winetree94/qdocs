@@ -6,9 +6,9 @@ import {
   ChevronUpIcon,
 } from '@radix-ui/react-icons';
 import styles from './Select.module.scss';
-import { QUEUE_UI_SIZES, QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_SIZES, QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import clsx from 'clsx';
-import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from '@legacy/styles/ui/Color';
 
 export type QueueSelectProps = Select.SelectProps &
   Select.SelectContentProps &

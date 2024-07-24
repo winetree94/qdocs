@@ -1,11 +1,11 @@
-import { QueueSlider } from 'components/slider/Slider';
-import { QueueScale } from 'model/property';
+import { QueueSlider } from '@legacy/components/slider/Slider';
+import { QueueScale } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
 import { store } from 'store';
-import { HistoryActions } from 'store/history';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingSelectors } from 'store/settings';
+import { HistoryActions } from '@legacy/store/history';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
 
 export const ObjectStyleScale = () => {
   const { t } = useTranslation();

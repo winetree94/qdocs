@@ -7,7 +7,7 @@ import {
   QueueScale,
   QueueStroke,
   QueueImage,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export interface StandaloneImageObject {
   objectId: EntityId;

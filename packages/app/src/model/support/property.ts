@@ -1,4 +1,4 @@
-import { OBJECT_TYPE, OBJECT_TYPES, QueueObjectType } from 'model/object';
+import { OBJECT_TYPE, OBJECT_TYPES, QueueObjectType } from '@legacy/model/object';
 import {
   OBJECT_PROPERTY_TYPE,
   OBJECT_PROPERTY_TYPES,
@@ -10,7 +10,7 @@ import {
   WithScale,
   WithStroke,
   WithText,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export const SUPPPORTED_PROPERTY_MAP: {
   [key in OBJECT_PROPERTY_TYPES]: {

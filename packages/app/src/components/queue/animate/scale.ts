@@ -1,6 +1,6 @@
-import { ScaleEffect, QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
-import { QueueScale, WithScale } from 'model/property';
+import { ScaleEffect, QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueScale, WithScale } from '@legacy/model/property';
 
 export interface ScaleAnimation {
   fromScale: QueueScale;

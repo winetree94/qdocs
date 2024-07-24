@@ -1,42 +1,48 @@
-import { fitScreenSizeEvent } from 'app/events/event';
-import { useEventDispatch } from 'cdk/hooks/event-dispatcher';
+import { fitScreenSizeEvent } from '@legacy/app/events/event';
+import { useEventDispatch } from '@legacy/cdk/hooks/event-dispatcher';
 import clsx from 'clsx';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { QueueSeparator } from 'components/separator/Separator';
-import { QueueIconButton } from 'components/buttons/button/Button';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
+import { QueueIconButton } from '@legacy/components/buttons/button/Button';
 import styles from './SubHeader.module.scss';
-import { SettingSelectors } from 'store/settings/selectors';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingsActions } from 'store/settings/actions';
-import { HistoryActions } from 'store/history';
-import { HistorySelectors } from 'store/history/selectors';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg';
-import { ReactComponent as CornerUpLeftIcon } from 'assets/icons/corner-up-left.svg';
-import { ReactComponent as CornerUpRightIcon } from 'assets/icons/corner-up-right.svg';
-import { ReactComponent as ImageIcon } from 'assets/icons/image.svg';
-import { ReactComponent as PrinterIcon } from 'assets/icons/printer.svg';
-import { ReactComponent as SaveIcon } from 'assets/icons/save.svg';
-import { ReactComponent as SearchIcon } from 'assets/icons/search.svg';
-import { ReactComponent as ShareIcon } from 'assets/icons/share-2.svg';
-import { ReactComponent as SidebarIcon } from 'assets/icons/sidebar.svg';
-import { ReactComponent as TableIcon } from 'assets/icons/table.svg';
-import { ReactComponent as TypeIcon } from 'assets/icons/type.svg';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingsActions } from '@legacy/store/settings/actions';
+import { HistoryActions } from '@legacy/store/history';
+import { HistorySelectors } from '@legacy/store/history/selectors';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { ReactComponent as CopyIcon } from '@legacy/assets/icons/copy.svg';
+import { ReactComponent as CornerUpLeftIcon } from '@legacy/assets/icons/corner-up-left.svg';
+import { ReactComponent as CornerUpRightIcon } from '@legacy/assets/icons/corner-up-right.svg';
+import { ReactComponent as ImageIcon } from '@legacy/assets/icons/image.svg';
+import { ReactComponent as PrinterIcon } from '@legacy/assets/icons/printer.svg';
+import { ReactComponent as SaveIcon } from '@legacy/assets/icons/save.svg';
+import { ReactComponent as SearchIcon } from '@legacy/assets/icons/search.svg';
+import { ReactComponent as ShareIcon } from '@legacy/assets/icons/share-2.svg';
+import { ReactComponent as SidebarIcon } from '@legacy/assets/icons/sidebar.svg';
+import { ReactComponent as TableIcon } from '@legacy/assets/icons/table.svg';
+import { ReactComponent as TypeIcon } from '@legacy/assets/icons/type.svg';
 import { memo, useState } from 'react';
-import { QueueDropdown } from 'components';
+import { QueueDropdown } from '@legacy/components/dropdown';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
-import { useCreateFigure, useCreateImage } from 'cdk/hooks/useCreateFigure';
-import QueueRectAddLayer from 'app/sub-header/RectAddLayer/RectAddLayer';
-import QueueLineAddLayer from 'app/sub-header/LineAddLayer/LineAddLayer';
+import {
+  useCreateFigure,
+  useCreateImage,
+} from '@legacy/cdk/hooks/useCreateFigure';
+import QueueRectAddLayer from '@legacy/app/sub-header/RectAddLayer/RectAddLayer';
+import QueueLineAddLayer from '@legacy/app/sub-header/LineAddLayer/LineAddLayer';
 import IconAddLayer from './IconAddLayer/IconAddLayer';
 import { store } from 'store';
-import { DocumentSelectors } from 'store/document';
-import { createDefaultImage, createDefaultSquareText } from 'model/object';
+import { DocumentSelectors } from '@legacy/store/document';
+import {
+  createDefaultImage,
+  createDefaultSquareText,
+} from '@legacy/model/object';
 import {
   ImageEncodingMessage,
   IMAGE_ENCODING_STATUS,
-} from 'workers/imageConversionWorker';
+} from '@legacy/workers/imageConversionWorker';
 import { nanoid } from '@reduxjs/toolkit';
 
 const QueueSubHeader = memo(() => {

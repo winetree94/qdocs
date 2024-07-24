@@ -1,5 +1,5 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import { QueueImage, QueueObjectType } from 'model/object';
+import { QueueImage, QueueObjectType } from '@legacy/model/object';
 
 const addOne = createAction<{
   queueIndex?: number;

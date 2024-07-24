@@ -1,5 +1,5 @@
 import { createSelector, EntityId } from '@reduxjs/toolkit';
-import { QueueObjectType } from 'model/object';
+import { QueueObjectType } from '@legacy/model/object';
 import { RootState } from 'store';
 import { objectEntityAdapter } from './reducer';
 

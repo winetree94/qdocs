@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
-import { QUEUE_UI_SIZES } from 'styles/ui/Size';
-import { QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLORS } from '@legacy/styles/ui/Color';
 
 export interface QueueRadioProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

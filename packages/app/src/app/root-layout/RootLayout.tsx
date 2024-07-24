@@ -2,24 +2,24 @@ import { useEffect } from 'react';
 import { QueueEditor } from '../../components/editor/Editor';
 import styles from './RootLayout.module.scss';
 import clsx from 'clsx';
-import { Welcome } from 'app/welcome-panel/Welcome';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { DocumentSelectors } from 'store/document/selectors';
-import { SettingSelectors } from 'store/settings/selectors';
+import { Welcome } from '@legacy/app/welcome-panel/Welcome';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { DocumentSelectors } from '@legacy/store/document/selectors';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { SettingsActions } from '../../store/settings';
-import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
-import { RightPanel } from 'app/right-panel/RightPanel';
-import { PagePanel } from 'app/page-panel/PagePanel';
-import QueueSubHeader from 'app/sub-header/SubHeader';
-import { QueueHeader } from 'app/header/Header';
-import { BottomPanel } from 'app/bottom-panel/BottomPanel';
-import { GlobalKeydown } from 'app/global-keydown/GlobalKeydown';
+import { PanelResizer } from '@legacy/cdk/panel-resizer/PanelResizer';
+import { RightPanel } from '@legacy/app/right-panel/RightPanel';
+import { PagePanel } from '@legacy/app/page-panel/PagePanel';
+import QueueSubHeader from '@legacy/app/sub-header/SubHeader';
+import { QueueHeader } from '@legacy/app/header/Header';
+import { BottomPanel } from '@legacy/app/bottom-panel/BottomPanel';
+import { GlobalKeydown } from '@legacy/app/global-keydown/GlobalKeydown';
 import { useTranslation } from 'react-i18next';
-import { PreferencesSelectors } from 'store/preferences/selectors';
+import { PreferencesSelectors } from '@legacy/store/preferences/selectors';
 import {
   SUPPORTED_LANGUAGE,
   SUPPORTED_LANGUAGES,
-} from 'store/preferences/model';
+} from '@legacy/store/preferences/model';
 
 export const RootLayout = () => {
   const { i18n } = useTranslation();

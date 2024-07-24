@@ -6,7 +6,7 @@ import {
   QueueRotate,
   QueueScale,
   QueueStroke,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export interface StandaloneSquareObject {
   objectId: EntityId;

@@ -1,6 +1,6 @@
 import { createTypedListenerMiddleware } from 'middleware';
-import { EffectSelectors } from 'store/effect/selectors';
-import { PageSelectors } from 'store/page/selectors';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
+import { PageSelectors } from '@legacy/store/page/selectors';
 import { SettingsActions } from './actions';
 import { SettingSelectors } from './selectors';
 import { ObjectActions } from '../object';

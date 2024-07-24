@@ -1,4 +1,4 @@
-import { QueueStroke } from 'model/property/stroke';
+import { QueueStroke } from '@legacy/model/property/stroke';
 import { BaseQueueEffect } from './base';
 import { OBJECT_EFFECT_TYPE } from './meta';
 

@@ -1,10 +1,10 @@
-import { EffectControllerFade } from 'components/effect-controller/EffectControllerFade';
-import { EffectControllerFill } from 'components/effect-controller/EffectControllerFill';
-import { EffectControllerRect } from 'components/effect-controller/EffectControllerRect';
-import { EffectControllerRotate } from 'components/effect-controller/EffectControllerRotate';
-import { EffectControllerScale } from 'components/effect-controller/EffectControllerScale';
-import { QueueEffectType } from 'model/effect';
-import { OBJECT_PROPERTY_TYPE } from 'model/property';
+import { EffectControllerFade } from '@legacy/components/effect-controller/EffectControllerFade';
+import { EffectControllerFill } from '@legacy/components/effect-controller/EffectControllerFill';
+import { EffectControllerRect } from '@legacy/components/effect-controller/EffectControllerRect';
+import { EffectControllerRotate } from '@legacy/components/effect-controller/EffectControllerRotate';
+import { EffectControllerScale } from '@legacy/components/effect-controller/EffectControllerScale';
+import { QueueEffectType } from '@legacy/model/effect';
+import { OBJECT_PROPERTY_TYPE } from '@legacy/model/property';
 import { ReactElement } from 'react';
 
 export type EffectControllerIndexProps = {

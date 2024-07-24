@@ -1,4 +1,4 @@
-import { StandaloneImageObject } from 'model/standalone-object';
+import { StandaloneImageObject } from '@legacy/model/standalone-object';
 
 export const StandaloneImage = ({
   objectId,

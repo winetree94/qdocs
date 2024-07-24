@@ -2,9 +2,9 @@ import { forwardRef } from 'react';
 import * as Toggle from '@radix-ui/react-toggle';
 import styles from './Toggle.module.scss';
 import clsx from 'clsx';
-import { QueueButtonProps } from 'components/buttons/button/Button';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QueueButtonProps } from '@legacy/components/buttons/button/Button';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 
 export const QueueToggleRoot = forwardRef<
   HTMLButtonElement,

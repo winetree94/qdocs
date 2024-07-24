@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { EffectControllerBox } from 'components';
-import { useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { EffectControllerBox } from '@legacy/components/effect-controller';
+import { useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 
 export const PanelTabType = {
   Styler: 'styler',

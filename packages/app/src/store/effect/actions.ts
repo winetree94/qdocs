@@ -1,5 +1,5 @@
 import { createAction, EntityId } from '@reduxjs/toolkit';
-import { QueueEffectType } from 'model/effect';
+import { QueueEffectType } from '@legacy/model/effect';
 
 const addEffect = createAction<QueueEffectType>('effect/addEffect');
 

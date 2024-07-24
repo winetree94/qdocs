@@ -1,18 +1,18 @@
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { nanoid } from '@reduxjs/toolkit';
-import { deviceMetaKey } from 'cdk/device/meta';
-import { QueueContextMenu } from 'components/context-menu/Context';
-import { isQueueObjectClipboardModel } from 'model/clipboard/base';
-import { QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
+import { deviceMetaKey } from '@legacy/cdk/device/meta';
+import { QueueContextMenu } from '@legacy/components/context-menu/Context';
+import { isQueueObjectClipboardModel } from '@legacy/model/clipboard/base';
+import { QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { EffectActions } from 'store/effect';
-import { HistoryActions } from 'store/history';
-import { HistorySelectors } from 'store/history/selectors';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingsActions, SettingSelectors } from 'store/settings';
+import { EffectActions } from '@legacy/store/effect';
+import { HistoryActions } from '@legacy/store/history';
+import { HistorySelectors } from '@legacy/store/history/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
 import styles from './EditorContext.module.scss';
 
 export const EditorContext = forwardRef<

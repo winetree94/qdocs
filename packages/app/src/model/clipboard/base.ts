@@ -1,5 +1,5 @@
-import { QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
+import { QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
 import { QUEUE_CLIPBOARD_UNIQUE_ID } from './constants';
 
 export interface QueueClipboardModel<T> {

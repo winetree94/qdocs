@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { QueueEffectType } from 'model/effect';
+import { QueueEffectType } from '@legacy/model/effect';
 import { DocumentActions } from '../document';
 import { EffectActions } from './actions';
 

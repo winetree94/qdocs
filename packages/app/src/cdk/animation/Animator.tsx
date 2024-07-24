@@ -1,4 +1,4 @@
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
+import { AnimatorTimingFunctionType } from '@legacy/cdk/animation/timing/meta';
 import { isEqual } from 'lodash';
 import {
   createContext,

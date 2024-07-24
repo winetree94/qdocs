@@ -6,8 +6,8 @@ import { ObjectActions } from './actions';
 import { SettingsActions } from '../settings';
 import { SettingSelectors } from '../settings/selectors';
 import { EffectActions, EffectSelectors } from '../effect';
-import { QueueObjectType } from 'model/object';
-import { OBJECT_EFFECT_TYPES, QueueEffectType } from 'model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { OBJECT_EFFECT_TYPES, QueueEffectType } from '@legacy/model/effect';
 import {
   supportCreateEffect,
   supportFade,
@@ -21,7 +21,7 @@ import {
   supportScaleEffect,
   supportStroke,
   supportStrokeEffect,
-} from 'model/support';
+} from '@legacy/model/support';
 
 export const objectMiddleware = createTypedListenerMiddleware();
 

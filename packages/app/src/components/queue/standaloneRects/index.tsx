@@ -1,9 +1,9 @@
-import { OBJECT_TYPE, QueueObjectType } from 'model/object';
-import { StandaloneCircle } from 'components/queue/standaloneRects/Circle';
-import { StandaloneIcon } from 'components/queue/standaloneRects/Icon';
-import { StandaloneImage } from 'components/queue/standaloneRects/Image';
-import { StandaloneLine } from 'components/queue/standaloneRects/Line';
-import { StandaloneSquare } from 'components/queue/standaloneRects/Square';
+import { OBJECT_TYPE, QueueObjectType } from '@legacy/model/object';
+import { StandaloneCircle } from '@legacy/components/queue/standaloneRects/Circle';
+import { StandaloneIcon } from '@legacy/components/queue/standaloneRects/Icon';
+import { StandaloneImage } from '@legacy/components/queue/standaloneRects/Image';
+import { StandaloneLine } from '@legacy/components/queue/standaloneRects/Line';
+import { StandaloneSquare } from '@legacy/components/queue/standaloneRects/Square';
 import { memo } from 'react';
 
 export interface StandaloneRectProps {

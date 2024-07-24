@@ -1,4 +1,4 @@
-import { QueueFill } from 'model/property/fill';
+import { QueueFill } from '@legacy/model/property/fill';
 import { BaseQueueEffect } from './base';
 import { OBJECT_EFFECT_TYPE } from './meta';
 

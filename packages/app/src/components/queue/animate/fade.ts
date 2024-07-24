@@ -1,6 +1,6 @@
-import { FadeEffect, QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
-import { QueueFade, WithFade } from 'model/property';
+import { FadeEffect, QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueFade, WithFade } from '@legacy/model/property';
 
 export interface FadeAnimation {
   fromFade: QueueFade;

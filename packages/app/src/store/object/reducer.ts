@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, nanoid } from '@reduxjs/toolkit';
-import { QueueObjectType } from 'model/object';
-import { ObjectSelectors } from 'store/object/selectors';
+import { QueueObjectType } from '@legacy/model/object';
+import { ObjectSelectors } from '@legacy/store/object/selectors';
 import { DocumentActions } from '../document';
 import { ObjectActions } from './actions';
 

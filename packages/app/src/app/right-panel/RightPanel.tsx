@@ -1,11 +1,11 @@
-import QueueTab from 'components/tabs/Tab';
-import { EffectPanel } from 'app/effect-panel/EffectPanel';
-import { useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings';
-import { DefaultPropPanel } from 'app/default-prop-panel/DefaultPropPanel';
+import QueueTab from '@legacy/components/tabs/Tab';
+import { EffectPanel } from '@legacy/app/effect-panel/EffectPanel';
+import { useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings';
+import { DefaultPropPanel } from '@legacy/app/default-prop-panel/DefaultPropPanel';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { DocumentPanel } from 'app/document-panel/DocumentPanel';
+import { DocumentPanel } from '@legacy/app/document-panel/DocumentPanel';
 import { useEffect, useMemo, useState } from 'react';
 
 export type RightPanelProps = React.HTMLAttributes<HTMLDivElement>;

@@ -1,20 +1,20 @@
-import { Animators } from 'cdk/animation/Animator';
+import { Animators } from '@legacy/cdk/animation/Animator';
 import {
   getAnimatableFill,
   getCurrentFill,
   getFillAnimation,
-} from 'components/queue/animate/fill';
+} from '@legacy/components/queue/animate/fill';
 import {
   QueueFade,
   QueueFill,
   QueueRect,
   QueueRotate,
   QueueScale,
-} from 'model/property';
+} from '@legacy/model/property';
 import { createContext, useContext, useMemo } from 'react';
-import { EffectSelectors } from 'store/effect/selectors';
-import { useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
+import { useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings';
 import {
   getAnimatableFade,
   getCurrentFade,

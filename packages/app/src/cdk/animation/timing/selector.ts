@@ -1,5 +1,5 @@
-import { bounce } from 'cdk/animation/timing/bounce';
-import { AnimatorTimingFunctionType } from 'cdk/animation/timing/meta';
+import { bounce } from '@legacy/cdk/animation/timing/bounce';
+import { AnimatorTimingFunctionType } from '@legacy/cdk/animation/timing/meta';
 import { ease } from './ease';
 import { easeIn } from './ease-in';
 import { easeInOut } from './ease-in-out';

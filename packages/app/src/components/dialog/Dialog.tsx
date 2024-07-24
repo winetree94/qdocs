@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import styles from './Dialog.module.scss';
 import clsx from 'clsx';
-import { useRootRenderedContext } from 'cdk/root-renderer/root-renderer';
+import { useRootRenderedContext } from '@legacy/cdk/root-renderer/root-renderer';
 
 export interface QueueDialogRootProps {
   /**

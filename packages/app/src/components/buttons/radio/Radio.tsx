@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import styles from './Radio.module.scss';
 import clsx from 'clsx';
 import { QueueRadioProps } from './Radio.model';

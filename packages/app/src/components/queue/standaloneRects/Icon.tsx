@@ -1,6 +1,6 @@
-import symbolPath from 'assets/remixicon.symbol.svg';
-import { convertHexWithOpacity } from 'components/queue/color/convertHex';
-import { StandaloneIconObject } from 'model/standalone-object';
+import symbolPath from '@legacy/assets/remixicon.symbol.svg';
+import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
+import { StandaloneIconObject } from '@legacy/model/standalone-object';
 
 export const StandaloneIcon = ({
   rect,

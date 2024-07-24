@@ -1,4 +1,4 @@
-import { QueueText } from 'model/property/text';
+import { QueueText } from '@legacy/model/property/text';
 import { BaseQueueEffect } from './base';
 import { OBJECT_EFFECT_TYPE } from './meta';
 

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { angle } from 'cdk/math/angle';
-import { center } from 'cdk/math/center';
+import { angle } from '@legacy/cdk/math/angle';
+import { center } from '@legacy/cdk/math/center';
 import clsx from 'clsx';
-import { QueueObjectContainerContext } from 'components/queue/Container';
-import { QueueAnimatableContext } from 'components/queue/QueueAnimation';
-import { OBJECT_TYPE, OBJECT_TYPES } from 'model/object';
-import { QueueRect } from 'model/property';
+import { QueueObjectContainerContext } from '@legacy/components/queue/Container';
+import { QueueAnimatableContext } from '@legacy/components/queue/QueueAnimation';
+import { OBJECT_TYPE, OBJECT_TYPES } from '@legacy/model/object';
+import { QueueRect } from '@legacy/model/property';
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
-import { useAppSelector } from 'store/hooks';
-import { ObjectSelectors } from 'store/object';
-import { SettingSelectors } from 'store/settings';
+import { useAppSelector } from '@legacy/store/hooks';
+import { ObjectSelectors } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
 import styles from './Resizer.module.scss';
 
 interface ResizeMatrix {

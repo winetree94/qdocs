@@ -2,7 +2,7 @@
 import styles from './Draw.module.scss';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { Draggable } from 'cdk/drag/Drag';
+import { Draggable } from '@legacy/cdk/drag/Drag';
 
 export interface DrawEvent {
   x: number;

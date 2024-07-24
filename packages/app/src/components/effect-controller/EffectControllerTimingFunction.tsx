@@ -1,17 +1,17 @@
-import { QueueEffectType } from 'model/effect';
+import { QueueEffectType } from '@legacy/model/effect';
 import { ReactElement } from 'react';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { getEffectEntityKey } from 'store/effect/reducer';
-import { EffectSelectors } from 'store/effect/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { getEffectEntityKey } from '@legacy/store/effect/reducer';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { EffectActions } from '../../store/effect';
-import { HistoryActions } from 'store/history';
+import { HistoryActions } from '@legacy/store/history';
 import {
   AnimatorTimingFunctionType,
   TIMING_FUNCTION_META,
   TIMING_FUNCTION_TRANSLATION_KEY,
-} from 'cdk/animation/timing/meta';
-import { QueueSelect } from 'components/select/Select';
+} from '@legacy/cdk/animation/timing/meta';
+import { QueueSelect } from '@legacy/components/select/Select';
 import { useTranslation } from 'react-i18next';
 
 export type EffectControllerTimingFunctionProps = {

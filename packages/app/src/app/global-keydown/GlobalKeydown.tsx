@@ -1,16 +1,16 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { useGlobalKeydown } from 'cdk/hooks/useGlobalKeydown';
-import { isQueueObjectClipboardModel } from 'model/clipboard/base';
-import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
-import { QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
+import { useGlobalKeydown } from '@legacy/cdk/hooks/useGlobalKeydown';
+import { isQueueObjectClipboardModel } from '@legacy/model/clipboard/base';
+import { QUEUE_CLIPBOARD_UNIQUE_ID } from '@legacy/model/clipboard/constants';
+import { QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
 import { store } from 'store';
-import { EffectActions, EffectSelectors } from 'store/effect';
-import { HistoryActions } from 'store/history';
-import { HistorySelectors } from 'store/history/selectors';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingsActions, SettingSelectors } from 'store/settings';
+import { EffectActions, EffectSelectors } from '@legacy/store/effect';
+import { HistoryActions } from '@legacy/store/history';
+import { HistorySelectors } from '@legacy/store/history/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
 
 export const GlobalKeydown = () => {
   const dispatch = useAppDispatch();

@@ -1,7 +1,7 @@
-import { hexToRgb, rgbToFullFormHex } from 'components/queue/color/convertHex';
-import { FillEffect, OBJECT_EFFECT_TYPE, QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
-import { QueueFill, WithFill } from 'model/property';
+import { hexToRgb, rgbToFullFormHex } from '@legacy/components/queue/color/convertHex';
+import { FillEffect, OBJECT_EFFECT_TYPE, QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueFill, WithFill } from '@legacy/model/property';
 
 export interface FillAnimation {
   fromFill: QueueFill;

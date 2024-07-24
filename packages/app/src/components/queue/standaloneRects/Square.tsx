@@ -1,5 +1,5 @@
-import { convertHexWithOpacity } from 'components/queue/color/convertHex';
-import { StandaloneSquareObject } from 'model/standalone-object';
+import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
+import { StandaloneSquareObject } from '@legacy/model/standalone-object';
 
 export const StandaloneSquare = ({
   objectId,

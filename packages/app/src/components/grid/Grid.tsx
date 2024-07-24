@@ -1,6 +1,6 @@
-import { Animators, AnimatorsProps } from 'cdk/animation/Animator';
+import { Animators, AnimatorsProps } from '@legacy/cdk/animation/Animator';
 import clsx from 'clsx';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import {
   forwardRef,
   FunctionComponent,

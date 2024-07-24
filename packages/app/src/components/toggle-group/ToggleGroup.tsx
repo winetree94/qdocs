@@ -1,10 +1,10 @@
 import React, { forwardRef } from 'react';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import clsx from 'clsx';
-import { QueueButtonProps } from 'components/buttons/button/Button';
+import { QueueButtonProps } from '@legacy/components/buttons/button/Button';
 import styles from './ToggleGroup.module.scss';
-import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 
 export interface QueueToggleGroupProps {
   size?: QUEUE_UI_SIZES;

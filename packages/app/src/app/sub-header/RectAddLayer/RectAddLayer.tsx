@@ -1,10 +1,10 @@
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
-import { createDefaultSquare } from 'model/object/square';
-import { createDefaultCircle } from 'model/object/circle';
-import { QueueIconButton } from 'components/buttons/button/Button';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { useCreateFigure } from '@legacy/cdk/hooks/useCreateFigure';
+import { createDefaultSquare } from '@legacy/model/object/square';
+import { createDefaultCircle } from '@legacy/model/object/circle';
+import { QueueIconButton } from '@legacy/components/buttons/button/Button';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import styles from './RectAddLayer.module.scss';
 import clsx from 'clsx';
 

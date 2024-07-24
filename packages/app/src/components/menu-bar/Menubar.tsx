@@ -1,10 +1,10 @@
 import { CheckIcon } from '@radix-ui/react-icons';
 import * as Menubar from '@radix-ui/react-menubar';
 import clsx from 'clsx';
-import { QueueButtonProps } from 'components/buttons/button/Button';
+import { QueueButtonProps } from '@legacy/components/buttons/button/Button';
 import React from 'react';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import styles from './Menubar.module.scss';
 
 export const Root = React.forwardRef<HTMLDivElement, Menubar.MenubarProps>(

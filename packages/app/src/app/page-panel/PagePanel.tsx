@@ -11,29 +11,29 @@ import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { clsx } from 'clsx';
 import { throttle } from 'lodash';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingsActions, SettingSelectors } from 'store/settings';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
 import {
   NormalizedQueueDocumentPage,
   PageActions,
   PageSelectors,
-} from 'store/page';
-import { HistoryActions } from 'store/history';
-import { DocumentSelectors } from 'store/document';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { useAlertDialog } from 'components/alert-dialog/AlertDialog';
-import { QueueSeparator } from 'components/separator/Separator';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueContextMenu } from 'components/context-menu/Context';
-import { ObjectSelectors } from 'store/object';
-import { EffectSelectors } from 'store/effect';
-import { StandaloneRect } from 'components/queue/standaloneRects';
-import { Scaler } from 'components/scaler/Scaler';
-import { StandaloneText } from 'components/queue/standaloneRects/Text';
-import { OBJECT_EFFECT_TYPE } from 'model/effect';
+} from '@legacy/store/page';
+import { HistoryActions } from '@legacy/store/history';
+import { DocumentSelectors } from '@legacy/store/document';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QueueContextMenu } from '@legacy/components/context-menu/Context';
+import { ObjectSelectors } from '@legacy/store/object';
+import { EffectSelectors } from '@legacy/store/effect';
+import { StandaloneRect } from '@legacy/components/queue/standaloneRects';
+import { Scaler } from '@legacy/components/scaler/Scaler';
+import { StandaloneText } from '@legacy/components/queue/standaloneRects/Text';
+import { OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
 import { store } from 'store';
 
 const PagePanelRoot = ({

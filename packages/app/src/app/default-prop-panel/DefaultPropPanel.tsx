@@ -1,5 +1,5 @@
-import { ObjectStylerPanel } from 'app/object-styler-panel/ObjectStyler';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { ObjectStylerPanel } from '@legacy/app/object-styler-panel/ObjectStyler';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 
 export const DefaultPropPanel = () => {
   return (

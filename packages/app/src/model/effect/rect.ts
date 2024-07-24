@@ -1,4 +1,4 @@
-import { QueueRect } from 'model/property/rect';
+import { QueueRect } from '@legacy/model/property/rect';
 import { BaseQueueEffect } from './base';
 import { OBJECT_EFFECT_TYPE } from './meta';
 

@@ -1,12 +1,12 @@
-import { OBJECT_EFFECT_TYPE, RotateEffect } from 'model/effect';
-import { QueueRotate } from 'model/property';
+import { OBJECT_EFFECT_TYPE, RotateEffect } from '@legacy/model/effect';
+import { QueueRotate } from '@legacy/model/property';
 import { ReactElement } from 'react';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { getEffectEntityKey } from 'store/effect/reducer';
-import { EffectSelectors } from 'store/effect/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { getEffectEntityKey } from '@legacy/store/effect/reducer';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { EffectActions } from '../../store/effect';
-import { HistoryActions } from 'store/history';
+import { HistoryActions } from '@legacy/store/history';
 import { useTranslation } from 'react-i18next';
 
 export const EffectControllerRotate = (): ReactElement => {

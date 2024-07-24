@@ -1,4 +1,4 @@
-import { QueueDocumentRect } from 'model/document/document';
+import { QueueDocumentRect } from '@legacy/model/document/document';
 import {
   WithFade,
   WithFill,
@@ -7,11 +7,11 @@ import {
   WithScale,
   WithStroke,
   WithText,
-} from 'model/property';
+} from '@legacy/model/property';
 import { EntityId, nanoid } from '@reduxjs/toolkit';
 import { OBJECT_TYPE } from './meta';
 import { BaseObject } from './base';
-import { getRandomColor } from 'cdk/color/color';
+import { getRandomColor } from '@legacy/cdk/color/color';
 
 export interface QueueSquare
   extends BaseObject,

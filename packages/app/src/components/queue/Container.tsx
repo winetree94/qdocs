@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { QueueObjectType } from 'model/object';
+import { QueueObjectType } from '@legacy/model/object';
 import { createContext } from 'react';
 
 export interface QueueObjectContainerContextType<T extends QueueObjectType> {

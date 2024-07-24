@@ -1,13 +1,13 @@
 import { EntityId } from '@reduxjs/toolkit';
-import { Color } from 'components/object-styler/color/Color';
-import { QueueSlider } from 'components/slider/Slider';
-import { QueueObjectType } from 'model/object';
-import { QueueFill } from 'model/property';
-import { supportFillAll } from 'model/support';
+import { Color } from '@legacy/components/object-styler/color/Color';
+import { QueueSlider } from '@legacy/components/slider/Slider';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueFill } from '@legacy/model/property';
+import { supportFillAll } from '@legacy/model/support';
 import { ChangeEvent, ReactElement } from 'react';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingSelectors } from 'store/settings';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
 
 /**
  * @todo

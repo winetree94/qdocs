@@ -1,20 +1,20 @@
 import clsx from 'clsx';
-import { QueueIconButton } from 'components/buttons/button/Button';
-import { QueueSlider } from 'components/slider/Slider';
-import { Timeline } from 'components/timeline/Timeline';
-import { QueueToggle } from 'components/toggle/Toggle';
+import { QueueIconButton } from '@legacy/components/buttons/button/Button';
+import { QueueSlider } from '@legacy/components/slider/Slider';
+import { Timeline } from '@legacy/components/timeline/Timeline';
+import { QueueToggle } from '@legacy/components/toggle/Toggle';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingsActions, SettingSelectors } from 'store/settings';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { ReactComponent as PlayIcon } from 'assets/icons/play.svg';
-import { ReactComponent as StepBackIcon } from 'assets/icons/step-back.svg';
-import { ReactComponent as StepForwardIcon } from 'assets/icons/step-forward.svg';
-import { ReactComponent as StepInIcon } from 'assets/icons/step-in.svg';
-import { ReactComponent as StepOutIcon } from 'assets/icons/step-out.svg';
-import { ReactComponent as RepeatIcon } from 'assets/icons/repeat.svg';
-import { QueueSeparator } from 'components/separator/Separator';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { ReactComponent as PlayIcon } from '@legacy/assets/icons/play.svg';
+import { ReactComponent as StepBackIcon } from '@legacy/assets/icons/step-back.svg';
+import { ReactComponent as StepForwardIcon } from '@legacy/assets/icons/step-forward.svg';
+import { ReactComponent as StepInIcon } from '@legacy/assets/icons/step-in.svg';
+import { ReactComponent as StepOutIcon } from '@legacy/assets/icons/step-out.svg';
+import { ReactComponent as RepeatIcon } from '@legacy/assets/icons/repeat.svg';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from 'store';
 
 const ZOOM_LEVEL = {

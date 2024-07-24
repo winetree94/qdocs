@@ -1,15 +1,15 @@
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
-import { QueueContextMenu } from 'components/context-menu/Context';
+import { QueueContextMenu } from '@legacy/components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { ObjectActions } from '../../store/object';
-import { HistoryActions } from 'store/history';
-import { EffectActions, EffectSelectors } from 'store/effect';
-import { QUEUE_CLIPBOARD_UNIQUE_ID } from 'model/clipboard/constants';
+import { HistoryActions } from '@legacy/store/history';
+import { EffectActions, EffectSelectors } from '@legacy/store/effect';
+import { QUEUE_CLIPBOARD_UNIQUE_ID } from '@legacy/model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
-import { deviceMetaKey } from 'cdk/device/meta';
+import { deviceMetaKey } from '@legacy/cdk/device/meta';
 import { store } from 'store';
 
 export const QueueObjectContextContent = forwardRef<

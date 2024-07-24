@@ -4,7 +4,7 @@ import {
   QueueRect,
   QueueRotate,
   QueueScale,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export interface StandaloneIconObject {
   rect: QueueRect;

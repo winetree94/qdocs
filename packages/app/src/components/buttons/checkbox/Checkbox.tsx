@@ -1,9 +1,9 @@
 import React, { ReactNode, ChangeEvent, useMemo } from 'react';
-import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from '@legacy/styles/ui/Color';
 import styles from './Checkbox.module.scss';
 import clsx from 'clsx';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 
 export interface QueueCheckboxProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

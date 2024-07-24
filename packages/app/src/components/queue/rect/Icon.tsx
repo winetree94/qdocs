@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { QueueIcon } from 'model/object/icon';
+import { QueueIcon } from '@legacy/model/object/icon';
 import { useContext } from 'react';
 import {
   QueueObjectContainerContext,
@@ -7,8 +7,8 @@ import {
 } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';
 import { RectProps } from '../Rect';
-import symbolPath from 'assets/remixicon.symbol.svg';
-import { convertHexWithOpacity } from 'components/queue/color/convertHex';
+import symbolPath from '@legacy/assets/remixicon.symbol.svg';
+import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
 
 export const Icon = ({ onRectMousedown }: RectProps) => {
   const containerContext = useContext<

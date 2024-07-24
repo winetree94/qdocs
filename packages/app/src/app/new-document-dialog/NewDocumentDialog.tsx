@@ -1,14 +1,17 @@
-import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
+import {
+  QueueDialog,
+  QueueDialogRootRef,
+} from '@legacy/components/dialog/Dialog';
 import React, { useMemo, useRef } from 'react';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueToggleGroup } from 'components/toggle-group/ToggleGroup';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QueueToggleGroup } from '@legacy/components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
 import { useTranslation } from 'react-i18next';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { QueueSelect } from 'components/select/Select';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { QueueSelect } from '@legacy/components/select/Select';
 import { RootState } from 'store';
 
 export interface NewDocumentDialogProps {

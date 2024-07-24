@@ -1,10 +1,10 @@
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueDialog, QueueDialogRootRef } from 'components/dialog/Dialog';
-import { QueueInput } from 'components/input/Input';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QueueDialog, QueueDialogRootRef } from '@legacy/components/dialog/Dialog';
+import { QueueInput } from '@legacy/components/input/Input';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 
 export interface EditPageNameProps {
   pageName: string;

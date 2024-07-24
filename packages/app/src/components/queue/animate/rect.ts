@@ -1,6 +1,6 @@
-import { RectEffect, QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
-import { QueueRect, WithRect } from 'model/property';
+import { RectEffect, QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueRect, WithRect } from '@legacy/model/property';
 
 export interface RectAnimation {
   fromRect: QueueRect;

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PanelResizer } from 'cdk/panel-resizer/PanelResizer';
+import { PanelResizer } from '@legacy/cdk/panel-resizer/PanelResizer';
 import { PagePanel } from './PagePanel';
 
 type Story = StoryObj<typeof PagePanel>;

@@ -1,14 +1,14 @@
 import { EntityId } from '@reduxjs/toolkit';
-import { QueueFill } from 'model/property';
+import { QueueFill } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
-import { HistoryActions } from 'store/history';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingSelectors } from 'store/settings';
-import { QueueObjectType } from 'model/object';
-import QueueColorPicker from 'components/color-picker/ColorPicker';
-import { QueueSeparator } from 'components/separator/Separator';
-import { QueueInput } from 'components/input/Input';
+import { HistoryActions } from '@legacy/store/history';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
+import { QueueObjectType } from '@legacy/model/object';
+import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
+import { QueueInput } from '@legacy/components/input/Input';
 import { store } from 'store';
 import { supportFill } from '../../model/support/property';
 

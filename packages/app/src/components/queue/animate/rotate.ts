@@ -1,6 +1,6 @@
-import { RotateEffect, QueueEffectType } from 'model/effect';
-import { QueueObjectType } from 'model/object';
-import { QueueRotate, WithRotation } from 'model/property';
+import { RotateEffect, QueueEffectType } from '@legacy/model/effect';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueRotate, WithRotation } from '@legacy/model/property';
 
 export interface RotateAnimation {
   fromRotate: QueueRotate;

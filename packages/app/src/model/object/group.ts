@@ -6,7 +6,7 @@ import {
   WithRotation,
   WithScale,
   WithText,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export interface QueueGroupObject
   extends BaseObject,

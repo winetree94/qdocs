@@ -2,18 +2,18 @@ import { FunctionComponent, memo, ReactNode, useMemo, useState } from 'react';
 import memoize from 'memoize-one';
 import { areEqual, FixedSizeList, ListOnScrollProps } from 'react-window';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { useCreateFigure } from '@legacy/cdk/hooks/useCreateFigure';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import clsx from 'clsx';
-import styles from 'app/sub-header/IconAddLayer/IconAddLayer.module.scss';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
+import styles from '@legacy/app/sub-header/IconAddLayer/IconAddLayer.module.scss';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { createDefaultIcon } from 'model/object/icon';
-import { RemixIconClasses } from 'cdk/icon/factory';
-import { QueueInput } from 'components/input/Input';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
+import { createDefaultIcon } from '@legacy/model/object/icon';
+import { RemixIconClasses } from '@legacy/cdk/icon/factory';
+import { QueueInput } from '@legacy/components/input/Input';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { useTranslation } from 'react-i18next';
 
 interface QueueObject {

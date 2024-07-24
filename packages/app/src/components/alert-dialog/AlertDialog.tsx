@@ -3,12 +3,12 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import clsx from 'clsx';
 import styles from './AlertDialog.module.scss';
 import { QueueButton } from '../buttons/button/Button';
-import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from 'styles/ui/Color';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR, QUEUE_UI_COLORS } from '@legacy/styles/ui/Color';
 import {
   useRootRenderedContext,
   useRootRenderer,
-} from 'cdk/root-renderer/root-renderer';
+} from '@legacy/cdk/root-renderer/root-renderer';
 
 export interface QueueAlertDialogRootProps {
   children?: React.ReactNode;

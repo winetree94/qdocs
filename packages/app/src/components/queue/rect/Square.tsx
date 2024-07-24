@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { convertHexWithOpacity } from 'components/queue/color/convertHex';
+import { convertHexWithOpacity } from '@legacy/components/queue/color/convertHex';
 import { useContext } from 'react';
 import { QueueObjectContainerContext } from '../Container';
 import { QueueAnimatableContext } from '../QueueAnimation';

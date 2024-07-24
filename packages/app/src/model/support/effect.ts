@@ -10,8 +10,8 @@ import {
   ScaleEffect,
   StrokeEffect,
   TextEffect,
-} from 'model/effect';
-import { OBJECT_TYPE, OBJECT_TYPES, QueueObjectType } from 'model/object';
+} from '@legacy/model/effect';
+import { OBJECT_TYPE, OBJECT_TYPES, QueueObjectType } from '@legacy/model/object';
 import { CreateEffect } from '../effect/create';
 
 export const EFFECT_SUPPORTED_MAP: {

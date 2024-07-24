@@ -1,4 +1,4 @@
-import { disableGlobalKeyDownElement } from 'cdk/functions/disableGlobalKeyDownElement';
+import { disableGlobalKeyDownElement } from '@legacy/cdk/functions/disableGlobalKeyDownElement';
 import { useCallback, useEffect } from 'react';
 
 export interface UseGlobalKeydownProps {

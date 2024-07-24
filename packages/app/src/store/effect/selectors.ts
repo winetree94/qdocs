@@ -1,8 +1,8 @@
 import { createSelector, EntityId } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { ObjectSelectors } from 'store/object/selectors';
+import { ObjectSelectors } from '@legacy/store/object/selectors';
 import { effectEntityAdapter } from './reducer';
-import { QueueEffectType } from 'model/effect';
+import { QueueEffectType } from '@legacy/model/effect';
 
 const selectSelf = (state: RootState) => state.effects;
 const selectors = effectEntityAdapter.getSelectors(selectSelf);

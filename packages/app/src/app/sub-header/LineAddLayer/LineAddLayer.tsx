@@ -1,9 +1,9 @@
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { useCreateFigure } from 'cdk/hooks/useCreateFigure';
-import { QueueIconButton } from 'components/buttons/button/Button';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { createDefaultLine } from 'model/object/line';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { useCreateFigure } from '@legacy/cdk/hooks/useCreateFigure';
+import { QueueIconButton } from '@legacy/components/buttons/button/Button';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { createDefaultLine } from '@legacy/model/object/line';
 import styles from './LineAddLayer.module.scss';
 import clsx from 'clsx';
 

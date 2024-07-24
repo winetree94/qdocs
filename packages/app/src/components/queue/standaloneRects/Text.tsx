@@ -1,4 +1,4 @@
-import { StandaloneTextObject } from 'model/standalone-object';
+import { StandaloneTextObject } from '@legacy/model/standalone-object';
 import { memo } from 'react';
 
 export const StandaloneText = memo(

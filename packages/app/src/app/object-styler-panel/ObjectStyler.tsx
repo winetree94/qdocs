@@ -1,10 +1,10 @@
 import { memo, ReactElement } from 'react';
-import { useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
+import { useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { ObjectStyleText } from './Text';
 import { ObjectStyleOpacity } from './Opacity';
 import { ObjectStyleStroke } from './Stroke';
-import { QueueSeparator } from 'components/separator/Separator';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { ObjectStyleBackground } from './Background';
 import { ObjectStyleRect } from './Rect';
 import { ObjectStyleScale } from './Scale';

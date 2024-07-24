@@ -1,5 +1,5 @@
 import { createTypedListenerMiddleware } from 'middleware';
-import { HistoryActions } from 'store/history';
+import { HistoryActions } from '@legacy/store/history';
 import { DocumentActions } from './actions';
 
 export const documentMiddleware = createTypedListenerMiddleware();

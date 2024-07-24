@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import {
   QueueAlertDialog,
   QueueAlertDialogRootProps,
-} from 'components/alert-dialog/AlertDialog';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+} from '@legacy/components/alert-dialog/AlertDialog';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 
 type Story = StoryObj<typeof QueueAlertDialog.Root>;
 

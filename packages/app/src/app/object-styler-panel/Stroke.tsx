@@ -1,14 +1,14 @@
-import { QueueStroke } from 'model/property';
+import { QueueStroke } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
-import { HistoryActions } from 'store/history';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingSelectors } from 'store/settings';
-import { QueueSelect } from 'components/select/Select';
-import QueueColorPicker from 'components/color-picker/ColorPicker';
-import { QueueSlider } from 'components/slider/Slider';
+import { HistoryActions } from '@legacy/store/history';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
+import { QueueSelect } from '@legacy/components/select/Select';
+import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
+import { QueueSlider } from '@legacy/components/slider/Slider';
 import { store } from 'store';
-import { supportStroke } from 'model/support';
+import { supportStroke } from '@legacy/model/support';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();

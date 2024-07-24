@@ -1,5 +1,5 @@
 import { EntityId, nanoid } from '@reduxjs/toolkit';
-import { QueueDocumentRect } from 'model/document/document';
+import { QueueDocumentRect } from '@legacy/model/document/document';
 import {
   WithRect,
   WithFade,
@@ -8,11 +8,11 @@ import {
   WithScale,
   WithStroke,
   WithText,
-} from 'model/property';
-import { WithImage } from 'model/property/image';
+} from '@legacy/model/property';
+import { WithImage } from '@legacy/model/property/image';
 import { OBJECT_TYPE } from './meta';
 import { BaseObject } from './base';
-import { getRandomColor } from 'cdk/color/color';
+import { getRandomColor } from '@legacy/cdk/color/color';
 
 export interface QueueImage
   extends BaseObject,

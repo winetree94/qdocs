@@ -1,17 +1,17 @@
-import { SvgRemixIcon, SvgRemixIconProps } from 'cdk/icon/SvgRemixIcon';
-import { QueueInput } from 'components/input/Input';
-import { QueueText } from 'model/property';
+import { SvgRemixIcon, SvgRemixIconProps } from '@legacy/cdk/icon/SvgRemixIcon';
+import { QueueInput } from '@legacy/components/input/Input';
+import { QueueText } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
-import { HistoryActions } from 'store/history';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { ObjectActions } from 'store/object';
-import { SettingSelectors } from 'store/settings';
-import { QueueSelect } from 'components/select/Select';
-import QueueButtonGroup from 'components/buttons/button-group/ButtonGroup';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueSeparator } from 'components/separator/Separator';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import QueueColorPicker from 'components/color-picker/ColorPicker';
+import { HistoryActions } from '@legacy/store/history';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { ObjectActions } from '@legacy/store/object';
+import { SettingSelectors } from '@legacy/store/settings';
+import { QueueSelect } from '@legacy/components/select/Select';
+import QueueButtonGroup from '@legacy/components/buttons/button-group/ButtonGroup';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
 import { store } from 'store';
 
 const textHorizontalAlignButtonGroup: {

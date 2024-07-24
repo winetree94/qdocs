@@ -19,7 +19,8 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "~styles/*": ["styles/*"]
+      "~styles/*": ["styles/*"],
+      "@legacy/*": ["*"],
     },
     "strictNullChecks": false,
     "plugins": [

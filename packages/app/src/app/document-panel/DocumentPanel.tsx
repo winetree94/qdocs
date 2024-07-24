@@ -1,13 +1,13 @@
-import QueueCheckbox from 'components/buttons/checkbox/Checkbox';
-import QueueColorPicker from 'components/color-picker/ColorPicker';
-import { QueueInput } from 'components/input/Input';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { QueueSelect } from 'components/select/Select';
-import { QueueSeparator } from 'components/separator/Separator';
+import QueueCheckbox from '@legacy/components/buttons/checkbox/Checkbox';
+import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
+import { QueueInput } from '@legacy/components/input/Input';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
+import { QueueSelect } from '@legacy/components/select/Select';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DocumentActions, DocumentSelectors } from 'store/document';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { DocumentActions, DocumentSelectors } from '@legacy/store/document';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 
 export const DocumentPanel = () => {
   const dispatch = useAppDispatch();

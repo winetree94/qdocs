@@ -1,17 +1,17 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { documentMiddleware } from 'store/document/middleware';
-import { documentSlice } from 'store/document/reducer';
-import { effectMiddleware } from 'store/effect/middlewares';
-import { effectSlice } from 'store/effect/reducer';
-import { historySlice, withHistory } from 'store/history';
-import { objectMiddleware } from 'store/object/middlewares';
-import { objectsSlice } from 'store/object/reducer';
-import { pageMiddleware } from 'store/page/middlewares';
-import { pagesSlice } from 'store/page/reducer';
-import { settingsMiddleware } from 'store/settings/middlewares';
-import { documentSettingsSlice } from 'store/settings/reducer';
-import { preferencesSlice } from 'store/preferences/reducer';
-import { preferencesMiddleware } from 'store/preferences/middleware';
+import { documentMiddleware } from '@legacy/store/document/middleware';
+import { documentSlice } from '@legacy/store/document/reducer';
+import { effectMiddleware } from '@legacy/store/effect/middlewares';
+import { effectSlice } from '@legacy/store/effect/reducer';
+import { historySlice, withHistory } from '@legacy/store/history';
+import { objectMiddleware } from '@legacy/store/object/middlewares';
+import { objectsSlice } from '@legacy/store/object/reducer';
+import { pageMiddleware } from '@legacy/store/page/middlewares';
+import { pagesSlice } from '@legacy/store/page/reducer';
+import { settingsMiddleware } from '@legacy/store/settings/middlewares';
+import { documentSettingsSlice } from '@legacy/store/settings/reducer';
+import { preferencesSlice } from '@legacy/store/preferences/reducer';
+import { preferencesMiddleware } from '@legacy/store/preferences/middleware';
 
 const reducers = combineReducers({
   [historySlice.name]: historySlice.reducer,

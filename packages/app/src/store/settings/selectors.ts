@@ -1,14 +1,14 @@
 import { RootState } from 'store';
 import { createSelector } from '@reduxjs/toolkit';
-import { ObjectSelectors } from 'store/object/selectors';
+import { ObjectSelectors } from '@legacy/store/object/selectors';
 import { QueueDocumentSettings } from './model';
-import { EffectSelectors } from 'store/effect/selectors';
-import { QueueObjectType } from 'model/object';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
+import { QueueObjectType } from '@legacy/model/object';
 import {
   OBJECT_EFFECT_TYPE,
   OBJECT_EFFECT_TYPES,
   QueueEffectType,
-} from 'model/effect';
+} from '@legacy/model/effect';
 import {
   EFFECT_SUPPORTED_MAP,
   supportFade,
@@ -18,8 +18,8 @@ import {
   supportScale,
   supportStroke,
   supportText,
-} from 'model/support';
-import { TimeLineTrack } from 'model/timeline/timeline';
+} from '@legacy/model/support';
+import { TimeLineTrack } from '@legacy/model/timeline/timeline';
 
 const selectSelf = (state: RootState): QueueDocumentSettings => state.settings;
 

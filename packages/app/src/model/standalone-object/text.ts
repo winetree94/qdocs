@@ -4,7 +4,7 @@ import {
   QueueRotate,
   QueueScale,
   QueueText,
-} from 'model/property';
+} from '@legacy/model/property';
 
 export interface StandaloneTextObject {
   rect: QueueRect;

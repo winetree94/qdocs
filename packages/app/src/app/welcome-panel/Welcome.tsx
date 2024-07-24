@@ -1,9 +1,9 @@
-import { NewDocumentDialog } from 'app/new-document-dialog/NewDocumentDialog';
+import { NewDocumentDialog } from '@legacy/app/new-document-dialog/NewDocumentDialog';
 import clsx from 'clsx';
-import { useAppDispatch } from 'store/hooks';
+import { useAppDispatch } from '@legacy/store/hooks';
 import { DocumentActions } from '../../store/document';
 import { useTranslation } from 'react-i18next';
-import { useRootRenderer } from 'cdk/root-renderer/root-renderer';
+import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
 import { RootState } from 'store';
 import welcomeImage from './welcome.svg';
 import { memo } from 'react';

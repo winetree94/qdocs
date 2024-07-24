@@ -1,30 +1,30 @@
-import { EffectControllerIndex } from 'components/effect-controller/EffectControllerIndex';
+import { EffectControllerIndex } from '@legacy/components/effect-controller/EffectControllerIndex';
 import {
   BaseQueueEffect,
   OBJECT_EFFECT_TRANSLATION_KEY,
   OBJECT_EFFECT_TYPE,
   QueueEffectType,
-} from 'model/effect';
+} from '@legacy/model/effect';
 import { ReactElement, useState, useMemo } from 'react';
-import { QueueObjectType } from 'model/object';
-import { QueueButton, QueueIconButton } from 'components/buttons/button/Button';
-import { EffectControllerDuration } from 'components/effect-controller/EffectControllerDuration';
-import { EffectControllerTimingFunction } from 'components/effect-controller/EffectControllerTimingFunction';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingSelectors } from 'store/settings/selectors';
-import { EffectSelectors } from 'store/effect/selectors';
+import { QueueObjectType } from '@legacy/model/object';
+import { QueueButton, QueueIconButton } from '@legacy/components/buttons/button/Button';
+import { EffectControllerDuration } from '@legacy/components/effect-controller/EffectControllerDuration';
+import { EffectControllerTimingFunction } from '@legacy/components/effect-controller/EffectControllerTimingFunction';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
+import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { EffectActions, getEffectEntityKey } from '../../store/effect';
-import { HistoryActions } from 'store/history';
+import { HistoryActions } from '@legacy/store/history';
 import { useTranslation } from 'react-i18next';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { QueueDropdown } from 'components/dropdown';
-import { QueueScrollArea } from 'components/scroll-area/ScrollArea';
-import { QueueSeparator } from 'components/separator/Separator';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
+import { QueueDropdown } from '@legacy/components/dropdown';
+import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
+import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from 'store';
 import { isEqual } from 'lodash';
-import { OBJECT_SUPPORTED_EFFECTS } from 'model/support';
+import { OBJECT_SUPPORTED_EFFECTS } from '@legacy/model/support';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];

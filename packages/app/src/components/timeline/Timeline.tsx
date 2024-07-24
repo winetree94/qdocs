@@ -3,12 +3,12 @@ import {
   Grid,
   GridCellRendererProps,
   GridColumnDef,
-} from 'components/grid/Grid';
-import { SettingSelectors } from 'store/settings/selectors';
+} from '@legacy/components/grid/Grid';
+import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { TimeLineTrack } from '../../model/timeline/timeline';
 import styles from './Timeline.module.scss';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { SettingsActions } from 'store/settings';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
+import { SettingsActions } from '@legacy/store/settings';
 import { memo, useCallback, useMemo } from 'react';
 import { store } from 'store';
 import { isEqual } from 'lodash';

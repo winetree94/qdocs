@@ -1,12 +1,12 @@
-import { SvgRemixIcon } from 'cdk/icon/SvgRemixIcon';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { SvgRemixIcon } from '@legacy/cdk/icon/SvgRemixIcon';
+import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import styles from './PresentationRemote.module.scss';
-import { SettingsActions } from 'store/settings/actions';
-import { QueueIconButton } from 'components/buttons/button/Button';
-import { QueueToggle } from 'components/toggle/Toggle';
-import { SettingSelectors } from 'store/settings';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
+import { SettingsActions } from '@legacy/store/settings/actions';
+import { QueueIconButton } from '@legacy/components/buttons/button/Button';
+import { QueueToggle } from '@legacy/components/toggle/Toggle';
+import { SettingSelectors } from '@legacy/store/settings';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 
 export const PresentationRemote = () => {
   const dispatch = useAppDispatch();

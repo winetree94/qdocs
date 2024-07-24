@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { QueueButton } from 'components/buttons/button/Button';
-import { QueueDialog, QueueDialogRootProps } from 'components/dialog/Dialog';
-import { QUEUE_UI_COLOR } from 'styles/ui/Color';
-import { QUEUE_UI_SIZE } from 'styles/ui/Size';
+import { QueueButton } from '@legacy/components/buttons/button/Button';
+import { QueueDialog, QueueDialogRootProps } from '@legacy/components/dialog/Dialog';
+import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
+import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 
 type Story = StoryObj<typeof QueueDialog.Root>;
 

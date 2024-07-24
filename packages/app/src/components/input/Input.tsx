@@ -1,7 +1,7 @@
 import styles from './Input.module.scss';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
-import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from 'styles/ui/Size';
+import { QUEUE_UI_SIZE, QUEUE_UI_SIZES } from '@legacy/styles/ui/Size';
 
 export interface QueueInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {

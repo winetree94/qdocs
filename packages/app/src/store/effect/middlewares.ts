@@ -4,8 +4,8 @@ import { getEffectEntityKey } from './reducer';
 import { EffectSelectors } from './selectors';
 import { ObjectActions } from '../object';
 import { EffectActions } from './actions';
-import { SettingSelectors } from 'store/settings';
-import { QueueEffectType } from 'model/effect';
+import { SettingSelectors } from '@legacy/store/settings';
+import { QueueEffectType } from '@legacy/model/effect';
 
 export const effectMiddleware = createTypedListenerMiddleware();
 

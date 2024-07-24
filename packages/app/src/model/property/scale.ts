@@ -1,4 +1,4 @@
-import { OBJECT_PROPERTY_TYPE } from 'model/property/meta';
+import { OBJECT_PROPERTY_TYPE } from '@legacy/model/property/meta';
 
 export interface QueueScale {
   scale: number;
