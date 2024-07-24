@@ -11,17 +11,6 @@ import { SettingsActions } from '@legacy/store/settings/actions';
 import { HistoryActions } from '@legacy/store/history';
 import { HistorySelectors } from '@legacy/store/history/selectors';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { ReactComponent as CopyIcon } from '@legacy/assets/icons/copy.svg';
-import { ReactComponent as CornerUpLeftIcon } from '@legacy/assets/icons/corner-up-left.svg';
-import { ReactComponent as CornerUpRightIcon } from '@legacy/assets/icons/corner-up-right.svg';
-import { ReactComponent as ImageIcon } from '@legacy/assets/icons/image.svg';
-import { ReactComponent as PrinterIcon } from '@legacy/assets/icons/printer.svg';
-import { ReactComponent as SaveIcon } from '@legacy/assets/icons/save.svg';
-import { ReactComponent as SearchIcon } from '@legacy/assets/icons/search.svg';
-import { ReactComponent as ShareIcon } from '@legacy/assets/icons/share-2.svg';
-import { ReactComponent as SidebarIcon } from '@legacy/assets/icons/sidebar.svg';
-import { ReactComponent as TableIcon } from '@legacy/assets/icons/table.svg';
-import { ReactComponent as TypeIcon } from '@legacy/assets/icons/type.svg';
 import { memo, useState } from 'react';
 import { QueueDropdown } from '@legacy/components/dropdown';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
@@ -44,6 +33,19 @@ import {
   IMAGE_ENCODING_STATUS,
 } from '@legacy/workers/imageConversionWorker';
 import { nanoid } from '@reduxjs/toolkit';
+import {
+  RiArrowGoBackLine,
+  RiArrowGoForwardLine,
+  RiImageLine,
+  RiPrinterLine,
+  RiSaveLine,
+  RiShapesLine,
+  RiShareLine,
+  RiSidebarUnfoldLine,
+  RiTableLine,
+  RiText,
+  RiZoomInLine,
+} from '@remixicon/react';
 
 const QueueSubHeader = memo(() => {
   const dispatch = useAppDispatch();
@@ -153,7 +155,7 @@ const QueueSubHeader = memo(() => {
                 }>
                 <QueueDropdown.Trigger>
                   <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
-                    <SidebarIcon />
+                    <RiSidebarUnfoldLine />
                     <ChevronDownIcon
                       className={clsx(
                         'tw-w-3',
@@ -214,7 +216,7 @@ const QueueSubHeader = memo(() => {
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => dispatch(HistoryActions.Undo())}
                 disabled={!history.previous.length}>
-                <CornerUpLeftIcon />
+                <RiArrowGoBackLine />
               </QueueIconButton>
 
               {/* redo */}
@@ -222,7 +224,7 @@ const QueueSubHeader = memo(() => {
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => dispatch(HistoryActions.Redo())}
                 disabled={!history.future.length}>
-                <CornerUpRightIcon />
+                <RiArrowGoForwardLine />
               </QueueIconButton>
 
               <QueueSeparator.Root
@@ -236,13 +238,13 @@ const QueueSubHeader = memo(() => {
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => createText()}>
-                <TypeIcon />
+                <RiText />
               </QueueIconButton>
 
               <QueueIconButton
                 size={QUEUE_UI_SIZE.MEDIUM}
                 onClick={() => handleCreateImageClick()}>
-                <ImageIcon />
+                <RiImageLine />
               </QueueIconButton>
 
               <QueueDropdown
@@ -255,7 +257,7 @@ const QueueSubHeader = memo(() => {
                 }>
                 <QueueDropdown.Trigger>
                   <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
-                    <CopyIcon />
+                    <RiShapesLine />
                     <ChevronDownIcon
                       className={clsx(
                         'tw-w-3',
@@ -322,11 +324,11 @@ const QueueSubHeader = memo(() => {
               </QueueDropdown>
 
               <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-                <ShareIcon />
+                <RiShareLine />
               </QueueIconButton>
 
               <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-                <TableIcon />
+                <RiTableLine />
               </QueueIconButton>
             </div>
           </div>
@@ -339,7 +341,7 @@ const QueueSubHeader = memo(() => {
                 eventDispatch(fitScreenSizeEvent());
               }}
               style={{ width: 'unset' }}>
-              <SearchIcon />
+              <RiZoomInLine />
               <span
                 className={clsx('tw-text-black-900', 'tw-text-14', 'tw-mx-1')}>
                 {scale}%
@@ -347,13 +349,13 @@ const QueueSubHeader = memo(() => {
             </QueueIconButton>
 
             <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-              <PrinterIcon />
+              <RiPrinterLine />
             </QueueIconButton>
 
             <QueueIconButton
               size={QUEUE_UI_SIZE.MEDIUM}
               onClick={onSaveDocumentClick}>
-              <SaveIcon />
+              <RiSaveLine />
             </QueueIconButton>
           </div>
         </div>

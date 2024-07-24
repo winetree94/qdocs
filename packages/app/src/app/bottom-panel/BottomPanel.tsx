@@ -8,14 +8,16 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { ReactComponent as PlayIcon } from '@legacy/assets/icons/play.svg';
-import { ReactComponent as StepBackIcon } from '@legacy/assets/icons/step-back.svg';
-import { ReactComponent as StepForwardIcon } from '@legacy/assets/icons/step-forward.svg';
-import { ReactComponent as StepInIcon } from '@legacy/assets/icons/step-in.svg';
-import { ReactComponent as StepOutIcon } from '@legacy/assets/icons/step-out.svg';
-import { ReactComponent as RepeatIcon } from '@legacy/assets/icons/repeat.svg';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from '@legacy/store';
+import {
+  RiForwardEndMiniLine,
+  RiPlayMiniLine,
+  RiRepeatLine,
+  RiRewindStartMiniLine,
+  RiSkipBackMiniLine,
+  RiSkipForwardMiniLine,
+} from '@remixicon/react';
 
 const ZOOM_LEVEL = {
   [1]: 30,
@@ -88,27 +90,27 @@ export const BottomPanel = memo(() => {
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.goToIn())}>
-            <StepInIcon />
+            <RiRewindStartMiniLine />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => changeQueueIndex(-1, true)}>
-            <StepBackIcon />
+            <RiSkipBackMiniLine />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.play())}>
-            <PlayIcon />
+            <RiPlayMiniLine />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => changeQueueIndex(+1, true)}>
-            <StepForwardIcon />
+            <RiSkipForwardMiniLine />
           </QueueIconButton>
           <QueueIconButton
             size={QUEUE_UI_SIZE.MEDIUM}
             onClick={() => dispatch(SettingsActions.goToOut())}>
-            <StepOutIcon />
+            <RiForwardEndMiniLine />
           </QueueIconButton>
         </div>
 
@@ -126,7 +128,7 @@ export const BottomPanel = memo(() => {
             pressed={autoPlayRepeat}
             onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}
             size={QUEUE_UI_SIZE.MEDIUM}>
-            <RepeatIcon />
+            <RiRepeatLine />
           </QueueToggle.Root>
 
           <QueueSeparator.Root
