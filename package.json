@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn workspace @qdocs/app dev",
+    "dev": "yarn workspace @qdocs/app dev",
     "build": "yarn workspace @qdocs/app build"
   }
 }
