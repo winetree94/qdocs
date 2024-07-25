@@ -35,6 +35,7 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@reduxjs/toolkit": "^1.9.5",
     "@remixicon/react": "^4.2.0",
+    "@types/lodash": "^4.17.7",
     "clsx": "^2.0.0",
     "i18next": "^23.2.11",
     "i18next-icu": "^2.3.0",
@@ -42,7 +43,6 @@
     "lodash": "^4.17.21",
     "memoize-one": "^6.0.0",
     "next": "14.2.5",
-    "normalize.css": "^8.0.1",
     "react": "^18",
     "react-color": "^2.19.3",
     "react-compound-slider": "^3.4.0",
@@ -50,13 +50,14 @@
     "react-i18next": "^13.0.2",
     "react-redux": "^8.1.2",
     "react-virtualized-auto-sizer": "^1.0.7",
-    "react-window": "^1.8.9",
-    "remixicon": "^3.4.0"
+    "react-window": "^1.8.9"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.12",
     "@types/react-dom": "^18",
+    "@types/react-window": "^1.8.8",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
