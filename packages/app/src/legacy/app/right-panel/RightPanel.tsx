@@ -1,4 +1,3 @@
-import QueueTab from '@legacy/components/tabs/Tab';
 import { EffectPanel } from '@legacy/app/effect-panel/EffectPanel';
 import { useAppSelector } from '@legacy/store/hooks';
 import { SettingSelectors } from '@legacy/store/settings';
@@ -7,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { DocumentPanel } from '@legacy/app/document-panel/DocumentPanel';
 import { useEffect, useMemo, useState } from 'react';
+import { Box, Tabs, Text } from '@radix-ui/themes';
 
 export type RightPanelProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -56,7 +56,27 @@ export const RightPanel = ({ className, ...props }: RightPanelProps) => {
         className,
       )}
       {...props}>
-      <QueueTab className="tw-h-full" value={tabValue} tabs={tabs}></QueueTab>
+
+
+      <Tabs.Root defaultValue={tabs[0].id}>
+        <Tabs.List>
+          {tabs.map((tab) => (
+            <Tabs.Trigger value={tab.id} key={tab.id + 'list'} onClick={tab.onClick}>
+              {tab.label}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+
+        <Box pt="3">
+          {
+            tabs.map((tab) => (
+              <Tabs.Content value={tab.id} key={tab.id + 'content'}>
+                {tab.content}
+              </Tabs.Content>
+            ))
+          }
+        </Box>
+      </Tabs.Root>
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { QueueToggleGroup } from '@legacy/components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
@@ -7,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '@legacy/store';
 import { Button, Dialog, Flex } from '@radix-ui/themes';
 import { useRootRenderedContext } from '@legacy/cdk/root-renderer/root-renderer';
+import { ToggleGroup, ToggleGroupItem } from '@radix-ui/react-toggle-group';
 
 export interface NewDocumentDialogProps {
   onSubmit?: (document: RootState) => void;
@@ -106,7 +106,7 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
         </Dialog.Title>
 
         <Flex direction="column" gap="3">
-          <QueueToggleGroup.Root
+          <ToggleGroup
             type="single"
             value={documentTemplate}
             onValueChange={(value): void =>
@@ -114,15 +114,15 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
             }
             className={clsx(styles.TemplateGroup)}>
             {templates.map(({ name, getTemplate }) => (
-              <QueueToggleGroup.Item
+              <ToggleGroupItem
                 key={name}
                 className={styles.TemplateItem}
                 value={name}
                 onDoubleClick={() => onDoubleClickItem(getTemplate)}>
                 {name}
-              </QueueToggleGroup.Item>
+              </ToggleGroupItem>
             ))}
-          </QueueToggleGroup.Root>
+          </ToggleGroup>
         </Flex>
 
         <Flex gap="3" mt="4" justify="end">

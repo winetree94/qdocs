@@ -11,8 +11,8 @@ import {
   TIMING_FUNCTION_META,
   TIMING_FUNCTION_TRANSLATION_KEY,
 } from '@legacy/cdk/animation/timing/meta';
-import { QueueSelect } from '@legacy/components/select/Select';
 import { useTranslation } from 'react-i18next';
+import { Select } from '@radix-ui/themes';
 
 export type EffectControllerTimingFunctionProps = {
   effectType: QueueEffectType['type'];
@@ -57,17 +57,17 @@ export const EffectControllerTimingFunction = ({
   return (
     <div>
       <p className="tw-text-sm">{t('effect.timing-function')}</p>
-      <QueueSelect
-        defaultValue={firstObjectEffect.timing}
+      <Select.Root size="1" defaultValue={firstObjectEffect.timing}
         onValueChange={handleTimingFunctionChange}>
-        <QueueSelect.Group>
+        <Select.Trigger className='tw-w-full' />
+        <Select.Content>
           {timingFunctions.map((timingFunction) => (
-            <QueueSelect.Option value={timingFunction} key={timingFunction}>
+            <Select.Item value={timingFunction} key={timingFunction}>
               {t(TIMING_FUNCTION_TRANSLATION_KEY[timingFunction])}
-            </QueueSelect.Option>
+            </Select.Item>
           ))}
-        </QueueSelect.Group>
-      </QueueSelect>
+        </Select.Content>
+      </Select.Root>
     </div>
   );
 };

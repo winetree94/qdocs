@@ -1,6 +1,5 @@
 import { EntityId } from '@reduxjs/toolkit';
 import { Color } from '@legacy/components/object-styler/color/Color';
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { QueueObjectType } from '@legacy/model/object';
 import { QueueFill } from '@legacy/model/property';
 import { supportFillAll } from '@legacy/model/support';
@@ -8,6 +7,7 @@ import { ChangeEvent, ReactElement } from 'react';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';
 import { SettingSelectors } from '@legacy/store/settings';
+import { Slider } from '@radix-ui/themes';
 
 /**
  * @todo
@@ -104,7 +104,8 @@ export const ObjectStylerBackground = (): ReactElement => {
               />
             </div>
             <div className="tw-flex tw-items-center tw-w-full">
-              <QueueSlider
+              <Slider
+                size="1" 
                 min={0}
                 max={1}
                 step={0.1}

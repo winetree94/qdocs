@@ -1,14 +1,9 @@
 import clsx from 'clsx';
-import { QueueIconButton } from '@legacy/components/buttons/button/Button';
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { Timeline } from '@legacy/components/timeline/Timeline';
-import { QueueToggle } from '@legacy/components/toggle/Toggle';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from '@legacy/store';
 import {
   RiForwardEndMiniLine,
@@ -18,6 +13,8 @@ import {
   RiSkipBackMiniLine,
   RiSkipForwardMiniLine,
 } from '@remixicon/react';
+import { Button, Separator, Slider, IconButton } from '@radix-ui/themes';
+import { Toggle } from '@radix-ui/react-toggle';
 
 const ZOOM_LEVEL = {
   [1]: 30,
@@ -33,7 +30,7 @@ const ZOOM_LEVEL = {
 
 type ZOOM_LEVEL_KEYS = keyof typeof ZOOM_LEVEL;
 
-export const BottomPanel = memo(() => {
+export const BottomPanel = memo(function BottomPanel() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [zoom, setZoom] = React.useState<ZOOM_LEVEL_KEYS>(5);
@@ -87,31 +84,26 @@ export const BottomPanel = memo(() => {
             'tw-justify-center',
             'tw-gap-2',
           )}>
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
+          <IconButton
             onClick={() => dispatch(SettingsActions.goToIn())}>
             <RiRewindStartMiniLine />
-          </QueueIconButton>
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
+          </IconButton>
+          <IconButton
             onClick={() => changeQueueIndex(-1, true)}>
             <RiSkipBackMiniLine />
-          </QueueIconButton>
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
+          </IconButton>
+          <IconButton
             onClick={() => dispatch(SettingsActions.play())}>
             <RiPlayMiniLine />
-          </QueueIconButton>
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
+          </IconButton>
+          <IconButton
             onClick={() => changeQueueIndex(+1, true)}>
             <RiSkipForwardMiniLine />
-          </QueueIconButton>
-          <QueueIconButton
-            size={QUEUE_UI_SIZE.MEDIUM}
+          </IconButton>
+          <IconButton
             onClick={() => dispatch(SettingsActions.goToOut())}>
             <RiForwardEndMiniLine />
-          </QueueIconButton>
+          </IconButton>
         </div>
 
         {/* right */}
@@ -123,29 +115,29 @@ export const BottomPanel = memo(() => {
             'tw-items-center',
             'tw-justify-end',
           )}>
-          <QueueToggle.Root
+          
+          <Toggle
             className={clsx('tw-w-4')}
             pressed={autoPlayRepeat}
-            onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}
-            size={QUEUE_UI_SIZE.MEDIUM}>
-            <RiRepeatLine />
-          </QueueToggle.Root>
+            onPressedChange={(e) => dispatch(SettingsActions.setRepeat(e))}>
+            <IconButton variant='ghost'>
+              <RiRepeatLine /> {autoPlayRepeat ? 'ON' : 'OFF'}
+            </IconButton>
+          </Toggle>
 
-          <QueueSeparator.Root
-            className={clsx('!tw-h-4', 'tw-ml-2', 'tw-mr-1')}
-            orientation="vertical"
-          />
+          <Separator className='tw-mx-2' orientation="vertical" />
 
-          <QueueSlider
+          <Slider
+            size="1" 
             className={clsx('tw-w-[73px]', 'tw-ml-5', 'tw-mr-5')}
-            disableRange={true}
             min={1}
             max={9}
             value={[zoom]}
             step={1}
             onValueChange={([e]) =>
               setZoom(e as ZOOM_LEVEL_KEYS)
-            }></QueueSlider>
+            }
+          ></Slider>
         </div>
       </div>
       <Timeline columnWidth={ZOOM_LEVEL[zoom]} />

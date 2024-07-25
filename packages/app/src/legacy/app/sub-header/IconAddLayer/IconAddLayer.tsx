@@ -10,10 +10,9 @@ import styles from '@legacy/app/sub-header/IconAddLayer/IconAddLayer.module.scss
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { createDefaultIcon } from '@legacy/model/object/icon';
 import { RemixIconMap } from '@legacy/cdk/icon/factory';
-import { QueueInput } from '@legacy/components/input/Input';
 import { useTranslation } from 'react-i18next';
 import { RiArrowDownSLine, RiArrowRightSLine } from '@remixicon/react';
-import { ScrollArea } from '@radix-ui/themes';
+import { ScrollArea, TextField } from '@radix-ui/themes';
 
 interface QueueObject {
   key: string;
@@ -224,11 +223,10 @@ const QueueIconAddLayer = () => {
   return (
     <>
       <div className={clsx(styles.inputContainer)}>
-        <QueueInput
-          placeholder={t('object-panel.search-shape')}
+        <TextField.Root placeholder={t('object-panel.search-shape')}
           className={clsx(styles.input)}
           value={searchKeyword}
-          onChange={(e): void => setSearchKeyword(e.target.value)}></QueueInput>
+          onChange={(e): void => setSearchKeyword(e.target.value)} />
       </div>
       <ScrollArea className='tw-h-12'>
         <AutoSizer>

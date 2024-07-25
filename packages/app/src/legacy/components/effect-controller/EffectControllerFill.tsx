@@ -1,4 +1,3 @@
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { FillEffect, OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
 import { ChangeEvent, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import {
 import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingSelectors } from '@legacy/store/settings';
+import { Slider } from '@radix-ui/themes';
 
 export const EffectControllerFill = (): ReactElement => {
   const { t } = useTranslation();
@@ -99,7 +99,8 @@ export const EffectControllerFill = (): ReactElement => {
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <QueueSlider
+          <Slider
+            size="1"
             min={0}
             max={1}
             step={0.1}

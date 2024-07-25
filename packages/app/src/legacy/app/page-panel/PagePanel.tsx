@@ -20,7 +20,6 @@ import {
 } from '@legacy/store/page';
 import { HistoryActions } from '@legacy/store/history';
 import { DocumentSelectors } from '@legacy/store/document';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { ObjectSelectors } from '@legacy/store/object';
 import { EffectSelectors } from '@legacy/store/effect';
 import { StandaloneRect } from '@legacy/components/queue/standaloneRects';
@@ -29,7 +28,7 @@ import { StandaloneText } from '@legacy/components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
 import { store } from '@legacy/store';
 import { RiAddBoxLine, RiFileCopyLine } from '@remixicon/react';
-import { AlertDialog, Button, ContextMenu, Flex } from '@radix-ui/themes';
+import { AlertDialog, Button, ContextMenu, Flex, Separator } from '@radix-ui/themes';
 import { ScrollArea } from '@radix-ui/react-scroll-area';
 import { useRootRenderedContext, useRootRenderer } from '@/legacy/cdk/root-renderer/root-renderer';
 
@@ -489,7 +488,7 @@ export const PagePanel = () => {
         </PagesBox>
       </ScrollArea>
       <Flex>
-        <QueueSeparator.Root />
+        <Separator />
         <Button
           onClick={() => createPage(pageIds.length)}>
           <RiAddBoxLine size={16} />

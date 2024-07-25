@@ -1,4 +1,3 @@
-import { QueueInput } from '@legacy/components/input/Input';
 import { QueueRect } from '@legacy/model/property';
 import { memo } from 'react';
 import { store } from '@legacy/store';
@@ -6,8 +5,9 @@ import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';
 import { SettingSelectors } from '@legacy/store/settings';
+import { TextField } from '@radix-ui/themes';
 
-export const ObjectStyleRect = memo(() => {
+export const ObjectStyleRect = memo(function ObjectStylerRect() {
   const dispatch = useAppDispatch();
   const { width, height } = useAppSelector(
     SettingSelectors.firstSelectedObjectRect,
@@ -35,20 +35,18 @@ export const ObjectStyleRect = memo(() => {
   return (
     <div className="tw-flex tw-gap-2">
       <div className="tw-flex-1">
-        <QueueInput
-          value={width}
+        <TextField.Root
+          size="1"
           type="number"
-          variant="filled"
-          onChange={(e): void => updateRect({ width: Number(e.target.value) })}
-        />
+          value={width}
+          onChange={(e): void => updateRect({ width: Number(e.target.value) })} />
       </div>
       <div className="tw-flex-1">
-        <QueueInput
-          value={height}
+        <TextField.Root
+          size="1"
           type="number"
-          variant="filled"
-          onChange={(e): void => updateRect({ height: Number(e.target.value) })}
-        />
+          value={height}
+          onChange={(e): void => updateRect({ height: Number(e.target.value) })} />
       </div>
     </div>
   );

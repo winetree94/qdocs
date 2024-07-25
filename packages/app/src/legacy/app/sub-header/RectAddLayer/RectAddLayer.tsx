@@ -3,10 +3,9 @@ import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { useCreateFigure } from '@legacy/cdk/hooks/useCreateFigure';
 import { createDefaultSquare } from '@legacy/model/object/square';
 import { createDefaultCircle } from '@legacy/model/object/circle';
-import { QueueIconButton } from '@legacy/components/buttons/button/Button';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import styles from './RectAddLayer.module.scss';
 import clsx from 'clsx';
+import { IconButton } from '@radix-ui/themes';
 
 const QueueRectAddLayer = () => {
   const currentPageId = useAppSelector(SettingSelectors.pageId);
@@ -23,8 +22,7 @@ const QueueRectAddLayer = () => {
 
   return (
     <div className={clsx(styles.wrapper)}>
-      <QueueIconButton
-        size={QUEUE_UI_SIZE.MEDIUM}
+      <IconButton
         onClick={() => createSquare()}>
         <svg className={'tw-w-4 tw-h-4'}>
           <g>
@@ -37,9 +35,8 @@ const QueueRectAddLayer = () => {
             />
           </g>
         </svg>
-      </QueueIconButton>
-      <QueueIconButton
-        size={QUEUE_UI_SIZE.MEDIUM}
+      </IconButton>
+      <IconButton
         onClick={() => createCircle()}>
         <svg className={'tw-w-4 tw-h-4'}>
           <g>
@@ -53,7 +50,7 @@ const QueueRectAddLayer = () => {
             />
           </g>
         </svg>
-      </QueueIconButton>
+      </IconButton>
     </div>
   );
 };

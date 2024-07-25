@@ -7,10 +7,6 @@ import {
 } from '@legacy/model/effect';
 import { ReactElement, useState, useMemo } from 'react';
 import { QueueObjectType } from '@legacy/model/object';
-import {
-  QueueButton,
-  QueueIconButton,
-} from '@legacy/components/buttons/button/Button';
 import { EffectControllerDuration } from '@legacy/components/effect-controller/EffectControllerDuration';
 import { EffectControllerTimingFunction } from '@legacy/components/effect-controller/EffectControllerTimingFunction';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
@@ -20,12 +16,11 @@ import { EffectActions, getEffectEntityKey } from '../../store/effect';
 import { HistoryActions } from '@legacy/store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from '@legacy/store';
 import { isEqual } from 'lodash';
 import { OBJECT_SUPPORTED_EFFECTS } from '@legacy/model/support';
 import { RiAddLine, RiDeleteBin5Line } from '@remixicon/react';
-import { DropdownMenu, IconButton, ScrollArea } from '@radix-ui/themes';
+import { Button, DropdownMenu, IconButton, ScrollArea, Separator } from '@radix-ui/themes';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -57,21 +52,21 @@ export const EffectController = ({
   return (
     <div className="tw-flex tw-flex-col">
       <div className="tw-flex tw-relative">
-        <QueueButton
+        <Button
+          size="1"
           className="tw-flex-1"
           type="button"
-          size={QUEUE_UI_SIZE.SMALL}
           onClick={(): void => setOpen((prev) => !prev)}
           disabled={effectType === OBJECT_EFFECT_TYPE.CREATE}>
           <span>{t(OBJECT_EFFECT_TRANSLATION_KEY[effectType])}</span>
-        </QueueButton>
+        </Button>
         {effectType !== OBJECT_EFFECT_TYPE.CREATE && (
-          <QueueIconButton
+          <IconButton
             className="tw-absolute tw-right-0"
             onClick={handleDeleteEffectButton}
-            size={QUEUE_UI_SIZE.SMALL}>
+            >
             <RiDeleteBin5Line size={16} />
-          </QueueIconButton>
+          </IconButton>
         )}
       </div>
       {open && (
@@ -295,7 +290,7 @@ export const EffectControllerBox = (): ReactElement | null => {
         </ScrollArea>
       </div>
 
-      <QueueSeparator.Root className="tw-my-4" />
+      <Separator size="4" className="tw-my-4" />
 
       <div className="tw-flex tw-items-center tw-justify-between tw-flex-1 tw-basis-full">
         <h2 className="tw-text-xs tw-font-medium tw-leading-snug">

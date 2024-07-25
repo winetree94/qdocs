@@ -7,10 +7,9 @@ import { ObjectActions } from '@legacy/store/object';
 import { SettingSelectors } from '@legacy/store/settings';
 import { QueueObjectType } from '@legacy/model/object';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
-import { QueueInput } from '@legacy/components/input/Input';
 import { store } from '@legacy/store';
 import { supportFill } from '../../model/support/property';
+import { Separator, TextField } from '@radix-ui/themes';
 
 export const ObjectStyleBackground = () => {
   const { t } = useTranslation();
@@ -63,19 +62,15 @@ export const ObjectStyleBackground = () => {
             />
             <div className="tw-flex-1">{color.replace('#', '')}</div>
           </div>
-          <QueueSeparator.Root className="tw-h-4" orientation="vertical" />
+          <Separator size="4" className='tw-my-4' />
           <div className="tw-flex tw-items-center tw-basis-3/5">
-            <QueueInput
-              className="tw-p-0 tw-font-normal"
+            <TextField.Root
+              size="1"
               type="number"
               value={opacity * 100}
-              onChange={(event) => {
-                updateObjectFill({
-                  opacity: Number(event.target.value) / 100,
-                });
-              }}
-            />
-            %
+              onChange={(event): void => updateObjectFill({
+                opacity: Number(event.target.value) / 100,
+              })} />
           </div>
         </div>
       </div>

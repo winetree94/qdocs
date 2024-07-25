@@ -37,26 +37,26 @@ const WarnAlert = ({
 
   return (
     <AlertDialog.Root open={true}>
-    <AlertDialog.Content maxWidth="450px">
-      <AlertDialog.Title>{t('global.data-loss-warning-title')}</AlertDialog.Title>
-      <AlertDialog.Description size="2">
-        {t('global.data-loss-warning')}
-      </AlertDialog.Description>
+      <AlertDialog.Content maxWidth="450px">
+        <AlertDialog.Title>{t('global.data-loss-warning-title')}</AlertDialog.Title>
+        <AlertDialog.Description size="2">
+          {t('global.data-loss-warning')}
+        </AlertDialog.Description>
 
-      <Flex gap="3" mt="4" justify="end">
-        <AlertDialog.Cancel onClick={() => rootRendererContext.close()}>
-          <Button variant="soft" color="gray">
-            {t('global.cancel')}
-          </Button>
-        </AlertDialog.Cancel>
-        <AlertDialog.Action onClick={onConfirmClick}>
-          <Button variant="solid" color="red">
-            {t('global.confirm')}
-          </Button>
-        </AlertDialog.Action>
-      </Flex>
-    </AlertDialog.Content>
-  </AlertDialog.Root>
+        <Flex gap="3" mt="4" justify="end">
+          <AlertDialog.Cancel onClick={() => rootRendererContext.close()}>
+            <Button variant="soft" color="gray">
+              {t('global.cancel')}
+            </Button>
+          </AlertDialog.Cancel>
+          <AlertDialog.Action onClick={onConfirmClick}>
+            <Button variant="solid" color="red">
+              {t('global.confirm')}
+            </Button>
+          </AlertDialog.Action>
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   )
 }
 

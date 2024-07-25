@@ -4,11 +4,10 @@ import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';
 import { SettingSelectors } from '@legacy/store/settings';
-import { QueueSelect } from '@legacy/components/select/Select';
 import QueueColorPicker from '@legacy/components/color-picker/ColorPicker';
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { store } from '@legacy/store';
 import { supportStroke } from '@legacy/model/support';
+import { Select, Slider } from '@radix-ui/themes';
 
 export const ObjectStyleStroke = () => {
   const { t } = useTranslation();
@@ -50,7 +49,8 @@ export const ObjectStyleStroke = () => {
         </h2>
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <QueueSlider
+        <Slider
+          size="1"
           min={0}
           max={50}
           value={[width]}
@@ -58,8 +58,7 @@ export const ObjectStyleStroke = () => {
             updateStroke({
               width: e,
             })
-          }
-        />
+          } />
       </div>
 
       <div className="tw-flex-1 tw-basis-full">
@@ -75,13 +74,17 @@ export const ObjectStyleStroke = () => {
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <QueueSelect
+        <Select.Root
+          size="1"
           value={dasharray}
           onValueChange={(value): void => updateStroke({ dasharray: value })}>
-          <QueueSelect.Option value="solid">-------</QueueSelect.Option>
-          <QueueSelect.Option value="dashed">- - - -</QueueSelect.Option>
-          <QueueSelect.Option value="longDashed">-- -- --</QueueSelect.Option>
-        </QueueSelect>
+          <Select.Trigger className='tw-w-full' />
+          <Select.Content>
+            <Select.Item value="solid">-------</Select.Item>
+            <Select.Item value="dashed">- - - -</Select.Item>
+            <Select.Item value="longDashed">-- -- --</Select.Item>
+          </Select.Content>
+        </Select.Root>
       </div>
     </div>
   );

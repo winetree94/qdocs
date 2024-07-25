@@ -4,14 +4,14 @@ import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { ObjectStyleText } from './Text';
 import { ObjectStyleOpacity } from './Opacity';
 import { ObjectStyleStroke } from './Stroke';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { ObjectStyleBackground } from './Background';
 import { ObjectStyleRect } from './Rect';
 import { ObjectStyleScale } from './Scale';
 import { ObjectStyleRotate } from './Rotate';
 import { SUPPPORTED_PROPERTY_MAP } from '../../model/support/property';
+import { Separator } from '@radix-ui/themes';
 
-export const ObjectStylerPanel = memo((): ReactElement | null => {
+export const ObjectStylerPanel = memo(function ObjectStylerPanel(): ReactElement | null {
   const firstSelectedObjectType = useAppSelector(
     SettingSelectors.firstSelectedObjectType,
   );
@@ -28,41 +28,41 @@ export const ObjectStylerPanel = memo((): ReactElement | null => {
         )}
         {SUPPPORTED_PROPERTY_MAP.text[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleText />
           </>
         )}
         {SUPPPORTED_PROPERTY_MAP.fill[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleBackground />
           </>
         )}
         {SUPPPORTED_PROPERTY_MAP.scale[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleScale />
           </>
         )}
         {SUPPPORTED_PROPERTY_MAP.rotate[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleRotate />
           </>
         )}
         {SUPPPORTED_PROPERTY_MAP.stroke[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleStroke />
           </>
         )}
         {SUPPPORTED_PROPERTY_MAP.fade[firstSelectedObjectType] && (
           <>
-            <QueueSeparator.Root className="tw-my-2" />
+            <Separator my="3" size="4" />
             <ObjectStyleOpacity />
           </>
         )}
-        <QueueSeparator.Root className="tw-my-2" />
+        <Separator my="3" size="4" />
       </div>
     </div>
   );

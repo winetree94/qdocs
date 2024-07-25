@@ -1,4 +1,3 @@
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { QueueFade } from '@legacy/model/property';
 import { useTranslation } from 'react-i18next';
 import { store } from '@legacy/store';
@@ -6,6 +5,7 @@ import { HistoryActions } from '@legacy/store/history';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';
 import { SettingSelectors } from '@legacy/store/settings';
+import { Slider } from '@radix-ui/themes';
 
 export const ObjectStyleOpacity = () => {
   const { t } = useTranslation();
@@ -43,7 +43,8 @@ export const ObjectStyleOpacity = () => {
         </h2>
       </div>
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <QueueSlider
+        <Slider
+          size="1"
           min={0}
           max={1}
           value={[opacity]}
@@ -52,8 +53,7 @@ export const ObjectStyleOpacity = () => {
             updateFade({
               opacity: e,
             })
-          }
-        />
+          } />
       </div>
     </div>
   );

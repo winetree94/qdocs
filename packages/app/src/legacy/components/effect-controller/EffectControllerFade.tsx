@@ -6,8 +6,8 @@ import { getEffectEntityKey } from '@legacy/store/effect/reducer';
 import { EffectSelectors } from '@legacy/store/effect/selectors';
 import { EffectActions } from '../../store/effect';
 import { HistoryActions } from '@legacy/store/history';
-import { QueueSlider } from '@legacy/components/slider/Slider';
 import { useTranslation } from 'react-i18next';
+import { Slider } from '@radix-ui/themes';
 
 export const EffectControllerFade = (): ReactElement => {
   const { t } = useTranslation();
@@ -77,7 +77,8 @@ export const EffectControllerFade = (): ReactElement => {
           />
         </div>
         <div className="tw-flex tw-items-center tw-w-full">
-          <QueueSlider
+          <Slider
+            size="1"
             min={0}
             max={1}
             step={0.1}
@@ -85,7 +86,7 @@ export const EffectControllerFade = (): ReactElement => {
             onValueChange={(value): void => {
               handleCurrentOpacityChange(value);
             }}
-          />
+          ></Slider>
         </div>
       </div>
     </div>

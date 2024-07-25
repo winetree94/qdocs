@@ -20,5 +20,9 @@
   grid-auto-rows: theme('height.20');
   .TemplateItem {
     @apply tw-h-full;
+
+    &[data-state='on'] {
+      @apply tw-bg-gray-300;
+    }
   }
 }
