@@ -48,6 +48,11 @@ const bottomPanelOpened = createSelector(
   (settings) => settings.bottomPanelOpened,
 );
 
+const rightPanelOpened = createSelector(
+  selectSelf,
+  (settings) => settings.rightPanelOpened,
+);
+
 const selectionMode = createSelector(
   selectSelf,
   (settings) => settings.selectionMode,
@@ -456,6 +461,7 @@ export const SettingSelectors = {
   autoPlay,
   leftPanelOpened,
   bottomPanelOpened,
+  rightPanelOpened,
   allEffectedObjects,
   allEffectedObjectsMap,
   timelineData,

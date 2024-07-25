@@ -29,6 +29,7 @@ export const RootLayout = () => {
   const presentationMode = useAppSelector(SettingSelectors.presentationMode);
   const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
   const bottomPanelOpened = useAppSelector(SettingSelectors.bottomPanelOpened);
+  const rightPanelOpened = useAppSelector(SettingSelectors.rightPanelOpened);
   const autoPlay = useAppSelector(SettingSelectors.autoPlay);
 
   useEffect(() => {
@@ -158,7 +159,7 @@ export const RootLayout = () => {
             )}
           </div>
 
-          {!presentationMode && (
+          {!presentationMode && rightPanelOpened && (
             <div className="tw-flex tw-flex-col tw-h-full tw-pt-2.5 tw-bg-gray-400">
               <PanelResizer.Panel
                 className="tw-h-full"

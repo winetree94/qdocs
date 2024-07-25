@@ -16,6 +16,7 @@ const initialState: QueueDocumentSettings = {
   presentationMode: false,
   bottomPanelOpened: true,
   leftPanelOpened: true,
+  rightPanelOpened: true,
 };
 
 export interface DetailSelectionAction {

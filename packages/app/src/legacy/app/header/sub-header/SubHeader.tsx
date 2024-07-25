@@ -50,6 +50,7 @@ const QueueSubHeader = memo(function QueueSubHeader() {
 
   const leftPanelOpened = useAppSelector(SettingSelectors.leftPanelOpened);
   const bottomPanelOpened = useAppSelector(SettingSelectors.bottomPanelOpened);
+  const rightPanelOpened = useAppSelector(SettingSelectors.rightPanelOpened);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     sidebar: false,
@@ -165,6 +166,20 @@ const QueueSubHeader = memo(function QueueSubHeader() {
                 )
               }>
               {bottomPanelOpened
+                ? t('menu.close-bottom-sidebar')
+                : t('menu.open-bottom-sidebar')}
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onClick={() =>
+                dispatch(
+                  SettingsActions.updateSettings({
+                    changes: {
+                      rightPanelOpened: !rightPanelOpened,
+                    },
+                  }),
+                )
+              }>
+              {rightPanelOpened
                 ? t('menu.close-bottom-sidebar')
                 : t('menu.open-bottom-sidebar')}
             </DropdownMenu.Item>

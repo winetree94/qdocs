@@ -63,4 +63,10 @@ export interface QueueDocumentSettings {
    * 하단 패널 열림 여부
    */
   bottomPanelOpened: boolean;
+
+  /**
+   * @description
+   * 우측 패널 열림 여부
+   */
+  rightPanelOpened: boolean;
 }

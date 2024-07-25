@@ -17,29 +17,16 @@
     "strictNullChecks": false,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [],
     "paths": {
-      "@/*": [
+      "@qdocs/core/*": [
         "./src/*"
       ],
-      "@legacy/*": [
-        "./src/legacy/*"
-      ],
-      "@qdocs/core/*": [
-        "../core/src/*"
-      ]
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    "build/types/**/*.ts",
   ],
   "exclude": [
     "node_modules"

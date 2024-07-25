@@ -100,7 +100,7 @@ export interface DraggableProps extends React.HTMLAttributes<HTMLDivElement> {
  * 일정 좌표만큼 이동한 이후부터 실행되는 드래그 이벤트 핸들러
  */
 export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
-  (
+  function Draggable(
     {
       threshold = 10,
       children,
@@ -111,7 +111,7 @@ export const Draggable = forwardRef<HTMLDivElement, DraggableProps>(
       ...props
     }: DraggableProps,
     ref,
-  ) => {
+  ) {
     const [initMouseEvent, setInitMouseEvent] = useState<MouseEvent>(null);
     const [detectMouseEvent, setDetectMouseEvent] = useState<MouseEvent>(null);
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styles from './Draw.module.scss';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';

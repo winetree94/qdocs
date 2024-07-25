@@ -1,4 +1,15 @@
 {
   "name": "@qdocs/core",
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.3.1",
+  "dependencies": {
+    "react": "^18"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.7.0",
+    "@types/react": "^18",
+    "eslint": "9.x",
+    "eslint-plugin-react": "^7.35.0",
+    "globals": "^15.8.0",
+    "typescript-eslint": "^7.17.0"
+  }
 }
