@@ -1,19 +1,11 @@
 import { fitScreenSizeEvent } from '@legacy/app/events/event';
 import { useEventDispatch } from '@legacy/cdk/hooks/event-dispatcher';
-import clsx from 'clsx';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
-import { QueueSeparator } from '@legacy/components/separator/Separator';
-import { QueueIconButton } from '@legacy/components/buttons/button/Button';
-import styles from './SubHeader.module.scss';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { SettingsActions } from '@legacy/store/settings/actions';
 import { HistoryActions } from '@legacy/store/history';
 import { HistorySelectors } from '@legacy/store/history/selectors';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { memo, useState } from 'react';
-import { QueueDropdown } from '@legacy/components/dropdown';
-import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useTranslation } from 'react-i18next';
 import {
   useCreateFigure,
@@ -40,14 +32,13 @@ import {
   RiPrinterLine,
   RiSaveLine,
   RiShapesLine,
-  RiShareLine,
   RiSidebarUnfoldLine,
-  RiTableLine,
   RiText,
   RiZoomInLine,
 } from '@remixicon/react';
+import { Button, DropdownMenu, Flex, IconButton, ScrollArea } from '@radix-ui/themes';
 
-const QueueSubHeader = memo(() => {
+const QueueSubHeader = memo(function QueueSubHeader() {
   const dispatch = useAppDispatch();
   const eventDispatch = useEventDispatch();
   const { t } = useTranslation();
@@ -84,9 +75,9 @@ const QueueSubHeader = memo(() => {
       const file = fileInput.files[0];
       const worker = new Worker(
         /* webpackChunkName: "image-encoding-worker" */ new URL(
-          '../../workers/imageConversionWorker.ts',
-          import.meta.url,
-        ),
+        '../../workers/imageConversionWorker.ts',
+        import.meta.url,
+      ),
       );
 
       worker.addEventListener(
@@ -140,230 +131,129 @@ const QueueSubHeader = memo(() => {
   const createText = createFigure(createDefaultSquareText);
 
   return (
-    <QueueScrollArea.Root className={styles.Container}>
-      <QueueScrollArea.Viewport>
-        <div className={styles.ItemRoot}>
-          <div className={styles.ItemGroup}>
-            <div className={styles.ItemGroup}>
-              <QueueDropdown
-                open={isDropdownOpen.sidebar}
-                onOpenChange={() =>
-                  setIsDropdownOpen({
-                    ...isDropdownOpen,
-                    sidebar: !isDropdownOpen.sidebar,
-                  })
-                }>
-                <QueueDropdown.Trigger>
-                  <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
-                    <RiSidebarUnfoldLine />
-                    <ChevronDownIcon
-                      className={clsx(
-                        'tw-w-3',
-                        'tw-h-3',
-                        'tw-transition-all',
-                        'tw-duration-300',
-                        {
-                          'tw-scale-y-[1]': !isDropdownOpen.sidebar,
-                          'tw-scale-y-[-1]': isDropdownOpen.sidebar,
-                        },
-                      )}
-                    />
-                  </div>
-                </QueueDropdown.Trigger>
+    <ScrollArea scrollbars='horizontal' className='tw-h-fit tw-p-2'>
+      <Flex>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton variant='soft'>
+              <RiSidebarUnfoldLine />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item
+              onClick={() =>
+                dispatch(
+                  SettingsActions.updateSettings({
+                    changes: {
+                      leftPanelOpened: !leftPanelOpened,
+                    },
+                  }),
+                )
+              }>
+              {leftPanelOpened
+                ? t('menu.close-left-sidebar')
+                : t('menu.open-left-sidebar')}
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onClick={() =>
+                dispatch(
+                  SettingsActions.updateSettings({
+                    changes: {
+                      bottomPanelOpened: !bottomPanelOpened,
+                    },
+                  }),
+                )
+              }>
+              {bottomPanelOpened
+                ? t('menu.close-bottom-sidebar')
+                : t('menu.open-bottom-sidebar')}
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
 
-                <QueueDropdown.Content>
-                  <QueueDropdown.Item
-                    onClick={() =>
-                      dispatch(
-                        SettingsActions.updateSettings({
-                          changes: {
-                            leftPanelOpened: !leftPanelOpened,
-                          },
-                        }),
-                      )
-                    }>
-                    {leftPanelOpened
-                      ? t('menu.close-left-sidebar')
-                      : t('menu.open-left-sidebar')}
-                  </QueueDropdown.Item>
-                  <QueueDropdown.Item
-                    onClick={() =>
-                      dispatch(
-                        SettingsActions.updateSettings({
-                          changes: {
-                            bottomPanelOpened: !bottomPanelOpened,
-                          },
-                        }),
-                      )
-                    }>
-                    {bottomPanelOpened
-                      ? t('menu.close-bottom-sidebar')
-                      : t('menu.open-bottom-sidebar')}
-                  </QueueDropdown.Item>
-                </QueueDropdown.Content>
-              </QueueDropdown>
+        <IconButton variant='soft'
+          onClick={() => dispatch(HistoryActions.Undo())}
+          disabled={!history.previous.length}>
+          <RiArrowGoBackLine />
+        </IconButton>
 
-              <QueueSeparator.Root
-                orientation="vertical"
-                decorative
-                className={styles.Separator}
-              />
-            </div>
+        <IconButton variant='soft'
+          onClick={() => dispatch(HistoryActions.Redo())}
+          disabled={!history.future.length}>
+          <RiArrowGoForwardLine />
+        </IconButton>
 
-            <div className={styles.ItemGroup}>
-              {/* undo */}
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => dispatch(HistoryActions.Undo())}
-                disabled={!history.previous.length}>
-                <RiArrowGoBackLine />
-              </QueueIconButton>
+        <IconButton variant='soft' onClick={() => createText()}>
+          <RiText />
+        </IconButton>
 
-              {/* redo */}
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => dispatch(HistoryActions.Redo())}
-                disabled={!history.future.length}>
-                <RiArrowGoForwardLine />
-              </QueueIconButton>
+        <IconButton
+          variant='soft'
+          onClick={() => handleCreateImageClick()}>
+          <RiImageLine />
+        </IconButton>
 
-              <QueueSeparator.Root
-                orientation="vertical"
-                decorative
-                className={styles.Separator}
-              />
-            </div>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <IconButton variant='soft'>
+              <RiShapesLine />
+            </IconButton>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Sub>
+              <DropdownMenu.SubTrigger className="tw-py-2 tw-px-6">
+                {t('global.shape')}
+              </DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                <ScrollArea>
+                  <QueueRectAddLayer />
+                </ScrollArea>
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+            <DropdownMenu.Sub>
+              <DropdownMenu.SubTrigger className="tw-py-2 tw-px-6">
+                {t('global.line')}
+              </DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                <ScrollArea>
+                  <QueueLineAddLayer />
+                </ScrollArea>
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+            <DropdownMenu.Sub>
+              <DropdownMenu.SubTrigger className="tw-py-2 tw-px-6">
+                {t('global.icon')}
+              </DropdownMenu.SubTrigger>
+              <DropdownMenu.SubContent>
+                <IconAddLayer />
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Sub>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
 
-            <div className={styles.ItemGroup}>
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => createText()}>
-                <RiText />
-              </QueueIconButton>
+        <Button
+          onClick={() => {
+            eventDispatch(fitScreenSizeEvent());
+          }}
+          variant='soft'>
+          <RiZoomInLine />
+          {scale}%
+        </Button>
 
-              <QueueIconButton
-                size={QUEUE_UI_SIZE.MEDIUM}
-                onClick={() => handleCreateImageClick()}>
-                <RiImageLine />
-              </QueueIconButton>
+        <IconButton
+          variant='soft'
+          disabled={true}>
+          <RiPrinterLine />
+        </IconButton>
 
-              <QueueDropdown
-                open={isDropdownOpen.rect}
-                onOpenChange={() =>
-                  setIsDropdownOpen({
-                    ...isDropdownOpen,
-                    rect: !isDropdownOpen.rect,
-                  })
-                }>
-                <QueueDropdown.Trigger>
-                  <div className="tw-flex tw-items-center tw-p-3 tw-gap-1">
-                    <RiShapesLine />
-                    <ChevronDownIcon
-                      className={clsx(
-                        'tw-w-3',
-                        'tw-h-3',
-                        'tw-transition-all',
-                        'tw-duration-300',
-                        {
-                          'tw-scale-y-[1]': !isDropdownOpen.rect,
-                          'tw-scale-y-[-1]': isDropdownOpen.rect,
-                        },
-                      )}
-                    />
-                  </div>
-                </QueueDropdown.Trigger>
+        <IconButton
+          variant='soft'
+          onClick={onSaveDocumentClick}>
+          <RiSaveLine />
+        </IconButton>
 
-                <QueueDropdown.Content>
-                  <QueueDropdown.Sub>
-                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      {t('global.shape')}
-                    </QueueDropdown.SubTrigger>
-                    <QueueDropdown.SubContent>
-                      <QueueScrollArea.Root className="">
-                        <QueueScrollArea.Viewport className=""></QueueScrollArea.Viewport>
-                        <QueueRectAddLayer />
-                        <QueueScrollArea.Scrollbar orientation="vertical">
-                          <QueueScrollArea.Thumb />
-                        </QueueScrollArea.Scrollbar>
-                        <QueueScrollArea.Scrollbar orientation="horizontal">
-                          <QueueScrollArea.Thumb />
-                        </QueueScrollArea.Scrollbar>
-                        <QueueScrollArea.Corner />
-                      </QueueScrollArea.Root>
-                    </QueueDropdown.SubContent>
-                  </QueueDropdown.Sub>
-
-                  <QueueDropdown.Sub>
-                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      {t('global.line')}
-                    </QueueDropdown.SubTrigger>
-                    <QueueDropdown.SubContent>
-                      <QueueScrollArea.Root className="">
-                        <QueueScrollArea.Viewport className=""></QueueScrollArea.Viewport>
-                        <QueueLineAddLayer />
-                        <QueueScrollArea.Scrollbar orientation="vertical">
-                          <QueueScrollArea.Thumb />
-                        </QueueScrollArea.Scrollbar>
-                        <QueueScrollArea.Scrollbar orientation="horizontal">
-                          <QueueScrollArea.Thumb />
-                        </QueueScrollArea.Scrollbar>
-                        <QueueScrollArea.Corner />
-                      </QueueScrollArea.Root>
-                    </QueueDropdown.SubContent>
-                  </QueueDropdown.Sub>
-
-                  <QueueDropdown.Sub>
-                    <QueueDropdown.SubTrigger className="tw-py-2 tw-px-6">
-                      {t('global.icon')}
-                    </QueueDropdown.SubTrigger>
-                    <QueueDropdown.SubContent>
-                      <IconAddLayer />
-                    </QueueDropdown.SubContent>
-                  </QueueDropdown.Sub>
-                </QueueDropdown.Content>
-              </QueueDropdown>
-
-              <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-                <RiShareLine />
-              </QueueIconButton>
-
-              <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-                <RiTableLine />
-              </QueueIconButton>
-            </div>
-          </div>
-
-          <div className={clsx(styles.ItemGroup, 'tw-gap-2')}>
-            <QueueIconButton
-              className="tw-px-2"
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={() => {
-                eventDispatch(fitScreenSizeEvent());
-              }}
-              style={{ width: 'unset' }}>
-              <RiZoomInLine />
-              <span
-                className={clsx('tw-text-black-900', 'tw-text-14', 'tw-mx-1')}>
-                {scale}%
-              </span>
-            </QueueIconButton>
-
-            <QueueIconButton size={QUEUE_UI_SIZE.MEDIUM} disabled={true}>
-              <RiPrinterLine />
-            </QueueIconButton>
-
-            <QueueIconButton
-              size={QUEUE_UI_SIZE.MEDIUM}
-              onClick={onSaveDocumentClick}>
-              <RiSaveLine />
-            </QueueIconButton>
-          </div>
-        </div>
-      </QueueScrollArea.Viewport>
-      <QueueScrollArea.Scrollbar orientation="horizontal" hidden>
-        <QueueScrollArea.Thumb />
-      </QueueScrollArea.Scrollbar>
-    </QueueScrollArea.Root>
+      </Flex>
+    </ScrollArea>
   );
 });
 

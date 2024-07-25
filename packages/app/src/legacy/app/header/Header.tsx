@@ -1,7 +1,4 @@
 import { memo, ReactNode, useState } from 'react';
-import styles from '@legacy/app/header/Header.module.scss';
-import clsx from 'clsx';
-import { QueueMenubar } from '@legacy/components/menu-bar/Menubar';
 import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
 import { NewDocumentDialog } from '@legacy/app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
@@ -11,7 +8,6 @@ import { HistorySelectors } from '@legacy/store/history/selectors';
 import { HistoryActions } from '@legacy/store/history';
 import { SettingsActions } from '@legacy/store/settings';
 import { useTranslation } from 'react-i18next';
-import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { PreferencesSelectors } from '@legacy/store/preferences/selectors';
 import { PreferencesActions } from '@legacy/store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from '@legacy/store/preferences/model';
@@ -19,11 +15,8 @@ import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
 import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
 import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
 import { RootState, store } from '@legacy/store';
-import { QueueDropdown } from '@legacy/components/dropdown/Dropdown';
-import { QueueButton } from '@legacy/components/buttons/button/Button';
 import { RiPlayLine } from '@remixicon/react';
-import { Button, ContextMenu, DropdownMenu, Flex, Text } from '@radix-ui/themes';
-import * as Menubar from '@radix-ui/react-menubar';
+import { Button, DropdownMenu, Flex, Text } from '@radix-ui/themes';
 
 export interface ToolbarModel {
   key: string;
@@ -183,7 +176,7 @@ export const QueueHeader = memo(function QueueHeader() {
   };
 
   return (
-    <Flex justify={'between'} className='tw-p-4'>
+    <Flex justify={'between'} className='tw-p-2'>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button variant="solid">
@@ -295,19 +288,17 @@ export const QueueHeader = memo(function QueueHeader() {
         </DropdownMenu.Content>
       </DropdownMenu.Root>
 
-      <div className={clsx(styles['title-container'])}>{docName}</div>
+      <Text>
+        {docName}
+      </Text>
 
       {/* presentation mode */}
       {docId && (
-        <QueueButton
-          className={clsx(
-            styles['slide-button'],
-            'tw-flex tw-items-center tw-gap-1',
-          )}
+        <Button
           onClick={onPresentationStartClick}>
           <RiPlayLine size={16} />
-          <span className="tw-text-sm tw-font-medium">Present</span>
-        </QueueButton>
+          Present
+        </Button>
       )}
     </Flex>
   );
