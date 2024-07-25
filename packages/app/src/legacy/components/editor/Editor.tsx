@@ -2,10 +2,8 @@ import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { Drawable, DrawEvent } from '../../cdk/draw/Draw';
 import { Scaler } from '../scaler/Scaler';
 import { QueueObject } from '@legacy/components/queue';
-import { QueueContextMenu } from '@legacy/components/context-menu/Context';
 import clsx from 'clsx';
 import styles from './Editor.module.scss';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { ResizerEvent } from '@legacy/components/queue/Resizer';
 import { adjacent } from '@legacy/cdk/math/adjacent';
 import { EditorContext } from './EditorContext';
@@ -17,8 +15,6 @@ import { DocumentSelectors } from '@legacy/store/document/selectors';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { QueueRect } from '@legacy/model/property';
 import {
-  RectEffect,
-  RotateEffect,
   QueueEffectType,
 } from '@legacy/model/effect';
 import { EffectActions } from '../../store/effect';
@@ -30,12 +26,13 @@ import { isEqual } from 'lodash';
 import { HistoryActions } from '@legacy/store/history';
 import { QueueObjectType } from '@legacy/model/object';
 import { store } from '@legacy/store';
+import { ContextMenu, Flex, ScrollArea } from '@radix-ui/themes';
 
 export interface QueueEditorProps {
   className?: string;
 }
 
-export const QueueEditor = memo((props: QueueEditorProps) => {
+export const QueueEditor = memo(function QueueEditor(props: QueueEditorProps) {
   const dispatch = useAppDispatch();
 
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -413,14 +410,12 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
   }, [dispatch, currentScale, documentRect.width, documentRect.height]);
 
   return (
-    <QueueContextMenu.Root>
-      <QueueContextMenu.Trigger
+    <ContextMenu.Root>
+      <ContextMenu.Trigger
         ref={rootRef}
         className={clsx(styles.Root, props.className)}>
-        <QueueScrollArea.Root
-          className={clsx(styles.ScrollAreaRoot)}
-          onMouseDown={onRootMousedown}>
-          <QueueScrollArea.Viewport className={clsx('tw-flex')}>
+        <ScrollArea onMouseDown={onRootMousedown}>
+          <Flex justify={'center'} align={'center'} className='tw-h-full'>
             <Drawable
               onDrawEnd={onDrawEnd}
               className={clsx(
@@ -444,12 +439,12 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
                     background: documentRect.fill,
                   }}>
                   {queueObjects.map((object) => (
-                    <QueueContextMenu.Root
+                    <ContextMenu.Root
                       key={object.id}
                       onOpenChange={(open): void =>
                         onObjectContextMenuOpenChange(object.id, open)
                       }>
-                      <QueueContextMenu.Trigger>
+                      <ContextMenu.Trigger>
                         <QueueObject.Container
                           object={object}
                           detail={
@@ -498,29 +493,18 @@ export const QueueEditor = memo((props: QueueEditorProps) => {
                             </Draggable>
                           </QueueObject.Animator>
                         </QueueObject.Container>
-                      </QueueContextMenu.Trigger>
-                      <QueueContextMenu.Portal>
-                        <QueueObject.ContextContent />
-                      </QueueContextMenu.Portal>
-                    </QueueContextMenu.Root>
+                      </ContextMenu.Trigger>
+                      <QueueObject.ContextContent />
+                    </ContextMenu.Root>
                   ))}
                 </div>
               </Scaler>
             </Drawable>
-            {presentationMode && <PresentationRemote />}
-          </QueueScrollArea.Viewport>
-          <QueueScrollArea.Scrollbar orientation="vertical">
-            <QueueScrollArea.Thumb />
-          </QueueScrollArea.Scrollbar>
-          <QueueScrollArea.Scrollbar orientation="horizontal">
-            <QueueScrollArea.Thumb />
-          </QueueScrollArea.Scrollbar>
-          <QueueScrollArea.Corner />
-        </QueueScrollArea.Root>
-      </QueueContextMenu.Trigger>
-      <QueueContextMenu.Portal>
-        <EditorContext />
-      </QueueContextMenu.Portal>
-    </QueueContextMenu.Root>
+          </Flex>
+          {presentationMode && <PresentationRemote />}
+        </ScrollArea>
+      </ContextMenu.Trigger>
+      <EditorContext />
+    </ContextMenu.Root>
   );
 });

@@ -20,13 +20,12 @@ import { EffectActions, getEffectEntityKey } from '../../store/effect';
 import { HistoryActions } from '@legacy/store/history';
 import { useTranslation } from 'react-i18next';
 import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QueueDropdown } from '@legacy/components/dropdown';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
 import { store } from '@legacy/store';
 import { isEqual } from 'lodash';
 import { OBJECT_SUPPORTED_EFFECTS } from '@legacy/model/support';
 import { RiAddLine, RiDeleteBin5Line } from '@remixicon/react';
+import { DropdownMenu, IconButton, ScrollArea } from '@radix-ui/themes';
 
 type EffectControllerProps = {
   effectType: QueueEffectType['type'];
@@ -280,25 +279,20 @@ export const EffectControllerBox = (): ReactElement | null => {
       </div>
 
       <div className="tw-flex-1 tw-shrink-0 tw-basis-full">
-        <QueueScrollArea.Root>
-          <QueueScrollArea.Viewport className="tw-max-h-25">
-            <ul className="tw-text-sm">
-              {effects.map((effect, index) => (
-                <li key={`effect-${index}-${effect?.id}`}>
-                  <span className="tw-font-normal tw-text-[var(--gray-11)]">
-                    #{effect.index + 1}{' '}
-                  </span>
-                  <span className="tw-font-normal">
-                    {t(OBJECT_EFFECT_TRANSLATION_KEY[effect.type])}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </QueueScrollArea.Viewport>
-          <QueueScrollArea.Scrollbar>
-            <QueueScrollArea.Thumb />
-          </QueueScrollArea.Scrollbar>
-        </QueueScrollArea.Root>
+        <ScrollArea>
+          <ul className="tw-text-sm">
+            {effects.map((effect, index) => (
+              <li key={`effect-${index}-${effect?.id}`}>
+                <span className="tw-font-normal tw-text-[var(--gray-11)]">
+                  #{effect.index + 1}{' '}
+                </span>
+                <span className="tw-font-normal">
+                  {t(OBJECT_EFFECT_TRANSLATION_KEY[effect.type])}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </ScrollArea>
       </div>
 
       <QueueSeparator.Root className="tw-my-4" />
@@ -308,24 +302,23 @@ export const EffectControllerBox = (): ReactElement | null => {
           {t('effect-panel.current-effects')}
         </h2>
         {!isCreateEffectIndex && (
-          <QueueDropdown>
-            <QueueDropdown.Trigger asChild disabled={isCreateEffectIndex}>
-              <button
-                className="tw-flex tw-items-center disabled:tw-cursor-not-allowed"
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger disabled={isCreateEffectIndex}>
+              <IconButton
                 disabled={isCreateEffectIndex}>
                 <RiAddLine size={16} />
-              </button>
-            </QueueDropdown.Trigger>
-            <QueueDropdown.Content side="right" className="tw-w-[100px]">
+              </IconButton>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content side="right" size={"1"}>
               {addableEffectTypes.map((effectType) => (
-                <QueueDropdown.Item
+                <DropdownMenu.Item
                   key={effectType}
                   onClick={(): void => handleAddEffectItemClick(effectType)}>
                   {t(OBJECT_EFFECT_TRANSLATION_KEY[effectType])}
-                </QueueDropdown.Item>
+                </DropdownMenu.Item>
               ))}
-            </QueueDropdown.Content>
-          </QueueDropdown>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
         )}
       </div>
 

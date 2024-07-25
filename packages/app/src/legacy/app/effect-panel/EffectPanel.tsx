@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { EffectControllerBox } from '@legacy/components/effect-controller';
 import { useAppSelector } from '@legacy/store/hooks';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
+import { ScrollArea } from '@radix-ui/themes';
 
 export const PanelTabType = {
   Styler: 'styler',
@@ -19,14 +19,9 @@ export const EffectPanel = () => {
   return (
     <div className={clsx('tw-flex', 'tw-flex-col', 'tw-h-full')}>
       <div className="tw-h-full">
-        <QueueScrollArea.Root className="tw-h-full">
-          <QueueScrollArea.Viewport>
-            <EffectControllerBox />
-          </QueueScrollArea.Viewport>
-          <QueueScrollArea.Scrollbar>
-            <QueueScrollArea.Thumb />
-          </QueueScrollArea.Scrollbar>
-        </QueueScrollArea.Root>
+        <ScrollArea>
+          <EffectControllerBox />
+        </ScrollArea>
       </div>
     </div>
   );

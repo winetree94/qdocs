@@ -11,9 +11,9 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { createDefaultIcon } from '@legacy/model/object/icon';
 import { RemixIconMap } from '@legacy/cdk/icon/factory';
 import { QueueInput } from '@legacy/components/input/Input';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
 import { useTranslation } from 'react-i18next';
 import { RiArrowDownSLine, RiArrowRightSLine } from '@remixicon/react';
+import { ScrollArea } from '@radix-ui/themes';
 
 interface QueueObject {
   key: string;
@@ -54,7 +54,7 @@ interface FlattenRowProps {
 }
 
 const FlattenRow: FunctionComponent<FlattenRowProps> = memo(
-  ({ style, index, data }) => {
+  function FlattenRow({ style, index, data }) {
     const flattenData = data.flattenData[index];
 
     if (flattenData.type === 'group') {
@@ -230,39 +230,29 @@ const QueueIconAddLayer = () => {
           value={searchKeyword}
           onChange={(e): void => setSearchKeyword(e.target.value)}></QueueInput>
       </div>
-      <QueueScrollArea.Root className={clsx(styles.ScrollAreaRoot)}>
-        <QueueScrollArea.Viewport
-          className={clsx(styles.ScrollAreaViewport, 'tw-h-52')}>
-          <AutoSizer>
-            {({
-              height,
-              width,
-            }: {
-              height: number;
-              width: number;
-            }): ReactNode => (
-              <FixedSizeList
-                itemCount={flattenItems.length}
-                itemSize={50}
-                width={width}
-                height={height}
-                itemKey={(index): string => flattenItems[index].key}
-                itemData={memoizedItemData}
-                initialScrollOffset={listScrollTopState}
-                onScroll={handleScroll}>
-                {FlattenRow}
-              </FixedSizeList>
-            )}
-          </AutoSizer>
-        </QueueScrollArea.Viewport>
-        <QueueScrollArea.Scrollbar orientation="vertical">
-          <QueueScrollArea.Thumb />
-        </QueueScrollArea.Scrollbar>
-        <QueueScrollArea.Scrollbar orientation="horizontal">
-          <QueueScrollArea.Thumb />
-        </QueueScrollArea.Scrollbar>
-        <QueueScrollArea.Corner />
-      </QueueScrollArea.Root>
+      <ScrollArea className='tw-h-12'>
+        <AutoSizer>
+          {({
+            height,
+            width,
+          }: {
+            height: number;
+            width: number;
+          }): ReactNode => (
+            <FixedSizeList
+              itemCount={flattenItems.length}
+              itemSize={50}
+              width={width}
+              height={height}
+              itemKey={(index): string => flattenItems[index].key}
+              itemData={memoizedItemData}
+              initialScrollOffset={listScrollTopState}
+              onScroll={handleScroll}>
+              {FlattenRow}
+            </FixedSizeList>
+          )}
+        </AutoSizer>
+      </ScrollArea>
     </>
   );
 };

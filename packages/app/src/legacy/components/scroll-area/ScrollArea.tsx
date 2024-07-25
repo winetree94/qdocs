@@ -6,7 +6,7 @@ import clsx from 'clsx';
 export const Root = React.forwardRef<
   HTMLDivElement,
   ScrollArea.ScrollAreaProps
->(({ className, children, ...props }, ref) => {
+>(function Root({ className, children, ...props }, ref) {
   return (
     <ScrollArea.Root
       {...props}
@@ -20,7 +20,7 @@ export const Root = React.forwardRef<
 export const Viewport = React.forwardRef<
   HTMLDivElement,
   ScrollArea.ScrollAreaViewportProps
->(({ className, children, ...props }, ref) => {
+>(function Viewport({ className, children, ...props }, ref) {
   return (
     <ScrollArea.Viewport
       {...props}
@@ -34,7 +34,7 @@ export const Viewport = React.forwardRef<
 export const Scrollbar = React.forwardRef<
   HTMLDivElement,
   ScrollArea.ScrollAreaScrollbarProps
->(({ className, children, ...props }, ref) => {
+>(function Scrollbar({ className, children, ...props }, ref) {
   return (
     <ScrollArea.Scrollbar
       {...props}
@@ -48,7 +48,7 @@ export const Scrollbar = React.forwardRef<
 export const Thumb = React.forwardRef<
   HTMLDivElement,
   ScrollArea.ScrollAreaThumbProps
->(({ className, children, ...props }, ref) => {
+>(function Thumb({ className, children, ...props }, ref) {
   return (
     <ScrollArea.Thumb
       {...props}
@@ -62,7 +62,7 @@ export const Thumb = React.forwardRef<
 export const Corner = React.forwardRef<
   HTMLDivElement,
   ScrollArea.ScrollAreaCornerProps
->(({ className, children, ...props }, ref) => {
+>(function Corner({ className, children, ...props }, ref) {
   return (
     <ScrollArea.Corner
       {...props}

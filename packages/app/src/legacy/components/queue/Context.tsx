@@ -1,5 +1,4 @@
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
-import { QueueContextMenu } from '@legacy/components/context-menu/Context';
 import { forwardRef } from 'react';
 import styles from './Context.module.scss';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
@@ -11,11 +10,12 @@ import { QUEUE_CLIPBOARD_UNIQUE_ID } from '@legacy/model/clipboard/constants';
 import { useTranslation } from 'react-i18next';
 import { deviceMetaKey } from '@legacy/cdk/device/meta';
 import { store } from '@legacy/store';
+import { ContextMenu } from '@radix-ui/themes';
 
 export const QueueObjectContextContent = forwardRef<
   HTMLDivElement,
   ContextMenuContentProps
->((_, ref) => {
+>(function QueueObjectContextContent(_, ref) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const selectedObjectIds = useAppSelector(SettingSelectors.selectedObjectIds);
@@ -72,29 +72,29 @@ export const QueueObjectContextContent = forwardRef<
   };
 
   return (
-    <QueueContextMenu.Content
+    <ContextMenu.Content
       onMouseDown={(e): void => e.stopPropagation()}
       ref={ref}>
-      <QueueContextMenu.Item onClick={onRemoveObject}>
+      <ContextMenu.Item onClick={onRemoveObject}>
         {t('object-context.delete-from-current-queue')}{' '}
         <div className={styles.RightSlot}>Backspace</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={onCompletelyRemoveClick}>
+      </ContextMenu.Item>
+      <ContextMenu.Item onClick={onCompletelyRemoveClick}>
         {t('object-context.delete-permanently')}{' '}
         <div className={styles.RightSlot}>{deviceMetaKey}+Backspace</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Separator />
-      <QueueContextMenu.Item onClick={copyToClipboard}>
+      </ContextMenu.Item>
+      <ContextMenu.Separator />
+      <ContextMenu.Item onClick={copyToClipboard}>
         {t('global.copy')}{' '}
         <div className={styles.RightSlot}>{deviceMetaKey}+C</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item onClick={duplicate}>
+      </ContextMenu.Item>
+      <ContextMenu.Item onClick={duplicate}>
         {t('global.duplicate')}
-      </QueueContextMenu.Item>
+      </ContextMenu.Item>
       {selectedObjectIds.length === 1 && (
         <>
-          <QueueContextMenu.Separator />
-          <QueueContextMenu.Item
+          <ContextMenu.Separator />
+          <ContextMenu.Item
             onClick={() => {
               dispatch(HistoryActions.Capture());
               dispatch(
@@ -104,8 +104,8 @@ export const QueueObjectContextContent = forwardRef<
               );
             }}>
             {t('object-context.to-front')}
-          </QueueContextMenu.Item>
-          <QueueContextMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             onClick={() => {
               dispatch(HistoryActions.Capture());
               dispatch(
@@ -115,8 +115,8 @@ export const QueueObjectContextContent = forwardRef<
               );
             }}>
             {t('object-context.to-back')}
-          </QueueContextMenu.Item>
-          <QueueContextMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             onClick={() => {
               dispatch(HistoryActions.Capture());
               dispatch(
@@ -126,8 +126,8 @@ export const QueueObjectContextContent = forwardRef<
               );
             }}>
             {t('object-context.bring-forward')}
-          </QueueContextMenu.Item>
-          <QueueContextMenu.Item
+          </ContextMenu.Item>
+          <ContextMenu.Item
             onClick={() => {
               dispatch(HistoryActions.Capture());
               dispatch(
@@ -137,10 +137,10 @@ export const QueueObjectContextContent = forwardRef<
               );
             }}>
             {t('object-context.send-backward')}
-          </QueueContextMenu.Item>
+          </ContextMenu.Item>
         </>
       )}
-      <QueueContextMenu.Item
+      <ContextMenu.Item
         onClick={() => {
           dispatch(HistoryActions.Capture());
           dispatch(
@@ -150,8 +150,8 @@ export const QueueObjectContextContent = forwardRef<
           );
         }}>
         {t('object-context.group')}
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item
+      </ContextMenu.Item>
+      <ContextMenu.Item
         onClick={() => {
           dispatch(HistoryActions.Capture());
           dispatch(
@@ -161,7 +161,7 @@ export const QueueObjectContextContent = forwardRef<
           );
         }}>
         {t('object-context.ungroup')}
-      </QueueContextMenu.Item>
-    </QueueContextMenu.Content>
+      </ContextMenu.Item>
+    </ContextMenu.Content>
   );
 });

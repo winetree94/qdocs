@@ -1,18 +1,12 @@
-import {
-  QueueDialog,
-  QueueDialogRootRef,
-} from '@legacy/components/dialog/Dialog';
-import React, { useMemo, useRef } from 'react';
-import { QueueButton } from '@legacy/components/buttons/button/Button';
+import React, { useMemo } from 'react';
 import { QueueToggleGroup } from '@legacy/components/toggle-group/ToggleGroup';
 import clsx from 'clsx';
 import styles from './NewDocumentDialog.module.scss';
 import { TEMPLATES } from './templates.meta';
 import { useTranslation } from 'react-i18next';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
-import { QueueSelect } from '@legacy/components/select/Select';
 import { RootState } from '@legacy/store';
+import { Button, Dialog, Flex } from '@radix-ui/themes';
+import { useRootRenderedContext } from '@legacy/cdk/root-renderer/root-renderer';
 
 export interface NewDocumentDialogProps {
   onSubmit?: (document: RootState) => void;
@@ -20,8 +14,7 @@ export interface NewDocumentDialogProps {
 
 export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
   const { t } = useTranslation();
-  const dialogRef = useRef<QueueDialogRootRef>();
-  const [documentRatio, setDocumentRatio] = React.useState<string>('16:9');
+  const rootRendererContext = useRootRenderedContext();
   const [documentTemplate, setDocumentTemplate] =
     React.useState<string>('Empty');
 
@@ -66,7 +59,7 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
       onSubmit?.(document);
     } finally {
       setFetching(false);
-      dialogRef.current.close();
+      rootRendererContext.close();
     }
   };
 
@@ -101,70 +94,50 @@ export const NewDocumentDialog = ({ onSubmit }: NewDocumentDialogProps) => {
       onSubmit?.(document);
     } finally {
       setFetching(false);
-      dialogRef.current.close();
+      rootRendererContext.close();
     }
   };
 
   return (
-    <QueueDialog.Root ref={dialogRef}>
-      <QueueDialog.Title>
-        {t('new-document.set-up-new-document-template')}
-      </QueueDialog.Title>
-      <QueueDialog.Description>
-        <div className={styles.Container}>
-          <div className={styles.RatioContainer} style={{ display: 'none' }}>
-            <h6>문서 크기 비율</h6>
-            <QueueSelect
-              value={documentRatio}
-              onValueChange={(value): void => setDocumentRatio(value)}>
-              <QueueSelect.Group>
-                <QueueSelect.Option value="16:9">
-                  와이드 (16:9)
-                </QueueSelect.Option>
-                <QueueSelect.Option value="16:10">
-                  와이드 (16:10)
-                </QueueSelect.Option>
-                <QueueSelect.Option value="4:3">35mm (4:3)</QueueSelect.Option>
-              </QueueSelect.Group>
-            </QueueSelect>
-          </div>
-          <div className={styles.TemplateContainer}>
-            <QueueToggleGroup.Root
-              type="single"
-              value={documentTemplate}
-              onValueChange={(value): void =>
-                value && setDocumentTemplate(value)
-              }
-              className={clsx(styles.TemplateGroup)}>
-              {templates.map(({ name, getTemplate }) => (
-                <QueueToggleGroup.Item
-                  key={name}
-                  className={styles.TemplateItem}
-                  value={name}
-                  onDoubleClick={() => onDoubleClickItem(getTemplate)}>
-                  {name}
-                </QueueToggleGroup.Item>
-              ))}
-            </QueueToggleGroup.Root>
-          </div>
-        </div>
-      </QueueDialog.Description>
-      <QueueDialog.Footer>
-        <QueueButton
-          type="button"
-          size={QUEUE_UI_SIZE.MEDIUM}
-          color={QUEUE_UI_COLOR.RED}
-          onClick={(): void => dialogRef.current.close()}>
-          {t('global.cancel')}
-        </QueueButton>
-        <QueueButton
-          type="button"
-          size={QUEUE_UI_SIZE.MEDIUM}
-          color={QUEUE_UI_COLOR.BLUE}
-          onClick={onSubmitClick}>
-          {t('global.create')}
-        </QueueButton>
-      </QueueDialog.Footer>
-    </QueueDialog.Root>
+    <Dialog.Root open={true}>
+      <Dialog.Content maxWidth="450px">
+        <Dialog.Title className='tw-mb-4'>
+          {t('new-document.set-up-new-document-template')}
+        </Dialog.Title>
+
+        <Flex direction="column" gap="3">
+          <QueueToggleGroup.Root
+            type="single"
+            value={documentTemplate}
+            onValueChange={(value): void =>
+              value && setDocumentTemplate(value)
+            }
+            className={clsx(styles.TemplateGroup)}>
+            {templates.map(({ name, getTemplate }) => (
+              <QueueToggleGroup.Item
+                key={name}
+                className={styles.TemplateItem}
+                value={name}
+                onDoubleClick={() => onDoubleClickItem(getTemplate)}>
+                {name}
+              </QueueToggleGroup.Item>
+            ))}
+          </QueueToggleGroup.Root>
+        </Flex>
+
+        <Flex gap="3" mt="4" justify="end">
+          <Dialog.Close>
+            <Button variant="soft" color="gray" onClick={(): void => rootRendererContext.close()}>
+              {t('global.cancel')}
+            </Button>
+          </Dialog.Close>
+          <Dialog.Close>
+            <Button onClick={onSubmitClick}>
+              {t('global.create')}
+            </Button>
+          </Dialog.Close>
+        </Flex>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };

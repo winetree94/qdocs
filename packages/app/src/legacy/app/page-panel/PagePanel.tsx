@@ -20,13 +20,7 @@ import {
 } from '@legacy/store/page';
 import { HistoryActions } from '@legacy/store/history';
 import { DocumentSelectors } from '@legacy/store/document';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
-import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
 import { QueueSeparator } from '@legacy/components/separator/Separator';
-import { QueueScrollArea } from '@legacy/components/scroll-area/ScrollArea';
-import { QueueButton } from '@legacy/components/buttons/button/Button';
-import { QueueContextMenu } from '@legacy/components/context-menu/Context';
 import { ObjectSelectors } from '@legacy/store/object';
 import { EffectSelectors } from '@legacy/store/effect';
 import { StandaloneRect } from '@legacy/components/queue/standaloneRects';
@@ -35,6 +29,47 @@ import { StandaloneText } from '@legacy/components/queue/standaloneRects/Text';
 import { OBJECT_EFFECT_TYPE } from '@legacy/model/effect';
 import { store } from '@legacy/store';
 import { RiAddBoxLine, RiFileCopyLine } from '@remixicon/react';
+import { AlertDialog, Button, ContextMenu, Flex } from '@radix-ui/themes';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
+import { useRootRenderedContext, useRootRenderer } from '@/legacy/cdk/root-renderer/root-renderer';
+
+const Alert = ({
+  onConfirm
+}: {
+  onConfirm: () => void;
+}) => {
+  const { t } = useTranslation();
+  const rootRendererContext = useRootRenderedContext();
+
+  const onConfirmClick = () => {
+    onConfirm();
+    rootRendererContext.close();
+  }
+
+  return (
+    <AlertDialog.Root open={true}>
+      <AlertDialog.Content maxWidth="450px">
+        <AlertDialog.Title>페이지 삭제</AlertDialog.Title>
+        <AlertDialog.Description size="2">
+          페이지를 삭제하시겠습니까?
+        </AlertDialog.Description>
+
+        <Flex gap="3" mt="4" justify="end">
+          <AlertDialog.Cancel onClick={() => rootRendererContext.close()}>
+            <Button variant="soft" color="gray">
+              {t('global.cancel')}
+            </Button>
+          </AlertDialog.Cancel>
+          <AlertDialog.Action onClick={onConfirmClick}>
+            <Button variant="solid" color="red">
+              {t('global.confirm')}
+            </Button>
+          </AlertDialog.Action>
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
+  )
+}
 
 const PagePanelRoot = ({
   className,
@@ -136,7 +171,7 @@ const PagePreview = memo(
 
     const [pagePreviewScale, setPagePreviewScale] = useState(
       (pagePreviewRef.current?.offsetWidth || 1) /
-        (queueDocument.documentRect.width || 1),
+      (queueDocument.documentRect.width || 1),
     );
 
     const throttled = useRef(
@@ -198,32 +233,12 @@ const PagePreview = memo(
   },
 );
 
-const PageAddBox = ({
-  className,
-  ...props
-}: BaseHTMLAttributes<HTMLDivElement>) => {
-  return (
-    <div
-      className={clsx(
-        'tw-absolute',
-        'tw-bottom-0',
-        'tw-left-0',
-        'tw-w-full',
-        'tw-p-3',
-        'tw-bg-[var(--gray-1)]',
-        className,
-      )}
-      {...props}
-    />
-  );
-};
-
 export const PagePanel = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const alertDialog = useAlertDialog();
   const currentPageId = useAppSelector(SettingSelectors.pageId);
   const { id: documentId } = useAppSelector(DocumentSelectors.document);
+  const rootRenderer = useRootRenderer();
 
   const pageIds = useAppSelector(PageSelectors.ids);
 
@@ -378,129 +393,109 @@ export const PagePanel = () => {
 
   // context menu
   const openDeleteConfirmDialog = (id: EntityId): void => {
-    alertDialog.open({
-      title: '페이지 삭제',
-      description: '페이지를 삭제하시겠습니까?',
-      buttons: [
-        {
-          label: '취소',
-          size: QUEUE_UI_SIZE.MEDIUM,
-          color: QUEUE_UI_COLOR.RED,
-        },
-        {
-          label: '삭제',
-          onClick: (): void => removePage(id),
-        },
-      ],
-    });
+    rootRenderer.render(
+      <Alert
+        onConfirm={() => removePage(id)}
+      />
+    );
   };
 
   return (
     <PagePanelRoot>
-      <QueueScrollArea.Root className="tw-h-full">
-        <QueueScrollArea.Viewport>
-          <PagesBox>
-            {pageIds.map((pageId, index, self) => (
-              <QueueContextMenu.Root key={pageId}>
-                <QueueContextMenu.Trigger asChild>
-                  <PageBox
-                    draggable
-                    className={clsx('page-item', {
-                      'tw-bg-[var(--gray-5)]': currentPageId === pageId,
-                      'tw-opacity-50': dragOverIndex === index,
-                    })}
-                    data-id={pageId}
-                    onClick={() => navigatePage(pageId)}
-                    onDragStart={(event): void =>
-                      handleDragStart(event, pageId)
-                    }
-                    onDragEnter={(): void => setDragOverIndex(index)}
-                    onDragEnd={(): void => setDragOverIndex(-1)}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}>
-                    <div className="tw-shrink-0 tw-flex tw-flex-col tw-justify-between tw-items-end">
-                      <div className="tw-font-normal tw-text-xs tw-cursor-default">
-                        {index + 1}
-                      </div>
-                      <div className="tw-flex">
-                        <button
-                          className="tw-text-[var(--gray-10)] tw-cursor-pointer"
-                          onClick={() =>
-                            duplicatePageWithLastQueueSnapshot(pageId, index)
-                          }>
-                          <RiFileCopyLine size={16} />
-                        </button>
-                      </div>
+      <ScrollArea >
+        <PagesBox>
+          {pageIds.map((pageId, index, self) => (
+            <ContextMenu.Root key={pageId}>
+              <ContextMenu.Trigger>
+                <PageBox
+                  draggable
+                  className={clsx('page-item', {
+                    'tw-bg-[var(--gray-5)]': currentPageId === pageId,
+                    'tw-opacity-50': dragOverIndex === index,
+                  })}
+                  data-id={pageId}
+                  onClick={() => navigatePage(pageId)}
+                  onDragStart={(event): void =>
+                    handleDragStart(event, pageId)
+                  }
+                  onDragEnter={(): void => setDragOverIndex(index)}
+                  onDragEnd={(): void => setDragOverIndex(-1)}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}>
+                  <div className="tw-shrink-0 tw-flex tw-flex-col tw-justify-between tw-items-end">
+                    <div className="tw-font-normal tw-text-xs tw-cursor-default">
+                      {index + 1}
                     </div>
-
-                    <div className="tw-flex-1 tw-max-w-[80%]">
-                      <PagePreview pageId={pageId} />
+                    <div className="tw-flex">
+                      <button
+                        className="tw-text-[var(--gray-10)] tw-cursor-pointer"
+                        onClick={() =>
+                          duplicatePageWithLastQueueSnapshot(pageId, index)
+                        }>
+                        <RiFileCopyLine size={16} />
+                      </button>
                     </div>
-                  </PageBox>
-                </QueueContextMenu.Trigger>
+                  </div>
 
-                <QueueContextMenu.Portal>
-                  <QueueContextMenu.Content>
-                    <QueueContextMenu.Item
-                      onClick={() =>
-                        movePage(pageId, self[Math.max(index - 1, 0)])
-                      }>
-                      {t('page-panel.move-page-to-before')}
-                    </QueueContextMenu.Item>
-                    <QueueContextMenu.Item
-                      onClick={() =>
-                        movePage(
-                          pageId,
-                          self[Math.min(index + 1, self.length - 1)],
-                        )
-                      }>
-                      {t('page-panel.move-page-to-after')}
-                    </QueueContextMenu.Item>
-                    <QueueContextMenu.Separator />
-                    <QueueContextMenu.Item
-                      onClick={() => createPage(Math.max(index - 1))}>
-                      {t('page-panel.add-page-to-before')}
-                    </QueueContextMenu.Item>
-                    <QueueContextMenu.Item
-                      onClick={() => createPage(Math.min(index, self.length))}>
-                      {t('page-panel.add-page-to-after')}
-                    </QueueContextMenu.Item>
-                    <QueueContextMenu.Separator />
-                    <QueueContextMenu.Item
-                      onClick={() => duplicatePageAndContent(pageId, index)}>
-                      {t('page-panel.duplicate-page-and-content')}
-                    </QueueContextMenu.Item>
-                    {pageIds.length >= 2 && (
-                      <>
-                        <QueueContextMenu.Separator />
-                        <QueueContextMenu.Item
-                          className="tw-text-[var(--red-10)]"
-                          onClick={() => openDeleteConfirmDialog(pageId)}>
-                          {t('global.delete')}
-                        </QueueContextMenu.Item>
-                      </>
-                    )}
-                  </QueueContextMenu.Content>
-                </QueueContextMenu.Portal>
-              </QueueContextMenu.Root>
-            ))}
-          </PagesBox>
-        </QueueScrollArea.Viewport>
-        <QueueScrollArea.Scrollbar>
-          <QueueScrollArea.Thumb />
-        </QueueScrollArea.Scrollbar>
-      </QueueScrollArea.Root>
-      <PageAddBox>
-        <QueueSeparator.Root className="tw-mb-3" />
-        <QueueButton
-          className="tw-w-full tw-box-border tw-text-sm"
-          size={QUEUE_UI_SIZE.MEDIUM}
-          color={QUEUE_UI_COLOR.DEFAULT}
+                  <div className="tw-flex-1 tw-max-w-[80%]">
+                    <PagePreview pageId={pageId} />
+                  </div>
+                </PageBox>
+              </ContextMenu.Trigger>
+
+              <ContextMenu.Content size="1">
+                <ContextMenu.Item
+                  onClick={() =>
+                    movePage(pageId, self[Math.max(index - 1, 0)])
+                  }>
+                  {t('page-panel.move-page-to-before')}
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  onClick={() =>
+                    movePage(
+                      pageId,
+                      self[Math.min(index + 1, self.length - 1)],
+                    )
+                  }>
+                  {t('page-panel.move-page-to-after')}
+                </ContextMenu.Item>
+                <ContextMenu.Separator />
+                <ContextMenu.Item
+                  onClick={() => createPage(Math.max(index - 1))}>
+                  {t('page-panel.add-page-to-before')}
+                </ContextMenu.Item>
+                <ContextMenu.Item
+                  onClick={() => createPage(Math.min(index, self.length))}>
+                  {t('page-panel.add-page-to-after')}
+                </ContextMenu.Item>
+                <ContextMenu.Separator />
+                <ContextMenu.Item
+                  onClick={() => duplicatePageAndContent(pageId, index)}>
+                  {t('page-panel.duplicate-page-and-content')}
+                </ContextMenu.Item>
+                {pageIds.length >= 2 && (
+                  <>
+                    <ContextMenu.Separator />
+                    <ContextMenu.Item
+                      className="tw-text-[var(--red-10)]"
+                      onClick={() => openDeleteConfirmDialog(pageId)}>
+                      {t('global.delete')}
+                    </ContextMenu.Item>
+                  </>
+                )}
+              </ContextMenu.Content>
+            </ContextMenu.Root>
+          ))}
+        </PagesBox>
+      </ScrollArea>
+      <Flex>
+        <QueueSeparator.Root />
+        <Button
           onClick={() => createPage(pageIds.length)}>
           <RiAddBoxLine size={16} />
-          <span className="tw-ml-1">{t('page-panel.add-page')}</span>
-        </QueueButton>
-      </PageAddBox>
+          {t('page-panel.add-page')}
+        </Button>
+      </Flex>
     </PagePanelRoot>
   );
 };

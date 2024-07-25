@@ -64,7 +64,7 @@ export interface GridRootProps {
   onScroll?: (event: React.UIEvent<HTMLDivElement, UIEvent>) => void;
 }
 
-const GridRoot = forwardRef<HTMLDivElement, GridRootProps>((props, ref) => {
+const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   return (
     <div
       ref={ref}
@@ -92,7 +92,7 @@ export interface GridHeaderProps {
   onDragEnd?: (transformX: number) => void;
 }
 
-const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>((props, ref) => {
+const GridHeader = forwardRef<HTMLDivElement, GridHeaderProps>(function GridHeader(props, ref) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [initEvent, setInitEvent] = useState<React.MouseEvent<
@@ -195,7 +195,7 @@ export interface GridHeaderCellProps {
 }
 
 const GridHeaderCell = memo(
-  ({ width = 50, left, ...props }: GridHeaderCellProps) => {
+  function GridHeaderCell({ width = 50, left, ...props }: GridHeaderCellProps) {
     return (
       <div
         className={clsx(
@@ -218,7 +218,7 @@ export interface GridBodyProps {
   scrollWidth?: number;
 }
 
-const GridBody = forwardRef<HTMLDivElement, GridBodyProps>((props, ref) => {
+const GridBody = forwardRef<HTMLDivElement, GridBodyProps>(function GridBody(props, ref) {
   return (
     <QueueScrollArea.Root
       className={clsx(styles.GridBody, 'tw-flex-1', props.className)}>
@@ -268,7 +268,7 @@ export interface GridBodyCellProps {
   children?: React.ReactNode;
 }
 
-const GridCell = memo((props: GridBodyCellProps) => {
+const GridCell = memo(function GridCell(props: GridBodyCellProps) {
   return (
     <div
       className={clsx(
@@ -293,7 +293,7 @@ export interface GridOverlayProps {
 }
 
 export const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
-  (props, ref) => {
+  function GridOverlay(props, ref) {
     return (
       <QueueScrollArea.Root
         className={clsx(
@@ -332,7 +332,7 @@ export interface GridCursorProps {
   onDragEnd?: (transformX: number) => void;
 }
 
-export const GridCursor = memo((props: GridCursorProps) => {
+export const GridCursor = memo(function GridCursor(props: GridCursorProps) {
   const [initEvent, setInitEvent] = useState<React.MouseEvent<
     HTMLSpanElement | SVGSVGElement,
     MouseEvent

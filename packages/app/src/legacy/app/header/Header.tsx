@@ -1,5 +1,4 @@
-import { memo, ReactNode, useState } from 'react';
-import { useAlertDialog } from '@legacy/components/alert-dialog/AlertDialog';
+import { memo, ReactNode } from 'react';
 import { NewDocumentDialog } from '@legacy/app/new-document-dialog/NewDocumentDialog';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { DocumentSelectors } from '@legacy/store/document/selectors';
@@ -11,12 +10,10 @@ import { useTranslation } from 'react-i18next';
 import { PreferencesSelectors } from '@legacy/store/preferences/selectors';
 import { PreferencesActions } from '@legacy/store/preferences/actions';
 import { SUPPORTED_LANGUAGES } from '@legacy/store/preferences/model';
-import { QUEUE_UI_SIZE } from '@legacy/styles/ui/Size';
-import { QUEUE_UI_COLOR } from '@legacy/styles/ui/Color';
-import { useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
+import { useRootRenderedContext, useRootRenderer } from '@legacy/cdk/root-renderer/root-renderer';
 import { RootState, store } from '@legacy/store';
 import { RiPlayLine } from '@remixicon/react';
-import { Button, DropdownMenu, Flex, Text } from '@radix-ui/themes';
+import { AlertDialog, Button, DropdownMenu, Flex, Text } from '@radix-ui/themes';
 
 export interface ToolbarModel {
   key: string;
@@ -25,15 +22,51 @@ export interface ToolbarModel {
   children: ToolbarModel[];
 }
 
+const WarnAlert = ({
+  onConfirm
+}: {
+  onConfirm: () => void;
+}) => {
+  const { t } = useTranslation();
+  const rootRendererContext = useRootRenderedContext();
+
+  const onConfirmClick = () => {
+    onConfirm();
+    rootRendererContext.close();
+  }
+
+  return (
+    <AlertDialog.Root open={true}>
+    <AlertDialog.Content maxWidth="450px">
+      <AlertDialog.Title>{t('global.data-loss-warning-title')}</AlertDialog.Title>
+      <AlertDialog.Description size="2">
+        {t('global.data-loss-warning')}
+      </AlertDialog.Description>
+
+      <Flex gap="3" mt="4" justify="end">
+        <AlertDialog.Cancel onClick={() => rootRendererContext.close()}>
+          <Button variant="soft" color="gray">
+            {t('global.cancel')}
+          </Button>
+        </AlertDialog.Cancel>
+        <AlertDialog.Action onClick={onConfirmClick}>
+          <Button variant="solid" color="red">
+            {t('global.confirm')}
+          </Button>
+        </AlertDialog.Action>
+      </Flex>
+    </AlertDialog.Content>
+  </AlertDialog.Root>
+  )
+}
+
 export const QueueHeader = memo(function QueueHeader() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   // 불필요한 리렌더링을 막기 위해 useAppSelector로 셀렉한 값들을 사용할 때 구조분해 할당으로 가져온다. (나머지 상태는 업데이트 자체가 여러번 되는지 확인이 필요)
   const { previous, future } = useAppSelector(HistorySelectors.all);
   const dispatch = useAppDispatch();
-  const alertDialog = useAlertDialog();
   const preferences = useAppSelector(PreferencesSelectors.all);
   const rootRenderer = useRootRenderer();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const docId = useAppSelector(DocumentSelectors.documentId);
   const docName = useAppSelector(DocumentSelectors.documentName);
@@ -51,23 +84,9 @@ export const QueueHeader = memo(function QueueHeader() {
   const onNewDocumentClick = (): void => {
     const docs = DocumentSelectors.document(store.getState());
     if (docs) {
-      alertDialog.open({
-        title: t('global.data-loss-warning-title'),
-        description: t('global.data-loss-warning'),
-        buttons: [
-          {
-            label: t('global.cancel'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.RED,
-          },
-          {
-            label: t('global.confirm'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.BLUE,
-            onClick: openNewDocumentDialog,
-          },
-        ],
-      });
+      rootRenderer.render(
+        <WarnAlert onConfirm={openNewDocumentDialog} />
+      )
       return;
     }
     openNewDocumentDialog();
@@ -104,23 +123,9 @@ export const QueueHeader = memo(function QueueHeader() {
   const onOpenDocumentClick = (): void => {
     const docs = DocumentSelectors.document(store.getState());
     if (docs) {
-      alertDialog.open({
-        title: t('global.data-loss-warning-title'),
-        description: t('global.data-loss-warning'),
-        buttons: [
-          {
-            label: t('global.cancel'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.RED,
-          },
-          {
-            label: t('global.confirm'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.BLUE,
-            onClick: startFileChooser,
-          },
-        ],
-      });
+      rootRenderer.render(
+        <WarnAlert onConfirm={startFileChooser} />
+      )
       return;
     }
     startFileChooser();
@@ -153,23 +158,9 @@ export const QueueHeader = memo(function QueueHeader() {
   const onCloseDocumentClick = (): void => {
     const docs = DocumentSelectors.document(store.getState());
     if (docs) {
-      alertDialog.open({
-        title: t('global.data-loss-warning-title'),
-        description: t('global.data-loss-warning'),
-        buttons: [
-          {
-            label: t('global.cancel'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.RED,
-          },
-          {
-            label: t('global.confirm'),
-            size: QUEUE_UI_SIZE.MEDIUM,
-            color: QUEUE_UI_COLOR.BLUE,
-            onClick: clearDocument,
-          },
-        ],
-      });
+      rootRenderer.render(
+        <WarnAlert onConfirm={clearDocument} />
+      )
       return;
     }
     clearDocument();

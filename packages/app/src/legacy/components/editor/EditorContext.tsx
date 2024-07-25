@@ -1,7 +1,6 @@
 import { ContextMenuContentProps } from '@radix-ui/react-context-menu';
 import { nanoid } from '@reduxjs/toolkit';
 import { deviceMetaKey } from '@legacy/cdk/device/meta';
-import { QueueContextMenu } from '@legacy/components/context-menu/Context';
 import { isQueueObjectClipboardModel } from '@legacy/model/clipboard/base';
 import { QueueEffectType } from '@legacy/model/effect';
 import { QueueObjectType } from '@legacy/model/object';
@@ -14,11 +13,12 @@ import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { ObjectActions } from '@legacy/store/object';
 import { SettingsActions, SettingSelectors } from '@legacy/store/settings';
 import styles from './EditorContext.module.scss';
+import { ContextMenu } from '@radix-ui/themes';
 
 export const EditorContext = forwardRef<
   HTMLDivElement,
   ContextMenuContentProps
->((_, ref) => {
+>(function EditorContext(_, ref) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentPageId = useAppSelector(SettingSelectors.pageId);
@@ -78,24 +78,24 @@ export const EditorContext = forwardRef<
   };
 
   return (
-    <QueueContextMenu.Content ref={ref}>
-      <QueueContextMenu.Item
+    <ContextMenu.Content ref={ref}>
+      <ContextMenu.Item
         disabled={!history.previous.length}
         onClick={() => dispatch(HistoryActions.Undo())}>
         {t('global.undo')}{' '}
         <div className={styles.RightSlot}>{deviceMetaKey}+Z</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Item
+      </ContextMenu.Item>
+      <ContextMenu.Item
         disabled={!history.future.length}
         onClick={() => dispatch(HistoryActions.Redo())}>
         {t('global.redo')}{' '}
         <div className={styles.RightSlot}>{deviceMetaKey}+Shift+Z</div>
-      </QueueContextMenu.Item>
-      <QueueContextMenu.Separator />
-      <QueueContextMenu.Item onClick={() => paste()}>
+      </ContextMenu.Item>
+      <ContextMenu.Separator />
+      <ContextMenu.Item onClick={() => paste()}>
         {t('global.paste')}{' '}
         <div className={styles.RightSlot}>{deviceMetaKey}+V</div>
-      </QueueContextMenu.Item>
-    </QueueContextMenu.Content>
+      </ContextMenu.Item>
+    </ContextMenu.Content>
   );
 });
