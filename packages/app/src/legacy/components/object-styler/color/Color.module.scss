@@ -1,8 +1,0 @@
-.input-color {
-  @apply tw-relative tw-cursor-pointer tw-block tw-w-full tw-h-full tw-rounded-md tw-border tw-border-gray-100;
-
-  & input {
-    @apply tw-absolute tw-top-0 tw-left-0 tw-w-full tw-h-full;
-    visibility: hidden;
-  }
-}

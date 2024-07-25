@@ -19,24 +19,27 @@ export interface TimelineProps {
   columnWidth: number;
 }
 
-const TimelineEmptyRenderer = memo(() => <></>);
+const TimelineEmptyRenderer = memo(function TimelineEmptyRenderer() {
+  return <></>
+});
 
-const TimelineHeaderRenderer = memo((props: GridColumnDef<TimeLineTrack>) => (
-  <div
-    className={clsx(
-      'tw-relative',
-      'tw-text-12',
-      'tw-flex',
-      'tw-justify-center',
-      'tw-h-full',
-      'tw-items-center',
-    )}>
-    {Number(props.field) + 1}
-  </div>
-));
+const TimelineHeaderRenderer = memo(function TimelineHeaderRenderer(props: GridColumnDef<TimeLineTrack>) {
+  return (
+    <div
+      className={clsx(
+        'tw-relative',
+        'tw-text-12',
+        'tw-flex',
+        'tw-justify-center',
+        'tw-h-full',
+        'tw-items-center',
+      )}>
+      {Number(props.field) + 1}
+    </div>)
+});
 
 const TimelineCellRenderer = memo(
-  (props: GridCellRendererProps<TimeLineTrack>) => {
+  function TimelineCellRenderer(props: GridCellRendererProps<TimeLineTrack>) {
     const {
       startQueueIndex: start,
       endQueueIndex: end,
@@ -66,15 +69,15 @@ const TimelineCellRenderer = memo(
           cellIndex === start && 'tw-rounded-l-lg',
           cellIndex === end && 'tw-rounded-r-lg',
           start <= cellIndex &&
-            cellIndex <= end &&
-            selectedTrack &&
-            'tw-animate-pulse tw-border-solid tw-border-y-2 tw-border-amber-300',
+          cellIndex <= end &&
+          selectedTrack &&
+          'tw-animate-pulse tw-border-solid tw-border-y-2 tw-border-amber-300',
         )}></div>
     );
   },
 );
 
-export const Timeline = memo((props: TimelineProps) => {
+export const Timeline = memo(function Timeline(props: TimelineProps) {
   const tracks = useAppSelector(SettingSelectors.timelineData, (a, b) => {
     return isEqual(a, b);
   });

@@ -1,10 +1,9 @@
-import { RootLayout } from './app/root-layout/RootLayout';
+import { RootLayout } from './app/RootLayout';
 import { Provider } from 'react-redux';
 import { store } from '@legacy/store';
 import { EventDispatcherProvider } from '@legacy/cdk/hooks/event-dispatcher';
 import { RootRendererProvider } from '@legacy/cdk/root-renderer/root-renderer';
 import './i18n';
-import 'tailwindcss/tailwind.css';
 
 const App = () => {
   return (

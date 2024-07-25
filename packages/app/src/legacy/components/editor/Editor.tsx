@@ -10,7 +10,7 @@ import { EditorContext } from './EditorContext';
 import { PresentationRemote } from './PresentationRemote';
 import { useAppDispatch, useAppSelector } from '@legacy/store/hooks';
 import { useEventSelector } from '@legacy/cdk/hooks/event-dispatcher';
-import { fitScreenSizeEvent } from '@legacy/app/events/event';
+import { fitScreenSizeEvent } from '@/legacy/cdk/events/event';
 import { DocumentSelectors } from '@legacy/store/document/selectors';
 import { SettingSelectors } from '@legacy/store/settings/selectors';
 import { QueueRect } from '@legacy/model/property';
